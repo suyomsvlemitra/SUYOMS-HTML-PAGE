@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="mr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>नाहरकत प्रमाणपत्र अर्ज</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- GOOGLE FONTS (Noto Serif Devanagari सक्तीने लोड करण्यासाठी) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;600&family=Noto+Serif+Devanagari:wght@400;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- PDF Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+    <style>
+        /* थीमच्या Poppins फॉन्टला ओव्हरराईड करून कागदावर 'Noto Serif Devanagari' सक्तीने आणण्यासाठी */
+        .govt-font,
+        #print-area,
+        #print-area *,
+        #print-area p,
+        #print-area span,
+        #print-area div,
+        #print-area h2 {
+            font-family: 'Noto Serif Devanagari', Georgia, serif !important;
+        }
+
+        /* ॲप फॉर्म आणि हेडर्ससाठी Poppins / Noto Sans */
+        .vle-app-container {
+            font-family: 'Poppins', 'Noto Sans Devanagari', sans-serif !important;
+            color: #ffffff !important;
+        }
+
+        .vle-app-container label {
+            color: #cbd5e1 !important; /* text-slate-300 */
+        }
+
+        .vle-app-container button span, 
+        .vle-app-container a span {
+            color: #ffffff !important;
+            font-weight: 600 !important;
+            display: block !important;
+            visibility: visible !important;
+        }
+
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #1e1b4b;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #4c1d95;
+            border-radius: 4px;
+        }
+
+        #print-area {
+            transform-origin: top center;
+            transition: transform 0.2s ease;
+            color: #0f172a !important; /* Black text strictly inside A4 sheet */
+        }
+
+        @media print {
+            body, html {
+                background: white !important;
+                color: black !important;
+                padding: 0 !important;
+                margin: 0 !important;
+                width: 100% !important;
+            }
+            body * {
+                visibility: hidden;
+            }
+            #print-area, #print-area * {
+                visibility: visible;
+                font-family: 'Noto Serif Devanagari', Georgia, serif !important;
+            }
+
+            /* स्टॅम्प प्रिंटमध्ये अदृश्य होईल, पण 220px एवढी ब्लँक जागा सोडेल */
+            #stamp-preview-zone {
+                visibility: visible !important;
+                opacity: 0 !important;
+                height: 220px !important;
+                min-height: 220px !important;
+                border: none !important;
+            }
+
+            #print-area {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100% !important; 
+                max-width: 100% !important;
+                border: none !important;
+                box-shadow: none !important;
+                padding: 40px !important; 
+                margin: 0 !important;
+                transform: none !important; 
+                font-size: 16px !important; 
+                line-height: 1.8 !important;
+                color: #000 !important;
+            }
+        }
+    </style>
+</head>
+<body class="p-2 sm:p-4 text-white bg-slate-950">
+
+    <!-- MAIN CONTAINER -->
+    <div class="vle-app-container max-w-[1600px] mx-auto border-4 border-indigo-900 rounded-xl overflow-hidden bg-indigo-950/90 shadow-2xl">
+        
+        <!-- HEADER -->
+        <header class="bg-gradient-to-r from-indigo-950 via-purple-900 to-indigo-950 p-4 flex flex-col xl:flex-row justify-between items-center border-b-4 border-indigo-900 gap-4">
+            <!-- Title Section -->
+            <div class="flex items-center gap-4">
+                <div class="bg-white text-purple-900 p-3 rounded-xl shadow-lg border border-purple-400 shrink-0">
+                    <i class="fa-solid fa-file-signature text-3xl"></i>
+                </div>
+                <div>
+                    <h1 class="text-2xl md:text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-yellow-200 to-orange-400 tracking-wide">स्मार्ट नाहरकत प्रमाणपत्र जनरेटर</h1>
+                    <p class="text-xs md:text-sm text-purple-200 font-semibold mt-1">File 1: इंग्रजी टू मराठी ऑफलाइन ऑटो-टायपिंग (Space Bar)</p>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="flex flex-wrap items-center gap-2 xl:ml-auto w-full xl:w-auto justify-end">
+                
+                <button onclick="triggerPrint()" class="bg-slate-800 hover:bg-slate-700 border border-slate-600 px-3 py-2 rounded-lg flex flex-col items-center justify-center min-w-[65px] shadow-md transition cursor-pointer">
+                    <i class="fa-solid fa-print text-lg text-sky-400 mb-0.5"></i>
+                    <span class="text-[11px] text-white">Print</span>
+                </button>
+
+                <button onclick="triggerPDFDownload()" class="bg-slate-800 hover:bg-slate-700 border border-slate-600 px-3 py-2 rounded-lg flex flex-col items-center justify-center min-w-[65px] shadow-md transition cursor-pointer">
+                    <i class="fa-solid fa-file-pdf text-lg text-red-400 mb-0.5"></i>
+                    <span class="text-[11px] text-white">PDF</span>
+                </button>
+
+                <button onclick="saveFormData()" class="bg-slate-800 hover:bg-slate-700 border border-slate-600 px-3 py-2 rounded-lg flex flex-col items-center justify-center min-w-[65px] shadow-md transition cursor-pointer">
+                    <i class="fa-solid fa-floppy-disk text-lg text-yellow-400 mb-0.5"></i>
+                    <span class="text-[11px] text-white">Save</span>
+                </button>
+
+                <a href="https://drive.google.com/your-pdf-link" target="_blank" rel="noopener noreferrer" class="bg-slate-800 hover:bg-slate-700 border border-slate-600 px-3 py-2 rounded-lg flex flex-col items-center justify-center min-w-[90px] shadow-md transition text-center no-underline">
+                    <i class="fa-solid fa-file-arrow-down text-lg text-rose-500 mb-0.5"></i>
+                    <span class="text-[11px] text-white">PDF File Download</span>
+                </a>
+
+                <a href="https://drive.google.com/your-word-link" target="_blank" rel="noopener noreferrer" class="bg-slate-800 hover:bg-slate-700 border border-slate-600 px-3 py-2 rounded-lg flex flex-col items-center justify-center min-w-[90px] shadow-md transition text-center no-underline">
+                    <i class="fa-solid fa-file-word text-lg text-blue-400 mb-0.5"></i>
+                    <span class="text-[11px] text-white">Word File Download</span>
+                </a>
+
+            </div>
+        </header>
+
+        <!-- WORKSPACE -->
+        <div class="grid grid-cols-1 xl:grid-cols-12 gap-4 p-4">
+            
+            <!-- COLUMN 1: FORM INPUTS -->
+            <div class="xl:col-span-5 bg-purple-950/50 border border-purple-800/60 rounded-xl p-4 flex flex-col h-[880px] overflow-y-auto">
+                
+                <!-- STAMP SELECTOR BUTTONS -->
+                <div class="mb-4">
+                    <label class="block text-xs font-bold !text-yellow-400 mb-2 uppercase tracking-wider"><i class="fa-solid fa-stamp mr-1"></i> स्टॅम्प प्रिव्ह्यू निवडा</label>
+                    <div class="grid grid-cols-4 gap-2">
+                        <button onclick="changeStamp('10')" class="stamp-btn border-2 border-slate-700 bg-slate-900 hover:bg-sky-950 text-sky-400 font-bold py-2 px-1 rounded-lg text-xs transition cursor-pointer text-center">Rs. 10</button>
+                        <button onclick="changeStamp('20')" class="stamp-btn border-2 border-slate-700 bg-slate-900 hover:bg-purple-950 text-purple-400 font-bold py-2 px-1 rounded-lg text-xs transition cursor-pointer text-center">Rs. 20</button>
+                        <button onclick="changeStamp('50')" class="stamp-btn border-2 border-slate-700 bg-slate-900 hover:bg-emerald-950 text-emerald-400 font-bold py-2 px-1 rounded-lg text-xs transition cursor-pointer text-center">Rs. 50</button>
+                        <button onclick="changeStamp('100')" class="stamp-btn border-2 border-slate-700 bg-slate-900 hover:bg-blue-950 text-blue-400 font-bold py-2 px-1 rounded-lg text-xs transition cursor-pointer text-center">Rs. 100</button>
+                    </div>
+                    <button onclick="changeStamp('none')" class="w-full mt-2 bg-slate-800 hover:bg-slate-700 border border-slate-600 text-slate-200 text-xs py-1 rounded font-semibold cursor-pointer">स्टॅम्प काढा (Blank Paper)</button>
+                </div>
+
+                <!-- TOP SPACE CONTROLLER -->
+                <div class="mb-4 bg-slate-900/60 p-3 rounded-lg border border-slate-800">
+                    <div class="flex justify-between items-center mb-1">
+                        <label class="text-xs font-bold !text-purple-300"><i class="fa-solid fa-arrows-up-down mr-1"></i> वरील मार्जिन / स्पेस कमी-जास्त करा</label>
+                        <span id="space-val" class="text-xs font-bold text-yellow-400">0 px</span>
+                    </div>
+                    <input type="range" id="input-top-space" min="0" max="300" value="0" class="w-full accent-purple-500 cursor-pointer">
+                </div>
+
+                <div class="bg-purple-900/80 text-center py-1.5 rounded-lg font-bold text-sm mb-3 shadow border border-purple-700 text-white">
+                    माहिती भरा (टाईप करून Space दाबा)
+                </div>
+                
+                <!-- INPUT FORM -->
+                <div class="bg-slate-900/60 p-4 rounded-lg border border-slate-800 text-sm flex-1 space-y-3">
+                    
+                    <div class="grid grid-cols-2 gap-2">
+                        <div>
+                            <label class="block text-xs !text-slate-300 mb-1">दिनांक</label>
+                            <input type="text" id="input-date" value="19/07/2026" class="w-full bg-slate-800 border border-slate-700 rounded p-2 text-white focus:outline-none focus:border-purple-500">
+                        </div>
+                        <div>
+                            <label class="block text-xs !text-slate-300 mb-1">अधिकारी पद</label>
+                            <input type="text" id="input-officer" value="सरपंच/ ग्रामसेवक/ ग्रामविकास अधिकारी" class="marathi-input w-full bg-slate-800 border border-slate-700 rounded p-2 text-white focus:outline-none focus:border-purple-500">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs !text-slate-300 mb-1">ग्रामपंचायत कार्यालय नाव</label>
+                        <input type="text" id="input-gp-name" value="पुणगाव" class="marathi-input w-full bg-slate-800 border border-slate-700 rounded p-2 text-white focus:outline-none focus:border-purple-500">
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-2">
+                        <div>
+                            <label class="block text-xs !text-slate-300 mb-1">ता.</label>
+                            <input type="text" id="input-taluka" value="चांदूर बाजार" class="marathi-input w-full bg-slate-800 border border-slate-700 rounded p-2 text-white focus:outline-none focus:border-purple-500">
+                        </div>
+                        <div>
+                            <label class="block text-xs !text-slate-300 mb-1">जि.</label>
+                            <input type="text" id="input-dist" value="अमरावती" class="marathi-input w-full bg-slate-800 border border-slate-700 rounded p-2 text-white focus:outline-none focus:border-purple-500">
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-12 gap-2">
+                        <div class="col-span-3">
+                            <label class="block text-xs !text-slate-300 mb-1">आदरार्थी</label>
+                            <input type="text" id="input-title" value="श्री." class="marathi-input w-full bg-slate-800 border border-slate-700 rounded p-2 text-white focus:outline-none focus:border-purple-500">
+                        </div>
+                        <div class="col-span-9">
+                            <label class="block text-xs !text-slate-300 mb-1">अर्जदाराचे पूर्ण नाव</label>
+                            <input type="text" id="input-name" value="गोपाळ तुकाराम वानखडे" class="marathi-input w-full bg-slate-800 border border-slate-700 rounded p-2 text-white focus:outline-none focus:border-purple-500">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs !text-slate-300 mb-1">राहणार (रा.)</label>
+                        <input type="text" id="input-address" value="मु. पो. पुणगाव, ता. चांदूर बाजार" class="marathi-input w-full bg-slate-800 border border-slate-700 rounded p-2 text-white focus:outline-none focus:border-purple-500">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs !text-slate-300 mb-1">मोबाईल क्र.</label>
+                        <input type="text" id="input-mobile" value="9876543210" class="w-full bg-slate-800 border border-slate-700 rounded p-2 text-white focus:outline-none focus:border-purple-500">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs !text-slate-300 mb-1">प्रमाणपत्र मिळण्याचे कारण</label>
+                        <input type="text" id="input-reason" value="घरगुती विद्युत मीटर करिता" class="marathi-input w-full bg-slate-800 border border-slate-700 rounded p-2 text-white focus:outline-none focus:border-purple-500">
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-2">
+                        <div>
+                            <label class="block text-xs !text-slate-300 mb-1">मिळकत क्र.</label>
+                            <input type="text" id="input-property-no" value="३२४/२" class="marathi-input w-full bg-slate-800 border border-slate-700 rounded p-2 text-white focus:outline-none focus:border-purple-500">
+                        </div>
+                        <div>
+                            <label class="block text-xs !text-slate-300 mb-1">सोबत जोडलेले</label>
+                            <input type="text" id="input-attachments" value="१) खरेदीखत / ८अ उतारा, २) आधार कार्ड." class="marathi-input w-full bg-slate-800 border border-slate-700 rounded p-2 text-white focus:outline-none focus:border-purple-500">
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-2 pt-2">
+                        <button onclick="saveFormData()" class="bg-purple-700 hover:bg-purple-600 py-2 rounded font-bold shadow text-xs cursor-pointer text-white"><i class="fa-solid fa-save mr-1"></i> ड्राफ्ट सेव्ह करा</button>
+                        <button onclick="resetFormFields()" class="bg-slate-700 hover:bg-slate-600 py-2 rounded font-bold shadow text-xs cursor-pointer text-white"><i class="fa-solid fa-rotate-left mr-1"></i> रीसेट</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- COLUMN 2: LIVE PREVIEW A4 -->
+            <div class="xl:col-span-7 bg-purple-950/50 border border-purple-800/60 rounded-xl p-4 flex flex-col h-[880px]">
+                <div class="bg-purple-900/80 px-4 py-1.5 rounded-lg font-bold text-sm mb-3 flex justify-between items-center shadow border border-purple-700 text-white">
+                    <span>A4 Live Preview</span>
+                    <div class="flex items-center gap-2 text-xs bg-slate-950/40 px-2 py-1 rounded">
+                        <i onclick="zoomOut()" class="fa-solid fa-minus cursor-pointer hover:text-purple-400 transition"></i>
+                        <span id="zoom-text">100%</span>
+                        <i onclick="zoomIn()" class="fa-solid fa-plus cursor-pointer hover:text-purple-400 transition"></i>
+                    </div>
+                </div>
+
+                <div class="flex-1 bg-slate-700 p-4 rounded-lg overflow-y-auto flex justify-center items-start">
+                    <div id="print-area" class="govt-font w-[595px] min-h-[842px] bg-white p-12 shadow-2xl rounded border border-slate-300 relative text-[15px] leading-relaxed">
+                        
+                        <!-- STAMP GRAPHIC CONTAINER -->
+                        <div id="stamp-preview-zone" class="mb-4 hidden text-center border border-dashed border-transparent rounded overflow-hidden h-[220px]">
+                            <img id="stamp-img" src="" alt="Stamp" class="w-full h-[220px] object-contain">
+                        </div>
+
+                        <!-- DYNAMIC SCROLL SPACE HOLDER -->
+                        <div id="dynamic-space-holder" style="height: 0px;"></div>
+
+                        <!-- Title -->
+                        <div class="text-center font-bold text-[16px] mb-6 border-b pb-2">
+                            <h2>नाहरकत प्रमाणपत्रासाठी करावयाचा अर्ज</h2>
+                        </div>
+
+                        <!-- Date -->
+                        <div class="flex justify-end mb-4">
+                            <p><strong>दिनांक:</strong> <span id="view-date" class="font-bold border-b border-dotted border-slate-900 px-2">19/07/2026</span></p>
+                        </div>
+
+                        <!-- Context Heading -->
+                        <div class="space-y-1 text-[15px] mb-6">
+                            <p><strong>प्रति,</strong></p>
+                            <p class="pl-6"><span id="view-officer" class="font-bold">सरपंच/ ग्रामसेवक/ ग्रामविकास अधिकारी</span></p>
+                            <p class="pl-6">ग्रामपंचायत कार्यालय, <span id="view-gp-name" class="font-bold">पुणगाव</span></p>
+                            <p class="pl-6">ता. <span id="view-taluka" class="font-bold">चांदूर बाजार</span>, जि. <span id="view-dist" class="font-bold">अमरावती</span></p>
+                        </div>
+
+                        <!-- Subject Info Block -->
+                        <div class="border-t border-b border-slate-300 py-3 my-4 text-[15px] space-y-1.5 bg-slate-50 pl-4">
+                            <p><strong>विषय:</strong> ना हरकत प्रमाणपत्र मिळणेबाबत</p>
+                            <p><strong>अर्जदार:</strong> <span id="view-title" class="font-bold">श्री.</span> <span id="view-name" class="font-bold">गोपाळ तुकाराम वानखडे</span></p>
+                            <p><strong>रा.</strong> <span id="view-address" class="font-bold">मु. पो. पुणगाव, ता. चांदूर बाजार</span> &nbsp;&nbsp;&nbsp; <strong>मोबाईल क्र.</strong> <span id="view-mobile" class="font-bold">9876543210</span></p>
+                        </div>
+
+                        <!-- Body Paragraph -->
+                        <div class="text-justify text-[15px] leading-[1.8] mt-6 space-y-4">
+                            <p>महोदय,</p>
+                            <p class="indent-12">
+                                वरील विषयान्वये सविनय अर्ज सादर करतो / करते की, मला <span id="view-reason" class="font-bold border-b border-dashed border-slate-800 px-1">घरगुती विद्युत मीटर करिता</span> ना हरकत प्रमाणपत्र, मिळकत क्र. <span id="view-property-no" class="font-bold border-b border-dashed border-slate-800 px-1">३२४/२</span> या कारणासाठी मिळकत प्रमाणपत्राची आवश्यकता आहे. नियमानुसार सर्व थकबाकी व फी भरण्यास मी तयार आहे.
+                            </p>
+                            <p class="indent-12">
+                                करिता मला नाहरकत प्रमाणपत्र देण्यात यावे ही विनंती.
+                            </p>
+                        </div>
+
+                        <!-- Signatures & Attachments -->
+                        <div class="mt-16 flex justify-between items-start text-[15px]">
+                            <div class="space-y-2">
+                                <p class="font-bold">सोबत:</p>
+                                <p id="view-attachments" class="text-[13px] text-slate-700 pl-2">१) खरेदीखत / ८अ उतारा, २) आधार कार्ड.</p>
+                            </div>
+                            <div class="text-center min-w-[180px]">
+                                <p class="font-bold mb-12">अर्जदाराची सही</p>
+                                <div class="border-t border-slate-400 pt-1">
+                                    <p class="text-xs font-semibold">( <span id="view-footer-name">गोपाळ तुकाराम वानखडे</span> )</p>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- JAVASCRIPT CODE -->
+    <script>
+        let currentZoom = 100;
+        const printAreaEl = document.getElementById('print-area');
+        const zoomTextEl = document.getElementById('zoom-text');
+
+        function zoomIn() { if (currentZoom < 150) { currentZoom += 10; applyZoom(); } }
+        function zoomOut() { if (currentZoom > 50) { currentZoom -= 10; applyZoom(); } }
+        function applyZoom() { printAreaEl.style.transform = `scale(${currentZoom / 100})`; zoomTextEl.innerText = currentZoom + '%'; }
+
+        const inputTopSpace = document.getElementById('input-top-space');
+        const spaceVal = document.getElementById('space-val');
+        const dynamicSpaceHolder = document.getElementById('dynamic-space-holder');
+        const stampPreviewZone = document.getElementById('stamp-preview-zone');
+        const stampImg = document.getElementById('stamp-img');
+
+        inputTopSpace.addEventListener('input', function() {
+            const val = this.value + 'px';
+            spaceVal.innerText = val;
+            dynamicSpaceHolder.style.height = val;
+        });
+
+        function changeStamp(stampType) {
+            document.querySelectorAll('.stamp-btn').forEach(b => {
+                b.classList.remove('border-yellow-400', 'bg-slate-800');
+                b.classList.add('border-slate-700', 'bg-slate-900');
+            });
+
+            if (stampType === 'none') {
+                stampPreviewZone.classList.add('hidden');
+                stampImg.src = "";
+                return;
+            }
+
+            stampPreviewZone.classList.remove('hidden');
+            let imgUrl = "";
+            if (stampType === '10') imgUrl = "10-stamp.jpg";
+            if (stampType === '20') imgUrl = "20-stamp.jpg";
+            if (stampType === '50') imgUrl = "50-stamp.jpg";
+            if (stampType === '100') imgUrl = "100-stamp.jpg";
+            
+            stampImg.src = imgUrl;
+            event.currentTarget.classList.remove('border-slate-700', 'bg-slate-900');
+            event.currentTarget.classList.add('border-yellow-400', 'bg-slate-800');
+        }
+
+        // Form elements
+        const inputDate = document.getElementById('input-date');
+        const inputOfficer = document.getElementById('input-officer');
+        const inputGpName = document.getElementById('input-gp-name');
+        const inputTaluka = document.getElementById('input-taluka');
+        const inputDist = document.getElementById('input-dist');
+        const inputTitle = document.getElementById('input-title');
+        const inputName = document.getElementById('input-name');
+        const inputAddress = document.getElementById('input-address');
+        const inputMobile = document.getElementById('input-mobile');
+        const inputReason = document.getElementById('input-reason');
+        const inputPropertyNo = document.getElementById('input-property-no');
+        const inputAttachments = document.getElementById('input-attachments');
+
+        // Preview elements
+        const viewDate = document.getElementById('view-date');
+        const viewOfficer = document.getElementById('view-officer');
+        const viewGpName = document.getElementById('view-gp-name');
+        const viewTaluka = document.getElementById('view-taluka');
+        const viewDist = document.getElementById('view-dist');
+        const viewTitle = document.getElementById('view-title');
+        const viewName = document.getElementById('view-name');
+        const viewAddress = document.getElementById('view-address');
+        const viewMobile = document.getElementById('view-mobile');
+        const viewReason = document.getElementById('view-reason');
+        const viewPropertyNo = document.getElementById('view-property-no');
+        const viewAttachments = document.getElementById('view-attachments');
+        const viewFooterName = document.getElementById('view-footer-name');
+
+        function updatePreview() {
+            viewDate.textContent = inputDate.value || '-----/-----/-----';
+            viewOfficer.textContent = inputOfficer.value;
+            viewGpName.textContent = inputGpName.value || '_______________';
+            viewTaluka.textContent = inputTaluka.value || '___________';
+            viewDist.textContent = inputDist.value || '___________';
+            viewTitle.textContent = inputTitle.value;
+            
+            const fullName = inputName.value || '___________';
+            viewName.textContent = fullName;
+            viewFooterName.textContent = fullName;
+            
+            viewAddress.textContent = inputAddress.value || '______________________________';
+            viewMobile.textContent = inputMobile.value || '__________';
+            viewReason.textContent = inputReason.value || '____________________';
+            viewPropertyNo.textContent = inputPropertyNo.value || '_______';
+            viewAttachments.textContent = inputAttachments.value || '______________';
+        }
+
+        // UNICODE DIRECT MARATHI TRANSLITERATION ENGINE
+        const marathiMap = {
+            "a": "ा", "b": "ब", "c": "च", "d": "द", "e": "े", "f": "फ", "g": "ग", "h": "ह", "i": "ि",
+            "j": "ज", "k": "क", "l": "ल", "m": "म", "n": "न", "o": "ो", "p": "प", "q": "क", "r": "र",
+            "s": "स", "t": "त", "u": "ु", "v": "व", "w": "व", "x": "क्ष", "y": "य", "z": "झ",
+            "sh": "श", "ch": "च", "th": "थ", "dh": "ध", "kh": "ख", "gh": "घ", "bh": "भ", "ph": "फ",
+            "aa": "ा", "ee": "ी", "oo": "ू", "ai": "ै", "au": "ौ", "am": "ं", "ah": "ः",
+            "gopal": "गोपाळ", "tukaram": "तुकाराम", "wankhade": "वानखडे", "pungaon": "पुणगाव",
+            "chandur": "चांदूर", "bazar": "बाजार", "amravati": "अमरावती", "shree": "श्री.", "mr": "श्री."
+        };
+
+        function transliterateWord(word) {
+            let lowerWord = word.toLowerCase();
+            if (marathiMap[lowerWord]) return marathiMap[lowerWord];
+            
+            let result = '';
+            let i = 0;
+            while (i < word.length) {
+                let char2 = lowerWord.substring(i, i + 2);
+                let char1 = lowerWord.substring(i, i + 1);
+                
+                if (marathiMap[char2]) {
+                    result += marathiMap[char2];
+                    i += 2;
+                } else if (marathiMap[char1]) {
+                    result += marathiMap[char1];
+                    i += 1;
+                } else {
+                    result += char1;
+                    i++;
+                }
+            }
+            return result;
+        }
+
+        document.querySelectorAll('.marathi-input').forEach(input => {
+            input.addEventListener('keydown', function(e) {
+                if (e.key === ' ' || e.keyCode === 32) {
+                    let text = this.value;
+                    let words = text.split(' ');
+                    let lastWord = words[words.length - 1];
+                    
+                    if(lastWord && !/[\u0900-\u097F]/.test(lastWord)) {
+                        let converted = transliterateWord(lastWord);
+                        words[words.length - 1] = converted;
+                        this.value = words.join(' ');
+                        updatePreview();
+                    }
+                }
+            });
+            input.addEventListener('blur', updatePreview);
+        });
+
+        // PDF जनरेट करताना स्टॅम्प अदृश्य करून त्याची 220px जागा ठेवणारे फंक्शन
+        function triggerPDFDownload() {
+            const originalTransform = printAreaEl.style.transform;
+            printAreaEl.style.transform = "scale(1)";
+            
+            const originalOpacity = stampPreviewZone.style.opacity;
+            stampPreviewZone.style.opacity = "0";
+
+            const opt = {
+                margin:       [10, 10, 10, 10],
+                filename:     (inputName.value || 'Application') + '_नाहरकत_अर्ज.pdf',
+                image:        { type: 'jpeg', quality: 0.98 },
+                html2canvas:  { scale: 2, useCORS: true },
+                jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+            };
+
+            html2pdf().set(opt).from(printAreaEl).save().then(() => {
+                printAreaEl.style.transform = originalTransform; 
+                stampPreviewZone.style.opacity = originalOpacity;
+            });
+        }
+
+        function triggerPrint() { window.print(); }
+
+        function saveFormData() {
+            const formData = {
+                date: inputDate.value, officer: inputOfficer.value, gpName: inputGpName.value,
+                taluka: inputTaluka.value, dist: inputDist.value, title: inputTitle.value,
+                name: inputName.value, address: inputAddress.value, mobile: inputMobile.value,
+                reason: inputReason.value, propertyNo: inputPropertyNo.value, attachments: inputAttachments.value,
+                topSpace: inputTopSpace.value
+            };
+            localStorage.setItem('vle_new_file1_data', JSON.stringify(formData));
+            alert('माहिती सुरक्षितपणे सेव्ह झाली आहे!');
+        }
+
+        function resetFormFields() {
+            inputDate.value = "19/07/2026"; inputOfficer.value = "सरपंच/ ग्रामसेवक/ ग्रामविकास अधिकारी";
+            inputGpName.value = "पुणगाव"; inputTaluka.value = "चांदूर बाजार"; inputDist.value = "अमरावती";
+            inputTitle.value = "श्री."; inputName.value = "गोपाळ तुकाराम वानखडे";
+            inputAddress.value = "मु. पो. पुणगाव, ता. चांदूर बाजार"; inputMobile.value = "9876543210";
+            inputReason.value = "घरगुती विद्युत मीटर करिता"; inputPropertyNo.value = "३२४/२";
+            inputAttachments.value = "१) खरेदीखत / ८अ उतारा, २) आधार कार्ड.";
+            inputTopSpace.value = 0; spaceVal.innerText = "0 px"; dynamicSpaceHolder.style.height = "0px";
+            changeStamp('none'); updatePreview(); currentZoom = 100; applyZoom();
+        }
+
+        window.onload = function() {
+            const savedData = localStorage.getItem('vle_new_file1_data');
+            if (savedData) {
+                const data = JSON.parse(savedData);
+                inputDate.value = data.date; inputOfficer.value = data.officer;
+                inputGpName.value = data.gpName; inputTaluka.value = data.taluka; inputDist.value = data.dist;
+                inputTitle.value = data.title; inputName.value = data.name;
+                inputAddress.value = data.address; inputMobile.value = data.mobile;
+                inputReason.value = data.reason; inputPropertyNo.value = data.propertyNo;
+                inputAttachments.value = data.attachments;
+                if(data.topSpace) {
+                    inputTopSpace.value = data.topSpace;
+                    spaceVal.innerText = data.topSpace + "px";
+                    dynamicSpaceHolder.style.height = data.topSpace + "px";
+                }
+                updatePreview();
+            }
+        };
+
+        const allFields = [inputDate, inputOfficer, inputGpName, inputTaluka, inputDist, inputTitle, inputName, inputAddress, inputMobile, inputReason, inputPropertyNo, inputAttachments];
+        allFields.forEach(field => {
+            field.addEventListener('input', updatePreview);
+        });
+    </script>
+</body>
+</html>
