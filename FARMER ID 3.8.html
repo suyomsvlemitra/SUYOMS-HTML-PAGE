@@ -1,3 +1,109 @@
+<!-- 🔒 सर्व पेजेससाठी ऑल-इन-वन सेक्युरिटी ऑथ गार्ड -->
+<script type="text/javascript">
+  // १. पेज कंटेंट फ्लॅश (Flash) रोखण्यासाठी फिल्टर
+  document.documentElement.style.filter = "brightness(0) invert(1)";
+  
+  (function() {
+    // २. लोकल स्टोरेज मधील प्राथमिक चेक
+    if (localStorage.getItem("isLoggedIn") === "true") {
+      document.documentElement.style.filter = "none";
+    } else {
+      document.write('<body style="background:#ffffff !important; display:block !important;"></body>');
+      alert("🔒 Login Required! कृपया लॉगिन करा.");
+      window.location.href = "https://www.suyoms.com/p/login.html"; 
+    }
+  })();
+</script>
+
+<!-- ३. फायरबेस SDK लोड करा -->
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+
+<script type="text/javascript">
+  // 🛠️ मराठी काना-मात्रा डिकोडर फिक्स
+  function cleanAlert(str) {
+    var parser = new DOMParser();
+    var decoded = parser.parseFromString('<!doctype html><body>' + str, 'text/html').body.textContent;
+    alert(decoded);
+  }
+
+  // फायरबेस कॉन्फिगरेशन
+  const firebaseConfig = {
+    apiKey: "AIzaSyDOYUIvE7yWCNEf_K6dHEGfEqtUwLy3rdM",
+    authDomain: "suyoms-login.firebaseapp.com",
+    databaseURL: "https://suyoms-login-default-rtdb.asia-southeast1.firebasedatabase.app",
+    projectId: "suyoms-login",
+    storageBucket: "suyoms-login.firebasestorage.app",
+    messagingSenderId: "1084425019811",
+    appId: "1:1084425019811:web:f036c2b42cb5eb4ee5ba16"
+  };
+
+  if (!firebase.apps.length) {
+    firebase.initializeApp(firebaseConfig);
+  }
+
+  // ४. रिअल-टाइम सिंगल डिव्हाईस आणि एक्सपायरी तपासणी
+  (function verifySessionAndExpiry() {
+    const userMobile = localStorage.getItem("userMobile");
+    const currentToken = localStorage.getItem("sessionToken");
+
+    if (!userMobile || !currentToken) {
+      localStorage.clear();
+      window.location.href = "https://www.suyoms.com/p/login.html";
+      return;
+    }
+
+    const userRef = firebase.database().ref('users/' + userMobile);
+
+    userRef.on('value', (snapshot) => {
+      const data = snapshot.val();
+      
+      // जर युझर डेटाबेसमध्ये नसेल
+      if (!data) {
+        localStorage.clear();
+        cleanAlert("⚠️ तुमचे खाते सापडले नाही!");
+        window.location.href = "https://www.suyoms.com/p/login.html";
+        return;
+      }
+
+      // अ) एकाच युझरचे एकापेक्षा जास्त डिव्हाईसवर लॉगिन तपासणे
+      if (data.activeSession && data.activeSession !== currentToken) {
+        cleanAlert("⚠️ तुमचे खाते दुसऱ्या PC किंवा मोबाईलवर चालू झाले आहे. या डिव्हाईसवरून तुम्ही लॉगआऊट होत आहात!");
+        localStorage.clear();
+        window.location.href = "https://www.suyoms.com/p/login.html";
+        return;
+      }
+
+      // ब) प्लॅन एक्सपायरी तपासणे
+      if (data.expiryDate) {
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+
+        let expiry;
+        const parts = data.expiryDate.split(/[-/]/);
+        if (parts.length === 3) {
+          if (parts[0].length === 2 && parts[2].length === 4) {
+            expiry = new Date(parts[2], parts[1] - 1, parts[0]);
+          } else if (parts[0].length === 4) {
+            expiry = new Date(parts[0], parts[1] - 1, parts[2]);
+          }
+        } else {
+          expiry = new Date(data.expiryDate);
+        }
+
+        if (expiry) {
+          expiry.setHours(0, 0, 0, 0);
+          if (expiry < today) {
+            cleanAlert("⚠️ तुमचा प्लॅन संपलेला आहे! कृपया नूतनीकरण करा.");
+            localStorage.clear();
+            window.location.href = "https://www.suyoms.com/p/login.html";
+          }
+        }
+      }
+    });
+  })();
+</script>
+
 
 
 
