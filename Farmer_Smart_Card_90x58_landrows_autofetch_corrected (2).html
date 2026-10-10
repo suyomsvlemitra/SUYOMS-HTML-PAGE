@@ -314,7 +314,7 @@ ashokStambh: "https://cdn.jsdelivr.net/gh/suyomsvlemitra/AI-Images@Suyoms-images
 };
 
 let landData = [
-{ state: 'MH', dist: 'Jalgaon', subDist: 'Pachora', village: 'Pachora', sno: '102', ss: '4', area: '0.500' }
+{ state: 'MH', dist: 'Jalgaon', subDist: 'Pachora', village: 'Pachora', sno: '102', ss: '4', khata: '', area: '0.500' }
 ];
 
 function loadAssets(callback) {
@@ -651,7 +651,7 @@ const cols = [
 { title: "District", width: 140 * S },
 { title: "Sub Dist", width: 150 * S },
 { title: "Village", width: 180 * S },
-{ title: "S No. ", width: 150 * S },
+{ title: "S No.", width: 150 * S },
 { title: "Khata -", width: 80 * S },
 { title: "Area (Ha)", width: 110 * S }
 ];
@@ -680,7 +680,7 @@ startY += rowH;
 ctx.font = `bold ${24 * S}px ${FONT_SERIF}`;
 
 landData.forEach((row) => {
-const vals = [row.state, row.dist, row.subDist, row.village, [row.sno, row.ss].filter(v => String(v || "").trim()).join(" / "), "-", row.area];
+const vals = [row.state, row.dist, row.subDist, row.village, [row.sno, row.ss].filter(v => String(v || "").trim()).join(" / "), row.khata || "-", row.area];
 let cX = startX;
 
 vals.forEach((val, cIdx) => {
@@ -1005,6 +1005,7 @@ subDist: r.subDist || '',
 village: r.village || '',
 sno: r.sno || '',
 ss: r.ss || '',
+khata: r.khata || '',
 area: r.area || ''
 }));
 renderLandInputs();
@@ -1192,7 +1193,7 @@ tr.innerHTML = `
 <td class="p-1"><input type="text" value="${item.subDist}" oninput="updateLandData(${index}, 'subDist', this.value)" class="w-full bg-white border border-purple-200 p-1 rounded text-slate-800 focus:border-purple-500 outline-none"></td>
 <td class="p-1"><input type="text" value="${item.village}" oninput="updateLandData(${index}, 'village', this.value)" class="w-full bg-white border border-purple-200 p-1 rounded text-slate-800 focus:border-purple-500 outline-none"></td>
 <td class="p-1"><div class="flex gap-1"><input aria-label="S No." placeholder="S No." type="text" value="${item.sno}" oninput="updateLandData(${index}, 'sno', this.value)" class="w-1/2 min-w-0 bg-white border border-orange-200 p-1 rounded text-slate-800 outline-none"><span>/</span><input aria-label="S/S No." placeholder="S/S No." type="text" value="${item.ss}" oninput="updateLandData(${index}, 'ss', this.value)" class="w-1/2 min-w-0 bg-white border border-orange-200 p-1 rounded text-slate-800 outline-none"></div></td>
-<td class="p-1 text-center">-</td>
+<td class="p-1"><input aria-label="Khata Number" placeholder="Khata No." type="text" value="${item.khata || ''}" oninput="updateLandData(${index}, 'khata', this.value)" class="w-full bg-white border border-orange-200 p-1 rounded text-slate-800 outline-none"></td>
 <td class="p-1"><input type="text" value="${item.area}" oninput="updateLandData(${index}, 'area', this.value)" class="w-full bg-white border border-purple-200 p-1 rounded text-slate-800 focus:border-purple-500 outline-none"></td>
 <td class="p-1 text-center"><button onclick="removeLandRow(${index})" class="text-red-500 hover:text-red-700 font-bold bg-red-50 hover:bg-red-100 p-1.5 rounded transition-colors"><i class="fas fa-trash-alt"></i></button></td>
 `;
