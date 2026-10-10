@@ -1,0 +1,1291 @@
+
+
+
+<!DOCTYPE html>
+<html lang="mr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AgriStack Premium Farmer Smart Card Generator HD</title>
+
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+<!-- PDF Auto Fill: PDF.js + Tesseract OCR (English + Marathi) -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/tesseract.js@5.0.4/dist/tesseract.min.js"></script>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Noto+Sans+Devanagari:wght@400;600;700;800&display=swap');
+
+body, button, input, select, textarea {
+font-family: 'Poppins', 'Noto Sans Devanagari', sans-serif !important;
+background-color: #f5f5f4;
+color: #171717;
+}
+
+.canvas-card {
+width: 100%;
+max-width: 540px;
+height: auto;
+border-radius: 12px;
+box-shadow: 0 10px 25px -3px rgba(0, 0, 0, 0.35), 0 4px 10px -2px rgba(0, 0, 0, 0.25);
+background-color: #ffffff;
+border: none !important;
+transition: all 0.3s ease;
+}
+
+.canvas-card:hover {
+box-shadow: 0 15px 30px -3px rgba(0, 0, 0, 0.45), 0 6px 12px -2px rgba(0, 0, 0, 0.3);
+}
+
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: #f5f5f4; }
+::-webkit-scrollbar-thumb { background: #f97316; border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: #c2410c; }
+
+.pdf-upload-box {
+background: linear-gradient(135deg, #faf5ff, #fdf2f8);
+border: 1px solid #d8b4fe;
+border-radius: 14px;
+padding: 12px;
+}
+.pdf-progress {
+height: 7px;
+background: #ede9fe;
+border-radius: 999px;
+overflow: hidden;
+margin-top: 8px;
+}
+.pdf-progress > div {
+height: 100%;
+width: 0%;
+background: linear-gradient(90deg, #7e22ce, #db2777);
+transition: width .25s ease;
+}
+.pdf-status {
+min-height: 18px;
+font-size: 10px;
+margin-top: 6px;
+color: #5b21b6;
+}
+
+@media print {
+.no-print { display: none !important; }
+body { background: white !important; }
+.print-area { display: flex !important; gap: 10mm; justify-content: center; padding-top: 15mm; }
+canvas {
+width: 95mm !important;
+height: 60mm !important;
+image-rendering: -webkit-optimize-contrast;
+image-rendering: crisp-edges;
+}
+}
+</style>
+</head>
+<body class="min-h-screen pb-12">
+
+<!-- Header Banner -->
+<header class="max-w-7xl mx-auto bg-white border-b-4 border-black text-slate-800 p-4 rounded-b-2xl shadow-md mb-6 flex justify-between items-center no-print">
+<h1 class="text-xl font-extrabold flex items-center gap-2 text-black tracking-wide">
+<i class="fas fa-id-card text-amber-600 text-2xl"></i> AgriStack Smart Farmer ID (HD 8K Enhanced)
+</h1>
+<span class="bg-gradient-to-r from-black to-orange-600 text-white px-4 py-1.5 text-xs rounded-full font-bold shadow-lg uppercase tracking-wider">
+SUYOMS VLE 3.8 HD
+</span>
+</header>
+
+<main class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 no-print px-4">
+
+<!-- Input Form Panel -->
+<div class="lg:col-span-6 bg-white border border-orange-100 p-6 rounded-2xl shadow-lg shadow-orange-200/50 space-y-4 relative overflow-hidden">
+
+<div class="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-orange-500 to-orange-500"></div>
+
+<h2 class="text-sm font-bold text-black uppercase tracking-wider border-b border-orange-100 pb-2 flex items-center gap-2">
+<i class="fas fa-user-pen text-amber-500"></i> शेतकरी माहिती संपादन (Farmer Details)
+</h2>
+
+<!-- PDF Auto Fill Upload - added without changing existing fields -->
+<div class="pdf-upload-box">
+<div class="flex items-center justify-between gap-3">
+<div>
+<div class="text-xs font-bold text-black flex items-center gap-2">
+<i class="fas fa-file-pdf text-red-600"></i>
+Farmer Registration PDF Auto Fill
+</div>
+<div class="text-[10px] text-slate-600 mt-1">
+PDF upload केल्यानंतर Farmer Details, Contact Details आणि Land Details मधील उपलब्ध माहिती आपोआप भरली जाईल.
+</div>
+</div>
+<label for="pdf-file" class="shrink-0 cursor-pointer bg-red-600 hover:bg-red-700 text-white text-xs font-bold px-4 py-2 rounded-lg shadow-md transition-colors">
+<i class="fas fa-upload mr-1"></i> PDF Upload
+</label>
+<input type="file" id="pdf-file" accept="application/pdf,.pdf" class="hidden" onchange="handlePDFUpload(event)">
+</div>
+<div class="pdf-progress"><div id="pdf-progress-bar"></div></div>
+<div id="pdf-status" class="pdf-status">PDF निवडा — OCR Auto Fill तयार आहे.</div>
+</div>
+
+<!-- Photo Upload -->
+<div class="flex items-center gap-4 bg-orange-50/50 p-3 rounded-xl border border-orange-300">
+<div class="w-14 h-16 bg-white border border-orange-300 rounded-lg flex items-center justify-center overflow-hidden shadow-sm">
+<img id="form-photo-img" class="w-full h-full object-cover hidden">
+<i id="form-photo-icon" class="fas fa-user text-orange-300 text-2xl"></i>
+</div>
+<div>
+<label class="block text-xs font-semibold text-black mb-1">शेतकऱ्याचा फोटो बदला</label>
+<input type="file" id="photo-file" accept="image/*" class="hidden" onchange="handlePhotoUpload(event)">
+<button type="button" onclick="document.getElementById('photo-file').click()" class="bg-orange-600 hover:bg-black text-white text-xs font-semibold px-4 py-1.5 rounded-lg shadow-md transition-colors duration-200">
+<i class="fas fa-camera mr-1"></i> फोटो अपलोड करा
+</button>
+</div>
+</div>
+
+<!-- Basic Details Grid -->
+<div class="grid grid-cols-2 gap-3 text-xs">
+<div>
+<label class="text-black font-semibold">Farmer ID*</label>
+<input type="text" id="in-farmer-id" value="9876 5432 1010" class="w-full p-2 bg-white border border-orange-300 rounded-lg text-slate-800 mt-1 focus:border-orange-500 focus:ring-2 focus:ring-orange-200 outline-none transition-all shadow-sm" oninput="renderCards()">
+</div>
+<div>
+<label class="text-black font-semibold">नाव (मराठी)*</label>
+<input type="text" id="in-name-hn" value="रमेश बाबुराव पाटील" class="w-full p-2 bg-white border border-orange-300 rounded-lg text-slate-800 mt-1 focus:border-orange-500 focus:ring-2 focus:ring-orange-200 outline-none transition-all shadow-sm" oninput="renderCards()">
+</div>
+<div>
+<label class="text-black font-semibold">Name (English)*</label>
+<input type="text" id="in-name-en" value="Ramesh Baburao Patil" class="w-full p-2 bg-white border border-orange-300 rounded-lg text-slate-800 mt-1 focus:border-orange-500 focus:ring-2 focus:ring-orange-200 outline-none transition-all shadow-sm" oninput="renderCards()">
+</div>
+<div>
+<label class="text-black font-semibold">लिंग (Gender)*</label>
+<select id="in-gender" class="w-full p-2 bg-white border border-orange-300 rounded-lg text-slate-800 mt-1 focus:border-orange-500 focus:ring-2 focus:ring-orange-200 outline-none transition-all shadow-sm cursor-pointer" onchange="renderCards()">
+<option value="Male" selected>Male</option>
+<option value="Female">Female</option>
+</select>
+</div>
+
+<div>
+<label class="text-black font-semibold">जन्म तारीख (DOB)*</label>
+<input type="date" id="in-dob" value="1980-08-15" class="w-full p-2 bg-white border border-orange-300 rounded-lg text-slate-800 mt-1 focus:border-orange-500 focus:ring-2 focus:ring-orange-200 outline-none transition-all shadow-sm cursor-pointer" onchange="renderCards()">
+</div>
+
+<div>
+<label class="text-black font-semibold">क्षेत्र (Area)*</label>
+<select id="in-area-type" class="w-full p-2 bg-white border border-orange-300 rounded-lg text-slate-800 mt-1 focus:border-orange-500 focus:ring-2 focus:ring-orange-200 outline-none transition-all shadow-sm cursor-pointer" onchange="renderCards()">
+<option value="Rural" selected>Rural (ग्रामीण)</option>
+<option value="Urban">Urban (शहरी)</option>
+</select>
+</div>
+
+<div>
+<label class="text-black font-semibold">आधार क्रमांक*</label>
+<input type="text" id="in-aadhaar" value="[Aadhaar Redacted]" class="w-full p-2 bg-white border border-orange-300 rounded-lg text-slate-800 mt-1 focus:border-orange-500 focus:ring-2 focus:ring-orange-200 outline-none transition-all shadow-sm" oninput="renderCards()">
+</div>
+
+<!-- नवीन मोबाईल नंबर इनपुट फील्ड -->
+<div>
+<label class="text-black font-semibold">मोबाईल नंबर (Mobile)*</label>
+<input type="text" id="in-mobile" value="9876543210" class="w-full p-2 bg-white border border-orange-300 rounded-lg text-slate-800 mt-1 focus:border-orange-500 focus:ring-2 focus:ring-orange-200 outline-none transition-all shadow-sm" oninput="renderCards()">
+</div>
+
+<div>
+<label class="text-black font-semibold flex justify-between">
+Approval Date* <span class="text-[9px] text-amber-600">(Auto)</span>
+</label>
+<input type="text" id="in-approval-date" class="w-full p-2 bg-orange-50 border border-orange-300 rounded-lg text-slate-800 mt-1 focus:border-orange-500 outline-none shadow-sm" oninput="renderCards()">
+</div>
+
+<div class="col-span-2">
+<label class="text-black font-semibold flex justify-between">
+Download Date* <span class="text-[9px] text-amber-600">(Auto)</span>
+</label>
+<input type="text" id="in-download-date" class="w-full p-2 bg-orange-50 border border-orange-300 rounded-lg text-slate-800 mt-1 focus:border-orange-500 outline-none shadow-sm" oninput="renderCards()">
+</div>
+
+<div class="col-span-2">
+<label class="text-black font-semibold">संपूर्ण पत्ता (Full Address)*</label>
+<textarea id="in-address" rows="2" class="w-full p-2 bg-white border border-orange-300 rounded-lg text-slate-800 mt-1 focus:border-orange-500 focus:ring-2 focus:ring-orange-200 outline-none transition-all shadow-sm resize-none" oninput="renderCards()">A/P. Pachora, Tal. Pachora, Dist. Jalgaon - 424201</textarea>
+</div>
+</div>
+
+<!-- Land Details Table Input -->
+<div class="pt-2">
+<div class="flex justify-between items-center mb-2">
+<span class="text-xs font-bold text-black flex items-center gap-1">
+<i class="fas fa-table text-amber-500"></i> जमीन धारणा तपशील
+</span>
+<button type="button" onclick="addLandRow()" class="bg-black hover:bg-neutral-800 text-white text-[10px] font-bold px-3 py-1.5 rounded-md shadow-md transition-colors">
+<i class="fas fa-plus"></i> Row जोडा
+</button>
+</div>
+<div class="overflow-x-auto border border-orange-300 rounded-xl shadow-sm">
+<table class="w-full text-[10px] text-left text-slate-700">
+<thead class="bg-orange-100 text-black font-bold border-b border-orange-300">
+<tr>
+<th class="p-2">State</th>
+<th class="p-2">Dist</th>
+<th class="p-2">Sub Dist</th>
+<th class="p-2">Village</th>
+<th class="p-2">S No. / S/S No.</th>
+<th class="p-2">Khata -</th>
+<th class="p-2">Area</th>
+<th class="p-2 text-center"><i class="fas fa-cog"></i></th>
+</tr>
+</thead>
+<tbody id="land-rows-container"></tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+<!-- Live Canvas Preview Section -->
+<div class="lg:col-span-6 space-y-6 flex flex-col items-center">
+
+<div class="bg-white border border-orange-100 p-6 rounded-2xl shadow-lg shadow-orange-200/50 w-full flex flex-col items-center gap-5 relative overflow-hidden">
+
+<div class="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-amber-500 to-orange-500"></div>
+
+<h2 class="text-sm font-bold text-black uppercase tracking-wider self-start border-b border-orange-100 w-full pb-2 flex items-center justify-between">
+<span><i class="fas fa-eye text-amber-500 mr-1"></i> Live Card Preview (HD Render)</span>
+<span class="text-[10px] bg-orange-100 text-black border border-orange-300 px-2.5 py-0.5 rounded-full font-bold shadow-sm">Ultra HD 600 DPI</span>
+</h2>
+
+<!-- Live HD Canvases -->
+<div class="space-y-6 flex flex-col items-center w-full bg-slate-50 py-4 rounded-xl border border-orange-50">
+<div>
+<span class="text-xs font-bold text-black mb-2 block text-center">Front Side (समोरील बाजू)</span>
+<canvas id="canvas-front" width="2022" height="1276" class="canvas-card"></canvas>
+</div>
+<div>
+<span class="text-xs font-bold text-black mb-2 block text-center">Back Side (मागील बाजू)</span>
+<canvas id="canvas-back" width="2022" height="1276" class="canvas-card"></canvas>
+</div>
+</div>
+
+<!-- Action Download Buttons -->
+<div class="w-full space-y-3 pt-2">
+<div class="grid grid-cols-2 gap-3">
+<button onclick="download4x6PDF()" class="bg-black hover:bg-neutral-800 text-white font-bold py-2.5 rounded-xl shadow-lg flex items-center justify-center gap-2 text-xs transition-all">
+<i class="fas fa-file-pdf text-sm"></i> 4×6 PDF डाउनलोड
+</button>
+<button onclick="downloadPDF()" class="bg-gradient-to-r from-orange-600 to-amber-500 hover:from-orange-700 hover:to-amber-600 text-white font-bold py-2.5 rounded-xl shadow-lg flex items-center justify-center gap-2 text-xs transition-all">
+<i class="fas fa-file-pdf text-sm"></i> HD PDF डाउनलोड
+</button>
+</div>
+<div class="grid grid-cols-2 gap-3">
+<button onclick="downloadImage('canvas-front', 'AgriStack_Card_Front_HD.png')" class="bg-white border-2 border-black text-orange-700 hover:bg-orange-50 font-bold py-2 rounded-xl text-xs flex items-center justify-center gap-2 transition-colors shadow-sm">
+<i class="fas fa-image"></i> Front HD Image
+</button>
+<button onclick="downloadImage('canvas-back', 'AgriStack_Card_Back_HD.png')" class="bg-white border-2 border-black text-orange-700 hover:bg-orange-50 font-bold py-2 rounded-xl text-xs flex items-center justify-center gap-2 transition-colors shadow-sm">
+<i class="fas fa-image"></i> Back HD Image
+</button>
+</div>
+</div>
+</div>
+
+</div>
+
+</main>
+
+<script>
+let userPhotoImg = null;
+let assets = {};
+
+const FONT_DEVANAGARI = "'Noto Sans Devanagari', 'Arial', sans-serif";
+const FONT_SERIF = "'Times New Roman', 'Georgia', serif";
+const FONT_AWESOME = '"Font Awesome 6 Free", "FontAwesome"';
+
+const S = 2.0;
+
+function decodeText(text) {
+const txt = document.createElement('textarea');
+txt.innerHTML = text;
+return txt.value;
+}
+
+const assetUrls = {
+bgFront: "https://cdn.jsdelivr.net/gh/suyomsvlemitra/AI-Images@Suyoms-images/Frint_site_image-transformed.png",
+bgBack: "https://cdn.jsdelivr.net/gh/suyomsvlemitra/AI-Images@Suyoms-images/Back_Side-transformed.png",
+agriLogo: "https://cdn.jsdelivr.net/gh/suyomsvlemitra/AI-Images@Suyoms-images/agri_stack_logo copy.png",
+mhGovLogo: "https://cdn.jsdelivr.net/gh/suyomsvlemitra/AI-Images@Suyoms-images/mh gov logo copy.png",
+ashokStambh: "https://cdn.jsdelivr.net/gh/suyomsvlemitra/AI-Images@Suyoms-images/56656.png"
+};
+
+let landData = [
+{ state: 'MH', dist: 'Jalgaon', subDist: 'Pachora', village: 'Pachora', sno: '102', ss: '4', area: '0.500' }
+];
+
+function loadAssets(callback) {
+let loaded = 0;
+const keys = Object.keys(assetUrls);
+
+keys.forEach(key => {
+const img = new Image();
+img.crossOrigin = "Anonymous";
+img.src = assetUrls[key];
+
+img.onload = () => {
+assets[key] = img;
+loaded++;
+renderCards();
+if (loaded === keys.length && callback) callback();
+};
+
+img.onerror = () => {
+loaded++;
+renderCards();
+if (loaded === keys.length && callback) callback();
+};
+});
+}
+
+function drawRoundedCardBorder(ctx, w, h, radius) {
+ctx.beginPath();
+ctx.moveTo(radius, 0);
+ctx.lineTo(w - radius, 0);
+ctx.quadraticCurveTo(w, 0, w, radius);
+ctx.lineTo(w, h - radius);
+ctx.quadraticCurveTo(w, h, w - radius, h);
+ctx.lineTo(radius, h);
+ctx.quadraticCurveTo(0, h, 0, h - radius);
+ctx.lineTo(0, radius);
+ctx.quadraticCurveTo(0, 0, radius, 0);
+ctx.closePath();
+}
+
+function drawDottedCropBorder(ctx, w, h) {
+ctx.save();
+ctx.setLineDash([16 * S, 16 * S]);
+ctx.strokeStyle = "#000000";
+ctx.lineWidth = 1.5 * S;
+drawRoundedCardBorder(ctx, w, h, 28 * S);
+ctx.stroke();
+ctx.restore();
+}
+
+function renderCards() {
+renderFrontCard();
+renderBackCard();
+}
+
+function drawRoundedRectPath(ctx, x, y, width, height, radius) {
+ctx.beginPath();
+ctx.moveTo(x + radius, y);
+ctx.lineTo(x + width - radius, y);
+ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
+ctx.lineTo(x + width, y + height - radius);
+ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+ctx.lineTo(x + radius, y + height);
+ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
+ctx.lineTo(x, y + radius);
+ctx.quadraticCurveTo(x, y, x + radius, y);
+ctx.closePath();
+}
+
+function formatDOBForCard(dateString) {
+if (!dateString) return "";
+if (dateString.includes("-")) {
+const parts = dateString.split("-");
+if (parts.length === 3) return `${parts[2]}/${parts[1]}/${parts[0]}`;
+}
+return dateString;
+}
+
+function renderFrontCard() {
+const canvas = document.getElementById('canvas-front');
+if (!canvas) return;
+const ctx = canvas.getContext('2d');
+const w = canvas.width;
+const h = canvas.height;
+
+ctx.clearRect(0, 0, w, h);
+
+ctx.save();
+drawRoundedCardBorder(ctx, w, h, 28 * S);
+ctx.clip();
+
+ctx.fillStyle = "#ffffff";
+ctx.fillRect(0, 0, w, h);
+
+if (assets.bgFront) {
+ctx.save();
+ctx.globalAlpha = 0.28;
+ctx.drawImage(assets.bgFront, 0, 0, w, h);
+ctx.restore();
+}
+
+if (assets.agriLogo) ctx.drawImage(assets.agriLogo, 30 * S, 25 * S, 125 * S, 55 * S);
+if (assets.ashokStambh) ctx.drawImage(assets.ashokStambh, 895 * S, 15 * S, 60 * S, 80 * S);
+
+ctx.fillStyle = "#c2410c";
+ctx.font = `bold ${30 * S}px ${FONT_DEVANAGARI}`;
+ctx.textAlign = "center";
+ctx.fillText(decodeText("शेतकरी वैयक्तिक ओळखपत्र"), w / 2, 42 * S);
+
+ctx.fillStyle = "#044e1b";
+ctx.font = `800 ${40 * S}px ${FONT_SERIF}`;
+ctx.fillText("Farmer Personal Identity Card", w / 2, 84 * S);
+
+ctx.strokeStyle = "#000000";
+ctx.lineWidth = 2.5 * S;
+ctx.beginPath();
+ctx.moveTo(10 * S, 105 * S);
+ctx.lineTo(w - 10 * S, 105 * S);
+ctx.stroke();
+
+ctx.save();
+ctx.translate(22 * S, 330 * S);
+ctx.rotate(-Math.PI / 2);
+ctx.fillStyle = "#000000";
+ctx.font = `bold ${22 * S}px ${FONT_SERIF}`;
+ctx.textAlign = "center";
+const appDate = document.getElementById('in-approval-date').value;
+ctx.fillText(`Approval Date : ${appDate}`, 0, 0);
+ctx.restore();
+
+const px = 50 * S, py = 145 * S, pw = 220 * S, ph = 275 * S, borderRadius = 12 * S;
+
+ctx.save();
+ctx.save();
+drawRoundedRectPath(ctx, px, py, pw, ph, borderRadius);
+ctx.clip();
+
+if (userPhotoImg) {
+ctx.drawImage(userPhotoImg, px, py, pw, ph);
+} else {
+ctx.fillStyle = "#e2e8f0";
+ctx.fillRect(px, py, pw, ph);
+ctx.fillStyle = "#64748b";
+ctx.font = `bold ${24 * S}px ${FONT_SERIF}`;
+ctx.textAlign = "center";
+ctx.fillText("PHOTO", px + (pw / 2), py + (ph / 2));
+}
+ctx.restore();
+
+ctx.strokeStyle = "#475569";
+ctx.lineWidth = 2 * S;
+drawRoundedRectPath(ctx, px, py, pw, ph, borderRadius);
+ctx.stroke();
+ctx.restore();
+
+ctx.textAlign = "left";
+const txLabel = 295 * S;
+const txValue = 460 * S;
+let ty = 175 * S; // थोडे वर सरकवले जेवढे फिल्ड्स वाढले त्यानुसार
+const lineGap = 37 * S; // अंतर थोडे कमी केले जेवढे कार्डवर बसू शकेल
+
+const nameHn = decodeText(document.getElementById('in-name-hn').value);
+const nameEn = document.getElementById('in-name-en').value;
+const gender = document.getElementById('in-gender').value;
+const rawDob = document.getElementById('in-dob').value;
+const dob = formatDOBForCard(rawDob);
+const areaType = document.getElementById('in-area-type').value;
+const aadhaar = document.getElementById('in-aadhaar').value;
+const mobile = document.getElementById('in-mobile').value; // मोबाईल नंबर व्हॅल्यू
+const farmerId = document.getElementById('in-farmer-id').value;
+
+// मोबाईल नंबर फील्ड लिस्टमध्ये समाविष्ट केले आहे
+const fields = [
+{ label: decodeText("नाव"), val: nameHn, fontLabel: `bold ${26 * S}px ${FONT_DEVANAGARI}`, fontVal: `bold ${26 * S}px ${FONT_DEVANAGARI}` },
+{ label: "Name", val: nameEn, fontLabel: `bold ${25 * S}px ${FONT_SERIF}`, fontVal: `bold ${25 * S}px ${FONT_SERIF}` },
+{ label: "Gender", val: gender, fontLabel: `bold ${24 * S}px ${FONT_SERIF}`, fontVal: `bold ${24 * S}px ${FONT_SERIF}` },
+{ label: "DOB", val: dob, fontLabel: `bold ${24 * S}px ${FONT_SERIF}`, fontVal: `bold ${24 * S}px ${FONT_SERIF}` },
+{ label: "Area", val: areaType, fontLabel: `bold ${24 * S}px ${FONT_SERIF}`, fontVal: `bold ${24 * S}px ${FONT_SERIF}` },
+{ label: "Aadhaar", val: aadhaar, fontLabel: `bold ${24 * S}px ${FONT_SERIF}`, fontVal: `bold ${24 * S}px ${FONT_SERIF}` },
+{ label: "Mobile", val: mobile, fontLabel: `bold ${24 * S}px ${FONT_SERIF}`, fontVal: `bold ${24 * S}px ${FONT_SERIF}` }
+];
+
+fields.forEach(f => {
+ctx.fillStyle = "#000000";
+ctx.font = f.fontLabel;
+ctx.fillText(f.label, txLabel, ty);
+
+ctx.font = f.fontVal;
+ctx.fillText(f.val, txValue, ty);
+ty += lineGap;
+});
+
+try {
+const qx = 730 * S, qy = 280 * S, qw = 220 * S, qh = 220 * S;
+const qrCanvas = document.createElement('canvas');
+
+const qrDataText = `Farmer ID: ${farmerId}
+नाव (मराठी): ${nameHn}
+Name (English): ${nameEn}
+लिंग (Gender): ${gender}
+जन्म तारीख (DOB): ${dob}
+क्षेत्र (Area): ${areaType}
+आधार: ${aadhaar}
+मोबाईल: ${mobile}
+संपूर्ण पत्ता (Full Address): ${document.getElementById('in-address').value}
+Enrollment No: ${pdfExtraData.enrollmentNo || ''}
+Caste Category: ${pdfExtraData.casteCategory || ''}
+Age: ${pdfExtraData.age || ''}
+Identifier (English): ${pdfExtraData.identifierEn || ''}
+Identifier (Local): ${pdfExtraData.identifierLocal || ''}
+Email: ${pdfExtraData.email || ''}
+Address (Local): ${pdfExtraData.addressLocal || ''}
+Farmer Type: ${pdfExtraData.farmerType || ''}
+Occupation: ${pdfExtraData.occupation || ''}
+Caste Certificate: ${pdfExtraData.casteCertificate || ''}
+PAN: ${pdfExtraData.pan || ''}
+Minority Religion: ${pdfExtraData.minorityReligion || ''}
+KCC Number: ${pdfExtraData.kccNumber || ''}
+KCC Amount: ${pdfExtraData.kccAmount || ''}
+KCC Bank: ${pdfExtraData.kccBank || ''}
+Bank Name: ${pdfExtraData.bankName || ''}
+Branch Code: ${pdfExtraData.branchCode || ''}
+IFSC: ${pdfExtraData.ifsc || ''}
+Bank Account: ${pdfExtraData.accountNumber || ''}
+Disabilities: ${pdfExtraData.disabilities || ''}
+Consent Date: ${pdfExtraData.consentDate || ''}`;
+
+new QRious({
+element: qrCanvas,
+size: 440,
+value: qrDataText,
+level: 'H'
+});
+ctx.drawImage(qrCanvas, qx, qy, qw, qh);
+ctx.strokeStyle = "#000000";
+ctx.lineWidth = 1.5 * S;
+ctx.strokeRect(qx, qy, qw, qh);
+} catch (e) {
+console.warn("QR Error:", e);
+}
+
+ctx.fillStyle = "#044e1b";
+ctx.font = `900 ${42 * S}px ${FONT_SERIF}`;
+ctx.textAlign = "center";
+ctx.fillText(`Farmer ID : ${farmerId}`, w / 2, h - (90 * S));
+
+ctx.strokeStyle = "#b45309";
+ctx.lineWidth = 6 * S;
+ctx.beginPath();
+ctx.moveTo(10 * S, h - (68 * S));
+ctx.lineTo(w - (10 * S), h - (68 * S));
+ctx.stroke();
+
+ctx.fillStyle = "#000000";
+ctx.font = `bold ${30 * S}px ${FONT_SERIF}`;
+ctx.textAlign = "center";
+ctx.fillText("Maharashtra Farmer Registry", w / 2, h - (20 * S));
+
+ctx.restore();
+drawDottedCropBorder(ctx, w, h);
+}
+
+function renderBackCard() {
+const canvas = document.getElementById('canvas-back');
+if (!canvas) return;
+const ctx = canvas.getContext('2d');
+const w = canvas.width;
+const h = canvas.height;
+
+ctx.clearRect(0, 0, w, h);
+
+ctx.save();
+drawRoundedCardBorder(ctx, w, h, 28 * S);
+ctx.clip();
+
+ctx.fillStyle = "#ffffff";
+ctx.fillRect(0, 0, w, h);
+
+if (assets.bgBack) {
+ctx.save();
+ctx.globalAlpha = 0.28;
+ctx.drawImage(assets.bgBack, 0, 0, w, h);
+ctx.restore();
+}
+
+if (assets.agriLogo) ctx.drawImage(assets.agriLogo, 30 * S, 25 * S, 125 * S, 55 * S);
+if (assets.mhGovLogo) ctx.drawImage(assets.mhGovLogo, 885 * S, 15 * S, 75 * S, 75 * S);
+
+ctx.fillStyle = "#c2410c";
+ctx.font = `bold ${28 * S}px ${FONT_DEVANAGARI}`;
+ctx.textAlign = "center";
+ctx.fillText(decodeText("शेतीची माहित"), w / 2, 42 * S);
+
+ctx.fillStyle = "#044e1b";
+ctx.font = `800 ${34 * S}px ${FONT_SERIF}`;
+ctx.fillText("Information about agriculture", w / 2, 80 * S);
+
+ctx.strokeStyle = "#000000";
+ctx.lineWidth = 2.5 * S;
+ctx.beginPath();
+ctx.moveTo(10 * S, 105 * S);
+ctx.lineTo(w - (10 * S), 105 * S);
+ctx.stroke();
+
+ctx.save();
+ctx.translate(22 * S, 330 * S);
+ctx.rotate(-Math.PI / 2);
+ctx.fillStyle = "#000000";
+ctx.font = `bold ${22 * S}px ${FONT_SERIF}`;
+ctx.textAlign = "center";
+const downDate = document.getElementById('in-download-date').value;
+ctx.fillText(`Download Date : ${downDate}`, 0, 0);
+ctx.restore();
+
+const address = decodeText(document.getElementById('in-address').value);
+ctx.textAlign = "left";
+ctx.font = `bold ${26 * S}px ${FONT_SERIF}`;
+ctx.fillStyle = "#000000";
+ctx.fillText("Address:", 60 * S, 138 * S);
+
+ctx.font = `bold ${24 * S}px ${FONT_SERIF}`;
+ctx.fillText(address, 60 * S, 168 * S);
+
+const startX = 50 * S;
+let startY = 205 * S;
+const tableW = 910 * S;
+const rowH = 52 * S;
+
+ctx.strokeStyle = "#000000";
+ctx.lineWidth = 2 * S;
+
+const cols = [
+{ title: "State", width: 100 * S },
+{ title: "District", width: 140 * S },
+{ title: "Sub Dist", width: 150 * S },
+{ title: "Village", width: 180 * S },
+{ title: "S No. / S/S No.", width: 150 * S },
+{ title: "Khata -", width: 80 * S },
+{ title: "Area (Ha)", width: 110 * S }
+];
+
+ctx.fillStyle = "#a7f3d0";
+ctx.fillRect(startX, startY, tableW, rowH);
+ctx.strokeRect(startX, startY, tableW, rowH);
+
+ctx.font = `bold ${24 * S}px ${FONT_SERIF}`;
+ctx.fillStyle = "#064e3b";
+let curX = startX;
+
+cols.forEach((col) => {
+ctx.textAlign = "center";
+ctx.fillText(col.title, curX + (col.width / 2), startY + (33 * S));
+curX += col.width;
+});
+
+curX = startX;
+cols.forEach((col) => {
+ctx.strokeRect(curX, startY, col.width, rowH);
+curX += col.width;
+});
+
+startY += rowH;
+ctx.font = `bold ${24 * S}px ${FONT_SERIF}`;
+
+landData.forEach((row) => {
+const vals = [row.state, row.dist, row.subDist, row.village, [row.sno, row.ss].filter(v => String(v || "").trim()).join(" / "), "-", row.area];
+let cX = startX;
+
+vals.forEach((val, cIdx) => {
+ctx.fillStyle = "#ffffff";
+ctx.fillRect(cX, startY, cols[cIdx].width, rowH);
+ctx.strokeRect(cX, startY, cols[cIdx].width, rowH);
+
+ctx.textAlign = "center";
+ctx.fillStyle = "#000000";
+ctx.fillText(val || '-', cX + (cols[cIdx].width / 2), startY + (33 * S));
+cX += cols[cIdx].width;
+});
+startY += rowH;
+});
+
+ctx.fillStyle = "#b91c1c";
+ctx.font = `bold ${20 * S}px ${FONT_DEVANAGARI}`;
+ctx.textAlign = "center";
+ctx.fillText(decodeText("* टीप: हे कार्ड केवळ वैयक्तिक वापरासाठी आहे; हे सरकारी कार्ड नाही."), w / 2, 498 * S);
+
+ctx.font = `bold ${19 * S}px ${FONT_SERIF}`;
+ctx.fillText("This card is for personal use not for Govt. issue card.", w / 2, 524 * S);
+
+ctx.strokeStyle = "#b45309";
+ctx.lineWidth = 6 * S;
+ctx.beginPath();
+ctx.moveTo(10 * S, h - (68 * S));
+ctx.lineTo(w - (10 * S), h - (68 * S));
+ctx.stroke();
+
+ctx.fillStyle = "#000000";
+ctx.font = `900 ${25 * S}px ${FONT_AWESOME}`;
+ctx.textAlign = "left";
+ctx.fillText("\uf095", 50 * S, h - (20 * S));
+
+ctx.font = `bold ${26 * S}px ${FONT_SERIF}`;
+ctx.fillText("020 25712712", 85 * S, h - (20 * S));
+
+ctx.font = `900 ${25 * S}px ${FONT_AWESOME}`;
+ctx.textAlign = "right";
+ctx.fillText("\uf0ac", 650 * S, h - (20 * S));
+
+ctx.font = `bold ${26 * S}px ${FONT_SERIF}`;
+ctx.textAlign = "right";
+ctx.fillText("www.mhfr.agristack.gov.in", 960 * S, h - (20 * S));
+
+ctx.restore();
+drawDottedCropBorder(ctx, w, h);
+}
+
+/* =========================================================
+PDF AUTO-FILL ENGINE
+- Reads PDF with PDF.js
+- Uses embedded PDF text when available
+- Falls back to Tesseract OCR for scanned/image PDFs
+- Auto-fills existing form fields + land table
+========================================================= */
+
+let pdfExtraData = {
+enrollmentNo: "",
+casteCategory: "",
+age: "",
+identifierEn: "",
+identifierLocal: "",
+email: "",
+addressLocal: "",
+farmerType: "",
+occupation: "",
+casteCertificate: "",
+pan: "",
+minorityReligion: "",
+kccNumber: "",
+kccAmount: "",
+kccBank: "",
+bankName: "",
+branchCode: "",
+ifsc: "",
+accountNumber: "",
+disabilities: "",
+consentDate: ""
+};
+
+function setPDFStatus(message, progress = null, error = false) {
+const el = document.getElementById('pdf-status');
+const bar = document.getElementById('pdf-progress-bar');
+if (el) {
+el.textContent = message;
+el.style.color = error ? '#b91c1c' : '#5b21b6';
+}
+if (bar && progress !== null) {
+bar.style.width = Math.max(0, Math.min(100, progress)) + '%';
+}
+}
+
+function cleanOCRText(text) {
+return (text || "")
+.replace(/\r/g, "")
+.replace(/[\u00a0]/g, " ")
+.replace(/[ \t]+/g, " ")
+.replace(/\n{3,}/g, "\n\n")
+.trim();
+}
+
+function cleanEnglishName(value) {
+return String(value || "").replace(/[|¦]/g, "I").replace(/\s+/g, " ").replace(/^[^A-Za-z]+|[^A-Za-z.' -]+$/g, "").trim();
+}
+function getFarmerEnglishName() {
+const input = document.getElementById("in-name-en");
+return cleanEnglishName(input ? input.value : "") || "Farmer";
+}
+function safeFileName(value) {
+return cleanEnglishName(value).replace(/[^A-Za-z0-9]+/g, "_").replace(/^_+|_+$/g, "") || "Farmer";
+}
+
+function firstMatch(text, patterns) {
+for (const pattern of patterns) {
+const m = text.match(pattern);
+if (m && m[1]) return m[1].trim();
+}
+return "";
+}
+
+function normalizeDateForInput(value) {
+if (!value) return "";
+const s = String(value).trim();
+let m = s.match(/^(\d{4})[\/.\-](\d{1,2})[\/.\-](\d{1,2})$/);
+if (m) return `${m[1]}-${String(m[2]).padStart(2,'0')}-${String(m[3]).padStart(2,'0')}`;
+m = s.match(/(\d{1,2})[\/.\-](\d{1,2})[\/.\-](\d{4})/);
+if (!m) return "";
+return `${m[3]}-${String(m[2]).padStart(2, '0')}-${String(m[1]).padStart(2, '0')}`;
+}
+
+function normalizeDisplayDate(value) {
+if (!value) return "";
+const m = value.match(/(\d{1,2})[\/.\-](\d{1,2})[\/.\-](\d{4})/);
+return m ? `${String(m[1]).padStart(2,'0')}/${String(m[2]).padStart(2,'0')}/${m[3]}` : value;
+}
+
+function extractBetweenLabel(text, label, nextLabels) {
+const escaped = label.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+const next = nextLabels.map(x => x.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|');
+const re = new RegExp(escaped + '\\s*[:\\-]?\\s*(.*?)\\s*(?=' + next + '|$)', 'is');
+const m = text.match(re);
+return m ? m[1].replace(/\s+/g, ' ').trim() : "";
+}
+
+function parseFarmerPDF(textPages) {
+ const pages = (textPages || []).map(t => String(t || "").replace(/\u00a0/g," ").replace(/[ \t]+/g," ").replace(/\n+/g," ").trim());
+ const all = pages.join(" \n "), p1 = pages[0] || "", p2 = pages.slice(1).join(" ");
+ const data = {};
+ const pick = (patterns, text=all) => firstMatch(text, patterns);
+ data.enrollmentNo = pick([/(?:Farmer\s+enrollment\s+(?:number|no\.?)|Enrollment\s+(?:Number|No\.?))\s*[:\-]?\s*([A-Za-z0-9_\/\-]+)/i]);
+ data.farmerId = pick([/(?:Farmer\s*ID|Farmer\s*Id\s*Number)\s*[:\-]?\s*([0-9]{6,20})/i]);
+ data.nameEn = cleanEnglishName(pick([/(?:Farmer\s+Name\s+as\s+per\s+Aadhaar\s+in\s+English|Farmer\s+Name)\s*[:\-]?\s*(.+?)(?=\s+Farmer['’]?s?\s+Name\s+in\s+Local|\s+Gender\b|$)/i]));
+ data.nameLocal = pick([/Farmer['’]?s?\s+Name\s+in\s+Local\s+Language\s*[:\-]?\s*(.+?)(?=\s+Gender\b|$)/i]);
+ data.gender = pick([/\bGender\s*[:\-]?\s*(Female|Male|Other|स्त्री|पुरुष|महिला|इतर)\b/i]);
+ data.dob = pick([/(?:Date\s+of\s+Birth|DOB|Birth\s+Date)\s*[:\-]?\s*((?:\d{1,4})[\/.\-]\d{1,2}[\/.\-]\d{1,4})/i]);
+ data.casteCategory = pick([/Caste\s+Category\s*[:\-]?\s*([A-Za-z]+)/i]);
+ data.age = pick([/\bAge\s*[:\-]?\s*(\d{1,3})\b/i]);
+ data.identifierEn = extractBetweenLabel(all,"Identifier Name In English",["Identifier Name in Local Language","Mobile Number","Contact Details"]);
+ data.identifierLocal = extractBetweenLabel(all,"Identifier Name in Local Language",["Contact Details","Mobile Number","Address","Farmer Bank"]);
+ data.mobile = pick([/(?:Mobile\s+Number|Mobile|Phone)\s*[:\-]?\s*([6-9]\d{9})/i]);
+ data.email = pick([/(?:Email\s+Address|Email)\s*[:\-]?\s*([A-Za-z0-9._%+\-]+@[A-Za-z0-9.\-]+\.[A-Za-z]{2,})/i]);
+ data.addressEn = extractBetweenLabel(p2 || all,"Address In English",["Address In Local Language","Farmer type","Farmer Type","Land Ownership Details"]);
+ data.addressLocal = extractBetweenLabel(p2 || all,"Address In Local Language",["Farmer type","Farmer Type","Occupations","Land Ownership Details"]);
+ data.farmerType = pick([/Farmer\s+type\s*[:\-]?\s*(Rural|Urban|[A-Za-z]+)/i],p2 || all);
+ data.occupation = extractBetweenLabel(p2 || all,"Occupations",["Land Ownership Details","Annexure"]);
+ data.casteCertificate = extractBetweenLabel(all,"Farmer Caste Certificate Number/ID",["Farmer Pan Number","Minority Religion"]);
+ data.pan = extractBetweenLabel(all,"Farmer Pan Number",["Minority Religion","Kisan Credit Card Number"]);
+ data.minorityReligion = extractBetweenLabel(all,"Minority Religion",["Kisan Credit Card Number","Kisan Credit Card Amount"]);
+ data.kccNumber = extractBetweenLabel(all,"Kisan Credit Card Number (KCC)",["Kisan Credit Card Amount","Kisan Credit Card Bank Name"]);
+ data.kccAmount = extractBetweenLabel(all,"Kisan Credit Card Amount",["Kisan Credit Card Bank Name","Bank Name"]);
+ data.kccBank = extractBetweenLabel(all,"Kisan Credit Card Bank Name",["Bank Name","Bank Branch Code"]);
+ data.bankName = extractBetweenLabel(all,"Bank Name",["Bank Branch Code","IFSC Code"]);
+ data.branchCode = extractBetweenLabel(all,"Bank Branch Code",["IFSC Code","Bank Account Number"]);
+ data.ifsc = extractBetweenLabel(all,"IFSC Code",["Bank Account Number","Farmer Disabilities"]);
+ data.accountNumber = extractBetweenLabel(all,"Bank Account Number",["Farmer Disabilities"]);
+ data.disabilities = extractBetweenLabel(all,"Farmer Disabilities",["Consent Date","Date"]);
+ data.consentDate = pick([/(?:Consent\s+Date|Date)\s*[:\-]?\s*(\d{1,2}[\/.\-]\d{1,2}[\/.\-]\d{4})/i]);
+ for (const k of Object.keys(data)) if (typeof data[k] === "string") data[k] = data[k].replace(/\s{2,}/g," ").replace(/^[\s:;\-|]+|[\s:;\-|]+$/g,"").trim();
+ return data;
+}
+function setInputValue(id, value, trigger = true) {
+const el = document.getElementById(id);
+if (!el || value === undefined || value === null || value === "") return false;
+el.value = value;
+if (trigger) el.dispatchEvent(new Event('input', { bubbles: true }));
+return true;
+}
+
+function applyExtractedFarmerData(data) {
+let changed = 0;
+
+if (data.farmerId) changed += setInputValue('in-farmer-id', data.farmerId) ? 1 : 0;
+if (data.nameEn) changed += setInputValue('in-name-en', data.nameEn) ? 1 : 0;
+if (data.nameLocal) changed += setInputValue('in-name-hn', data.nameLocal) ? 1 : 0;
+if (data.mobile) changed += setInputValue('in-mobile', data.mobile) ? 1 : 0;
+
+if (data.gender) {
+const gender = /female|woman|स्त्री|महिला/i.test(data.gender) ? 'Female' : 'Male';
+const el = document.getElementById('in-gender');
+if (el) {
+el.value = gender;
+el.dispatchEvent(new Event('change', { bubbles: true }));
+changed++;
+}
+}
+
+if (data.dob) {
+const dob = normalizeDateForInput(data.dob);
+if (dob) {
+changed += setInputValue('in-dob', dob) ? 1 : 0;
+}
+}
+
+// The supplied card has Rural/Urban, while the registration PDF does not
+// explicitly provide that field. Keep the current value unless a clear
+// urban/rural value is present in the PDF.
+if (data.areaType) changed += setInputValue('in-area-type', data.areaType) ? 1 : 0;
+
+if (data.addressEn) changed += setInputValue('in-address', data.addressEn) ? 1 : 0;
+
+const consentDate = normalizeDisplayDate(data.consentDate);
+if (consentDate) {
+changed += setInputValue('in-approval-date', consentDate) ? 1 : 0;
+changed += setInputValue('in-download-date', consentDate) ? 1 : 0;
+}
+
+// Keep all additional PDF fields available to the QR and future use.
+pdfExtraData = {
+enrollmentNo: data.enrollmentNo || "",
+casteCategory: data.casteCategory || "",
+age: data.age || "",
+identifierEn: data.identifierEn || "",
+identifierLocal: data.identifierLocal || "",
+email: data.email || "",
+addressLocal: data.addressLocal || "",
+farmerType: data.farmerType || "",
+occupation: data.occupation || "",
+casteCertificate: data.casteCertificate || "",
+pan: data.pan || "",
+minorityReligion: data.minorityReligion || "",
+kccNumber: data.kccNumber || "",
+kccAmount: data.kccAmount || "",
+kccBank: data.kccBank || "",
+bankName: data.bankName || "",
+branchCode: data.branchCode || "",
+ifsc: data.ifsc || "",
+accountNumber: data.accountNumber || "",
+disabilities: data.disabilities || "",
+consentDate: data.consentDate || ""
+};
+
+if (data.farmerId || data.nameEn || data.nameLocal || data.mobile || data.addressEn) {
+renderCards();
+}
+
+return changed;
+}
+
+function parseLandFromOCR(text) {
+  // Isolated parser for Land Ownership Details only; other features remain untouched.
+  const raw = String(text || '').replace(/\u00a0/g, ' ');
+  const start = raw.search(/Land\s+Ownership\s+Details/i);
+  let section = start >= 0 ? raw.slice(start + 'Land Ownership Details'.length) : raw;
+  const end = section.search(/Consent\s+by\s+Farmer|Annexure/i);
+  if (end >= 0) section = section.slice(0, end);
+  const flat = section.replace(/MAHARA\s*[_|¦-]?\s*SHTRA/gi, ' MAHARASHTRA ')
+    .replace(/MAHARAS\s*HTRA/gi, ' MAHARASHTRA ')
+    .replace(/[|¦_]/g, ' ').replace(/[\t\r]+/g, ' ').replace(/\s+/g, ' ').trim();
+  const districts = 'DHULE|JALGAON|NASHIK|NANDURBAR|PUNE|AKOLA|BULDHANA|AMRAVATI|AHILYANAGAR|CHHATRAPATI\\s+SAMBHAJINAGAR';
+  const marker = new RegExp('\\b(' + districts + ')\\b', 'ig');
+  const matches = [...flat.matchAll(marker)];
+  const rows = [];
+  const clean = v => String(v || '').replace(/\s+/g, ' ').replace(/^[\s:;,]+|[\s:;,]+$/g, '').trim();
+  for (let i = 0; i < matches.length && rows.length < 5; i++) {
+    const m = matches[i];
+    const chunk = flat.slice(m.index, i + 1 < matches.length ? matches[i + 1].index : flat.length);
+    const row = chunk.match(new RegExp('^(' + districts + ')\\s+([A-Za-z][A-Za-z.\\-]{1,30})\\s+([A-Za-z][A-Za-z-]{2,})\\s+(\\d{1,6})\\s+([0-9]{1,4}(?:\\s*\\/\\s*[\\p{L}\\p{N}*-]+)?|[*-])[\\s\\S]{0,350}?(\\d{1,3}\\.\\d{3,6})', 'iu'));
+    if (!row) continue;
+    const subDist = clean(row[2]);
+    const villagePrefix = clean(row[3]);
+    const sno = clean(row[4]);
+    const ss = clean(row[5]).replace(/\s*\/\s*/g, '/');
+    const area = clean(row[6]);
+    // OCR can split a village cell across columns: "Chhadw" appears before S No.,
+    // while "el (korde)" appears after the area. Rejoin these fragments per row.
+    const suffix = chunk.match(/\b(el)\b[\s\S]{0,120}?\(\s*(korde)\s*\)/i) || chunk.match(/\b([A-Za-z]{1,12})\s*\(\s*([A-Za-z]{2,})\s*\)/i);
+    const village = suffix ? clean(villagePrefix + suffix[1] + ' (' + suffix[2] + ')') : villagePrefix;
+    rows.push({ state: 'MAHARASHTRA', dist: clean(m[1]), subDist, village, sno, ss, area });
+  }
+  return rows.slice(0, 5);
+}
+
+function applyLandFromPDF(textPages) {
+const p2 = (textPages || []).slice(1).join("\n") || (textPages || []).join("\n");
+const land = parseLandFromOCR(p2) ;
+
+// Targeted parsing for the supplied Farmer Registry layout.
+if (!land.length) {
+const m = p2.match(
+/(?:MAHARAS\s*HTRA|MAHARASHTRA|MH)\s+(DHULE|JALGAON|NASHIK|NANDURBAR|PUNE|AKOLA|BULDHANA|AMRAVATI|AHILYANAGAR)\s+([A-Za-z][A-Za-z.'()-]*)\s+([A-Za-z][A-Za-z.'() -]+?)\s+(\d{1,6})\s+([*\-0-9A-Za-z/ब-ह़-ॿ]+)[\s\S]{0,180}?(\d+\.\d{3,})/is
+);
+if (m) {
+land.push({
+state: 'MAHARASHTRA',
+dist: m[1] || '',
+subDist: m[2] || '',
+village: m[3] || '',
+sno: m[4] || '',
+ss: m[5] || '',
+area: m[6] || ''
+});
+}
+}
+
+if (land.length) {
+landData = land.slice(0, 5).map(r => ({
+state: r.state || 'MH',
+dist: r.dist || '',
+subDist: r.subDist || '',
+village: r.village || '',
+sno: r.sno || '',
+ss: r.ss || '',
+area: r.area || ''
+}));
+renderLandInputs();
+return true;
+}
+return false;
+}
+
+async function getPDFPageCanvas(page, scale = 1.7) {
+const viewport = page.getViewport({ scale });
+const canvas = document.createElement('canvas');
+canvas.width = Math.ceil(viewport.width);
+canvas.height = Math.ceil(viewport.height);
+const ctx = canvas.getContext('2d', { willReadFrequently: true });
+await page.render({ canvasContext: ctx, viewport }).promise;
+return canvas;
+}
+
+async function extractPDFTextLayer(page) {
+try {
+const content = await page.getTextContent();
+return content.items.map(item => item.str).join(' ').trim();
+} catch (e) {
+return "";
+}
+}
+
+async function cropFarmerPhotoFromFirstPage(canvas) {
+// The supplied Farmer Registration PDF places the photo at the top-right.
+// Crop proportionally so the feature also works if page resolution changes.
+try {
+const sx = Math.floor(canvas.width * 0.886);
+const sy = Math.floor(canvas.height * 0.199);
+const sw = Math.floor(canvas.width * 0.083);
+const sh = Math.floor(canvas.height * 0.148);
+
+const crop = document.createElement('canvas');
+crop.width = Math.max(120, sw);
+crop.height = Math.max(150, sh);
+const c = crop.getContext('2d');
+c.drawImage(canvas, sx, sy, sw, sh, 0, 0, crop.width, crop.height);
+
+const img = new Image();
+img.onload = () => {
+userPhotoImg = img;
+const preview = document.getElementById('form-photo-img');
+const icon = document.getElementById('form-photo-icon');
+if (preview) {
+preview.src = crop.toDataURL('image/jpeg', 0.95);
+preview.classList.remove('hidden');
+}
+if (icon) icon.classList.add('hidden');
+renderCards();
+};
+img.src = crop.toDataURL('image/jpeg', 0.95);
+} catch (e) {
+console.warn("PDF photo crop failed:", e);
+}
+}
+
+async function handlePDFUpload(e) {
+const file = e.target.files && e.target.files[0];
+if (!file) return;
+
+if (!/\.pdf$/i.test(file.name) && file.type !== 'application/pdf') {
+setPDFStatus("कृपया फक्त PDF file upload करा.", 0, true);
+return;
+}
+
+try {
+if (!window.pdfjsLib) throw new Error("PDF.js load झालेले नाही.");
+if (!window.Tesseract) throw new Error("OCR library load झालेले नाही.");
+
+setPDFStatus("PDF वाचत आहे...", 5);
+
+const buffer = await file.arrayBuffer();
+const pdf = await pdfjsLib.getDocument({ data: buffer }).promise;
+const totalPages = pdf.numPages;
+const textPages = [];
+let firstCanvas = null;
+let hasUsefulText = false;
+
+// First try native PDF text. This is faster for digital PDFs.
+for (let p = 1; p <= totalPages; p++) {
+const page = await pdf.getPage(p);
+const t = await extractPDFTextLayer(page);
+textPages.push(t);
+if (t && t.length > 80) hasUsefulText = true;
+setPDFStatus(`PDF text तपासत आहे... Page ${p}/${totalPages}`, 5 + Math.round((p / totalPages) * 15));
+}
+
+// Always render the first page for the farmer photo.
+firstCanvas = await getPDFPageCanvas(await pdf.getPage(1), 2.0);
+await cropFarmerPhotoFromFirstPage(firstCanvas);
+
+// OCR also runs when a PDF has only a partial text layer.
+const nativeData = parseFarmerPDF(textPages);
+const needsOCR = !hasUsefulText || !(nativeData.farmerId && nativeData.nameEn && nativeData.dob && nativeData.gender);
+if (needsOCR) {
+const worker = await Tesseract.createWorker("eng+mar", 1, {
+logger: m => {
+if (m && typeof m.progress === 'number') {
+const base = 20 + Math.round((m.progress || 0) * 65);
+setPDFStatus(`OCR चालू आहे... ${Math.round((m.progress || 0) * 100)}%`, base);
+}
+}
+});
+
+try {
+for (let p = 1; p <= totalPages; p++) {
+const page = await pdf.getPage(p);
+const canvas = p === 1 ? firstCanvas : await getPDFPageCanvas(page, 2.0);
+setPDFStatus(`OCR चालू आहे... Page ${p}/${totalPages}`, 20 + Math.round((p / totalPages) * 65));
+const result = await worker.recognize(canvas);
+const ocrText = result && result.data ? result.data.text : "";
+const nativeText = textPages[p - 1] || "";
+if (ocrText.trim().length > nativeText.trim().length || !nativeText.trim()) textPages[p - 1] = ocrText;
+}
+} finally {
+await worker.terminate();
+}
+}
+
+setPDFStatus("माहिती शोधून Form मध्ये भरत आहे...", 88);
+const data = parseFarmerPDF(textPages);
+const changed = applyExtractedFarmerData(data);
+const landChanged = applyLandFromPDF(textPages);
+
+// Keep OCR output accessible in QR without changing the visual card layout.
+window.lastPDFExtractedText = cleanOCRText(textPages.join("\n"));
+
+renderCards();
+
+const found = [];
+if (data.enrollmentNo) found.push("Enrollment");
+if (data.farmerId) found.push("Farmer ID");
+if (data.nameEn || data.nameLocal) found.push("Name");
+if (data.gender) found.push("Gender");
+if (data.dob) found.push("DOB");
+if (data.mobile) found.push("Mobile");
+if (data.addressEn) found.push("Address");
+if (landChanged) found.push("Land");
+
+if (found.length) {
+setPDFStatus(`✓ Auto Fill पूर्ण — ${found.join(", ")} भरले. OCR मधील इतर माहिती QR data मध्येही ठेवली आहे.`, 100);
+} else {
+setPDFStatus("PDF वाचला पण आवश्यक field ओळखता आले नाहीत. Clear/print PDF किंवा उच्च-गुणवत्तेचा scan वापरा.", 100, true);
+}
+
+} catch (err) {
+console.error("PDF Auto Fill Error:", err);
+setPDFStatus("PDF Auto Fill मध्ये error: " + (err.message || err), 0, true);
+}
+}
+
+function handlePhotoUpload(e) {
+const file = e.target.files[0];
+if (file) {
+const reader = new FileReader();
+reader.onload = function(evt) {
+const img = new Image();
+img.onload = function() {
+userPhotoImg = img;
+document.getElementById('form-photo-img').src = evt.target.result;
+document.getElementById('form-photo-img').classList.remove('hidden');
+document.getElementById('form-photo-icon').classList.add('hidden');
+renderCards();
+};
+img.src = evt.target.result;
+};
+reader.readAsDataURL(file);
+}
+}
+
+function renderLandInputs() {
+const container = document.getElementById('land-rows-container');
+if (!container) return;
+container.innerHTML = '';
+landData.forEach((item, index) => {
+const tr = document.createElement('tr');
+tr.className = "border-b border-purple-100 text-[10px] hover:bg-purple-50 transition-colors";
+tr.innerHTML = `
+<td class="p-1"><input type="text" value="${item.state}" oninput="updateLandData(${index}, 'state', this.value)" class="w-full bg-white border border-purple-200 p-1 rounded text-slate-800 focus:border-purple-500 outline-none"></td>
+<td class="p-1"><input type="text" value="${item.dist}" oninput="updateLandData(${index}, 'dist', this.value)" class="w-full bg-white border border-purple-200 p-1 rounded text-slate-800 focus:border-purple-500 outline-none"></td>
+<td class="p-1"><input type="text" value="${item.subDist}" oninput="updateLandData(${index}, 'subDist', this.value)" class="w-full bg-white border border-purple-200 p-1 rounded text-slate-800 focus:border-purple-500 outline-none"></td>
+<td class="p-1"><input type="text" value="${item.village}" oninput="updateLandData(${index}, 'village', this.value)" class="w-full bg-white border border-purple-200 p-1 rounded text-slate-800 focus:border-purple-500 outline-none"></td>
+<td class="p-1"><div class="flex gap-1"><input aria-label="S No." placeholder="S No." type="text" value="${item.sno}" oninput="updateLandData(${index}, 'sno', this.value)" class="w-1/2 min-w-0 bg-white border border-orange-200 p-1 rounded text-slate-800 outline-none"><span>/</span><input aria-label="S/S No." placeholder="S/S No." type="text" value="${item.ss}" oninput="updateLandData(${index}, 'ss', this.value)" class="w-1/2 min-w-0 bg-white border border-orange-200 p-1 rounded text-slate-800 outline-none"></div></td>
+<td class="p-1 text-center">-</td>
+<td class="p-1"><input type="text" value="${item.area}" oninput="updateLandData(${index}, 'area', this.value)" class="w-full bg-white border border-purple-200 p-1 rounded text-slate-800 focus:border-purple-500 outline-none"></td>
+<td class="p-1 text-center"><button onclick="removeLandRow(${index})" class="text-red-500 hover:text-red-700 font-bold bg-red-50 hover:bg-red-100 p-1.5 rounded transition-colors"><i class="fas fa-trash-alt"></i></button></td>
+`;
+container.appendChild(tr);
+});
+renderCards();
+}
+
+function addLandRow() {
+if (landData.length >= 5) { alert('जास्तीत जास्त 5 जमीन नोंदी जोडता येतील.'); return; }
+landData.push({ state: 'MH', dist: '', subDist: '', village: '', sno: '', ss: '', area: '' });
+renderLandInputs();
+}
+
+function removeLandRow(i) {
+landData.splice(i, 1);
+renderLandInputs();
+}
+
+function updateLandData(i, key, val) {
+landData[i][key] = val;
+renderCards();
+}
+
+function downloadImage(canvasId, filename) {
+const canvas = document.getElementById(canvasId);
+const link = document.createElement('a');
+const side = /back/i.test(filename) ? 'Back' : 'Front';
+link.download = safeFileName(getFarmerEnglishName()) + '_Farmer_Smart_Card_' + side + '_HD.png';
+link.href = canvas.toDataURL('image/png', 1.0);
+link.click();
+}
+
+async function preparePDFCanvas() {
+  try {
+    await document.fonts.load("700 28px 'Noto Sans Devanagari'");
+    await document.fonts.load("700 28px Poppins");
+    await document.fonts.ready;
+  } catch (e) {
+    console.warn("Font loading notice:", e);
+  }
+  renderCards();
+}
+
+// 4×6 inch PDF: front and back on ONE page, stacked vertically.
+async function download4x6PDF() {
+  const { jsPDF } = window.jspdf;
+  await preparePDFCanvas();
+  const pdf = new jsPDF({ orientation: 'portrait', unit: 'mm', format: [101.6, 152.4], compress: true });
+  const frontCanvas = document.getElementById('canvas-front');
+  const backCanvas = document.getElementById('canvas-back');
+  const cardW = 90;
+  const cardH = 58;
+  const gap = 4;
+  const x = (101.6 - cardW) / 2;
+  const totalH = cardH * 2 + gap;
+  const y = (152.4 - totalH) / 2;
+  pdf.addImage(frontCanvas.toDataURL('image/png', 1.0), 'PNG', x, y, cardW, cardH, undefined, 'FAST');
+  pdf.addImage(backCanvas.toDataURL('image/png', 1.0), 'PNG', x, y + cardH + gap, cardW, cardH, undefined, 'FAST');
+  pdf.save(safeFileName(getFarmerEnglishName()) + '_Farmer_Smart_Card_4x6.pdf');
+}
+
+// HD PDF: keep A4 paper and both card sides on the same page; only reduce top blank space.
+async function downloadPDF() {
+  const { jsPDF } = window.jspdf;
+  await preparePDFCanvas();
+  const pdf = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4', compress: true });
+  const frontCanvas = document.getElementById('canvas-front');
+  const backCanvas = document.getElementById('canvas-back');
+  const imgFront = frontCanvas.toDataURL('image/png', 1.0);
+  const imgBack = backCanvas.toDataURL('image/png', 1.0);
+  // Original A4 layout and card size retained; top position moved from 20 mm to 5 mm.
+  pdf.addImage(imgFront, 'PNG', 12, 5, 90, 58, undefined, 'FAST');
+  pdf.addImage(imgBack, 'PNG', 108, 5, 90, 58, undefined, 'FAST');
+  pdf.save(safeFileName(getFarmerEnglishName()) + '_Farmer_Smart_Card_HD.pdf');
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+const today = new Date();
+const dd = String(today.getDate()).padStart(2, '0');
+const mm = String(today.getMonth() + 1).padStart(2, '0');
+const yyyy = today.getFullYear();
+const formattedDate = dd + '/' + mm + '/' + yyyy;
+
+document.getElementById('in-approval-date').value = formattedDate;
+document.getElementById('in-download-date').value = formattedDate;
+
+renderLandInputs();
+document.fonts.ready.then(() => {
+renderCards();
+});
+loadAssets();
+});
+</script>
+</body>
+</html>
