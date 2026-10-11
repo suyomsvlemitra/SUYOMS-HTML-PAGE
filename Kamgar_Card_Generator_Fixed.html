@@ -21,7 +21,7 @@
 <div class="field"><label>नोंदणीचे ठिकाण</label><input id="place" placeholder="ठिकाण"></div>
 <div class="field"><label>जिल्हा</label><input id="district" placeholder="जिल्हा"></div>
 </div><p class="note">फॉर्ममध्ये भरलेली माहिती कार्ड आणि QR मध्ये आपोआप अपडेट होईल. फोटो फक्त कार्डवर राहील.</p>
-<div class="config">लोगो फॉर्ममध्ये नाहीत. कोडमधील <b>LEFT_LOGO_URL</b> आणि <b>RIGHT_LOGO_URL</b> येथे GitHub RAW URL द्या.</div></section>
+<div class="config">लोगो फॉर्ममध्ये नाहीत. कोडमधील <b>https://cdn.jsdelivr.net/gh/suyomsvlemitra/AI-Images@Suyoms-images/Kamgar.png</b> आणि <b>https://cdn.jsdelivr.net/gh/suyomsvlemitra/AI-Images@Suyoms-images/Shasan.png</b> येथे GitHub RAW URL द्या.</div></section>
 <section class="panel"><h2>◉ Live Card Preview (Front + Back)</h2><div class="size">कार्डचे अंतिम प्रिंट माप: 90 × 58 mm | Canvas: 1800 × 1160 px</div>
 <div class="preview"><h3>समोरील बाजू (Front)</h3><canvas id="front" width="1800" height="1160"></canvas></div>
 <div class="preview"><h3>मागील बाजू (Back)</h3><canvas id="back" width="1800" height="1160"></canvas></div>
@@ -30,8 +30,8 @@
 <script>
 'use strict';
 // GitHub RAW image URLs येथे एकदाच फिक्स करा:
-const LEFT_LOGO_URL = 'https://cdn.jsdelivr.net/gh/suyomsvlemitra/AI-Images@Suyoms-images/Kamgar.png';
-const RIGHT_LOGO_URL = 'https://cdn.jsdelivr.net/gh/suyomsvlemitra/AI-Images@Suyoms-images/Shasan.png';
+const LEFT_LOGO_URL = '';
+const RIGHT_LOGO_URL = '';
 const W=1800,H=1160, SCALE=2, CREAM='#fffaf4', YELLOW='#ffff78';
 let photo=null, logos={}, qrImage=null, renderSerial=0;
 const ids=['reg','date','name','gender','dob','mobile','work','place','district'];
