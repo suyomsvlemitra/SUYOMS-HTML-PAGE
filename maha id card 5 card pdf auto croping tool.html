@@ -292,7 +292,7 @@
                     <span class="bg-orange-500 text-white text-[10px] font-black px-2 py-0.5 rounded-full uppercase tracking-widest">v2.5 Dual-Size</span>
                 </div>
                 <h1 class="text-2xl md:text-4xl font-black text-neutral-900 mt-1 tracking-tight">
-                    Smart ID Card <span class="text-gradient">A4 & 4x6 Print Maker</span>
+                    MAHA ID Card <span class="text-gradient">A4 & 4x6 Print Maker</span>
                 </h1>
                 <p class="text-gray-600 text-xs md:text-sm font-semibold mt-0.5">
                     A4 शीटवर ५ कार्ड्स किंवा 4x6 फोटो पेपरवर १ कार्ड (वर Front, खाली Back) | ऑटो-क्रॉप | पासवर्ड PDF सपोर्ट
@@ -666,7 +666,7 @@
     <!-- FOOTER -->
     <footer class="bg-neutral-900 text-gray-400 text-xs py-4 border-t border-neutral-800 text-center no-print">
         <p class="font-medium">
-            Smart ID Card Print Maker | A4 (5 Cards) + 4x6 Photo Paper (Single Card) | 100% Client-Side Private & Fast
+            MAHA ID Card Print Maker | A4 (5 Cards) + 4x6 Photo Paper (Single Card) | 100% Client-Side Private & Fast
         </p>
     </footer>
 
@@ -1497,7 +1497,7 @@
             try {
                 const { PDFDocument } = window.PDFLib;
                 const pdfDoc = await PDFDocument.create();
-                pdfDoc.setTitle("Smart_5_ID_Cards_A4_Print");
+                pdfDoc.setTitle("MAHA_5_ID_Cards_A4_Print");
 
                 const mmToPt = 2.834645669;
                 const a4Width = 210 * mmToPt;   // 595.28 pt
@@ -1551,7 +1551,7 @@
 
                 const downloadLink = document.createElement('a');
                 downloadLink.href = blobUrl;
-                downloadLink.download = `Smart_5_Cards_A4_${new Date().toISOString().slice(0, 10)}.pdf`;
+                downloadLink.download = `MAHA_5_Cards_A4_${new Date().toISOString().slice(0, 10)}.pdf`;
                 document.body.appendChild(downloadLink);
                 downloadLink.click();
                 document.body.removeChild(downloadLink);
@@ -1593,7 +1593,7 @@
             try {
                 const { PDFDocument } = window.PDFLib;
                 const pdfDoc = await PDFDocument.create();
-                pdfDoc.setTitle("Smart_Single_ID_Card_4x6_Photo_Print");
+                pdfDoc.setTitle("MAHA_Single_ID_Card_4x6_Photo_Print");
 
                 // Standard 4x6 Inch in PostScript Points (72 pt / inch)
                 // Width = 4 in = 288.0 pt (101.6 mm)
@@ -1667,7 +1667,7 @@
 
                 const downloadLink = document.createElement('a');
                 downloadLink.href = blobUrl;
-                downloadLink.download = `Smart_ID_Card_4x6_${new Date().toISOString().slice(0, 10)}.pdf`;
+                downloadLink.download = `MAHA_ID_Card_4x6_${new Date().toISOString().slice(0, 10)}.pdf`;
                 document.body.appendChild(downloadLink);
                 downloadLink.click();
                 document.body.removeChild(downloadLink);
