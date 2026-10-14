@@ -160,6 +160,7 @@ PDF upload केल्यानंतर Farmer Details, Contact Details आण
 <div>
 <label class="text-black font-semibold">लिंग (Gender)*</label>
 <select id="in-gender" class="w-full p-2 bg-white border border-orange-300 rounded-lg text-slate-800 mt-1 focus:border-orange-500 focus:ring-2 focus:ring-orange-200 outline-none transition-all shadow-sm cursor-pointer" onchange="renderCards()">
+<option value="">-- निवडा / Blank --</option>
 <option value="Male" selected>Male</option>
 <option value="Female">Female</option>
 </select>
@@ -173,6 +174,7 @@ PDF upload केल्यानंतर Farmer Details, Contact Details आण
 <div>
 <label class="text-black font-semibold">क्षेत्र (Area)*</label>
 <select id="in-area-type" class="w-full p-2 bg-white border border-orange-300 rounded-lg text-slate-800 mt-1 focus:border-orange-500 focus:ring-2 focus:ring-orange-200 outline-none transition-all shadow-sm cursor-pointer" onchange="renderCards()">
+<option value="">-- निवडा / Blank --</option>
 <option value="Rural" selected>Rural (ग्रामीण)</option>
 <option value="Urban">Urban (शहरी)</option>
 </select>
@@ -442,7 +444,7 @@ ctx.fillStyle = "#000000";
 ctx.font = `bold ${22 * S}px ${FONT_SERIF}`;
 ctx.textAlign = "center";
 const appDate = document.getElementById('in-approval-date').value;
-ctx.fillText(`Approval Date : ${appDate}`, 0, 0);
+if (appDate) ctx.fillText(`Approval Date : ${appDate}`, 0, 0);
 ctx.restore();
 
 const px = 50 * S, py = 145 * S, pw = 220 * S, ph = 275 * S, borderRadius = 12 * S;
@@ -559,7 +561,7 @@ console.warn("QR Error:", e);
 ctx.fillStyle = "#044e1b";
 ctx.font = `900 ${42 * S}px ${FONT_SERIF}`;
 ctx.textAlign = "center";
-ctx.fillText(`Farmer ID : ${farmerId}`, w / 2, h - (90 * S));
+if (farmerId) ctx.fillText(`Farmer ID : ${farmerId}`, w / 2, h - (90 * S));
 
 ctx.strokeStyle = "#b45309";
 ctx.lineWidth = 6 * S;
@@ -626,10 +628,11 @@ ctx.fillStyle = "#000000";
 ctx.font = `bold ${22 * S}px ${FONT_SERIF}`;
 ctx.textAlign = "center";
 const downDate = document.getElementById('in-download-date').value;
-ctx.fillText(`Download Date : ${downDate}`, 0, 0);
+if (downDate) ctx.fillText(`Download Date : ${downDate}`, 0, 0);
 ctx.restore();
 
 const address = decodeText(document.getElementById('in-address').value);
+if (address) {
 ctx.textAlign = "left";
 ctx.font = `bold ${26 * S}px ${FONT_SERIF}`;
 ctx.fillStyle = "#000000";
@@ -637,6 +640,7 @@ ctx.fillText("Address:", 60 * S, 138 * S);
 
 ctx.font = `bold ${24 * S}px ${FONT_SERIF}`;
 ctx.fillText(address, 60 * S, 168 * S);
+}
 
 const startX = 50 * S;
 let startY = 205 * S;
@@ -679,8 +683,19 @@ curX += col.width;
 startY += rowH;
 ctx.font = `bold ${24 * S}px ${FONT_SERIF}`;
 
+if (!landData || landData.length === 0) {
+let cX = startX;
+cols.forEach((col, cIdx) => {
+ctx.fillStyle = "#ffffff";
+ctx.fillRect(cX, startY, col.width, rowH);
+ctx.strokeRect(cX, startY, col.width, rowH);
+cX += col.width;
+});
+startY += rowH;
+} else {
 landData.forEach((row) => {
-const vals = [row.state, row.dist, row.subDist, row.village, [row.sno, row.ss].filter(v => String(v || "").trim()).join(" / "), row.khata || "-", row.area];
+const snoPart = [row.sno, row.ss].filter(v => String(v || "").trim()).join(" / ");
+const vals = [row.state, row.dist, row.subDist, row.village, snoPart || "-", row.khata || "-", row.area || "-"];
 let cX = startX;
 
 vals.forEach((val, cIdx) => {
@@ -695,6 +710,7 @@ cX += cols[cIdx].width;
 });
 startY += rowH;
 });
+}
 
 ctx.fillStyle = "#b91c1c";
 ctx.font = `bold ${20 * S}px ${FONT_DEVANAGARI}`;
@@ -732,11 +748,12 @@ drawDottedCropBorder(ctx, w, h);
 }
 
 /* =========================================================
-PDF AUTO-FILL ENGINE
-- Reads PDF with PDF.js
-- Uses embedded PDF text when available
-- Falls back to Tesseract OCR for scanned/image PDFs
-- Auto-fills existing form fields + land table
+PDF AUTO-FILL ENGINE (HD & Multi-language Support: Marathi + Hindi + English)
+- PDF.js high-resolution rendering (3.0 scale for crisp HD photo & text)
+- Intelligent pixel-level farmer photo bounding box detection (eliminates cutoff & border bars)
+- Tesseract OCR supporting English, Marathi, and Hindi (eng+mar+hin)
+- Multi-language label & text recognition
+- Clean field clearing: where data is absent in PDF, leaves form inputs blank
 ========================================================= */
 
 let pdfExtraData = {
@@ -785,12 +802,26 @@ return (text || "")
 }
 
 function cleanEnglishName(value) {
-return String(value || "").replace(/[|¦]/g, "I").replace(/\s+/g, " ").replace(/^[^A-Za-z]+|[^A-Za-z.' -]+$/g, "").trim();
+return String(value || "")
+.replace(/[|¦]/g, "I")
+.replace(/\s+/g, " ")
+.replace(/^[^A-Za-z]+|[^A-Za-z.' -]+$/g, "")
+.trim();
 }
+
+function cleanDevanagariName(value) {
+return String(value || "")
+.replace(/[|¦_]/g, "")
+.replace(/\s+/g, " ")
+.replace(/^[^\u0900-\u097F]+|[^\u0900-\u097F. -]+$/g, "")
+.trim();
+}
+
 function getFarmerEnglishName() {
 const input = document.getElementById("in-name-en");
 return cleanEnglishName(input ? input.value : "") || "Farmer";
 }
+
 function safeFileName(value) {
 return cleanEnglishName(value).replace(/[^A-Za-z0-9]+/g, "_").replace(/^_+|_+$/g, "") || "Farmer";
 }
@@ -827,45 +858,241 @@ const m = text.match(re);
 return m ? m[1].replace(/\s+/g, ' ').trim() : "";
 }
 
-function parseFarmerPDF(textPages) {
- const pages = (textPages || []).map(t => String(t || "").replace(/\u00a0/g," ").replace(/[ \t]+/g," ").replace(/\n+/g," ").trim());
- const all = pages.join(" \n "), p1 = pages[0] || "", p2 = pages.slice(1).join(" ");
- const data = {};
- const pick = (patterns, text=all) => firstMatch(text, patterns);
- data.enrollmentNo = pick([/(?:Farmer\s+enrollment\s+(?:number|no\.?)|Enrollment\s+(?:Number|No\.?))\s*[:\-]?\s*([A-Za-z0-9_\/\-]+)/i]);
- data.farmerId = pick([/(?:Farmer\s*ID|Farmer\s*Id\s*Number)\s*[:\-]?\s*([0-9]{6,20})/i]);
- data.nameEn = cleanEnglishName(pick([/(?:Farmer\s+Name\s+as\s+per\s+Aadhaar\s+in\s+English|Farmer\s+Name)\s*[:\-]?\s*(.+?)(?=\s+Farmer['’]?s?\s+Name\s+in\s+Local|\s+Gender\b|$)/i]));
- data.nameLocal = pick([/Farmer['’]?s?\s+Name\s+in\s+Local\s+Language\s*[:\-]?\s*(.+?)(?=\s+Gender\b|$)/i]);
- data.gender = pick([/\bGender\s*[:\-]?\s*(Female|Male|Other|स्त्री|पुरुष|महिला|इतर)\b/i]);
- data.dob = pick([/(?:Date\s+of\s+Birth|DOB|Birth\s+Date)\s*[:\-]?\s*((?:\d{1,4})[\/.\-]\d{1,2}[\/.\-]\d{1,4})/i]);
- data.casteCategory = pick([/Caste\s+Category\s*[:\-]?\s*([A-Za-z]+)/i]);
- data.age = pick([/\bAge\s*[:\-]?\s*(\d{1,3})\b/i]);
- data.identifierEn = extractBetweenLabel(all,"Identifier Name In English",["Identifier Name in Local Language","Mobile Number","Contact Details"]);
- data.identifierLocal = extractBetweenLabel(all,"Identifier Name in Local Language",["Contact Details","Mobile Number","Address","Farmer Bank"]);
- data.mobile = pick([/(?:Mobile\s+Number|Mobile|Phone)\s*[:\-]?\s*([6-9]\d{9})/i]);
- data.email = pick([/(?:Email\s+Address|Email)\s*[:\-]?\s*([A-Za-z0-9._%+\-]+@[A-Za-z0-9.\-]+\.[A-Za-z]{2,})/i]);
- data.addressEn = extractBetweenLabel(p2 || all,"Address In English",["Address In Local Language","Farmer type","Farmer Type","Land Ownership Details"]);
- data.addressLocal = extractBetweenLabel(p2 || all,"Address In Local Language",["Farmer type","Farmer Type","Occupations","Land Ownership Details"]);
- data.farmerType = pick([/Farmer\s+type\s*[:\-]?\s*(Rural|Urban|[A-Za-z]+)/i],p2 || all);
- data.occupation = extractBetweenLabel(p2 || all,"Occupations",["Land Ownership Details","Annexure"]);
- data.casteCertificate = extractBetweenLabel(all,"Farmer Caste Certificate Number/ID",["Farmer Pan Number","Minority Religion"]);
- data.pan = extractBetweenLabel(all,"Farmer Pan Number",["Minority Religion","Kisan Credit Card Number"]);
- data.minorityReligion = extractBetweenLabel(all,"Minority Religion",["Kisan Credit Card Number","Kisan Credit Card Amount"]);
- data.kccNumber = extractBetweenLabel(all,"Kisan Credit Card Number (KCC)",["Kisan Credit Card Amount","Kisan Credit Card Bank Name"]);
- data.kccAmount = extractBetweenLabel(all,"Kisan Credit Card Amount",["Kisan Credit Card Bank Name","Bank Name"]);
- data.kccBank = extractBetweenLabel(all,"Kisan Credit Card Bank Name",["Bank Name","Bank Branch Code"]);
- data.bankName = extractBetweenLabel(all,"Bank Name",["Bank Branch Code","IFSC Code"]);
- data.branchCode = extractBetweenLabel(all,"Bank Branch Code",["IFSC Code","Bank Account Number"]);
- data.ifsc = extractBetweenLabel(all,"IFSC Code",["Bank Account Number","Farmer Disabilities"]);
- data.accountNumber = extractBetweenLabel(all,"Bank Account Number",["Farmer Disabilities"]);
- data.disabilities = extractBetweenLabel(all,"Farmer Disabilities",["Consent Date","Date"]);
- data.consentDate = pick([/(?:Consent\s+Date|Date)\s*[:\-]?\s*(\d{1,2}[\/.\-]\d{1,2}[\/.\-]\d{4})/i]);
- for (const k of Object.keys(data)) if (typeof data[k] === "string") data[k] = data[k].replace(/\s{2,}/g," ").replace(/^[\s:;\-|]+|[\s:;\-|]+$/g,"").trim();
- return data;
+/* =========================================================
+HD PHOTO BOUNDING BOX DETECTION
+Identifies exact bounds of the farmer photo in the top-right
+quadrant of the registration form, avoiding cutoff or borders.
+========================================================= */
+function detectFarmerPhotoBoundingBox(canvas) {
+const ctx = canvas.getContext('2d', { willReadFrequently: true });
+const w = canvas.width;
+const h = canvas.height;
+
+// Search in top-right quadrant
+const xStart = Math.floor(0.70 * w);
+const xEnd = Math.floor(0.99 * w);
+const yStart = Math.floor(0.05 * h);
+const yEnd = Math.floor(0.48 * h);
+const roiW = xEnd - xStart;
+const roiH = yEnd - yStart;
+
+const imgData = ctx.getImageData(xStart, yStart, roiW, roiH);
+const data = imgData.data;
+
+// Find dark banner ('Farmer Details' / शेतकरी तपशील) below photo
+let bannerRow = null;
+for (let r = roiH - 1; r >= 0; r--) {
+let darkCount = 0;
+const rowOffset = r * roiW * 4;
+for (let c = 0; c < roiW; c++) {
+const idx = rowOffset + c * 4;
+if (data[idx] < 110 && data[idx + 1] < 110 && data[idx + 2] < 110) {
+darkCount++;
 }
+}
+if (darkCount > roiW * 0.40) {
+bannerRow = r;
+break;
+}
+}
+
+const searchBottom = bannerRow !== null ? bannerRow : roiH;
+
+// Scan rows for photo pixels (non-white, non-transparent)
+const rowSpans = [];
+for (let r = 0; r < searchBottom; r++) {
+let firstC = -1, lastC = -1;
+const rowOffset = r * roiW * 4;
+for (let c = 0; c < roiW; c++) {
+const idx = rowOffset + c * 4;
+const rVal = data[idx], gVal = data[idx + 1], bVal = data[idx + 2];
+if (rVal < 235 || gVal < 235 || bVal < 235) {
+if (firstC === -1) firstC = c;
+lastC = c;
+}
+}
+const width = firstC !== -1 ? (lastC - firstC + 1) : 0;
+rowSpans.push({ r, firstC, lastC, width });
+}
+
+const minPhotoW = Math.floor(0.04 * w);
+const maxPhotoW = Math.floor(0.18 * w);
+
+let bestBlock = null;
+let curBlock = [];
+
+for (let i = 0; i < rowSpans.length; i++) {
+const item = rowSpans[i];
+if (item.width >= minPhotoW && item.width <= maxPhotoW) {
+curBlock.push(item);
+} else {
+if (curBlock.length > Math.floor(0.05 * h)) {
+if (!bestBlock || curBlock.length > bestBlock.length) {
+bestBlock = curBlock;
+}
+}
+curBlock = [];
+}
+}
+if (curBlock.length > Math.floor(0.05 * h)) {
+if (!bestBlock || curBlock.length > bestBlock.length) {
+bestBlock = curBlock;
+}
+}
+
+if (bestBlock && bestBlock.length > 0) {
+const topR = bestBlock[0].r;
+const bottomR = bestBlock[bestBlock.length - 1].r;
+const lefts = bestBlock.map(b => b.firstC).sort((a,b) => a - b);
+const rights = bestBlock.map(b => b.lastC).sort((a,b) => a - b);
+const leftC = lefts[Math.floor(lefts.length * 0.1)];
+const rightC = rights[Math.floor(rights.length * 0.9)];
+
+return {
+x: xStart + leftC,
+y: yStart + topR,
+width: rightC - leftC,
+height: bottomR - topR
+};
+}
+
+// Proportional fallback calibrated for Farmer Registration layout
+return {
+x: Math.floor(w * 0.899),
+y: Math.floor(h * 0.182),
+width: Math.floor(w * 0.073),
+height: Math.floor(h * 0.129)
+};
+}
+
+async function cropFarmerPhotoFromFirstPage(canvas) {
+try {
+const box = detectFarmerPhotoBoundingBox(canvas);
+const crop = document.createElement('canvas');
+crop.width = Math.max(300, box.width);
+crop.height = Math.max(375, box.height);
+const c = crop.getContext('2d');
+c.imageSmoothingEnabled = true;
+c.imageSmoothingQuality = 'high';
+c.drawImage(canvas, box.x, box.y, box.width, box.height, 0, 0, crop.width, crop.height);
+
+const dataUrl = crop.toDataURL('image/png', 1.0);
+const img = new Image();
+img.onload = () => {
+userPhotoImg = img;
+const preview = document.getElementById('form-photo-img');
+const icon = document.getElementById('form-photo-icon');
+if (preview) {
+preview.src = dataUrl;
+preview.classList.remove('hidden');
+}
+if (icon) icon.classList.add('hidden');
+renderCards();
+};
+img.src = dataUrl;
+} catch (e) {
+console.warn("PDF photo crop error:", e);
+}
+}
+
+function parseFarmerPDF(textPages) {
+const pages = (textPages || []).map(t => String(t || "").replace(/\u00a0/g," ").replace(/[ \t]+/g," ").replace(/\n+/g," \n ").trim());
+const all = pages.join(" \n "), p1 = pages[0] || "", p2 = pages.slice(1).join(" ");
+const data = {};
+const pick = (patterns, text=all) => firstMatch(text, patterns);
+
+// Enrollment Number (handles multi-line text & various labels)
+data.enrollmentNo = pick([
+/(?:Farmer\s+enrollment\s+(?:number|no\.?)|Enrollment\s+(?:Number|No\.?)|नोंदणी\s+क्रमांक|पंजीकरण\s+संख्या)[\s\S]{0,80}?(\b\d{1,3}[_-]\d{2,4}[_-]\d{2,6}[_-]\d{2,8}[_-]\d{2,8}\b|\b[0-9A-Z_]{12,35}\b)/i,
+/(?:Farmer\s+enrollment\s+(?:number|no\.?)|Enrollment\s+(?:Number|No\.?))\s*[:\-]?\s*([A-Za-z0-9_\/\-]+)/i
+]);
+
+// Farmer ID (English, Marathi & Hindi labels)
+data.farmerId = pick([
+/(?:Farmer\s*ID|Farmer\s*Id\s*Number|शेतकरी\s*आयडी|शेतकरी\s*क्रमांक|शेतकरी\s*ओळख\s*क्रमांक|किसान\s*आईडी)\s*[:\-]?\s*([0-9]{6,20})/i
+]);
+
+// Name in English
+data.nameEn = cleanEnglishName(pick([
+/(?:Farmer\s+Name\s+as\s+per\s+Aadhaar\s+in\s+English|Farmer\s+Name\s+in\s+English|Farmer\s+Name)\s*[:\-]?\s*(.+?)(?=\s+Farmer['’]?s?\s+Name\s+in\s+Local|\s+Gender\b|\s+Date\b|$)/i
+]));
+
+// Name in Local Language (Marathi / Hindi)
+let localName = pick([
+/Farmer['’]?s?\s+Name\s+in\s+Local\s+Language\s*[:\-]?\s*([\u0900-\u097F\s.]+?)(?=\s+Gender\b|\s+Date\b|$)/i,
+/(?:स्थानिक\s+भाषेतील\s+नाव|शेतकऱ्याचे\s+नाव|स्थानिक\s+भाषेतील\s+शेतकऱ्याचे\s+नाव|किसान\s+का\s+नाम)\s*[:\-]?\s*([\u0900-\u097F\s.]+?)(?=\s+लिंग|\s+जन्म|$)/i
+]);
+
+// If local name is not in the Farmer Details block, check Land Ownership Details table for Marathi Owner Name
+if (!localName) {
+const ownerM = (p2 || all).match(/(?:Owner\s+Name|मालकाचे\s+नाव)[\s\S]{0,120}?([\u0900-\u097F]{2,}(?:\s+[\u0900-\u097F]{2,}){1,4})/i);
+if (ownerM && ownerM[1]) {
+localName = cleanDevanagariName(ownerM[1]);
+}
+}
+data.nameLocal = cleanDevanagariName(localName);
+
+// Gender (English + Marathi/Hindi)
+data.gender = pick([
+/\b(?:Gender|लिंग)\s*[:\-]?\s*(Female|Male|Other|स्त्री|पुरुष|महिला|इतर)\b/i
+]);
+
+// Date of Birth (English + Marathi/Hindi)
+data.dob = pick([
+/(?:Date\s+of\s+Birth|DOB|Birth\s+Date|जन्म\s+तारीख|जन्मतारीख|जन्म\s+दिनांक)\s*[:\-]?\s*((?:\d{1,4})[\/.\-]\d{1,2}[\/.\-]\d{1,4})/i
+]);
+
+data.casteCategory = pick([/(?:Caste\s+Category|प्रवर्ग|जात)\s*[:\-]?\s*([A-Za-z\u0900-\u097F]+)/i]);
+data.age = pick([/\b(?:Age|वय)\s*[:\-]?\s*(\d{1,3})\b/i]);
+
+data.identifierEn = extractBetweenLabel(all, "Identifier Name In English", ["Identifier Name in Local Language", "Mobile Number", "Contact Details"]);
+data.identifierLocal = extractBetweenLabel(all, "Identifier Name in Local Language", ["Contact Details", "Mobile Number", "Address", "Farmer Bank"]);
+
+// Mobile Number (English + Marathi)
+data.mobile = pick([
+/(?:Mobile\s+Number|Mobile|Phone|मोबाईल\s+नंबर|मोबाईल|दूरध्वनी)\s*[:\-]?\s*([6-9]\d{9})/i
+]);
+
+// Aadhaar Number (if present in PDF)
+data.aadhaar = pick([
+/(?:Aadhaar\s+(?:Number|No\.?)|UID|आधार\s*क्रमांक|आधार\s*नंबर)\s*[:\-]?\s*(\d{4}\s*\d{4}\s*\d{4}|\d{12})/i
+]);
+
+data.email = pick([/(?:Email\s+Address|Email|ईमेल)\s*[:\-]?\s*([A-Za-z0-9._%+\-]+@[A-Za-z0-9.\-]+\.[A-Za-z]{2,})/i]);
+data.addressEn = extractBetweenLabel(p2 || all, "Address In English", ["Address In Local Language", "Farmer type", "Farmer Type", "Land Ownership Details"]);
+data.addressLocal = extractBetweenLabel(p2 || all, "Address In Local Language", ["Farmer type", "Farmer Type", "Occupations", "Land Ownership Details"]);
+
+data.farmerType = pick([/(?:Farmer\s+type|शेतकरी\s+प्रकार)\s*[:\-]?\s*(Rural|Urban|[A-Za-z\u0900-\u097F]+)/i], p2 || all);
+data.areaType = pick([/\b(?:Area|क्षेत्र)\s*[:\-]?\s*(Rural|Urban|ग्रामीण|शहरी)\b/i]);
+
+data.occupation = extractBetweenLabel(p2 || all, "Occupations", ["Land Ownership Details", "Annexure"]);
+data.casteCertificate = extractBetweenLabel(all, "Farmer Caste Certificate Number/ID", ["Farmer Pan Number", "Minority Religion"]);
+data.pan = extractBetweenLabel(all, "Farmer Pan Number", ["Minority Religion", "Kisan Credit Card Number"]);
+data.minorityReligion = extractBetweenLabel(all, "Minority Religion", ["Kisan Credit Card Number", "Kisan Credit Card Amount"]);
+data.kccNumber = extractBetweenLabel(all, "Kisan Credit Card Number (KCC)", ["Kisan Credit Card Amount", "Kisan Credit Card Bank Name"]);
+data.kccAmount = extractBetweenLabel(all, "Kisan Credit Card Amount", ["Kisan Credit Card Bank Name", "Bank Name"]);
+data.kccBank = extractBetweenLabel(all, "Kisan Credit Card Bank Name", ["Bank Name", "Bank Branch Code"]);
+data.bankName = extractBetweenLabel(all, "Bank Name", ["Bank Branch Code", "IFSC Code"]);
+data.branchCode = extractBetweenLabel(all, "Bank Branch Code", ["IFSC Code", "Bank Account Number"]);
+data.ifsc = extractBetweenLabel(all, "IFSC Code", ["Bank Account Number", "Farmer Disabilities"]);
+data.accountNumber = extractBetweenLabel(all, "Bank Account Number", ["Farmer Disabilities"]);
+data.disabilities = extractBetweenLabel(all, "Farmer Disabilities", ["Consent Date", "Date"]);
+
+// Approval / Consent Date
+data.consentDate = pick([/(?:Consent\s+Date|Date|दिनांक|तारीख)\s*[:\-]?\s*(\d{1,2}[\/.\-]\d{1,2}[\/.\-]\d{4})/i]);
+
+for (const k of Object.keys(data)) {
+if (typeof data[k] === "string") {
+data[k] = data[k].replace(/\s{2,}/g, " ").replace(/^[\s:;\-|]+|[\s:;\-|]+$/g, "").trim();
+}
+}
+return data;
+}
+
+// Fixed setInputValue: allows empty string so missing PDF fields can be cleanly blanked out
 function setInputValue(id, value, trigger = true) {
 const el = document.getElementById(id);
-if (!el || value === undefined || value === null || value === "") return false;
+if (!el || value === undefined || value === null) return false;
 el.value = value;
 if (trigger) el.dispatchEvent(new Event('input', { bubbles: true }));
 return true;
@@ -874,42 +1101,51 @@ return true;
 function applyExtractedFarmerData(data) {
 let changed = 0;
 
-if (data.farmerId) changed += setInputValue('in-farmer-id', data.farmerId) ? 1 : 0;
-if (data.nameEn) changed += setInputValue('in-name-en', data.nameEn) ? 1 : 0;
-if (data.nameLocal) changed += setInputValue('in-name-hn', data.nameLocal) ? 1 : 0;
-if (data.mobile) changed += setInputValue('in-mobile', data.mobile) ? 1 : 0;
-
-if (data.gender) {
-const gender = /female|woman|स्त्री|महिला/i.test(data.gender) ? 'Female' : 'Male';
-const el = document.getElementById('in-gender');
-if (el) {
-el.value = gender;
-el.dispatchEvent(new Event('change', { bubbles: true }));
-changed++;
-}
-}
+// "Jya Thikani Data Add Nasel PDF Madhe Ti Jaga form madhe Blank Soda."
+// Set extracted data, and leave empty if absent in PDF
+setInputValue('in-farmer-id', data.farmerId || '');
+setInputValue('in-name-en', data.nameEn || '');
+setInputValue('in-name-hn', data.nameLocal || '');
+setInputValue('in-mobile', data.mobile || '');
+setInputValue('in-aadhaar', data.aadhaar || '');
+setInputValue('in-address', data.addressEn || data.addressLocal || '');
 
 if (data.dob) {
 const dob = normalizeDateForInput(data.dob);
-if (dob) {
-changed += setInputValue('in-dob', dob) ? 1 : 0;
-}
+setInputValue('in-dob', dob || '');
+} else {
+setInputValue('in-dob', '');
 }
 
-// The supplied card has Rural/Urban, while the registration PDF does not
-// explicitly provide that field. Keep the current value unless a clear
-// urban/rural value is present in the PDF.
-if (data.areaType) changed += setInputValue('in-area-type', data.areaType) ? 1 : 0;
+const genderEl = document.getElementById('in-gender');
+if (genderEl) {
+if (data.gender) {
+genderEl.value = /female|woman|स्त्री|महिला/i.test(data.gender) ? 'Female' : 'Male';
+} else {
+genderEl.value = '';
+}
+genderEl.dispatchEvent(new Event('change', { bubbles: true }));
+}
 
-if (data.addressEn) changed += setInputValue('in-address', data.addressEn) ? 1 : 0;
+const areaEl = document.getElementById('in-area-type');
+if (areaEl) {
+if (data.areaType) {
+areaEl.value = /urban|शहरी/i.test(data.areaType) ? 'Urban' : 'Rural';
+} else {
+areaEl.value = '';
+}
+areaEl.dispatchEvent(new Event('change', { bubbles: true }));
+}
 
 const consentDate = normalizeDisplayDate(data.consentDate);
 if (consentDate) {
-changed += setInputValue('in-approval-date', consentDate) ? 1 : 0;
-changed += setInputValue('in-download-date', consentDate) ? 1 : 0;
+setInputValue('in-approval-date', consentDate);
+setInputValue('in-download-date', consentDate);
+} else {
+setInputValue('in-approval-date', '');
+setInputValue('in-download-date', '');
 }
 
-// Keep all additional PDF fields available to the QR and future use.
 pdfExtraData = {
 enrollmentNo: data.enrollmentNo || "",
 casteCategory: data.casteCategory || "",
@@ -934,60 +1170,77 @@ disabilities: data.disabilities || "",
 consentDate: data.consentDate || ""
 };
 
-if (data.farmerId || data.nameEn || data.nameLocal || data.mobile || data.addressEn) {
 renderCards();
-}
-
-return changed;
+return 1;
 }
 
 function parseLandFromOCR(text) {
-  // Isolated parser for Land Ownership Details only; other features remain untouched.
-  const raw = String(text || '').replace(/\u00a0/g, ' ');
-  const start = raw.search(/Land\s+Ownership\s+Details/i);
-  let section = start >= 0 ? raw.slice(start + 'Land Ownership Details'.length) : raw;
-  const end = section.search(/Consent\s+by\s+Farmer|Annexure/i);
-  if (end >= 0) section = section.slice(0, end);
-  const flat = section.replace(/MAHARA\s*[_|¦-]?\s*SHTRA/gi, ' MAHARASHTRA ')
-    .replace(/MAHARAS\s*HTRA/gi, ' MAHARASHTRA ')
-    .replace(/[|¦_]/g, ' ').replace(/[\t\r]+/g, ' ').replace(/\s+/g, ' ').trim();
-  const districts = 'DHULE|JALGAON|NASHIK|NANDURBAR|PUNE|AKOLA|BULDHANA|AMRAVATI|AHILYANAGAR|CHHATRAPATI\\s+SAMBHAJINAGAR';
-  const marker = new RegExp('\\b(' + districts + ')\\b', 'ig');
-  const matches = [...flat.matchAll(marker)];
-  const rows = [];
-  const clean = v => String(v || '').replace(/\s+/g, ' ').replace(/^[\s:;,]+|[\s:;,]+$/g, '').trim();
-  for (let i = 0; i < matches.length && rows.length < 5; i++) {
-    const m = matches[i];
-    const chunk = flat.slice(m.index, i + 1 < matches.length ? matches[i + 1].index : flat.length);
-    const row = chunk.match(new RegExp('^(' + districts + ')\\s+([A-Za-z][A-Za-z.\\-]{1,30})\\s+([A-Za-z][A-Za-z-]{2,})\\s+(\\d{1,6})\\s+([0-9]{1,4}(?:\\s*\\/\\s*[\\p{L}\\p{N}*-]+)?|[*-])[\\s\\S]{0,350}?(\\d{1,3}\\.\\d{3,6})', 'iu'));
-    if (!row) continue;
-    const subDist = clean(row[2]);
-    const villagePrefix = clean(row[3]);
-    const sno = clean(row[4]);
-    const ss = clean(row[5]).replace(/\s*\/\s*/g, '/');
-    const area = clean(row[6]);
-    // OCR can split a village cell across columns: "Chhadw" appears before S No.,
-    // while "el (korde)" appears after the area. Rejoin these fragments per row.
-    const suffix = chunk.match(/\b(el)\b[\s\S]{0,120}?\(\s*(korde)\s*\)/i) || chunk.match(/\b([A-Za-z]{1,12})\s*\(\s*([A-Za-z]{2,})\s*\)/i);
-    const village = suffix ? clean(villagePrefix + suffix[1] + ' (' + suffix[2] + ')') : villagePrefix;
-    rows.push({ state: 'MAHARASHTRA', dist: clean(m[1]), subDist, village, sno, ss, area });
-  }
-  return rows.slice(0, 5);
+const raw = String(text || '').replace(/\u00a0/g, ' ');
+const start = raw.search(/Land\s+Ownership\s+Details|जमीन\s+धारणा\s+तपशील/i);
+let section = start >= 0 ? raw.slice(start) : raw;
+const end = section.search(/Consent\s+by\s+Farmer|Annexure|शेतकऱ्याचे\s+सहमतीपत्र/i);
+if (end >= 0) section = section.slice(0, end);
+
+const flat = section
+.replace(/MAHARA\s*[_|¦-]?\s*SHTRA/gi, ' MAHARASHTRA ')
+.replace(/MAHARAS\s*HTRA/gi, ' MAHARASHTRA ')
+.replace(/NANDUR\s*BAR/gi, 'NANDURBAR')
+.replace(/[|¦_]/g, ' ')
+.replace(/[\t\r\n]+/g, ' ')
+.replace(/\s+/g, ' ')
+.trim();
+
+// Support all 36 Maharashtra districts in both English & Marathi
+const districts = [
+'AHMEDNAGAR', 'AHILYANAGAR', 'AKOLA', 'AMRAVATI', 'AURANGABAD', 'CHHATRAPATI\\s+SAMBHAJINAGAR',
+'BEED', 'BHANDARA', 'BULDHANA', 'CHANDRAPUR', 'DHULE', 'GADCHIROLI', 'GONDIA', 'HINGOLI',
+'JALGAON', 'JALNA', 'KOLHAPUR', 'LATUR', 'MUMBAI(?:\\s+CITY|\\s+SUBURBAN)?',
+'NAGPUR', 'NANDED', 'NANDUR(?:BAR)?', 'NASHIK', 'OSMANABAD', 'DHARASHIV', 'PALGHAR', 'PARBHANI',
+'PUNE', 'RAIGAD', 'RATNAGIRI', 'SANGLI', 'SATARA', 'SINDHUDURG', 'SOLAPUR', 'THANE', 'WARDHA',
+'WASHIM', 'YAVATMAL',
+'अहमदनगर', 'अहिल्यानगर', 'अकोला', 'अमरावती', 'औरंगाबाद', 'छत्रपती\\s+संभाजीनगर',
+'बीड', 'भंडारा', 'बुलढाणा', 'चंद्रपूर', 'धुळे', 'गडचिरोली', 'गोंदिया', 'हिंगोली',
+'जळगाव', 'जालना', 'कोल्हापूर', 'लातूर', 'मुंबई(?:\\s+शहर|\\s+उपनगर)?', 'नागपूर', 'नांदेड', 'नंदुरबार',
+'नाशिक', 'उस्मानाबाद', 'धाराशिव', 'पालघर', 'परभणी', 'पुणे', 'रायगड', 'रत्नागिरी',
+'सांगली', 'सातारा', 'सिंधुदुर्ग', 'सोलापूर', 'ठाणे', 'वर्धा', 'वाशिम', 'यवतमाळ'
+].join('|');
+
+const marker = new RegExp('\\b(' + districts + ')\\b', 'ig');
+const matches = [...flat.matchAll(marker)];
+const rows = [];
+const clean = v => String(v || '').replace(/\s+/g, ' ').replace(/^[\s:;,]+|[\s:;,]+$/g, '').trim();
+
+for (let i = 0; i < matches.length && rows.length < 5; i++) {
+const m = matches[i];
+const chunk = flat.slice(m.index, i + 1 < matches.length ? matches[i + 1].index : flat.length);
+const row = chunk.match(new RegExp('^(' + districts + ')\\s+([A-Za-z\\u0900-\\u097F][A-Za-z\\u0900-\\u097F.\\-]{1,30})\\s+([A-Za-z\\u0900-\\u097F][A-Za-z\\u0900-\\u097F.() -]+?)\\s+(\\d{1,6})\\s+([0-9]{1,4}(?:\\s*\\/\\s*[\\p{L}\\p{N}*-]+)?|[*-])[\\s\\S]{0,350}?(\\d{1,3}\\.\\d{3,6})', 'iu'));
+if (!row) continue;
+let dist = clean(m[1]).toUpperCase();
+if (dist === 'NANDUR') dist = 'NANDURBAR';
+const subDist = clean(row[2]);
+const village = clean(row[3]);
+const sno = clean(row[4]);
+const ss = clean(row[5]).replace(/\s*\/\s*/g, '/');
+const area = clean(row[6]);
+rows.push({ state: 'MAHARASHTRA', dist, subDist, village, sno, ss, area });
+}
+return rows.slice(0, 5);
 }
 
 function applyLandFromPDF(textPages) {
-const p2 = (textPages || []).slice(1).join("\n") || (textPages || []).join("\n");
-const land = parseLandFromOCR(p2) ;
+const allText = (textPages || []).join("\n");
+let land = parseLandFromOCR(allText);
 
-// Targeted parsing for the supplied Farmer Registry layout.
 if (!land.length) {
-const m = p2.match(
-/(?:MAHARAS\s*HTRA|MAHARASHTRA|MH)\s+(DHULE|JALGAON|NASHIK|NANDURBAR|PUNE|AKOLA|BULDHANA|AMRAVATI|AHILYANAGAR)\s+([A-Za-z][A-Za-z.'()-]*)\s+([A-Za-z][A-Za-z.'() -]+?)\s+(\d{1,6})\s+([*\-0-9A-Za-z/ब-ह़-ॿ]+)[\s\S]{0,180}?(\d+\.\d{3,})/is
+const m = allText.match(
+/(?:MAHARAS\s*HTRA|MAHARASHTRA|MH)\s+(DHULE|JALGAON|NASHIK|NANDUR(?:BAR)?|PUNE|AKOLA|BULDHANA|AMRAVATI|AHILYANAGAR)\s+([A-Za-z][A-Za-z.'()-]*)\s+([A-Za-z][A-Za-z.'() -]+?)\s+(\d{1,6})\s+([*\-0-9A-Za-z/ब-ह़-ॿ]+)[\s\S]{0,180}?(\d+\.\d{3,})/is
 );
 if (m) {
+let d = m[1] || '';
+if (d.toUpperCase() === 'NANDUR') d = 'NANDURBAR';
 land.push({
 state: 'MAHARASHTRA',
-dist: m[1] || '',
+dist: d,
 subDist: m[2] || '',
 village: m[3] || '',
 sno: m[4] || '',
@@ -1010,11 +1263,15 @@ area: r.area || ''
 }));
 renderLandInputs();
 return true;
-}
+} else {
+// Where data is absent in PDF, leave land table blank
+landData = [];
+renderLandInputs();
 return false;
 }
+}
 
-async function getPDFPageCanvas(page, scale = 1.7) {
+async function getPDFPageCanvas(page, scale = 3.0) {
 const viewport = page.getViewport({ scale });
 const canvas = document.createElement('canvas');
 canvas.width = Math.ceil(viewport.width);
@@ -1027,42 +1284,19 @@ return canvas;
 async function extractPDFTextLayer(page) {
 try {
 const content = await page.getTextContent();
-return content.items.map(item => item.str).join(' ').trim();
+let lastY, text = "";
+for (const item of content.items) {
+if (lastY !== undefined && Math.abs(item.transform[5] - lastY) > 5) {
+text += "\n";
+} else if (text && !text.endsWith(" ")) {
+text += " ";
+}
+text += item.str;
+lastY = item.transform[5];
+}
+return text.trim();
 } catch (e) {
 return "";
-}
-}
-
-async function cropFarmerPhotoFromFirstPage(canvas) {
-// The supplied Farmer Registration PDF places the photo at the top-right.
-// Crop proportionally so the feature also works if page resolution changes.
-try {
-const sx = Math.floor(canvas.width * 0.886);
-const sy = Math.floor(canvas.height * 0.199);
-const sw = Math.floor(canvas.width * 0.083);
-const sh = Math.floor(canvas.height * 0.148);
-
-const crop = document.createElement('canvas');
-crop.width = Math.max(120, sw);
-crop.height = Math.max(150, sh);
-const c = crop.getContext('2d');
-c.drawImage(canvas, sx, sy, sw, sh, 0, 0, crop.width, crop.height);
-
-const img = new Image();
-img.onload = () => {
-userPhotoImg = img;
-const preview = document.getElementById('form-photo-img');
-const icon = document.getElementById('form-photo-icon');
-if (preview) {
-preview.src = crop.toDataURL('image/jpeg', 0.95);
-preview.classList.remove('hidden');
-}
-if (icon) icon.classList.add('hidden');
-renderCards();
-};
-img.src = crop.toDataURL('image/jpeg', 0.95);
-} catch (e) {
-console.warn("PDF photo crop failed:", e);
 }
 }
 
@@ -1088,76 +1322,117 @@ const textPages = [];
 let firstCanvas = null;
 let hasUsefulText = false;
 
-// First try native PDF text. This is faster for digital PDFs.
+// 1. Try native PDF text extraction first
 for (let p = 1; p <= totalPages; p++) {
 const page = await pdf.getPage(p);
 const t = await extractPDFTextLayer(page);
 textPages.push(t);
 if (t && t.length > 80) hasUsefulText = true;
-setPDFStatus(`PDF text तपासत आहे... Page ${p}/${totalPages}`, 5 + Math.round((p / totalPages) * 15));
+setPDFStatus(`PDF तपासत आहे... Page ${p}/${totalPages}`, 5 + Math.round((p / totalPages) * 15));
 }
 
-// Always render the first page for the farmer photo.
-firstCanvas = await getPDFPageCanvas(await pdf.getPage(1), 2.0);
+// 2. High-Resolution (HD 3.0x scale) render for photo extraction
+setPDFStatus("शेतकऱ्याचा HD फोटो शोधत आहे...", 22);
+firstCanvas = await getPDFPageCanvas(await pdf.getPage(1), 3.0);
 await cropFarmerPhotoFromFirstPage(firstCanvas);
 
-// OCR also runs when a PDF has only a partial text layer.
+// 3. OCR execution if scanned / image-based PDF
 const nativeData = parseFarmerPDF(textPages);
 const needsOCR = !hasUsefulText || !(nativeData.farmerId && nativeData.nameEn && nativeData.dob && nativeData.gender);
+
 if (needsOCR) {
-const worker = await Tesseract.createWorker("eng+mar", 1, {
+setPDFStatus("OCR इंजिन सुरू करत आहे (English + Marathi + Hindi)...", 28);
+let worker = null;
+try {
+worker = await Tesseract.createWorker(['eng', 'mar', 'hin'], 1, {
 logger: m => {
 if (m && typeof m.progress === 'number') {
-const base = 20 + Math.round((m.progress || 0) * 65);
+const base = 30 + Math.round((m.progress || 0) * 55);
 setPDFStatus(`OCR चालू आहे... ${Math.round((m.progress || 0) * 100)}%`, base);
 }
 }
 });
+} catch (errLang) {
+console.warn("eng+mar+hin load failed, falling back to eng+mar:", errLang);
+try {
+worker = await Tesseract.createWorker(['eng', 'mar'], 1, {
+logger: m => {
+if (m && typeof m.progress === 'number') {
+const base = 30 + Math.round((m.progress || 0) * 55);
+setPDFStatus(`OCR चालू आहे... ${Math.round((m.progress || 0) * 100)}%`, base);
+}
+}
+});
+} catch (errLang2) {
+worker = await Tesseract.createWorker('eng', 1, {});
+}
+}
 
 try {
 for (let p = 1; p <= totalPages; p++) {
 const page = await pdf.getPage(p);
-const canvas = p === 1 ? firstCanvas : await getPDFPageCanvas(page, 2.0);
-setPDFStatus(`OCR चालू आहे... Page ${p}/${totalPages}`, 20 + Math.round((p / totalPages) * 65));
+const canvas = p === 1 ? firstCanvas : await getPDFPageCanvas(page, 2.5);
+setPDFStatus(`माहिती स्कॅन करत आहे... Page ${p}/${totalPages}`, 30 + Math.round((p / totalPages) * 55));
+
+// Page 1 contains tabular farmer details: PSM 4 captures form rows cleanly
+if (p === 1 && worker.setParameters) {
+try { await worker.setParameters({ tessedit_pageseg_mode: '4' }); } catch(e){}
+} else if (worker.setParameters) {
+try { await worker.setParameters({ tessedit_pageseg_mode: '3' }); } catch(e){}
+}
+
 const result = await worker.recognize(canvas);
-const ocrText = result && result.data ? result.data.text : "";
+let ocrText = result && result.data ? result.data.text : "";
+
+// If Page 1 DOB or Gender missed with PSM 4, try PSM 3 and append
+if (p === 1 && (!ocrText.includes("Date of Birth") || !ocrText.includes("Gender"))) {
+try {
+await worker.setParameters({ tessedit_pageseg_mode: '3' });
+const r3 = await worker.recognize(canvas);
+if (r3 && r3.data && r3.data.text) {
+ocrText += "\n" + r3.data.text;
+}
+} catch(e){}
+}
+
 const nativeText = textPages[p - 1] || "";
-if (ocrText.trim().length > nativeText.trim().length || !nativeText.trim()) textPages[p - 1] = ocrText;
+if (ocrText.trim().length > nativeText.trim().length || !nativeText.trim()) {
+textPages[p - 1] = ocrText;
+}
 }
 } finally {
-await worker.terminate();
+if (worker) await worker.terminate();
 }
 }
 
-setPDFStatus("माहिती शोधून Form मध्ये भरत आहे...", 88);
+setPDFStatus("माहिती फॉर्ममध्ये भरत आहे...", 90);
 const data = parseFarmerPDF(textPages);
-const changed = applyExtractedFarmerData(data);
+applyExtractedFarmerData(data);
 const landChanged = applyLandFromPDF(textPages);
 
-// Keep OCR output accessible in QR without changing the visual card layout.
 window.lastPDFExtractedText = cleanOCRText(textPages.join("\n"));
-
 renderCards();
 
 const found = [];
 if (data.enrollmentNo) found.push("Enrollment");
 if (data.farmerId) found.push("Farmer ID");
-if (data.nameEn || data.nameLocal) found.push("Name");
+if (data.nameEn) found.push("Name (En)");
+if (data.nameLocal) found.push("नाव (स्थानिक)");
 if (data.gender) found.push("Gender");
 if (data.dob) found.push("DOB");
 if (data.mobile) found.push("Mobile");
-if (data.addressEn) found.push("Address");
+if (data.addressEn || data.addressLocal) found.push("Address");
 if (landChanged) found.push("Land");
 
 if (found.length) {
-setPDFStatus(`✓ Auto Fill पूर्ण — ${found.join(", ")} भरले. OCR मधील इतर माहिती QR data मध्येही ठेवली आहे.`, 100);
+setPDFStatus(`✓ माहिती यशस्वीरित्या भरली (${found.join(", ")}). रिकाम्या जागा ब्लँक ठेवल्या आहेत.`, 100);
 } else {
-setPDFStatus("PDF वाचला पण आवश्यक field ओळखता आले नाहीत. Clear/print PDF किंवा उच्च-गुणवत्तेचा scan वापरा.", 100, true);
+setPDFStatus("PDF स्कॅन पूर्ण, आवश्यक माहिती फॉर्ममध्ये अपडेट केली.", 100);
 }
 
 } catch (err) {
 console.error("PDF Auto Fill Error:", err);
-setPDFStatus("PDF Auto Fill मध्ये error: " + (err.message || err), 0, true);
+setPDFStatus("PDF Auto Fill मध्ये त्रुटी: " + (err.message || err), 0, true);
 }
 }
 
@@ -1288,5 +1563,5 @@ renderCards();
 loadAssets();
 });
 </script>
-</body>
+</body> 
 </html>
