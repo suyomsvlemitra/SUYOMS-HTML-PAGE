@@ -56,6 +56,26 @@
             }
         }
     </style>
+
+    <script>
+  // राईट क्लिक डिसेबल करणे
+  document.addEventListener('contextmenu', function(e) {
+    e.preventDefault();
+    alert('या वेबसाईटवर राईट क्लिक करण्याची परवानगी नाही!'); // हवं असल्यास हा मेसेज काढू शकता
+  });
+
+  // डेव्हलपर टूल्स आणि शॉर्टकट कीज ब्लॉक करणे (F12, Ctrl+U, Ctrl+Shift+I, इत्यादी)
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'F12' || 
+        (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J' || e.key === 'C')) || 
+        (e.ctrlKey && e.key === 'U')) {
+      e.preventDefault();
+      return false;
+    }
+  });
+</script>
+
+    
 </head>
 <body class="min-h-screen pb-12">
 
