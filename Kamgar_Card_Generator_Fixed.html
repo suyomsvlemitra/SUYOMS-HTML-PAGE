@@ -6,7 +6,27 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <style>
 :root{--orange:#f97316;--black:#171717}*{box-sizing:border-box}body{margin:0;background:#fff7ed;color:#171717;font-family:Poppins,'Noto Sans Devanagari',sans-serif}header{background:linear-gradient(105deg,#111 70%,#c2410c);color:white;padding:19px max(18px,calc((100vw - 1320px)/2));border-bottom:5px solid var(--orange)}header h1{margin:0;font-size:23px}header small{color:#fed7aa}.wrap{max-width:1320px;margin:25px auto;padding:0 16px;display:grid;grid-template-columns:minmax(320px,1fr) minmax(320px,1fr);gap:22px;align-items:start}.panel{background:white;border:1px solid #fed7aa;border-radius:16px;box-shadow:0 7px 25px #9a34121c;padding:20px;min-width:0}.panel h2{margin:0 0 15px;font-size:17px;border-bottom:2px solid #ffedd5;padding-bottom:10px}.fields{display:grid;grid-template-columns:1fr 1fr;gap:12px}.field.wide{grid-column:1/-1}label{display:block;font-size:12px;font-weight:700;margin-bottom:5px}input,select,textarea{width:100%;padding:10px;border:1px solid #fdba74;border-radius:8px;background:#fff;min-width:0;font:14px 'Noto Sans Devanagari',sans-serif}textarea{resize:vertical}.photo{display:flex;align-items:center;gap:12px;padding:12px;background:#fff7ed;border-radius:9px;margin-bottom:13px}.photo img{width:55px;height:66px;object-fit:cover;border:1px solid #fdba74}.preview{background:#f5f5f4;border-radius:12px;padding:14px;margin:10px 0 22px;text-align:center}.preview h3{font-size:13px;margin:0 0 10px}.preview canvas{display:block;width:100%;max-width:540px;height:auto;aspect-ratio:90/58;margin:auto;background:#fffaf3;box-shadow:0 4px 15px #0003;border:1px solid #ddd}.size{background:#ffedd5;color:#7c2d12;font-weight:700;font-size:12px;border-radius:8px;padding:9px;text-align:center}.actions{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-top:15px}button{cursor:pointer;border:0;border-radius:9px;background:#111;color:#fff;padding:12px 6px;font-weight:700;font-family:inherit}button.orange{background:#ea580c}button:disabled{opacity:.55;cursor:wait}#status{font-size:12px;min-height:20px;margin-top:12px;color:#9a3412}.note{font-size:11px;color:#57534e;line-height:1.7}.config{background:#fff7ed;padding:9px;border-radius:8px;font-size:11px;margin-top:14px}@media(max-width:850px){.wrap{grid-template-columns:1fr}.fields{grid-template-columns:1fr 1fr}}@media(max-width:420px){.fields{grid-template-columns:1fr}.actions{grid-template-columns:1fr}}
-</style></head><body>
+</style>
+
+<script>
+  // राईट क्लिक डिसेबल करणे
+  document.addEventListener('contextmenu', function(e) {
+    e.preventDefault();
+    alert('या वेबसाईटवर राईट क्लिक करण्याची परवानगी नाही!'); // हवं असल्यास हा मेसेज काढू शकता
+  });
+
+  // डेव्हलपर टूल्स आणि शॉर्टकट कीज ब्लॉक करणे (F12, Ctrl+U, Ctrl+Shift+I, इत्यादी)
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'F12' || 
+        (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J' || e.key === 'C')) || 
+        (e.ctrlKey && e.key === 'U')) {
+      e.preventDefault();
+      return false;
+    }
+  });
+</script>
+
+</head><body>
 <header><h1>▣ कामगार ओळखपत्र – Card Generator</h1><small>SUYOMS VLE MITRA • Black & Saffron Edition</small></header>
 <main class="wrap"><section class="panel"><h2>✎ कामगार माहिती भरा</h2>
 <div class="photo"><img id="photoPreview" alt="फोटो" style="display:none"><div><label for="photo">कामगाराचा फोटो</label><input id="photo" type="file" accept="image/*"></div></div>
