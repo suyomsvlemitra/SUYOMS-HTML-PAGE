@@ -730,6 +730,16 @@ button:disabled {
         <label for="date">नोंदणी तारीख *</label>
         <input id="date" type="date">
       </div>
+
+      <div class="field">
+        <label for="renewalDate">नूतनीकरण तारीख</label>
+        <input id="renewalDate" type="date">
+      </div>
+
+      <div class="field">
+        <label for="validityDate">वैधता तारीख</label>
+        <input id="validityDate" type="date">
+      </div>
       
       <div class="field wide">
         <label for="name">कामगाराचे पूर्ण नाव (मराठी / हिंदी) *</label>
@@ -896,7 +906,7 @@ let qrImage = null;
 let renderSerial = 0;
 let cropperInstance = null;
 
-const ids = ['reg', 'date', 'name', 'gender', 'dob', 'mobile', 'work', 'place', 'district'];
+const ids = ['reg', 'date', 'renewalDate', 'validityDate', 'name', 'gender', 'dob', 'mobile', 'work', 'place', 'district'];
 const $ = id => document.getElementById(id);
 const value = id => ($(id) ? $(id).value.trim() : '');
 
@@ -1054,6 +1064,8 @@ function qrText() {
     'कामगार ओळखपत्र माहिती',
     'नोंदणी क्रमांक: ' + value('reg'),
     'नोंदणी तारीख: ' + dateFmt(value('date')),
+    'नूतनीकरण तारीख: ' + dateFmt(value('renewalDate')),
+    'वैधता तारीख: ' + dateFmt(value('validityDate')),
     'नाव: ' + value('name'),
     'लिंग: ' + value('gender'),
     'जन्म तारीख: ' + dateFmt(value('dob')),
@@ -1103,14 +1115,16 @@ function drawFront() {
   // Field Details matching exact poster positions & sizes
   drawFieldLine(ctx, 'नोंदणी क्रमांक :', value('reg'), 60, 415, 750, 360);
   drawFieldLine(ctx, 'नोंदणी तारीख :', dateFmt(value('date')), 790, 405, 1370, 380);
+  drawFieldLine(ctx, 'नूतनीकरण तारीख :', dateFmt(value('renewalDate')), 60, 485, 750, 360);
+  drawFieldLine(ctx, 'वैधता तारीख :', dateFmt(value('validityDate')), 790, 485, 1370, 380);
 
-  drawFieldLine(ctx, 'नाव :', value('name'), 60, 500, 1370, 340);
-  drawFieldLine(ctx, 'लिंग :', value('gender'), 60, 590, 1370, 200);
-  drawFieldLine(ctx, 'जन्म तारीख :', dateFmt(value('dob')), 60, 690, 1370, 350);
-  drawFieldLine(ctx, 'भ्रमणध्वनी क्रमांक :', value('mobile'), 60, 790, 1370, 360);
-  drawFieldLine(ctx, 'कामाचा प्रकार :', value('work'), 60, 885, 1370, 350);
-  drawFieldLine(ctx, 'नोंदणीचे ठिकाण :', value('place'), 60, 980, 720, 340);
-  drawFieldLine(ctx, 'जिल्हा :', value('district'), 750, 980, 1370, 360);
+  drawFieldLine(ctx, 'नाव :', value('name'), 60, 570, 1370, 340);
+  drawFieldLine(ctx, 'लिंग :', value('gender'), 60, 650, 1370, 200);
+  drawFieldLine(ctx, 'जन्म तारीख :', dateFmt(value('dob')), 60, 730, 1370, 350);
+  drawFieldLine(ctx, 'भ्रमणध्वनी क्रमांक :', value('mobile'), 60, 810, 1370, 360);
+  drawFieldLine(ctx, 'कामाचा प्रकार :', value('work'), 60, 890, 1370, 350);
+  drawFieldLine(ctx, 'नोंदणीचे ठिकाण :', value('place'), 60, 970, 720, 340);
+  drawFieldLine(ctx, 'जिल्हा :', value('district'), 750, 970, 1370, 360);
 
   // Photo Box (330 x 350 px at 1410, 350)
   ctx.fillStyle = '#f8fafc';
@@ -1310,6 +1324,14 @@ $('pdfFile').addEventListener('change', async e => {
     const regDateMatch = fullText.match(/(?:न[\x00\s]*दणी|नोंदणी)\s*(?:तार[\x00\s]*ख|तारीख)?\s*:\s*(\d{2}\/\d{2}\/\d{4})/);
     if (regDateMatch) $('date').value = toIsoDate(regDateMatch[1]);
     else if (dates.length > 0) $('date').value = toIsoDate(dates[0]);
+
+    const renewalMatch = fullText.match(/नूतनीकरण\s*(?:तारीख|तारिख|दिनांक)?\s*[:：]?\s*(\d{2}\/\d{2}\/\d{4})/);
+    if (renewalMatch) $('renewalDate').value = toIsoDate(renewalMatch[1]);
+    else if (dates.length > 1) $('renewalDate').value = toIsoDate(dates[1]);
+
+    const validityMatch = fullText.match(/वैधता\s*(?:तारीख|तारिख|दिनांक)?\s*[:：]?\s*(\d{2}\/\d{2}\/\d{4})/);
+    if (validityMatch) $('validityDate').value = toIsoDate(validityMatch[1]);
+    else if (dates.length > 2) $('validityDate').value = toIsoDate(dates[2]);
 
     // 3. Date of Birth
     const dobMatch = fullText.match(/जन्म\s*(?:तार[\x00\s]*ख|तारीख)?\s*:\s*(\d{2}\/\d{2}\/\d{4})/);
@@ -1656,5 +1678,5 @@ loadLogo('right', RIGHT_LOGO_URL);
 render();
 
 </script>
-<script src="https://cdn.raccoonai.tech/packages/branding-badge.js?v=7" defer></script><script src="https://cdn.raccoonai.tech/packages/branding-badge.js?v=7" defer></script></body>
+</body>
 </html>
