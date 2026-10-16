@@ -1,86 +1,1638 @@
 <!doctype html>
-<html lang="mr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>कामगार कार्ड जनरेटर | SUYOMS</title>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;500;600;700;800&family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
+<html lang="mr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>कामगार ओळखपत्र जनरेटर (Kamgar ID Card Generator) | 90x58 mm</title>
+
+<!-- Google Fonts for Marathi, Hindi and English: Mukta, Yantramanav, Tiro Devanagari Marathi -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Mukta:wght@400;500;600;700;800&family=Yantramanav:wght@500;700;900&family=Tiro+Devanagari+Marathi:ital@0;1&family=Noto+Sans+Devanagari:wght@400;600;700;800&family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+<!-- Libraries: QR Code, jsPDF, PDF.js, Cropper.js -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.js"></script>
+
 <style>
-:root{--orange:#f97316;--black:#171717}*{box-sizing:border-box}body{margin:0;background:#fff7ed;color:#171717;font-family:Poppins,'Noto Sans Devanagari',sans-serif}header{background:linear-gradient(105deg,#111 70%,#c2410c);color:white;padding:19px max(18px,calc((100vw - 1320px)/2));border-bottom:5px solid var(--orange)}header h1{margin:0;font-size:23px}header small{color:#fed7aa}.wrap{max-width:1320px;margin:25px auto;padding:0 16px;display:grid;grid-template-columns:minmax(320px,1fr) minmax(320px,1fr);gap:22px;align-items:start}.panel{background:white;border:1px solid #fed7aa;border-radius:16px;box-shadow:0 7px 25px #9a34121c;padding:20px;min-width:0}.panel h2{margin:0 0 15px;font-size:17px;border-bottom:2px solid #ffedd5;padding-bottom:10px}.fields{display:grid;grid-template-columns:1fr 1fr;gap:12px}.field.wide{grid-column:1/-1}label{display:block;font-size:12px;font-weight:700;margin-bottom:5px}input,select,textarea{width:100%;padding:10px;border:1px solid #fdba74;border-radius:8px;background:#fff;min-width:0;font:14px 'Noto Sans Devanagari',sans-serif}textarea{resize:vertical}.photo{display:flex;align-items:center;gap:12px;padding:12px;background:#fff7ed;border-radius:9px;margin-bottom:13px}.photo img{width:55px;height:66px;object-fit:cover;border:1px solid #fdba74}.preview{background:#f5f5f4;border-radius:12px;padding:14px;margin:10px 0 22px;text-align:center}.preview h3{font-size:13px;margin:0 0 10px}.preview canvas{display:block;width:100%;max-width:540px;height:auto;aspect-ratio:90/58;margin:auto;background:#fffaf3;box-shadow:0 4px 15px #0003;border:1px solid #ddd}.size{background:#ffedd5;color:#7c2d12;font-weight:700;font-size:12px;border-radius:8px;padding:9px;text-align:center}.actions{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-top:15px}button{cursor:pointer;border:0;border-radius:9px;background:#111;color:#fff;padding:12px 6px;font-weight:700;font-family:inherit}button.orange{background:#ea580c}button:disabled{opacity:.55;cursor:wait}#status{font-size:12px;min-height:20px;margin-top:12px;color:#9a3412}.note{font-size:11px;color:#57534e;line-height:1.7}.config{background:#fff7ed;padding:9px;border-radius:8px;font-size:11px;margin-top:14px}@media(max-width:850px){.wrap{grid-template-columns:1fr}.fields{grid-template-columns:1fr 1fr}}@media(max-width:420px){.fields{grid-template-columns:1fr}.actions{grid-template-columns:1fr}}
+@import url('https://fonts.googleapis.com/css2?family=Mukta:wght@400;500;600;700;800&family=Yantramanav:wght@500;700;900&family=Tiro+Devanagari+Marathi:ital@0;1&family=Noto+Sans+Devanagari:wght@400;600;700;800&family=Poppins:wght@400;600;700;800&display=swap');
+
+:root {
+  --orange: #f97316;
+  --orange-dark: #c2410c;
+  --black: #171717;
+  --bg-cream: #fffaf4;
+  --font-mr: 'Mukta', 'Yantramanav', 'Tiro Devanagari Marathi', 'Noto Sans Devanagari', 'Lohit Marathi', 'Mangal', 'Nirmala UI', sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: #fff7ed;
+  color: #171717;
+  font-family: var(--font-mr);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Hidden font-loader element so Blogger & Browser load Devanagari immediately */
+.font-loader {
+  font-family: 'Mukta', 'Yantramanav', 'Tiro Devanagari Marathi', sans-serif;
+  position: absolute;
+  left: -9999px;
+  top: -9999px;
+  visibility: hidden;
+  font-weight: 800;
+}
+
+header {
+  background: linear-gradient(105deg, #111 65%, #c2410c);
+  color: white;
+  padding: 18px 24px;
+  border-bottom: 5px solid var(--orange);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+header .header-inner {
+  max-width: 1320px;
+  margin: auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+header h1 {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: 0.3px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+header small {
+  color: #fed7aa;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.wrap {
+  max-width: 1360px;
+  margin: 22px auto;
+  padding: 0 16px;
+  display: grid;
+  grid-template-columns: minmax(360px, 1.05fr) minmax(360px, 1.15fr);
+  gap: 24px;
+  align-items: start;
+}
+
+.panel {
+  background: white;
+  border: 1px solid #fed7aa;
+  border-radius: 16px;
+  box-shadow: 0 7px 25px rgba(154, 52, 18, 0.08);
+  padding: 22px;
+  min-width: 0;
+}
+
+.panel h2 {
+  margin: 0 0 16px;
+  font-size: 18px;
+  font-weight: 800;
+  color: #7c2d12;
+  border-bottom: 2px solid #ffedd5;
+  padding-bottom: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* PDF Auto Fetch Section */
+.pdf-upload-box {
+  background: linear-gradient(135deg, #eff6ff 0%, #f0fdf4 100%);
+  border: 2px dashed #3b82f6;
+  border-radius: 12px;
+  padding: 16px;
+  text-align: center;
+  margin-bottom: 20px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.pdf-upload-box:hover {
+  border-color: #1d4ed8;
+  background: linear-gradient(135deg, #dbeafe 0%, #dcfce7 100%);
+  transform: translateY(-1px);
+}
+
+.pdf-upload-box .icon {
+  font-size: 32px;
+  margin-bottom: 6px;
+}
+
+.pdf-upload-box h4 {
+  margin: 0 0 4px;
+  color: #1e3a8a;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.pdf-upload-box p {
+  margin: 0;
+  font-size: 12px;
+  color: #475569;
+}
+
+.pdf-upload-box input[type="file"] {
+  display: none;
+}
+
+.pdf-badge-success {
+  display: none;
+  background: #dcfce7;
+  color: #15803d;
+  border: 1px solid #86efac;
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 12px;
+  font-weight: 700;
+  margin-top: 10px;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Photo & Cropping Controls */
+.photo-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 14px;
+  background: #fff7ed;
+  border: 1px solid #fed7aa;
+  border-radius: 12px;
+  margin-bottom: 18px;
+}
+
+.photo-preview-wrap {
+  width: 70px;
+  height: 84px;
+  background: #f1f2f4;
+  border: 2px solid #fdba74;
+  border-radius: 6px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.photo-preview-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: none;
+}
+
+.photo-preview-wrap span {
+  font-size: 12px;
+  color: #888;
+  font-weight: 700;
+}
+
+.photo-actions {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.photo-actions label.btn-upload {
+  display: inline-block;
+  background: #ea580c;
+  color: white;
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  text-align: center;
+  transition: background 0.15s;
+}
+
+.photo-actions label.btn-upload:hover {
+  background: #c2410c;
+}
+
+.btn-crop {
+  background: #0284c7;
+  color: white;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.15s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.btn-crop:hover {
+  background: #0369a1;
+}
+
+.btn-crop:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Fields Grid */
+.fields {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 13px;
+}
+
+.field.wide {
+  grid-column: 1 / -1;
+}
+
+label {
+  display: block;
+  font-size: 12px;
+  font-weight: 700;
+  margin-bottom: 5px;
+  color: #374151;
+}
+
+input, select, textarea {
+  width: 100%;
+  padding: 9px 12px;
+  border: 1px solid #fdba74;
+  border-radius: 8px;
+  background: #fff;
+  min-width: 0;
+  font-family: var(--font-mr) !important;
+  font-size: 14px;
+  font-weight: 600;
+  color: #1f2937;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+input:focus, select:focus, textarea:focus {
+  border-color: #ea580c;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(234, 88, 12, 0.2);
+}
+
+.note {
+  font-size: 11.5px;
+  color: #6b7280;
+  line-height: 1.6;
+  margin-top: 14px;
+}
+
+/* Preview Column */
+.size-badge {
+  background: #ffedd5;
+  color: #7c2d12;
+  font-weight: 800;
+  font-size: 13px;
+  border-radius: 8px;
+  padding: 10px 14px;
+  text-align: center;
+  margin-bottom: 16px;
+  border: 1px solid #fed7aa;
+}
+
+.preview-card-box {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 14px;
+  margin-bottom: 18px;
+  text-align: center;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+}
+
+.preview-card-box h3 {
+  font-size: 14px;
+  font-weight: 800;
+  color: #1e293b;
+  margin: 0 0 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.preview-card-box canvas {
+  display: block;
+  width: 100%;
+  max-width: 540px;
+  height: auto;
+  aspect-ratio: 90 / 58;
+  margin: auto;
+  background: var(--bg-cream);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+  border-radius: 4px;
+}
+
+/* Action Buttons */
+.download-section-title {
+  font-size: 13px;
+  font-weight: 800;
+  color: #7c2d12;
+  margin: 16px 0 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.actions-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.actions-grid.primary-actions {
+  grid-template-columns: 1fr 1fr 1fr;
+}
+
+button.act-btn {
+  cursor: pointer;
+  border: 0;
+  border-radius: 9px;
+  padding: 12px 10px;
+  font-weight: 700;
+  font-family: var(--font-mr) !important;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.15s ease;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+button.act-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+}
+
+button.act-btn:active {
+  transform: translateY(0);
+}
+
+button.btn-dark {
+  background: #1e293b;
+  color: #fff;
+}
+button.btn-dark:hover {
+  background: #0f172a;
+}
+
+button.btn-orange {
+  background: #ea580c;
+  color: #fff;
+}
+button.btn-orange:hover {
+  background: #c2410c;
+}
+
+button.btn-green {
+  background: #16a34a;
+  color: #fff;
+}
+button.btn-green:hover {
+  background: #15803d;
+}
+
+button.btn-blue {
+  background: #2563eb;
+  color: #fff;
+}
+button.btn-blue:hover {
+  background: #1d4ed8;
+}
+
+button:disabled {
+  opacity: 0.6;
+  cursor: wait !important;
+  transform: none !important;
+}
+
+#status {
+  font-size: 12.5px;
+  min-height: 22px;
+  margin-top: 14px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-weight: 700;
+  display: none;
+}
+
+#status.info {
+  display: block;
+  background: #f0fdf4;
+  color: #166534;
+  border: 1px solid #bbf7d0;
+}
+
+#status.error {
+  display: block;
+  background: #fef2f2;
+  color: #991b1b;
+  border: 1px solid #fecaca;
+}
+
+/* Modal for Image Cropping */
+.modal-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.75);
+  z-index: 99999;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+
+.modal-overlay.active {
+  display: flex;
+}
+
+.modal-content {
+  background: white;
+  border-radius: 16px;
+  width: 100%;
+  max-width: 600px;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+}
+
+.modal-header {
+  padding: 14px 20px;
+  background: #111;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.modal-header h3 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 800;
+}
+
+.modal-close {
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 22px;
+  cursor: pointer;
+}
+
+.cropper-container-box {
+  padding: 16px;
+  background: #262626;
+  max-height: 420px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cropper-container-box img {
+  max-width: 100%;
+  max-height: 380px;
+}
+
+.modal-footer {
+  padding: 14px 20px;
+  background: #f8fafc;
+  border-top: 1px solid #e2e8f0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.crop-tools {
+  display: flex;
+  gap: 6px;
+}
+
+.crop-tool-btn {
+  background: #e2e8f0;
+  color: #1e293b;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.crop-tool-btn:hover {
+  background: #cbd5e1;
+}
+
+.modal-save-btn {
+  background: #16a34a;
+  color: white;
+  border: none;
+  padding: 9px 18px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.modal-save-btn:hover {
+  background: #15803d;
+}
+
+/* Print CSS: A4 Top Corner Side-by-Side (समोर-समोर) */
+#printArea {
+  display: none;
+}
+
+@media print {
+  @page {
+    size: A4 portrait;
+    margin: 10mm;
+  }
+  
+  html, body {
+    background: #fff !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+  
+  body > * {
+    display: none !important;
+  }
+  
+  #printArea {
+    display: block !important;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 190mm;
+  }
+  
+  .print-header-label {
+    font-size: 10px;
+    font-weight: bold;
+    color: #555;
+    margin-bottom: 2mm;
+    font-family: sans-serif;
+  }
+  
+  .print-cards-row {
+    display: flex;
+    flex-direction: row;
+    gap: 6mm;
+    align-items: flex-start;
+  }
+  
+  .print-card-wrapper {
+    width: 90mm;
+  }
+  
+  .print-card-img {
+    width: 90mm;
+    height: 58mm;
+    border: 0.2mm solid #bbb;
+    display: block;
+  }
+}
+
+@media (max-width: 880px) {
+  .wrap {
+    grid-template-columns: 1fr;
+  }
+  .actions-grid.primary-actions {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .fields {
+    grid-template-columns: 1fr;
+  }
+  .actions-grid, .actions-grid.primary-actions {
+    grid-template-columns: 1fr;
+  }
+}
 </style>
+</head>
+<body>
 
-<script>
-  // राईट क्लिक डिसेबल करणे
-  document.addEventListener('contextmenu', function(e) {
-    e.preventDefault();
-    alert('या वेबसाईटवर राईट क्लिक करण्याची परवानगी नाही!'); // हवं असल्यास हा मेसेज काढू शकता
-  });
+<!-- Hidden text for Devanagari Font Preloading -->
+<div class="font-loader">महाराष्ट्र शासन कामगार विभाग इमारत इतर बांधकाम कल्याणकारी मंडळ ओळखपत्र सूचना नोंदणी क्रमांक नाव लिंग पुरुष स्त्री जन्म तारीख भ्रमणध्वनी कामाचा प्रकार पत्ता MMTC</div>
 
-  // डेव्हलपर टूल्स आणि शॉर्टकट कीज ब्लॉक करणे (F12, Ctrl+U, Ctrl+Shift+I, इत्यादी)
-  document.addEventListener('keydown', function(e) {
-    if (e.key === 'F12' || 
-        (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J' || e.key === 'C')) || 
-        (e.ctrlKey && e.key === 'U')) {
-      e.preventDefault();
-      return false;
-    }
-  });
-</script>
+<header>
+  <div class="header-inner">
+    <div>
+      <h1>▣ कामगार ओळखपत्र जनरेटर (Kamgar Smart Card)</h1>
+      <small>महाराष्ट्र इमारत व इतर बांधकाम कामगार कल्याणकारी मंडळ • 90 × 58 mm CR80 Size</small>
+    </div>
+  </div>
+</header>
 
-</head><body>
-<header><h1>▣ कामगार ओळखपत्र – Card Generator</h1><small>SUYOMS VLE MITRA • Black & Saffron Edition</small></header>
-<main class="wrap"><section class="panel"><h2>✎ कामगार माहिती भरा</h2>
-<div class="photo"><img id="photoPreview" alt="फोटो" style="display:none"><div><label for="photo">कामगाराचा फोटो</label><input id="photo" type="file" accept="image/*"></div></div>
-<div class="fields">
-<div class="field"><label>नोंदणी क्रमांक</label><input id="reg" placeholder="नोंदणी क्रमांक"></div>
-<div class="field"><label>नोंदणी तारीख</label><input id="date" type="date"></div>
-<div class="field wide"><label>नाव (मराठी / हिंदी)</label><input id="name" placeholder="पूर्ण नाव"></div>
-<div class="field"><label>लिंग</label><select id="gender"><option value="स्त्री">स्त्री</option><option value="पुरुष">पुरुष</option><option value="इतर">इतर</option></select></div>
-<div class="field"><label>जन्म तारीख</label><input id="dob" type="date"></div>
-<div class="field"><label>भ्रमणध्वनी क्रमांक</label><input id="mobile" inputmode="numeric" placeholder="मोबाईल"></div>
-<div class="field"><label>कामाचा प्रकार</label><input id="work" placeholder="कामाचा प्रकार"></div>
-<div class="field"><label>नोंदणीचे ठिकाण</label><input id="place" placeholder="ठिकाण"></div>
-<div class="field"><label>जिल्हा</label><input id="district" placeholder="जिल्हा"></div>
-</div><p class="note">फॉर्ममध्ये भरलेली माहिती कार्ड आणि QR मध्ये आपोआप अपडेट होईल. फोटो फक्त कार्डवर राहील.</p>
-<div class="config">लोगो फॉर्ममध्ये नाहीत. कोडमधील <b>LEFT_LOGO_URL</b> आणि <b>RIGHT_LOGO_URL</b> येथे GitHub RAW URL द्या.</div></section>
-<section class="panel"><h2>◉ Live Card Preview (Front + Back)</h2><div class="size">कार्डचे अंतिम प्रिंट माप: 90 × 58 mm | Canvas: 1800 × 1160 px</div>
-<div class="preview"><h3>समोरील बाजू (Front)</h3><canvas id="front" width="1800" height="1160"></canvas></div>
-<div class="preview"><h3>मागील बाजू (Back)</h3><canvas id="back" width="1800" height="1160"></canvas></div>
-<div class="actions"><button id="frontBtn" onclick="savePNG('front')">▧ Front PNG</button><button id="backBtn" onclick="savePNG('back')">▧ Back PNG</button><button class="orange" id="sixBtn" onclick="savePDF('4x6')">▤ 4×6 PDF</button><button class="orange" id="a4Btn" onclick="savePDF('a4')">▤ A4 PDF</button></div>
-<div id="status" role="status"></div><p class="note">PDF मध्ये Front आणि Back दोन्ही बाजू 90 × 58 mm आकारात दिल्या आहेत. 4×6 आणि A4 हे कागदाचे आकार आहेत. प्रिंट करताना Actual Size / 100% वापरा. QR व PDF लायब्ररी लोड होण्यासाठी प्रथम इंटरनेट आवश्यक आहे.</p></section></main>
+<main class="wrap">
+  <!-- Left Section: Form & Uploads -->
+  <section class="panel">
+    <h2>
+      <span>✎ कामगार माहिती व अपलोड</span>
+    </h2>
+
+    <!-- PDF Auto-Fetch Upload Zone -->
+    <div class="pdf-upload-box" id="pdfDropZone" onclick="$('pdfFile').click()">
+      <div class="icon">📄</div>
+      <h4>महाराष्ट्र कामगार कल्याण ई-कार्ड PDF अपलोड करा</h4>
+      <p>PDF अपलोड करताच नोंदणी क्रमांक, नाव, जन्मतारीख, पत्ता व फोटो आपोआप भरले जातील</p>
+      <input type="file" id="pdfFile" accept="application/pdf">
+      <div id="pdfSuccessBadge" class="pdf-badge-success">
+        ✅ PDF डेटा व फोटो यशस्वीरित्या फेट्च झाला!
+      </div>
+    </div>
+
+    <!-- Photo & Manual Cropping Option -->
+    <div class="photo-row">
+      <div class="photo-preview-wrap">
+        <span id="photoPlaceholder">फोटो</span>
+        <img id="photoPreview" alt="कामगार फोटो">
+      </div>
+      <div class="photo-actions">
+        <label class="btn-upload" for="photoInput">
+          📁 फोटो निवडा (Upload Photo)
+        </label>
+        <input type="file" id="photoInput" accept="image/*" style="display:none">
+        
+        <button type="button" class="btn-crop" id="btnOpenCropper" disabled onclick="openCropperModal()">
+          ✂️ फोटो मॅन्युअली क्रॉप करा (Crop Photo)
+        </button>
+      </div>
+    </div>
+
+    <!-- Information Fields -->
+    <div class="fields">
+      <div class="field">
+        <label for="reg">नोंदणी क्रमांक *</label>
+        <input id="reg" placeholder="उदा. MH111260010069">
+      </div>
+      
+      <div class="field">
+        <label for="date">नोंदणी तारीख *</label>
+        <input id="date" type="date">
+      </div>
+      
+      <div class="field wide">
+        <label for="name">कामगाराचे पूर्ण नाव (मराठी / हिंदी) *</label>
+        <input id="name" placeholder="उदा. संदीप विजय पाटिल">
+      </div>
+      
+      <div class="field">
+        <label for="gender">लिंग *</label>
+        <select id="gender">
+          <option value="स्त्री" selected>स्त्री</option>
+          <option value="पुरुष">पुरुष</option>
+          <option value="इतर">इतर</option>
+        </select>
+      </div>
+      
+      <div class="field">
+        <label for="dob">जन्म तारीख *</label>
+        <input id="dob" type="date">
+      </div>
+      
+      <div class="field">
+        <label for="mobile">भ्रमणध्वनी क्रमांक *</label>
+        <input id="mobile" inputmode="numeric" maxlength="10" placeholder="उदा. 9325800516">
+      </div>
+      
+      <div class="field">
+        <label for="work">कामाचा प्रकार *</label>
+        <input id="work" placeholder="उदा. बांधकाम कामगार">
+      </div>
+      
+      <div class="field">
+        <label for="place">नोंदणीचे ठिकाण *</label>
+        <input id="place" placeholder="उदा. चालीसगांव">
+      </div>
+      
+      <div class="field">
+        <label for="district">जिल्हा *</label>
+        <input id="district" placeholder="उदा. जळगाव">
+      </div>
+    </div>
+
+    <p class="note">
+      💡 <b>टीप:</b> फॉर्ममधील सर्व माहिती बदलताच कार्ड व QR कोड लगेच अपडेट होतात. जर Blogger मध्ये फॉन्ट दिसत नसेल तर हा कोड ऑटो-फॉन्ट लोड करतो.
+    </p>
+  </section>
+
+  <!-- Right Section: Live Card Preview & Downloads -->
+  <section class="panel">
+    <h2>
+      <span>◉ Live Card Preview (Front + Back)</span>
+    </h2>
+
+    <div class="size-badge">
+      कार्डचे अचूक प्रिंट माप: <b>90 × 58 mm</b> | Canvas: 1800 × 1160 px (508 DPI HD)
+    </div>
+
+    <!-- Front Preview Canvas -->
+    <div class="preview-card-box">
+      <h3>समोरील बाजू (Front Side)</h3>
+      <canvas id="front" width="1800" height="1160"></canvas>
+    </div>
+
+    <!-- Back Preview Canvas -->
+    <div class="preview-card-box">
+      <h3>मागील बाजू (Back Side)</h3>
+      <canvas id="back" width="1800" height="1160"></canvas>
+    </div>
+
+    <!-- Download & Print Actions -->
+    <div class="download-section-title">📥 डाउनलोड व प्रिंट ऑप्शन्स</div>
+    
+    <div class="actions-grid primary-actions">
+      <button class="act-btn btn-green" id="a4PdfBtn" onclick="saveA4PdfSideBySide()">
+        📄 A4 PDF (समोर-समोर)
+      </button>
+      <button class="act-btn btn-blue" id="sixPdfBtn" onclick="save4x6PdfTopBottom()">
+        📄 4×6 PDF (वर-खाली)
+      </button>
+      <button class="act-btn btn-orange" id="printBtn" onclick="triggerA4Print()">
+        🖨️ A4 थेट प्रिंट (Print)
+      </button>
+    </div>
+
+    <div class="actions-grid" style="margin-top: 10px;">
+      <button class="act-btn btn-dark" id="frontBtn" onclick="savePNG('front')">
+        ▧ Front PNG डाउनलोड
+      </button>
+      <button class="act-btn btn-dark" id="backBtn" onclick="savePNG('back')">
+        ▧ Back PNG डाउनलोड
+      </button>
+    </div>
+
+    <div id="status" role="status"></div>
+
+    <p class="note">
+      • <b>A4 PDF (समोर-समोर):</b> A4 पानावर वरच्या कोपऱ्यात Front आणि Back दोन्ही बाजू 90×58 mm मापात एकमेकांच्या शेजारी (Side-by-side) सेव्ह होतात.<br>
+      • <b>4×6 PDF (वर-खाली):</b> 4×6 फोटो पेपरवर Front वर आणि Back खाली 90×58 mm मापात सेव्ह होतात.<br>
+      • <b>A4 थेट प्रिंट:</b> ब्राऊजर प्रिंट डायलॉग उघडून A4 साईजवर 100% ॲक्चुअल साईजमध्ये थेट प्रिंट काढता येते.
+    </p>
+  </section>
+</main>
+
+<!-- Hidden Print Area for Native A4 Direct Printing -->
+<div id="printArea">
+  <div class="print-header-label">महाराष्ट्र इमारत व इतर बांधकाम कामगार कल्याणकारी मंडळ - ओळखपत्र (90 × 58 mm)</div>
+  <div class="print-cards-row">
+    <div class="print-card-wrapper">
+      <img id="printFrontImg" class="print-card-img" alt="Front Card">
+    </div>
+    <div class="print-card-wrapper">
+      <img id="printBackImg" class="print-card-img" alt="Back Card">
+    </div>
+  </div>
+</div>
+
+<!-- Modal for Interactive Photo Cropping -->
+<div class="modal-overlay" id="cropModal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3>✂️ कामगाराचा फोटो क्रॉप करा (Aspect Ratio: 330 × 350)</h3>
+      <button class="modal-close" onclick="closeCropperModal()">&times;</button>
+    </div>
+    <div class="cropper-container-box">
+      <img id="cropperImage" alt="Crop Target">
+    </div>
+    <div class="modal-footer">
+      <div class="crop-tools">
+        <button type="button" class="crop-tool-btn" onclick="cropperZoom(0.1)" title="Zoom In">➕</button>
+        <button type="button" class="crop-tool-btn" onclick="cropperZoom(-0.1)" title="Zoom Out">➖</button>
+        <button type="button" class="crop-tool-btn" onclick="cropperRotate(-90)" title="Rotate Left">↺ ९०°</button>
+        <button type="button" class="crop-tool-btn" onclick="cropperRotate(90)" title="Rotate Right">↻ ९०°</button>
+        <button type="button" class="crop-tool-btn" onclick="cropperReset()" title="Reset">रीसेट</button>
+      </div>
+      <div>
+        <button type="button" class="crop-tool-btn" onclick="closeCropperModal()" style="margin-right: 6px;">रद्द करा</button>
+        <button type="button" class="modal-save-btn" onclick="saveCroppedPhoto()">✅ क्रॉप सेव्ह करा</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <script>
 'use strict';
-// GitHub RAW image URLs येथे एकदाच फिक्स करा:
+
+// PDF.js worker setup
+if (window.pdfjsLib) {
+  pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+}
+
+// Logo URLs (GitHub RAW CDN)
 const LEFT_LOGO_URL = 'https://cdn.jsdelivr.net/gh/suyomsvlemitra/AI-Images@Suyoms-images/Kamgar.png';
 const RIGHT_LOGO_URL = 'https://cdn.jsdelivr.net/gh/suyomsvlemitra/AI-Images@Suyoms-images/Shasan.png';
-const W=1800,H=1160, SCALE=2, CREAM='#fffaf4', YELLOW='#ffff78';
-let photo=null, logos={}, qrImage=null, renderSerial=0;
-const ids=['reg','date','name','gender','dob','mobile','work','place','district'];
-const $=id=>document.getElementById(id);
-const value=id=>$(id).value.trim();
-const dateFmt=s=>s&&/^\d{4}-\d\d-\d\d$/.test(s)?s.slice(8)+'/'+s.slice(5,7)+'/'+s.slice(0,4):s;
-function status(t){$('status').textContent=t}
-function imgFrom(src){return new Promise((resolve,reject)=>{const i=new Image();i.crossOrigin='anonymous';i.onload=()=>resolve(i);i.onerror=reject;i.src=src})}
-async function loadLogo(key,url){if(!url)return;try{logos[key]=await imgFrom(url);render()}catch(e){status('लोगो लोड झाला नाही. GitHub RAW URL / CORS तपासा.');}}
-function fitted(ctx,text,x,y,maxWidth,fontSize=32,min=19){let s=fontSize;do{ctx.font=`700 ${s}px "Noto Sans Devanagari",sans-serif`;if(ctx.measureText(text).width<=maxWidth)break;s-=1}while(s>min);ctx.fillText(text,x,y,maxWidth)}
-function wave(ctx,back=false){ctx.fillStyle=YELLOW;ctx.beginPath();if(!back){ctx.moveTo(0,200);ctx.bezierCurveTo(420,210,770,550,1230,605);ctx.bezierCurveTo(1450,635,1660,600,1800,575);ctx.lineTo(1800,680);ctx.bezierCurveTo(1500,755,1270,760,980,705);ctx.bezierCurveTo(560,625,290,425,0,420)}else{ctx.moveTo(0,185);ctx.bezierCurveTo(430,220,800,485,1230,535);ctx.bezierCurveTo(1510,570,1660,555,1800,525);ctx.lineTo(1800,690);ctx.bezierCurveTo(1500,775,1170,780,865,690);ctx.bezierCurveTo(510,575,250,485,0,470)}ctx.closePath();ctx.fill()}
-function base(ctx,back){ctx.clearRect(0,0,W,H);ctx.fillStyle=CREAM;ctx.fillRect(0,0,W,H);wave(ctx,back);ctx.strokeStyle='#ddd6cc';ctx.lineWidth=5;ctx.strokeRect(3,3,W-6,H-6);ctx.fillStyle='#63330f';ctx.textAlign='center';ctx.font='800 52px "Noto Sans Devanagari",sans-serif';if(!back){ctx.fillText('महाराष्ट्र शासन',W/2,70,1050);ctx.fillText('कामगार विभाग',W/2,127,1050);ctx.font='800 43px "Noto Sans Devanagari",sans-serif';ctx.fillText('महाराष्ट्र इमारत व इतर बांधकाम कामगार कल्याणकारी मंडळ',W/2,187,1190);ctx.fillStyle='#111';ctx.font='800 75px "Noto Sans Devanagari",sans-serif';ctx.fillText('ओळखपत्र',W/2,278)}else{ctx.fillStyle='#111';ctx.font='800 73px "Noto Sans Devanagari",sans-serif';ctx.fillText('सूचना',W/2,120)}}
-function drawLogo(ctx,img,x,y,w,h){if(img){let ratio=Math.min(w/img.width,h/img.height);let dw=img.width*ratio,dh=img.height*ratio;ctx.drawImage(img,x+(w-dw)/2,y+(h-dh)/2,dw,dh)}}
-function line(ctx,label,val,x,y,max=1080){ctx.fillStyle='#161616';ctx.textAlign='left';ctx.font='700 41px "Noto Sans Devanagari",sans-serif';ctx.fillText(label,x,y);const lx=x+ctx.measureText(label).width+13;fitted(ctx,val||'________________',lx,y,Math.max(100,max-(lx-x)),42,24)}
-function qrText(){return ['कामगार ओळखपत्र माहिती','नोंदणी क्रमांक: '+value('reg'),'नोंदणी तारीख: '+dateFmt(value('date')),'नाव: '+value('name'),'लिंग: '+value('gender'),'जन्म तारीख: '+dateFmt(value('dob')),'भ्रमणध्वनी: '+value('mobile'),'कामाचा प्रकार: '+value('work'),'नोंदणीचे ठिकाण: '+value('place'),'जिल्हा: '+value('district')].join('\n')}
-async function generateQR(serial){if(typeof qrcode!=='function'){qrImage=null;status('QR Library लोड झाली नाही. इंटरनेट तपासून Refresh करा.');drawFront();return}
-try{const qr=qrcode(0,'L');qr.addData(qrText(),'Byte');qr.make();const data=qr.createDataURL(7,5);const img=await imgFrom(data);if(serial===renderSerial){qrImage=img;drawFront();status('QR तयार आहे. कार्ड व डाउनलोड उपलब्ध आहेत.')}}catch(e){if(serial===renderSerial){qrImage=null;drawFront();status('QR डेटा खूप मोठा आहे किंवा QR Library त्रुटी: '+e.message)}}}
-function drawFront(){const c=$('front'),ctx=c.getContext('2d');base(ctx,false);drawLogo(ctx,logos.left,55,36,225,165);drawLogo(ctx,logos.right,1515,27,220,170);
-line(ctx,'नोंदणी क्रमांक :',value('reg'),55,410,700);line(ctx,'नोंदणी तारीख :',dateFmt(value('date')),810,410,665);
-line(ctx,'नाव :',value('name'),55,505,1320);line(ctx,'लिंग :',value('gender'),55,595,1100);line(ctx,'जन्म तारीख :',dateFmt(value('dob')),55,685,1100);line(ctx,'भ्रमणध्वनी क्रमांक :',value('mobile'),55,775,1100);line(ctx,'कामाचा प्रकार :',value('work'),55,865,1100);line(ctx,'नोंदणीचे ठिकाण :',value('place'),55,960,700);line(ctx,'जिल्हा :',value('district'),805,960,500);
-ctx.fillStyle='#f1f2f4';ctx.fillRect(1430,350,300,335);if(photo){const r=Math.max(300/photo.width,335/photo.height),iw=photo.width*r,ih=photo.height*r;ctx.save();ctx.beginPath();ctx.rect(1430,350,300,335);ctx.clip();ctx.drawImage(photo,1430+(300-iw)/2,350+(335-ih)/2,iw,ih);ctx.restore()}else{ctx.fillStyle='#777';ctx.textAlign='center';ctx.font='40px "Noto Sans Devanagari",sans-serif';ctx.fillText('फोटो',1580,520)}
-ctx.fillStyle='white';ctx.fillRect(1410,742,330,330);if(qrImage){ctx.drawImage(qrImage,1420,752,310,310)}else{ctx.fillStyle='#555';ctx.textAlign='center';ctx.font='26px sans-serif';ctx.fillText('QR loading...',1575,900)}}
-function drawBack(){const ctx=$('back').getContext('2d');base(ctx,true);ctx.fillStyle='#111';ctx.textAlign='left';ctx.font='700 43px "Noto Sans Devanagari",sans-serif';const lines=['१. हे ओळखपत्र जपून ठेवावे.','२. हे ओळखपत्र गहाळ झाल्यास दुसरी प्रत शुल्क आकारून देण्यात येईल.','३. हे ओळखपत्र गहाळ झाल्यास त्वरित संबंधित जिल्हा कार्यालयास कळवावे.','४. हे ओळखपत्र सापडल्यास कृपया खालील पत्त्यावर पाठवावे.'];lines.forEach((s,i)=>fitted(ctx,s,75,215+i*100,1650,43,32));ctx.font='800 43px "Noto Sans Devanagari",sans-serif';ctx.fillText('पत्ता –',75,705);ctx.font='700 39px "Noto Sans Devanagari",sans-serif';ctx.fillText('सचिव / मुख्य कार्यकारी अधिकारी,',75,775);fitted(ctx,'महाराष्ट्र इमारत आणि इतर बांधकाम कामगार कल्याणकारी मंडळ, मुंबई.',75,845,1650,39,30);fitted(ctx,'MMTC हाऊस, 5 वा मजला, ई ब्लॉक, सी-22, बीकेसी, बांद्रा (पूर्व), मुंबई – 400051.',75,925,1650,37,29);ctx.fillText('फोन : 022-26572631 / 32',75,1000)}
-async function render(){const n=++renderSerial;qrImage=null;drawFront();drawBack();await document.fonts.ready;if(n!==renderSerial)return;drawFront();drawBack();generateQR(n)}
-$('photo').addEventListener('change',async e=>{const f=e.target.files[0];if(!f)return;try{photo=await imgFrom(URL.createObjectURL(f));$('photoPreview').src=photo.src;$('photoPreview').style.display='block';render()}catch(e){status('फोटो वाचता आला नाही.')}});
-ids.forEach(id=>$(id).addEventListener('input',render));
-async function ready(){await document.fonts.ready;if(typeof qrcode!=='function')throw Error('QR Library उपलब्ध नाही');if(typeof window.jspdf?.jsPDF!=='function')throw Error('PDF Library उपलब्ध नाही');if(!qrImage){await generateQR(renderSerial);if(!qrImage)throw Error('QR तयार झाला नाही; कृपया माहिती कमी करा किंवा इंटरनेट तपासा.')}}
-function download(blob,name){const a=document.createElement('a'),url=URL.createObjectURL(blob);a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),2000)}
-async function savePNG(side){try{await ready();$(side+'Btn').disabled=true;$(side).toBlob(blob=>{if(blob)download(blob,'Kamgar_Card_'+side+'.png');$(side+'Btn').disabled=false},'image/png')}catch(e){status(e.message)}}
-async function savePDF(mode){const btn=$(mode==='a4'?'a4Btn':'sixBtn');try{btn.disabled=true;await ready();const {jsPDF}=window.jspdf;const a4=mode==='a4',pw=a4?210:101.6,ph=a4?297:152.4;const pdf=new jsPDF({orientation:'portrait',unit:'mm',format:[pw,ph],compress:true});const CARD_W_MM=90,CARD_H_MM=58;const x=(pw-CARD_W_MM)/2,y=a4?32:9;pdf.setFont('helvetica','bold');pdf.setFontSize(9);pdf.text('FRONT',x,y-3);pdf.addImage($('front').toDataURL('image/png'),'PNG',x,y,CARD_W_MM,CARD_H_MM,undefined,'FAST');const by=y+67;if(by+CARD_H_MM<=ph-5){pdf.text('BACK',x,by-3);pdf.addImage($('back').toDataURL('image/png'),'PNG',x,by,CARD_W_MM,CARD_H_MM,undefined,'FAST')}else{pdf.addPage([pw,ph],'portrait');pdf.text('BACK',x,y-3);pdf.addImage($('back').toDataURL('image/png'),'PNG',x,y,CARD_W_MM,CARD_H_MM,undefined,'FAST')}pdf.save('Kamgar_Card_'+(a4?'A4':'4x6')+'.pdf');status('PDF डाउनलोड सुरू झाले. Actual Size / 100% ने प्रिंट करा.')}catch(e){status('PDF Error: '+e.message)}finally{btn.disabled=false}}
-loadLogo('left',LEFT_LOGO_URL);loadLogo('right',RIGHT_LOGO_URL);render();
-</script></body></html>
+
+const W = 1800, H = 1160;
+const CREAM = '#fffaf4';
+const YELLOW = '#fffc79';
+const CARD_W_MM = 90;
+const CARD_H_MM = 58;
+
+let photo = null;
+let rawUploadedPhotoSrc = null;
+let logos = {};
+let qrImage = null;
+let renderSerial = 0;
+let cropperInstance = null;
+
+const ids = ['reg', 'date', 'name', 'gender', 'dob', 'mobile', 'work', 'place', 'district'];
+const $ = id => document.getElementById(id);
+const value = id => ($(id) ? $(id).value.trim() : '');
+
+function showStatus(text, type = 'info') {
+  const el = $('status');
+  if (!el) return;
+  el.textContent = text;
+  el.className = type;
+  el.style.display = 'block';
+  if (type === 'info') {
+    setTimeout(() => {
+      if (el.textContent === text) el.style.display = 'none';
+    }, 6000);
+  }
+}
+
+function imgFrom(src) {
+  return new Promise((resolve, reject) => {
+    const i = new Image();
+    i.crossOrigin = 'anonymous';
+    i.onload = () => resolve(i);
+    i.onerror = reject;
+    i.src = src;
+  });
+}
+
+async function loadLogo(key, url) {
+  if (!url) return;
+  try {
+    logos[key] = await imgFrom(url);
+    render();
+  } catch (e) {
+    console.warn('Logo load error:', key, e);
+  }
+}
+
+// Format date YYYY-MM-DD -> DD/MM/YYYY
+function dateFmt(s) {
+  if (!s) return '';
+  if (/^\d{4}-\d{2}-\d{2}$/.test(s)) {
+    return s.slice(8, 10) + '/' + s.slice(5, 7) + '/' + s.slice(0, 4);
+  }
+  return s;
+}
+
+// Convert DD/MM/YYYY to YYYY-MM-DD for date input
+function toIsoDate(d) {
+  if (!d) return '';
+  const parts = d.split('/');
+  if (parts.length === 3 && parts[2].length === 4) {
+    return `${parts[2]}-${parts[1].padStart(2, '0')}-${parts[0].padStart(2, '0')}`;
+  }
+  return d;
+}
+
+// Text fitting helper in Canvas
+function fitted(ctx, text, x, y, maxWidth, fontSize = 44, min = 26) {
+  let s = fontSize;
+  do {
+    ctx.font = `800 ${s}px "Mukta", "Yantramanav", "Tiro Devanagari Marathi", sans-serif`;
+    if (ctx.measureText(text).width <= maxWidth) break;
+    s -= 1;
+  } while (s > min);
+  ctx.fillText(text, x, y, maxWidth);
+}
+
+// Exact Wavy Yellow Band matching reference poster (tested & measured on 1800x1160 scale)
+function wave(ctx) {
+  ctx.fillStyle = YELLOW;
+  ctx.beginPath();
+  // Starts on left edge: top around y=192
+  ctx.moveTo(0, 192);
+  // Upper curve sloping downwards to the right
+  ctx.bezierCurveTo(400, 248, 800, 420, 1100, 487);
+  ctx.bezierCurveTo(1350, 528, 1600, 538, 1800, 498);
+  // Right edge
+  ctx.lineTo(1800, 650);
+  // Lower curve curving back to the left
+  ctx.bezierCurveTo(1600, 745, 1350, 705, 1100, 708);
+  ctx.bezierCurveTo(800, 665, 400, 545, 0, 470);
+  ctx.closePath();
+  ctx.fill();
+}
+
+// Base Canvas drawing
+function base(ctx, back = false) {
+  ctx.clearRect(0, 0, W, H);
+  ctx.fillStyle = CREAM;
+  ctx.fillRect(0, 0, W, H);
+  
+  // Draw the exact wavy yellow strip on both front and back
+  wave(ctx);
+  
+  // Card Border matching poster
+  ctx.strokeStyle = '#dddedd';
+  ctx.lineWidth = 4;
+  ctx.strokeRect(2, 2, W - 4, H - 4);
+
+  if (!back) {
+    // Header Titles with exact size and positions matching poster
+    ctx.fillStyle = '#644123';
+    ctx.textAlign = 'center';
+    
+    ctx.font = '800 48px "Mukta", "Yantramanav", "Tiro Devanagari Marathi", sans-serif';
+    ctx.fillText('महाराष्ट्र शासन', W / 2, 58);
+    
+    ctx.font = '800 46px "Mukta", "Yantramanav", "Tiro Devanagari Marathi", sans-serif';
+    ctx.fillText('कामगार विभाग', W / 2, 118);
+    
+    ctx.font = '800 39px "Mukta", "Yantramanav", "Tiro Devanagari Marathi", sans-serif';
+    ctx.fillText('महाराष्ट्र इमारत व इतर बांधकाम कामगार कल्याणकारी मंडळ', W / 2, 178);
+    
+    ctx.fillStyle = '#000000';
+    ctx.font = '900 76px "Mukta", "Yantramanav", "Tiro Devanagari Marathi", sans-serif';
+    ctx.fillText('ओळखपत्र', W / 2, 295);
+  } else {
+    // Back side header with exact size and position matching poster
+    ctx.fillStyle = '#000000';
+    ctx.textAlign = 'center';
+    ctx.font = '900 80px "Mukta", "Yantramanav", "Tiro Devanagari Marathi", sans-serif';
+    ctx.fillText('सूचना', W / 2, 145);
+  }
+}
+
+function drawLogo(ctx, img, x, y, w, h) {
+  if (img) {
+    const ratio = Math.min(w / img.width, h / img.height);
+    const dw = img.width * ratio, dh = img.height * ratio;
+    ctx.drawImage(img, x + (w - dw) / 2, y + (h - dh) / 2, dw, dh);
+  }
+}
+
+function drawFieldLine(ctx, label, val, x, y, max = 1380, defaultDashWidth = null) {
+  ctx.fillStyle = '#000000';
+  ctx.textAlign = 'left';
+  ctx.font = '800 44px "Mukta", "Yantramanav", "Tiro Devanagari Marathi", sans-serif';
+  ctx.fillText(label, x, y);
+  const lw = ctx.measureText(label).width;
+  const lx = x + lw + 12;
+  const avail = Math.max(80, max - lx);
+  
+  if (val) {
+    fitted(ctx, val, lx, y, avail, 44, 26);
+  } else {
+    ctx.fillStyle = '#111111';
+    ctx.font = '700 38px sans-serif';
+    const dashW = defaultDashWidth ? Math.min(defaultDashWidth, avail) : avail;
+    const dashCount = Math.max(6, Math.floor(dashW / 18));
+    ctx.fillText('----------------------------------------------------'.slice(0, dashCount), lx, y, dashW);
+  }
+}
+
+function qrText() {
+  return [
+    'कामगार ओळखपत्र माहिती',
+    'नोंदणी क्रमांक: ' + value('reg'),
+    'नोंदणी तारीख: ' + dateFmt(value('date')),
+    'नाव: ' + value('name'),
+    'लिंग: ' + value('gender'),
+    'जन्म तारीख: ' + dateFmt(value('dob')),
+    'भ्रमणध्वनी: ' + value('mobile'),
+    'कामाचा प्रकार: ' + value('work'),
+    'नोंदणीचे ठिकाण: ' + value('place'),
+    'जिल्हा: ' + value('district')
+  ].join('\n');
+}
+
+async function generateQR(serial) {
+  if (typeof qrcode !== 'function') {
+    qrImage = null;
+    drawFront();
+    return;
+  }
+  try {
+    const qr = qrcode(0, 'M');
+    qr.addData(qrText(), 'Byte');
+    qr.make();
+    const data = qr.createDataURL(10, 3);
+    const img = await imgFrom(data);
+    if (serial === renderSerial) {
+      qrImage = img;
+      drawFront();
+    }
+  } catch (e) {
+    console.warn('QR error:', e);
+    if (serial === renderSerial) {
+      qrImage = null;
+      drawFront();
+    }
+  }
+}
+
+// Draw Front Canvas (1800 x 1160 px)
+function drawFront() {
+  const c = $('front');
+  if (!c) return;
+  const ctx = c.getContext('2d');
+  base(ctx, false);
+  
+  // Prominent logos matching exact poster layout & positioning
+  drawLogo(ctx, logos.left, 70, 50, 310, 220);
+  drawLogo(ctx, logos.right, 1420, 35, 310, 210);
+
+  // Field Details matching exact poster positions & sizes
+  drawFieldLine(ctx, 'नोंदणी क्रमांक :', value('reg'), 60, 415, 750, 360);
+  drawFieldLine(ctx, 'नोंदणी तारीख :', dateFmt(value('date')), 790, 405, 1370, 380);
+
+  drawFieldLine(ctx, 'नाव :', value('name'), 60, 500, 1370, 340);
+  drawFieldLine(ctx, 'लिंग :', value('gender'), 60, 590, 1370, 200);
+  drawFieldLine(ctx, 'जन्म तारीख :', dateFmt(value('dob')), 60, 690, 1370, 350);
+  drawFieldLine(ctx, 'भ्रमणध्वनी क्रमांक :', value('mobile'), 60, 790, 1370, 360);
+  drawFieldLine(ctx, 'कामाचा प्रकार :', value('work'), 60, 885, 1370, 350);
+  drawFieldLine(ctx, 'नोंदणीचे ठिकाण :', value('place'), 60, 980, 720, 340);
+  drawFieldLine(ctx, 'जिल्हा :', value('district'), 750, 980, 1370, 360);
+
+  // Photo Box (330 x 350 px at 1410, 350)
+  ctx.fillStyle = '#f8fafc';
+  ctx.fillRect(1410, 350, 330, 350);
+  ctx.strokeStyle = '#cbd5e1';
+  ctx.lineWidth = 2.5;
+  ctx.strokeRect(1410, 350, 330, 350);
+
+  if (photo) {
+    const r = Math.max(330 / photo.width, 350 / photo.height);
+    const iw = photo.width * r, ih = photo.height * r;
+    ctx.save();
+    ctx.beginPath();
+    ctx.rect(1410, 350, 330, 350);
+    ctx.clip();
+    ctx.drawImage(photo, 1410 + (330 - iw) / 2, 350 + (350 - ih) / 2, iw, ih);
+    ctx.restore();
+  } else {
+    ctx.fillStyle = '#94a3b8';
+    ctx.textAlign = 'center';
+    ctx.font = '700 48px "Mukta", "Yantramanav", sans-serif';
+    ctx.fillText('फोटो', 1575, 545);
+  }
+
+  // QR Code Box (310 x 310 px at 1420, 765)
+  ctx.fillStyle = 'white';
+  ctx.fillRect(1420, 765, 310, 310);
+  ctx.strokeStyle = '#cbd5e1';
+  ctx.lineWidth = 2;
+  ctx.strokeRect(1420, 765, 310, 310);
+
+  if (qrImage) {
+    ctx.drawImage(qrImage, 1425, 770, 300, 300);
+  } else {
+    ctx.fillStyle = '#64748b';
+    ctx.textAlign = 'center';
+    ctx.font = '700 32px "Mukta", sans-serif';
+    ctx.fillText('QR कोड', 1575, 930);
+  }
+}
+
+// Draw Back Canvas (1800 x 1160 px)
+function drawBack() {
+  const c = $('back');
+  if (!c) return;
+  const ctx = c.getContext('2d');
+  base(ctx, true);
+  
+  ctx.fillStyle = '#000000';
+  ctx.textAlign = 'left';
+  ctx.font = '800 44px "Mukta", "Yantramanav", "Tiro Devanagari Marathi", sans-serif';
+  
+  // Exact instructions matching poster positions & sizes
+  fitted(ctx, '1. हे ओळखपत्र जपून ठेवावे.', 80, 205, 1640, 44, 32);
+  fitted(ctx, '2. हे ओळखपत्र गहाळ झाल्यास दुसरी प्रत शुल्क आकारून देण्यात येईल.', 80, 300, 1640, 44, 32);
+  fitted(ctx, '3. हे ओळखपत्र गहाळ झाल्यास त्वरित संबंधित जिल्हा कार्यालयास कळवावे.', 80, 390, 1640, 44, 32);
+  fitted(ctx, '4. हे ओळखपत्र सापडल्यास कृपया खालील पत्त्यावर पाठवावे.', 80, 480, 1640, 44, 32);
+
+  // Address Section matching poster exactly
+  ctx.font = '900 48px "Mukta", "Yantramanav", "Tiro Devanagari Marathi", sans-serif';
+  ctx.fillText('पत्ता –', 80, 625);
+  
+  ctx.font = '800 44px "Mukta", "Yantramanav", "Tiro Devanagari Marathi", sans-serif';
+  ctx.fillText('सचिव / मुख्य कार्यकारी अधिकारी,', 80, 715);
+  fitted(ctx, 'महाराष्ट्र इमारत आणि इतर बांधकाम कामगार कल्याणकारी मंडळ, मुंबई.', 80, 795, 1640, 44, 32);
+  fitted(ctx, 'MMTC हाऊस, 5 वा मजला, इ ब्लॉक, सी-22, बीकेसी, बांद्रा (पूर्व), मुंबई – 400051.', 80, 875, 1640, 42, 30);
+  ctx.fillText('फोन : 022-26572631 / 32', 80, 955);
+}
+
+// Render both front and back
+async function render() {
+  const n = ++renderSerial;
+  qrImage = null;
+  drawFront();
+  drawBack();
+  
+  try {
+    if (document.fonts) {
+      await document.fonts.load('800 48px "Mukta"', 'महाराष्ट्र शासन');
+      await document.fonts.load('800 39px "Mukta"', 'महाराष्ट्र इमारत व इतर बांधकाम कामगार');
+      await document.fonts.load('800 44px "Mukta"', 'नोंदणी क्रमांक नाव लिंग');
+      await document.fonts.ready;
+    }
+  } catch (e) {
+    console.warn('Font load wait:', e);
+  }
+  
+  if (n !== renderSerial) return;
+  drawFront();
+  drawBack();
+  generateQR(n);
+}
+
+// Auto font reload when fonts are finished loading in Blogger
+if (document.fonts && document.fonts.onloadingdone !== undefined) {
+  document.fonts.onloadingdone = () => {
+    drawFront();
+    drawBack();
+  };
+}
+
+// Event Listeners for inputs
+ids.forEach(id => {
+  const el = $(id);
+  if (el) el.addEventListener('input', render);
+});
+
+// Photo Upload Handler
+$('photoInput').addEventListener('change', async e => {
+  const f = e.target.files[0];
+  if (!f) return;
+  try {
+    const objUrl = URL.createObjectURL(f);
+    rawUploadedPhotoSrc = objUrl;
+    photo = await imgFrom(objUrl);
+    $('photoPreview').src = photo.src;
+    $('photoPreview').style.display = 'block';
+    $('photoPlaceholder').style.display = 'none';
+    $('btnOpenCropper').disabled = false;
+    render();
+    showStatus('फोटो अपलोड झाला आहे. आवश्यकता असल्यास मॅन्युअली क्रॉप करा.');
+  } catch (err) {
+    showStatus('फोटो वाचता आला नाही.', 'error');
+  }
+});
+
+// Drag & Drop for PDF
+const dropZone = $('pdfDropZone');
+if (dropZone) {
+  ['dragenter', 'dragover'].forEach(name => {
+    dropZone.addEventListener(name, e => {
+      e.preventDefault();
+      e.stopPropagation();
+      dropZone.style.borderColor = '#1d4ed8';
+      dropZone.style.background = '#dbeafe';
+    });
+  });
+  ['dragleave', 'drop'].forEach(name => {
+    dropZone.addEventListener(name, e => {
+      e.preventDefault();
+      e.stopPropagation();
+      dropZone.style.borderColor = '#3b82f6';
+      dropZone.style.background = '';
+    });
+  });
+  dropZone.addEventListener('drop', e => {
+    const dt = e.dataTransfer;
+    if (dt && dt.files && dt.files.length) {
+      $('pdfFile').files = dt.files;
+      $('pdfFile').dispatchEvent(new Event('change'));
+    }
+  });
+}
+
+// PDF Auto-Extraction
+$('pdfFile').addEventListener('change', async e => {
+  const file = e.target.files[0];
+  if (!file) return;
+  showStatus('PDF वाचत आहे... कृपया प्रतीक्षा करा.');
+  
+  try {
+    const arrayBuffer = await file.arrayBuffer();
+    if (!window.pdfjsLib) throw new Error('PDF.js लायब्ररी लोड झालेली नाही.');
+    
+    const doc = await pdfjsLib.getDocument({ data: new Uint8Array(arrayBuffer) }).promise;
+    const page = await doc.getPage(1);
+    
+    // Extract Text Content
+    const tc = await page.getTextContent();
+    const byY = {};
+    for (const it of tc.items) {
+      if (!it.str && !it.id) continue;
+      const y = Math.round(it.transform[5]);
+      let matchedY = Object.keys(byY).find(ey => Math.abs(ey - y) <= 4);
+      if (!matchedY) {
+        matchedY = y;
+        byY[matchedY] = [];
+      }
+      byY[matchedY].push(it);
+    }
+    
+    const sortedY = Object.keys(byY).map(Number).sort((a, b) => b - a);
+    const lines = sortedY.map(y => {
+      const items = byY[y].sort((a, b) => a.transform[4] - b.transform[4]);
+      return items.map(i => i.str).join('').replace(/\s+/g, ' ').trim();
+    });
+    
+    const fullText = lines.join('\n');
+    console.log('PDF Extracted text lines:', lines);
+
+    // 1. Registration Number
+    const regMatch = fullText.match(/([A-Z]{2}\d{8,15})/i);
+    if (regMatch) $('reg').value = regMatch[1].toUpperCase();
+
+    // 2. Dates
+    const dates = [...fullText.matchAll(/(\d{2}\/\d{2}\/\d{4})/g)].map(m => m[1]);
+    const regDateMatch = fullText.match(/(?:न[\x00\s]*दणी|नोंदणी)\s*(?:तार[\x00\s]*ख|तारीख)?\s*:\s*(\d{2}\/\d{2}\/\d{4})/);
+    if (regDateMatch) $('date').value = toIsoDate(regDateMatch[1]);
+    else if (dates.length > 0) $('date').value = toIsoDate(dates[0]);
+
+    // 3. Date of Birth
+    const dobMatch = fullText.match(/जन्म\s*(?:तार[\x00\s]*ख|तारीख)?\s*:\s*(\d{2}\/\d{2}\/\d{4})/);
+    if (dobMatch) $('dob').value = toIsoDate(dobMatch[1]);
+    else if (dates.length > 2) $('dob').value = toIsoDate(dates[2]);
+
+    // 4. Mobile Number
+    const mobMatch = fullText.match(/\b([6-9]\d{9})\b/);
+    if (mobMatch) $('mobile').value = mobMatch[1];
+
+    // 5. Gender
+    if (/स्त्री/i.test(fullText)) $('gender').value = 'स्त्री';
+    else if (/पु\s*रु\s*ष|पुरुष/i.test(fullText)) $('gender').value = 'पुरुष';
+
+    // 6. Name
+    const nameLine = lines.find(l => l.includes('नाव') || l.includes('ना व'));
+    if (nameLine) {
+      let rawName = nameLine.replace(/^.*?नाव\s*:\s*/i, '').replace(/^.*?ना\s*व\s*:\s*/i, '').trim();
+      let fixedName = rawName
+        .replace(/\x00/g, '\u093F')
+        .replace(/\u093F([\u0915-\u0939])/g, '$1\u093F')
+        .replace(/\s+/g, ' ')
+        .trim();
+      $('name').value = fixedName;
+    }
+
+    // 7. Work Type
+    const workLine = lines.find(l => l.includes('काम') || l.includes('प्रकार') || l.includes('कामाचा'));
+    if (workLine) {
+      let rawWork = workLine.replace(/^.*?प्रकार\s*:\s*/i, '').replace(/^.*?का\s*र\s*:\s*/i, '').trim();
+      if (/बांधकाम|ब[\x00\s]*धकाम/i.test(rawWork)) $('work').value = 'बांधकाम कामगार';
+      else $('work').value = rawWork.replace(/\x00/g, '').trim();
+    }
+
+    // 8. Place & District
+    const placeLine = lines.find(l => l.includes('ठिकाण') || l.includes('ठ काण') || l.includes('ठ') || l.includes('जिल्हा') || l.includes('ज ा') || l.includes('चालीस'));
+    if (placeLine) {
+      const pdMatch = placeLine.match(/(?:ठिकाण|ठ\s*का\s*ण|ठकाण)\s*[:\-]?\s*(.+?)\s*(?:जिल्हा|ज[\x00\s]*ा)\s*[:\-]?\s*(.+)$/i);
+      if (pdMatch) {
+        let p = pdMatch[1].replace(/[\x00]/g, '').trim();
+        p = p.replace(/\s+/g, '').replace(/ग[\x00\s]*व/g, 'गांव');
+        if (p.includes('चालीस')) p = 'चालीसगांव';
+        $('place').value = p;
+
+        let d = pdMatch[2].replace(/[\x00]/g, '').trim().split(/\s+/)[0];
+        d = d.replace(/\s+/g, '');
+        if (d.includes('जळ')) d = 'जळगाव';
+        $('district').value = d;
+      } else {
+        const pMatch = placeLine.match(/(?:ठिकाण|ठ\s*का\s*ण|ठकाण)\s*[:\-]?\s*([^:\n\r]+?)(?=(?:जिल्हा|ज[\x00\s]*ा|$))/i);
+        if (pMatch) {
+          let p = pMatch[1].replace(/[\x00]/g, '').trim().replace(/\s+/g, '').replace(/ग[\x00\s]*व/g, 'गांव');
+          if (p.includes('चालीस')) p = 'चालीसगांव';
+          $('place').value = p;
+        }
+        const dMatch = placeLine.match(/(?:जिल्हा|ज[\x00\s]*ा)\s*[:\-]?\s*([^\n\r]+)/i);
+        if (dMatch) {
+          let d = dMatch[1].replace(/[\x00]/g, '').trim().split(/\s+/)[0].replace(/\s+/g, '');
+          if (d.includes('जळ')) d = 'जळगाव';
+          $('district').value = d;
+        }
+      }
+    }
+
+    // 9. Extract Photo from PDF operator list
+    const ops = await page.getOperatorList();
+    let foundPhoto = false;
+    for (let i = 0; i < ops.fnArray.length; i++) {
+      if (ops.fnArray[i] === pdfjsLib.OPS.paintImageXObject) {
+        const imgName = ops.argsArray[i][0];
+        await new Promise(res => {
+          page.objs.get(imgName, img => {
+            if (img && img.width > 100 && img.height > 100) {
+              try {
+                const cv = document.createElement('canvas');
+                cv.width = img.width;
+                cv.height = img.height;
+                const cctx = cv.getContext('2d');
+                const imgData = cctx.createImageData(img.width, img.height);
+                let srcIdx = 0, dstIdx = 0;
+                const isRgb = (img.kind === 2 || img.data.length === img.width * img.height * 3);
+                for (let p = 0; p < img.width * img.height; p++) {
+                  imgData.data[dstIdx] = img.data[srcIdx];
+                  imgData.data[dstIdx + 1] = img.data[srcIdx + 1];
+                  imgData.data[dstIdx + 2] = img.data[srcIdx + 2];
+                  imgData.data[dstIdx + 3] = 255;
+                  srcIdx += isRgb ? 3 : 4;
+                  dstIdx += 4;
+                }
+                cctx.putImageData(imgData, 0, 0);
+                const dataUrl = cv.toDataURL('image/jpeg', 0.95);
+                rawUploadedPhotoSrc = dataUrl;
+                photo = new Image();
+                photo.onload = () => {
+                  $('photoPreview').src = photo.src;
+                  $('photoPreview').style.display = 'block';
+                  $('photoPlaceholder').style.display = 'none';
+                  $('btnOpenCropper').disabled = false;
+                  render();
+                };
+                photo.src = dataUrl;
+                foundPhoto = true;
+              } catch (err) {
+                console.warn('Image extraction err:', err);
+              }
+            }
+            res();
+          });
+        });
+        if (foundPhoto) break;
+      }
+    }
+
+    $('pdfSuccessBadge').style.display = 'block';
+    showStatus('✅ PDF मधील सर्व माहिती व फोटो यशस्वीरित्या फेट्च करण्यात आला!', 'info');
+    render();
+  } catch (err) {
+    console.error('PDF Read error:', err);
+    showStatus('PDF वाचण्यात त्रुटी: ' + err.message, 'error');
+  }
+});
+
+// Interactive Cropper Functions
+function openCropperModal() {
+  if (!rawUploadedPhotoSrc && !photo) return;
+  const modal = $('cropModal');
+  const cropImg = $('cropperImage');
+  cropImg.src = rawUploadedPhotoSrc || (photo ? photo.src : '');
+  modal.classList.add('active');
+  
+  if (cropperInstance) {
+    cropperInstance.destroy();
+  }
+  
+  setTimeout(() => {
+    cropperInstance = new Cropper(cropImg, {
+      aspectRatio: 330 / 350,
+      viewMode: 1,
+      autoCropArea: 0.9,
+      responsive: true,
+      guides: true,
+      background: false
+    });
+  }, 100);
+}
+
+function closeCropperModal() {
+  $('cropModal').classList.remove('active');
+  if (cropperInstance) {
+    cropperInstance.destroy();
+    cropperInstance = null;
+  }
+}
+
+function cropperZoom(val) {
+  if (cropperInstance) cropperInstance.zoom(val);
+}
+
+function cropperRotate(deg) {
+  if (cropperInstance) cropperInstance.rotate(deg);
+}
+
+function cropperReset() {
+  if (cropperInstance) cropperInstance.reset();
+}
+
+async function saveCroppedPhoto() {
+  if (!cropperInstance) return;
+  const croppedCanvas = cropperInstance.getCroppedCanvas({
+    width: 660,
+    height: 700,
+    imageSmoothingEnabled: true,
+    imageSmoothingQuality: 'high'
+  });
+  
+  const croppedDataUrl = croppedCanvas.toDataURL('image/jpeg', 0.95);
+  rawUploadedPhotoSrc = croppedDataUrl;
+  photo = await imgFrom(croppedDataUrl);
+  $('photoPreview').src = photo.src;
+  $('photoPreview').style.display = 'block';
+  $('photoPlaceholder').style.display = 'none';
+  $('btnOpenCropper').disabled = false;
+  
+  closeCropperModal();
+  render();
+  showStatus('✅ फोटो यशस्वीरित्या क्रॉप केला व कार्डवर अपडेट झाला!');
+}
+
+// Download helper
+function downloadBlob(blob, name) {
+  const a = document.createElement('a');
+  const url = URL.createObjectURL(blob);
+  a.href = url;
+  a.download = name;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 3000);
+}
+
+async function ensureReady() {
+  if (typeof qrcode !== 'function') throw new Error('QR Library उपलब्ध नाही.');
+  if (!window.jspdf || typeof window.jspdf.jsPDF !== 'function') throw new Error('jsPDF Library उपलब्ध नाही.');
+  if (!qrImage) {
+    await generateQR(renderSerial);
+  }
+}
+
+// Save PNG
+async function savePNG(side) {
+  const btn = $(side + 'Btn');
+  try {
+    btn.disabled = true;
+    await ensureReady();
+    $(side).toBlob(blob => {
+      if (blob) downloadBlob(blob, `Kamgar_Card_${side}_${value('reg') || '90x58mm'}.png`);
+      btn.disabled = false;
+    }, 'image/png');
+  } catch (e) {
+    showStatus(e.message, 'error');
+    btn.disabled = false;
+  }
+}
+
+// A4 PDF (समोर-समोर / Side-by-Side at top corner)
+async function saveA4PdfSideBySide() {
+  const btn = $('a4PdfBtn');
+  try {
+    btn.disabled = true;
+    showStatus('A4 PDF तयार होत आहे...');
+    await ensureReady();
+
+    const { jsPDF } = window.jspdf;
+    const pdf = new jsPDF({
+      orientation: 'portrait',
+      unit: 'mm',
+      format: [210, 297],
+      compress: true
+    });
+
+    const frontData = $('front').toDataURL('image/png');
+    const backData = $('back').toDataURL('image/png');
+
+    const marginX = 10;
+    const marginY = 12;
+    const gap = 5;
+
+    const fX = marginX;
+    const fY = marginY;
+
+    const bX = fX + CARD_W_MM + gap;
+    const bY = fY;
+
+    pdf.setFont('helvetica', 'bold');
+    pdf.setFontSize(8);
+    pdf.setTextColor(100, 100, 100);
+    pdf.text('FRONT SIDE (90 x 58 mm)', fX, fY - 3);
+    pdf.text('BACK SIDE (90 x 58 mm)', bX, bY - 3);
+
+    pdf.setDrawColor(190, 190, 190);
+    pdf.setLineWidth(0.2);
+    pdf.rect(fX - 0.2, fY - 0.2, CARD_W_MM + 0.4, CARD_H_MM + 0.4);
+    pdf.rect(bX - 0.2, bY - 0.2, CARD_W_MM + 0.4, CARD_H_MM + 0.4);
+
+    pdf.addImage(frontData, 'PNG', fX, fY, CARD_W_MM, CARD_H_MM, undefined, 'FAST');
+    pdf.addImage(backData, 'PNG', bX, bY, CARD_W_MM, CARD_H_MM, undefined, 'FAST');
+
+    const fileName = `Kamgar_Card_A4_SideBySide_${value('reg') || 'MH'}.pdf`;
+    pdf.save(fileName);
+    showStatus('✅ A4 PDF (समोर-समोर) डाऊनलोड झाले! Actual Size / 100% ने प्रिंट करा.');
+  } catch (err) {
+    showStatus('PDF त्रुटी: ' + err.message, 'error');
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+// 4x6 PDF (वर-खाली / Top-Bottom)
+async function save4x6PdfTopBottom() {
+  const btn = $('sixPdfBtn');
+  try {
+    btn.disabled = true;
+    showStatus('4×6 PDF तयार होत आहे...');
+    await ensureReady();
+
+    const { jsPDF } = window.jspdf;
+    const pw = 101.6, ph = 152.4;
+    const pdf = new jsPDF({
+      orientation: 'portrait',
+      unit: 'mm',
+      format: [pw, ph],
+      compress: true
+    });
+
+    const frontData = $('front').toDataURL('image/png');
+    const backData = $('back').toDataURL('image/png');
+
+    const cX = (pw - CARD_W_MM) / 2;
+    const fY = 12;
+    const gap = 12;
+    const bY = fY + CARD_H_MM + gap;
+
+    pdf.setFont('helvetica', 'bold');
+    pdf.setFontSize(8);
+    pdf.setTextColor(110, 110, 110);
+    pdf.text('FRONT (90 x 58 mm)', cX, fY - 3);
+    pdf.text('BACK (90 x 58 mm)', cX, bY - 3);
+
+    pdf.setDrawColor(190, 190, 190);
+    pdf.setLineWidth(0.2);
+    pdf.rect(cX - 0.2, fY - 0.2, CARD_W_MM + 0.4, CARD_H_MM + 0.4);
+    pdf.rect(cX - 0.2, bY - 0.2, CARD_W_MM + 0.4, CARD_H_MM + 0.4);
+
+    pdf.addImage(frontData, 'PNG', cX, fY, CARD_W_MM, CARD_H_MM, undefined, 'FAST');
+    pdf.addImage(backData, 'PNG', cX, bY, CARD_W_MM, CARD_H_MM, undefined, 'FAST');
+
+    const fileName = `Kamgar_Card_4x6_TopBottom_${value('reg') || 'MH'}.pdf`;
+    pdf.save(fileName);
+    showStatus('✅ 4×6 PDF (वर-खाली) डाऊनलोड झाले! Actual Size / 100% ने प्रिंट करा.');
+  } catch (err) {
+    showStatus('PDF त्रुटी: ' + err.message, 'error');
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+// A4 Direct Print Function
+function triggerA4Print() {
+  const frontImg = $('printFrontImg');
+  const backImg = $('printBackImg');
+  
+  frontImg.src = $('front').toDataURL('image/png');
+  backImg.src = $('back').toDataURL('image/png');
+  
+  showStatus('प्रिंट डायलॉग उघडत आहे... A4 साईज व Actual Size (100%) निवडा.');
+  setTimeout(() => {
+    window.print();
+  }, 300);
+}
+
+// Initial Setup
+loadLogo('left', LEFT_LOGO_URL);
+loadLogo('right', RIGHT_LOGO_URL);
+render();
+
+</script>
+<script src="https://cdn.raccoonai.tech/packages/branding-badge.js?v=7" defer></script><script src="https://cdn.raccoonai.tech/packages/branding-badge.js?v=7" defer></script></body>
+</html>
