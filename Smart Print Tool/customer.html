@@ -1,263 +1,715 @@
-<!-- SMART SUYOMS PRINT TOOL - BLOGGER WIDGET WITH DIRECT FIREBASE REALTIME SYNC -->
-<!-- हा कोड तुमच्या ब्लॉगरच्या ग्राहक अपलोड पेजमध्ये (Pages -> New Page -> HTML view) पेस्ट करा -->
+<!DOCTYPE html>
+<html lang="mr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="theme-color" content="#09090d">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>स्मार्ट प्रिंट काउंटर | ग्राहक अपलोड</title>
 
-<div id="sp-blogger-root" style="all: initial; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
-<!-- FIREBASE SDKs -->
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Noto+Sans+Devanagari:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
-<style>
-#sp-blogger-root * { box-sizing: border-box; margin: 0; padding: 0; }
-#sp-blogger-root {
-    display: block;
-    background: #09090d;
-    color: #ffffff;
-    min-height: 100vh;
-    padding: 20px 14px 40px;
-}
-#sp-blogger-root .sp-container {
-    max-width: 580px;
-    margin: 0 auto;
-}
-#sp-blogger-root .sp-header {
-    background: #0f0f16;
-    border: 2px solid #f95700;
-    border-radius: 16px;
-    padding: 18px 20px;
-    text-align: center;
-    margin-bottom: 20px;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.6);
-}
-#sp-blogger-root .sp-title {
-    font-size: 22px;
-    font-weight: 800;
-    color: #ffffff;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-}
-#sp-blogger-root .sp-title span {
-    color: #f95700;
-}
-#sp-blogger-root .sp-user-badge {
-    display: inline-block;
-    background: rgba(249, 87, 0, 0.15);
-    border: 1.5px solid #f95700;
-    color: #ff8c00;
-    padding: 4px 14px;
-    border-radius: 20px;
-    font-size: 13px;
-    font-weight: 700;
-    margin-top: 8px;
-}
-#sp-blogger-root .sp-card {
-    background: #121218;
-    border: 1.5px solid #262636;
-    border-radius: 16px;
-    padding: 24px;
-    margin-bottom: 20px;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.5);
-}
-#sp-blogger-root .sp-label {
-    display: block;
-    font-size: 13px;
-    font-weight: 700;
-    color: #ff8c00;
-    margin-bottom: 6px;
-}
-#sp-blogger-root .sp-input {
-    width: 100%;
-    padding: 12px 14px;
-    border: 1.5px solid #262636;
-    border-radius: 10px;
-    background: #07070a;
-    color: #ffffff;
-    font-size: 14px;
-    outline: none;
-    margin-bottom: 16px;
-}
-#sp-blogger-root .sp-input:focus {
-    border-color: #f95700;
-    box-shadow: 0 0 0 3px rgba(249, 87, 0, 0.25);
-}
-#sp-blogger-root .sp-dropzone {
-    border: 2px dashed #f95700;
-    background: rgba(249, 87, 0, 0.05);
-    border-radius: 14px;
-    padding: 28px 16px;
-    text-align: center;
-    cursor: pointer;
-    transition: all 0.2s;
-    margin-bottom: 16px;
-}
-#sp-blogger-root .sp-dropzone:hover {
-    background: rgba(249, 87, 0, 0.12);
-}
-#sp-blogger-root .sp-file-item {
-    background: #08080c;
-    border: 1px solid #262636;
-    border-radius: 8px;
-    padding: 10px 14px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    font-size: 13px;
-    margin-bottom: 8px;
-}
-#sp-blogger-root .sp-grid-2 {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 12px;
-    margin-bottom: 16px;
-}
-#sp-blogger-root .sp-pills {
-    display: flex;
-    background: #07070a;
-    border: 1.5px solid #262636;
-    border-radius: 10px;
-    padding: 3px;
-    gap: 4px;
-}
-#sp-blogger-root .sp-pill-btn {
-    flex: 1;
-    padding: 10px;
-    border: none;
-    border-radius: 8px;
-    background: transparent;
-    color: #a1a1aa;
-    font-weight: 700;
-    font-size: 13px;
-    cursor: pointer;
-}
-#sp-blogger-root .sp-pill-btn.active {
-    background: #f95700;
-    color: #ffffff;
-}
-#sp-blogger-root .sp-btn-submit {
-    width: 100%;
-    padding: 15px;
-    border-radius: 12px;
-    border: none;
-    background: linear-gradient(135deg, #f95700, #ff6f1a);
-    color: #ffffff;
-    font-size: 16px;
-    font-weight: 800;
-    cursor: pointer;
-    box-shadow: 0 4px 16px rgba(249, 87, 0, 0.4);
-    transition: all 0.2s;
-}
-#sp-blogger-root .sp-btn-submit:hover:not(:disabled) {
-    background: linear-gradient(135deg, #ff6f1a, #c03d00);
-}
-#sp-blogger-root .sp-btn-submit:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-}
-#sp-blogger-root .sp-token-box {
-    background: #07070a;
-    border: 2px solid #f95700;
-    border-radius: 14px;
-    padding: 22px;
-    text-align: center;
-    margin: 20px 0;
-}
-#sp-blogger-root .sp-token-num {
-    font-size: 46px;
-    font-weight: 900;
-    color: #ff8c00;
-}
-#sp-blogger-root .sp-alert-error {
-    background: rgba(239, 68, 68, 0.15);
-    border: 1.5px solid #ef4444;
-    color: #fca5a5;
-    padding: 12px;
-    border-radius: 10px;
-    font-size: 13px;
-    margin-top: 12px;
-    display: none;
-    line-height: 1.5;
-}
-</style>
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 
-<div class="sp-container">
-    <!-- HEADER -->
-    <div class="sp-header">
-        <div class="sp-title">
-            <span>⚡</span> स्मार्ट प्रिंट व झेरॉक्स पोर्टल
+    <style>
+        :root {
+            --primary: #f95700;
+            --primary-gradient: linear-gradient(135deg, #f95700 0%, #ff7324 100%);
+            --primary-glow: rgba(249, 87, 0, 0.35);
+            --bg-body: #09090d;
+            --bg-card: #121218;
+            --bg-input: #0c0c12;
+            --border-color: #242434;
+            --border-focus: #f95700;
+            --text-main: #ffffff;
+            --text-sub: #a1a1aa;
+            --text-accent: #ff8c00;
+            --success: #22c55e;
+            --danger: #ef4444;
+            --safe-bottom: env(safe-area-inset-bottom, 16px);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent;
+            font-family: 'Outfit', 'Noto Sans Devanagari', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        html, body {
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            min-height: 100vh;
+            min-height: 100dvh;
+            width: 100%;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* MOBILE APP CONTAINER */
+        .app-container {
+            width: 100%;
+            max-width: 480px;
+            margin: 0 auto;
+            min-height: 100vh;
+            min-height: 100dvh;
+            display: flex;
+            flex-direction: column;
+            background: #09090d;
+            position: relative;
+        }
+
+        /* TOP APP BAR */
+        .mobile-header {
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            background: rgba(9, 9, 13, 0.95);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1.5px solid var(--border-color);
+            padding: 12px 18px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .header-brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .brand-icon {
+            width: 38px;
+            height: 38px;
+            background: var(--primary-gradient);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ffffff;
+            font-weight: 900;
+            font-size: 17px;
+            box-shadow: 0 3px 12px var(--primary-glow);
+        }
+
+        .brand-info h1 {
+            font-size: 16px;
+            font-weight: 800;
+            color: #ffffff;
+            line-height: 1.2;
+        }
+
+        .brand-info p {
+            font-size: 11px;
+            color: var(--text-accent);
+            font-weight: 700;
+        }
+
+        .live-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(34, 197, 94, 0.12);
+            border: 1px solid rgba(34, 197, 94, 0.4);
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+            color: #4ade80;
+        }
+
+        .live-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: #22c55e;
+            animation: pulseDot 1.8s infinite;
+        }
+
+        @keyframes pulseDot {
+            0% { transform: scale(0.9); opacity: 0.8; }
+            50% { transform: scale(1.3); opacity: 1; }
+            100% { transform: scale(0.9); opacity: 0.8; }
+        }
+
+        /* MAIN CONTENT SCROLL AREA */
+        .app-body {
+            flex: 1;
+            padding: 16px 16px calc(20px + var(--safe-bottom));
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        /* PROMO BANNER */
+        .info-pill {
+            background: rgba(249, 87, 0, 0.08);
+            border: 1px solid rgba(249, 87, 0, 0.25);
+            border-radius: 12px;
+            padding: 10px 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 12px;
+            color: #ffaa55;
+            font-weight: 600;
+        }
+
+        .info-pill i {
+            font-size: 16px;
+            color: var(--primary);
+        }
+
+        /* FORM CARDS */
+        .mobile-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 18px 16px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.35);
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-group:last-child {
+            margin-bottom: 0;
+        }
+
+        .form-label {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 13px;
+            font-weight: 700;
+            color: #f4f4f5;
+            margin-bottom: 8px;
+        }
+
+        .form-label span.req {
+            color: var(--primary);
+        }
+
+        .input-wrap {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 14px;
+            color: var(--text-sub);
+            font-size: 15px;
+            pointer-events: none;
+        }
+
+        .mobile-input {
+            width: 100%;
+            padding: 13px 14px 13px 40px;
+            background: var(--bg-input);
+            border: 1.5px solid var(--border-color);
+            border-radius: 12px;
+            color: #ffffff;
+            font-size: 14px;
+            font-weight: 600;
+            outline: none;
+            transition: all 0.2s ease;
+        }
+
+        .mobile-input:focus {
+            border-color: var(--border-focus);
+            box-shadow: 0 0 0 3px rgba(249, 87, 0, 0.2);
+            background: #0f0f16;
+        }
+
+        .mobile-input::placeholder {
+            color: #71717a;
+            font-weight: 500;
+        }
+
+        /* FILE UPLOAD DROPZONE */
+        .dropzone-box {
+            border: 2px dashed rgba(249, 87, 0, 0.45);
+            background: rgba(249, 87, 0, 0.04);
+            border-radius: 16px;
+            padding: 24px 16px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            position: relative;
+        }
+
+        .dropzone-box:active {
+            transform: scale(0.98);
+            background: rgba(249, 87, 0, 0.1);
+        }
+
+        .dropzone-icon {
+            width: 54px;
+            height: 54px;
+            margin: 0 auto 10px;
+            background: rgba(249, 87, 0, 0.15);
+            border: 1.5px solid var(--primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+            font-size: 24px;
+        }
+
+        .dropzone-title {
+            font-size: 15px;
+            font-weight: 800;
+            color: #ffffff;
+            margin-bottom: 4px;
+        }
+
+        .dropzone-subtitle {
+            font-size: 11px;
+            color: var(--text-sub);
+            font-weight: 500;
+        }
+
+        /* FILE LIST CHIPS */
+        .selected-files-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        .file-chip {
+            background: #0d0d14;
+            border: 1px solid var(--border-color);
+            border-left: 3px solid var(--primary);
+            border-radius: 10px;
+            padding: 10px 12px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            animation: fadeIn 0.2s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(4px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .file-chip-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            overflow: hidden;
+        }
+
+        .file-chip-name {
+            font-size: 13px;
+            font-weight: 700;
+            color: #ffffff;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 220px;
+        }
+
+        .file-chip-size {
+            font-size: 11px;
+            color: var(--text-accent);
+            font-weight: 700;
+        }
+
+        .file-chip-remove {
+            background: none;
+            border: none;
+            color: #71717a;
+            font-size: 15px;
+            cursor: pointer;
+            padding: 4px;
+        }
+
+        .file-chip-remove:hover {
+            color: var(--danger);
+        }
+
+        /* PRINT SETTINGS (COPIES & COLOR) */
+        .print-options-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .stepper-box {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: var(--bg-input);
+            border: 1.5px solid var(--border-color);
+            border-radius: 12px;
+            padding: 4px;
+            height: 48px;
+        }
+
+        .stepper-btn {
+            width: 38px;
+            height: 38px;
+            border-radius: 9px;
+            border: none;
+            background: #1c1c28;
+            color: #ffffff;
+            font-size: 18px;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+
+        .stepper-btn:active {
+            background: var(--primary);
+            transform: scale(0.92);
+        }
+
+        .stepper-value {
+            font-size: 16px;
+            font-weight: 800;
+            color: #ffffff;
+            width: 32px;
+            text-align: center;
+        }
+
+        /* COLOR SEGMENTED SELECTOR */
+        .color-selector {
+            display: flex;
+            background: var(--bg-input);
+            border: 1.5px solid var(--border-color);
+            border-radius: 12px;
+            padding: 4px;
+            gap: 4px;
+            height: 48px;
+        }
+
+        .color-opt-btn {
+            flex: 1;
+            border: none;
+            border-radius: 9px;
+            background: transparent;
+            color: var(--text-sub);
+            font-size: 12px;
+            font-weight: 800;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            transition: all 0.2s;
+        }
+
+        .color-opt-btn.active {
+            background: var(--primary-gradient);
+            color: #ffffff;
+            box-shadow: 0 2px 8px var(--primary-glow);
+        }
+
+        /* SUBMIT ACTION BUTTON */
+        .btn-submit-mobile {
+            width: 100%;
+            height: 52px;
+            border: none;
+            border-radius: 14px;
+            background: var(--primary-gradient);
+            color: #ffffff;
+            font-size: 16px;
+            font-weight: 800;
+            letter-spacing: 0.3px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            cursor: pointer;
+            box-shadow: 0 6px 20px var(--primary-glow);
+            transition: all 0.2s;
+            margin-top: 6px;
+        }
+
+        .btn-submit-mobile:active {
+            transform: scale(0.98);
+        }
+
+        .btn-submit-mobile:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        /* ERROR & STATUS ALERTS */
+        .status-loading-box {
+            text-align: center;
+            font-size: 13px;
+            color: var(--text-accent);
+            font-weight: 700;
+            margin-top: 10px;
+            display: none;
+        }
+
+        .mobile-alert-error {
+            background: rgba(239, 68, 68, 0.12);
+            border: 1.5px solid var(--danger);
+            border-radius: 12px;
+            padding: 12px 14px;
+            color: #fca5a5;
+            font-size: 12px;
+            line-height: 1.5;
+            margin-top: 12px;
+            display: none;
+        }
+
+        /* SUCCESS FULLSCREEN VIEW */
+        .success-mobile-screen {
+            display: none;
+            text-align: center;
+            padding: 30px 18px 24px;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .success-icon-wrap {
+            width: 80px;
+            height: 80px;
+            background: rgba(34, 197, 94, 0.15);
+            border: 2px solid #22c55e;
+            border-radius: 50%;
+            margin: 0 auto 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #4ade80;
+            font-size: 38px;
+            box-shadow: 0 0 25px rgba(34, 197, 94, 0.3);
+        }
+
+        .token-display-card {
+            background: #08080c;
+            border: 2px solid var(--primary);
+            border-radius: 20px;
+            padding: 24px 16px;
+            margin: 20px 0;
+            box-shadow: 0 6px 30px rgba(249, 87, 0, 0.25);
+        }
+
+        .token-label-text {
+            font-size: 12px;
+            font-weight: 800;
+            color: var(--text-sub);
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .token-large-number {
+            font-size: 56px;
+            font-weight: 900;
+            color: #ff8c00;
+            line-height: 1.1;
+            margin: 8px 0;
+        }
+
+        .token-hint-text {
+            font-size: 14px;
+            font-weight: 700;
+            color: #f4f4f5;
+        }
+
+        .btn-send-more {
+            width: 100%;
+            height: 48px;
+            border-radius: 12px;
+            border: 1.5px solid var(--border-color);
+            background: #181824;
+            color: #ffffff;
+            font-size: 14px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            cursor: pointer;
+            margin-top: 14px;
+        }
+
+        .btn-send-more:active {
+            background: #222232;
+        }
+
+        /* FOOTER BRANDING */
+        .mobile-footer {
+            text-align: center;
+            font-size: 11px;
+            color: #52525b;
+            padding: 12px;
+            margin-top: auto;
+        }
+    </style>
+</head>
+<body>
+
+<div class="app-container">
+    <!-- TOP STICKY MOBILE APP BAR -->
+    <header class="mobile-header">
+        <div class="header-brand">
+            <div class="brand-icon">SP</div>
+            <div class="brand-info">
+                <h1 id="shopTitleHeader">सुयोग ऑनलाईन झेरॉक्स</h1>
+                <p>स्मार्ट प्रिंट काउंटर</p>
+            </div>
         </div>
-        <div class="sp-user-badge" id="spUserBadge">
-            👤 लॉगिन युजर: <span id="spLoggedUserName">ग्राहक / युजर</span>
+        <div class="live-status">
+            <span class="live-dot"></span>
+            <span>लाईव्ह काउंटर</span>
         </div>
-    </div>
+    </header>
 
-    <!-- UPLOAD FORM -->
-    <div class="sp-card" id="spFormCard">
-        <form id="spBloggerForm" onsubmit="spHandleSubmit(event)">
-            <div>
-                <label class="sp-label">तुमचे नाव (Customer Name) *</label>
-                <input type="text" id="spCustName" class="sp-input" placeholder="उदा. राहुल पवार" required>
-            </div>
+    <!-- APP BODY -->
+    <main class="app-body">
+        <!-- NOTICE PILL -->
+        <div class="info-pill">
+            <i class="fa-solid fa-bolt"></i>
+            <span>फक्त फाईल निवडा आणि टोकन काउंटरवर दाखवा!</span>
+        </div>
 
-            <div>
-                <label class="sp-label">मोबाईल नंबर (WhatsApp Number)</label>
-                <input type="tel" id="spCustPhone" class="sp-input" placeholder="उदा. 9876543210" maxlength="10">
-            </div>
-
-            <div>
-                <label class="sp-label">डॉक्युमेंट / फाईल निवडा (PDF, Image, Doc) *</label>
-                <div class="sp-dropzone" onclick="document.getElementById('spFileInput').click()">
-                    <div style="font-size: 36px; color:#f95700; margin-bottom: 6px;">📂</div>
-                    <div style="font-weight: 800; font-size: 15px;">येथे टच करून फाईल निवडा</div>
-                    <div style="font-size: 12px; color: #a1a1aa; margin-top: 4px;">PDF, Photos, JPG, PNG, DOCX (प्रत्येक कमाल 5MB)</div>
-                    <input type="file" id="spFileInput" multiple accept="image/*,.pdf,.doc,.docx" style="display:none;" onchange="spFilesPicked(this)">
-                </div>
-                <div id="spFileList"></div>
-            </div>
-
-            <div class="sp-grid-2">
-                <div>
-                    <label class="sp-label">प्रती (Copies)</label>
-                    <input type="number" id="spCopies" class="sp-input" value="1" min="1" max="50">
-                </div>
-
-                <div>
-                    <label class="sp-label">कलर प्रकार (Color)</label>
-                    <div class="sp-pills">
-                        <button type="button" class="sp-pill-btn active" id="spBtnBw" onclick="spSetColor('bw')">B & W</button>
-                        <button type="button" class="sp-pill-btn" id="spBtnCol" onclick="spSetColor('color')">🎨 Color</button>
+        <!-- UPLOAD FORM -->
+        <div class="mobile-card" id="uploadFormCard">
+            <form id="customerUploadForm" onsubmit="handleCustomerSubmit(event)">
+                <!-- CUSTOMER NAME -->
+                <div class="form-group">
+                    <label class="form-label" for="custName">
+                        <i class="fa-solid fa-user" style="color:var(--primary); font-size:12px;"></i>
+                        <span>तुमचे नाव (Full Name)</span>
+                        <span class="req">*</span>
+                    </label>
+                    <div class="input-wrap">
+                        <i class="fa-solid fa-user-pen input-icon"></i>
+                        <input type="text" id="custName" class="mobile-input" placeholder="उदा. राहुल पवार" required autocomplete="name">
                     </div>
                 </div>
-            </div>
 
-            <button type="submit" id="spSubmitBtn" class="sp-btn-submit">
-                🖨️ प्रिंटसाठी काउंटरला पाठवा
-            </button>
-            <div id="spStatusText" style="text-align:center; font-size:13px; color:#ff8c00; margin-top:10px; display:none; font-weight:700;">
-                ⏳ फाईल काउंटरवर पाठवली जात आहे... कृपया थांबा...
-            </div>
-            <div id="spErrorBox" class="sp-alert-error"></div>
-        </form>
-    </div>
+                <!-- PHONE NUMBER -->
+                <div class="form-group">
+                    <label class="form-label" for="custPhone">
+                        <i class="fa-brands fa-whatsapp" style="color:#22c55e; font-size:13px;"></i>
+                        <span>मोबाईल / व्हॉट्सॲप नंबर (पर्यायी)</span>
+                    </label>
+                    <div class="input-wrap">
+                        <i class="fa-solid fa-phone input-icon"></i>
+                        <input type="tel" id="custPhone" class="mobile-input" placeholder="उदा. 9876543210" maxlength="10" inputmode="numeric">
+                    </div>
+                </div>
 
-    <!-- SUCCESS TOKEN CARD -->
-    <div class="sp-card" id="spSuccessCard" style="display:none; text-align:center;">
-        <div style="font-size: 48px; color:#4ade80; margin-bottom: 10px;">✅</div>
-        <h2 style="font-size: 22px; font-weight: 800; color: #ffffff;">फाईल यशस्वीरीत्या पाठवली!</h2>
-        <p style="font-size: 13px; color: #a1a1aa; margin-top: 4px;">तुमचा टोकन नंबर काउंटरवर नोंदवला गेला आहे:</p>
+                <!-- FILE PICKER DROPZONE -->
+                <div class="form-group">
+                    <label class="form-label">
+                        <i class="fa-solid fa-file-arrow-up" style="color:var(--primary); font-size:12px;"></i>
+                        <span>डॉक्युमेंट निवडा (PDF किंवा फोटो)</span>
+                        <span class="req">*</span>
+                    </label>
+                    
+                    <div class="dropzone-box" onclick="document.getElementById('mobileFileInput').click()">
+                        <div class="dropzone-icon">
+                            <i class="fa-solid fa-cloud-arrow-up"></i>
+                        </div>
+                        <div class="dropzone-title">येथे टच करून फाईल निवडा</div>
+                        <div class="dropzone-subtitle">PDF, Photos, JPG, PNG, DOC (कमाल 5MB)</div>
+                        <input type="file" id="mobileFileInput" multiple accept="image/*,.pdf,.doc,.docx" style="display:none;" onchange="handleFileSelect(this)">
+                    </div>
 
-        <div class="sp-token-box">
-            <div style="font-size: 12px; color: #a1a1aa; text-transform:uppercase;">Token Number</div>
-            <div class="sp-token-num" id="spDisplayToken">#101</div>
-            <div style="font-size: 14px; color: #ff8c00; font-weight:700; margin-top:8px;">
-                हा टोकन नंबर काउंटरवर सांगा किंवा दाखवा!
-            </div>
+                    <!-- SELECTED FILES LIST -->
+                    <div id="selectedFilesContainer" class="selected-files-list"></div>
+                </div>
+
+                <!-- COPIES & COLOR GRID -->
+                <div class="print-options-grid form-group">
+                    <div>
+                        <label class="form-label">
+                            <i class="fa-solid fa-copy" style="color:var(--primary); font-size:12px;"></i>
+                            <span>प्रती (Copies)</span>
+                        </label>
+                        <div class="stepper-box">
+                            <button type="button" class="stepper-btn" onclick="changeCopies(-1)">−</button>
+                            <span class="stepper-value" id="copiesDisplay">1</span>
+                            <button type="button" class="stepper-btn" onclick="changeCopies(1)">+</button>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="form-label">
+                            <i class="fa-solid fa-palette" style="color:var(--primary); font-size:12px;"></i>
+                            <span>कलर (Color)</span>
+                        </label>
+                        <div class="color-selector">
+                            <button type="button" class="color-opt-btn active" id="btnBw" onclick="selectColorMode('bw')">
+                                B &amp; W
+                            </button>
+                            <button type="button" class="color-opt-btn" id="btnCol" onclick="selectColorMode('color')">
+                                🎨 Color
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SUBMIT BUTTON -->
+                <button type="submit" id="btnSendOrder" class="btn-submit-mobile">
+                    <i class="fa-solid fa-paper-plane"></i>
+                    <span>प्रिंटसाठी काउंटरला पाठवा</span>
+                </button>
+
+                <!-- STATUS / LOADING -->
+                <div id="uploadStatusText" class="status-loading-box">
+                    <i class="fa-solid fa-circle-notch fa-spin"></i>
+                    <span style="margin-left:6px;">काउंटरवर फाईल पाठवली जात आहे...</span>
+                </div>
+
+                <!-- ERROR ALERT -->
+                <div id="mobileErrorBox" class="mobile-alert-error"></div>
+            </form>
         </div>
 
-        <button type="button" class="sp-btn-submit" style="background:#262636; border:1.5px solid #f95700;" onclick="spResetForm()">
-            + अजून फाईल पाठवा
-        </button>
-    </div>
+        <!-- SUCCESS TOKEN SCREEN -->
+        <div class="mobile-card success-mobile-screen" id="successTokenCard">
+            <div class="success-icon-wrap">
+                <i class="fa-solid fa-check"></i>
+            </div>
+            <h2 style="font-size:22px; font-weight:800; color:#ffffff;">फाईल यशस्वीरीत्या पाठवली!</h2>
+            <p style="font-size:13px; color:var(--text-sub); margin-top:4px;">तुमचा टोकन नंबर काउंटरच्या स्क्रीनवर नोंदवला गेला आहे.</p>
+
+            <div class="token-display-card">
+                <div class="token-label-text">YOUR TOKEN NUMBER</div>
+                <div class="token-large-number" id="displayTokenNumber">#101</div>
+                <div class="token-hint-text">👉 हा टोकन नंबर काउंटरवर सांगा किंवा दाखवा!</div>
+            </div>
+
+            <button type="button" class="btn-send-more" onclick="resetMobileForm()">
+                <i class="fa-solid fa-plus"></i>
+                <span>अजून फाईल पाठवायची आहे</span>
+            </button>
+        </div>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="mobile-footer">
+        ⚡ Smart Suyoms Digital Print Counter
+    </footer>
 </div>
 
 <script>
@@ -277,7 +729,7 @@
     let fbApp = null;
     let fbDb = null;
 
-    function initFirebase() {
+    function initFirebaseClient() {
         if (!window.firebase) return null;
         try {
             fbApp = firebase.apps && firebase.apps.length ? firebase.app() : firebase.initializeApp(fbConfig);
@@ -289,67 +741,95 @@
         }
     }
 
-    let spFiles = [];
-    let spColorMode = 'bw';
+    let selectedFiles = [];
+    let currentCopies = 1;
+    let currentColorMode = 'bw';
 
+    // Read shop name from query params if available
     window.addEventListener('DOMContentLoaded', () => {
-        initFirebase();
-        spDetectUser();
+        initFirebaseClient();
+        const urlParams = new URLSearchParams(window.location.search);
+        const shopParam = urlParams.get('shop');
+        if (shopParam) {
+            const cleanName = decodeURIComponent(shopParam).replace(/-/g, ' ');
+            document.getElementById('shopTitleHeader').innerText = cleanName;
+        }
     });
-    setTimeout(() => { initFirebase(); spDetectUser(); }, 500);
 
-    function spDetectUser() {
-        let detectedName = '';
-        if (window.firebase && firebase.auth && firebase.auth().currentUser) {
-            const u = firebase.auth().currentUser;
-            detectedName = u.displayName || u.email || '';
-        }
-        if (!detectedName) {
-            detectedName = localStorage.getItem('user_name') || localStorage.getItem('username') || localStorage.getItem('loggedInUser') || '';
-        }
-        if (!detectedName) {
-            const bloggerProfile = document.querySelector('.user .profile-name, #comments .author');
-            if (bloggerProfile) detectedName = bloggerProfile.innerText.trim();
-        }
-
-        if (detectedName) {
-            document.getElementById('spLoggedUserName').innerText = detectedName;
-            document.getElementById('spCustName').value = detectedName;
-        }
-    }
-
-    window.spSetColor = function(mode) {
-        spColorMode = mode;
-        document.getElementById('spBtnBw').className = 'sp-pill-btn ' + (mode === 'bw' ? 'active' : '');
-        document.getElementById('spBtnCol').className = 'sp-pill-btn ' + (mode === 'color' ? 'active' : '');
+    // Stepper function for copies
+    window.changeCopies = function(delta) {
+        currentCopies += delta;
+        if (currentCopies < 1) currentCopies = 1;
+        if (currentCopies > 50) currentCopies = 50;
+        document.getElementById('copiesDisplay').innerText = currentCopies;
     };
 
-    window.spFilesPicked = function(input) {
+    // Color mode selector
+    window.selectColorMode = function(mode) {
+        currentColorMode = mode;
+        const btnBw = document.getElementById('btnBw');
+        const btnCol = document.getElementById('btnCol');
+        if (mode === 'bw') {
+            btnBw.classList.add('active');
+            btnCol.classList.remove('active');
+        } else {
+            btnCol.classList.add('active');
+            btnBw.classList.remove('active');
+        }
+    };
+
+    // File selection handler
+    window.handleFileSelect = function(input) {
         if (!input.files || input.files.length === 0) return;
-        spFiles = Array.from(input.files);
+        const incoming = Array.from(input.files);
         
+        incoming.forEach(f => {
+            // Avoid duplicate additions
+            if (!selectedFiles.some(item => item.name === f.name && item.size === f.size)) {
+                selectedFiles.push(f);
+            }
+        });
+
+        renderSelectedFiles();
+    };
+
+    window.removeFileByIndex = function(idx) {
+        selectedFiles.splice(idx, 1);
+        renderSelectedFiles();
+    };
+
+    function renderSelectedFiles() {
+        const container = document.getElementById('selectedFilesContainer');
+        const errBox = document.getElementById('mobileErrorBox');
         let totalSize = 0;
         let oversized = false;
-        const list = document.getElementById('spFileList');
-        list.innerHTML = spFiles.map(f => {
+
+        container.innerHTML = selectedFiles.map((f, idx) => {
             totalSize += f.size;
             if (f.size > 8 * 1024 * 1024) oversized = true;
             return `
-                <div class="sp-file-item">
-                    <span>📄 ${escapeHtml(f.name)}</span>
-                    <span style="color:#ff8c00; font-weight:bold;">${(f.size/1024).toFixed(1)} KB</span>
+                <div class="file-chip">
+                    <div class="file-chip-left">
+                        <i class="fa-solid fa-file" style="color:var(--primary); font-size:16px;"></i>
+                        <div>
+                            <div class="file-chip-name">${escapeHtml(f.name)}</div>
+                            <div class="file-chip-size">${(f.size / 1024).toFixed(1)} KB</div>
+                        </div>
+                    </div>
+                    <button type="button" class="file-chip-remove" onclick="removeFileByIndex(${idx})" title="Remove">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
                 </div>
             `;
         }).join('');
 
-        const errBox = document.getElementById('spErrorBox');
         if (oversized || totalSize > 15 * 1024 * 1024) {
             errBox.style.display = 'block';
-            errBox.innerHTML = '⚠️ फाईलचा आकार खूप मोठा आहे (कृपया 5MB पेक्षा लहान फाईल निवडा जेणेकरून जलद ट्रान्सफर होईल).';
+            errBox.innerHTML = '⚠️ फाईलचा आकार खूप मोठा आहे (कृपया 5MB पेक्षा लहान फाईल निवडा).';
         } else {
             errBox.style.display = 'none';
         }
-    };
+    }
 
     function fileToBase64(file) {
         return new Promise((resolve, reject) => {
@@ -365,35 +845,35 @@
         return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
     }
 
-    window.spHandleSubmit = async function(e) {
+    // Submit handler
+    window.handleCustomerSubmit = async function(e) {
         e.preventDefault();
-        const errBox = document.getElementById('spErrorBox');
+        const errBox = document.getElementById('mobileErrorBox');
         errBox.style.display = 'none';
 
-        if (spFiles.length === 0) {
-            alert('कृपया किमान एक फाईल निवडा!');
+        if (selectedFiles.length === 0) {
+            alert('कृपया किमान एक फाईल निवडा (Please choose a file).');
             return;
         }
 
-        const btn = document.getElementById('spSubmitBtn');
-        const statusText = document.getElementById('spStatusText');
-        btn.disabled = true;
-        btn.innerText = 'अपलोड होत आहे... (Sending)';
-        statusText.style.display = 'block';
+        const name = document.getElementById('custName').value.trim();
+        const phone = document.getElementById('custPhone').value.trim();
+        const btn = document.getElementById('btnSendOrder');
+        const statusBox = document.getElementById('uploadStatusText');
 
-        const name = document.getElementById('spCustName').value.trim() || 'ग्राहक';
-        const phone = document.getElementById('spCustPhone').value.trim();
-        const copies = parseInt(document.getElementById('spCopies').value) || 1;
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> <span>अपलोड होत आहे...</span>';
+        statusBox.style.display = 'block';
+
         const tokenNum = Math.floor(100 + Math.random() * 900);
         const customerId = 'cust_' + Date.now();
 
-        // Convert files for Firebase storage
+        // Convert files to base64
         const preparedFiles = [];
         try {
-            for (let i = 0; i < spFiles.length; i++) {
-                const f = spFiles[i];
-                let base64 = '';
-                base64 = await fileToBase64(f);
+            for (let i = 0; i < selectedFiles.length; i++) {
+                const f = selectedFiles[i];
+                const base64 = await fileToBase64(f);
                 preparedFiles.push({
                     id: 'f_' + Date.now() + '_' + i,
                     name: f.name,
@@ -405,79 +885,85 @@
         } catch(convErr) {
             console.error('File conversion error:', convErr);
             errBox.style.display = 'block';
-            errBox.innerHTML = '❌ फाईल वाचताना त्रुटी आली. कृपया फाईल पुन्हा निवडा.';
+            errBox.innerHTML = '❌ फाईल वाचताना त्रुटी आली. कृपया पुन्हा प्रयत्न करा.';
             btn.disabled = false;
-            btn.innerText = '🖨️ प्रिंटसाठी काउंटरला पाठवा';
-            statusText.style.display = 'none';
+            btn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> <span>प्रिंटसाठी काउंटरला पाठवा</span>';
+            statusBox.style.display = 'none';
             return;
         }
 
         const payload = {
             id: customerId,
             token_number: tokenNum,
-            customer_name: name,
-            phone: phone,
-            copies: copies,
-            color_mode: spColorMode,
+            customer_name: name || 'ग्राहक',
+            phone: phone || '',
+            copies: currentCopies,
+            color_mode: currentColorMode,
             pages: 'All',
             createdAt: Date.now(),
             status: 'pending',
             files: preparedFiles
         };
 
-        // 1. Direct Firebase Realtime DB push
-        const db = initFirebase();
+        const db = initFirebaseClient();
         if (!db) {
             errBox.style.display = 'block';
-            errBox.innerHTML = '❌ Firebase लोड होऊ शकले नाही. कृपया इंटरनेट कनेक्शन तपासा.';
+            errBox.innerHTML = '❌ Firebase कनेक्ट होऊ शकले नाही. कृपया इंटरनेट कनेक्शन तपासा.';
             btn.disabled = false;
-            btn.innerText = '🖨️ प्रिंटसाठी काउंटरला पाठवा';
-            statusText.style.display = 'none';
+            btn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> <span>प्रिंटसाठी काउंटरला पाठवा</span>';
+            statusBox.style.display = 'none';
             return;
         }
 
         try {
-            // Write to Firebase Realtime Database
+            // Push to Firebase Realtime Database
             await db.ref('print_queue/' + customerId).set(payload);
-            console.log('Firebase Realtime push success:', customerId);
+            console.log('Firebase upload success:', customerId);
         } catch(fbErr) {
-            console.error('Firebase push error:', fbErr);
-            let errMsg = 'डेटाबेस एरर: ' + (fbErr.message || fbErr);
+            console.error('Firebase error:', fbErr);
+            let errMsg = 'डेटाबेस त्रुटी: ' + (fbErr.message || fbErr);
             if (fbErr.message && fbErr.message.includes('Permission denied')) {
-                errMsg = '❌ <b>Firebase Permission Denied!</b><br>कृपया Firebase Console मध्ये जाऊन Realtime Database च्या <b>Rules</b> मध्ये <code>.read: true</code> आणि <code>.write: true</code> करा.';
+                errMsg = '❌ <b>Firebase Permission Denied!</b><br>कृपया Firebase Console मध्ये Rules मध्ये <code>print_queue: { ".read": true, ".write": true }</code> असल्याची खात्री करा.';
             }
             errBox.style.display = 'block';
             errBox.innerHTML = errMsg;
             btn.disabled = false;
-            btn.innerText = '🖨️ प्रिंटसाठी काउंटरला पाठवा';
-            statusText.style.display = 'none';
+            btn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> <span>प्रिंटसाठी काउंटरला पाठवा</span>';
+            statusBox.style.display = 'none';
             return;
         }
 
-        // 2. BroadcastChannel fallback for same device/browser testing
+        // Cross-tab broadcast for instant sync
         try {
             const channel = new BroadcastChannel('smart_print_channel');
             channel.postMessage({ type: 'NEW_CUSTOMER_UPLOAD', customer_name: name, token: tokenNum });
         } catch(err) {}
 
-        // Show Token Screen only after SUCCESSFUL Firebase write
-        document.getElementById('spFormCard').style.display = 'none';
-        document.getElementById('spSuccessCard').style.display = 'block';
-        document.getElementById('spDisplayToken').innerText = '#' + tokenNum;
+        // Show Success View
+        document.getElementById('uploadFormCard').style.display = 'none';
+        document.getElementById('successTokenCard').style.display = 'block';
+        document.getElementById('displayTokenNumber').innerText = '#' + tokenNum;
+
         btn.disabled = false;
-        btn.innerText = '🖨️ प्रिंटसाठी काउंटरला पाठवा';
-        statusText.style.display = 'none';
+        btn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> <span>प्रिंटसाठी काउंटरला पाठवा</span>';
+        statusBox.style.display = 'none';
+        window.scrollTo({ top: 0, behavior: 'smooth' });
     };
 
-    window.spResetForm = function() {
-        spFiles = [];
-        document.getElementById('spBloggerForm').reset();
-        document.getElementById('spFileList').innerHTML = '';
-        document.getElementById('spErrorBox').style.display = 'none';
-        document.getElementById('spFormCard').style.display = 'block';
-        document.getElementById('spSuccessCard').style.display = 'none';
-        spDetectUser();
+    window.resetMobileForm = function() {
+        selectedFiles = [];
+        currentCopies = 1;
+        currentColorMode = 'bw';
+        document.getElementById('copiesDisplay').innerText = '1';
+        document.getElementById('customerUploadForm').reset();
+        document.getElementById('selectedFilesContainer').innerHTML = '';
+        document.getElementById('mobileErrorBox').style.display = 'none';
+        document.getElementById('uploadFormCard').style.display = 'block';
+        document.getElementById('successTokenCard').style.display = 'none';
+        selectColorMode('bw');
     };
 })();
 </script>
-</div>
+
+</body>
+</html>
