@@ -12,17 +12,9 @@
     <!-- Firebase App & Database SDKs for Realtime Mobile-to-PC Sync -->
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage-compat.js"></script>
-    <script src="js/suyoms-firebase.js"></script>
 
     <!-- Direct CDN for QR Code -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-    <script>
-        // Fallback in case CDN is blocked
-        if (typeof QRCode === 'undefined') {
-            document.write('<script src="js/qrcode.min.js"><\/script>');
-        }
-    </script>
 
     <style>
         :root {
@@ -123,6 +115,28 @@
             transition: all 0.2s;
         }
         .btn-sound-toggle.active { color: #ffffff; border-color: var(--primary); background: rgba(249, 87, 0, 0.25); }
+
+        .firebase-status-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            border-radius: 10px;
+            font-size: 12px;
+            font-weight: 700;
+            border: 1.5px solid #272738;
+            background: #101018;
+        }
+        .firebase-status-pill.online {
+            color: #4ade80;
+            border-color: #16a34a;
+            background: rgba(22, 163, 74, 0.15);
+        }
+        .firebase-status-pill.offline {
+            color: #f87171;
+            border-color: #ef4444;
+            background: rgba(239, 68, 68, 0.15);
+        }
 
         /* MAIN CONTAINER */
         .main-container { max-width: 1240px; margin: 24px auto; padding: 0 20px; }
@@ -370,11 +384,14 @@
     </div>
 
     <div class="header-actions">
+        <div class="firebase-status-pill offline" id="fbStatusBadge" title="Firebase Realtime Database Status">
+            <i class="fa-solid fa-circle-dot"></i> <span id="fbStatusText">Connecting...</span>
+        </div>
         <button class="btn-sound-toggle active" id="soundToggleBtn" onclick="toggleSoundAlert()" title="ध्वनी सूचना (Notification Chime)">
             <i class="fa-solid fa-volume-high" id="soundIcon"></i>
             <span id="soundLabel">Sound On</span>
         </button>
-        <a href="customer.html" target="_blank" class="btn-header-link" title="Open Customer Upload Page">
+        <a href="customer.html" target="_blank" class="btn-header-link" id="headerCustomerLink" title="Open Customer Upload Page">
             <i class="fa-solid fa-up-right-from-square"></i>
             <span>Customer View</span>
         </a>
@@ -613,7 +630,7 @@
         </div>
 
         <div style="margin-bottom:14px;">
-            <label style="display:block; font-size:12px; font-weight:700; color:#ff8c00; margin-bottom:5px;">Custom Customer Page URL (ब्लॉगर ग्राहक पेज लिंक - पर्यायी)</label>
+            <label style="display:block; font-size:12px; font-weight:700; color:#ff8c00; margin-bottom:5px;">Custom Customer Page URL (ब्लॉगर ग्राहक पेज लिंक)</label>
             <input type="url" id="settingCustomUrl" placeholder="उदा. https://tumche-blog.blogspot.com/p/upload.html" style="width:100%; padding:10px 14px; background:#07070a; color:#ffffff; border:1.5px solid var(--border); border-radius:10px; font-size:13px; outline:none;">
             <span style="font-size:11px; color:var(--text-muted); display:block; margin-top:3px;">तुम्ही ब्लॉगरवर बनवलेल्या ग्राहक पेजची पूर्ण लिंक येथे टाका म्हणजे QR कोड त्याचाच बनेल.</span>
         </div>
@@ -648,7 +665,6 @@
 
 <!-- AUDIO CONTEXT CHIME SOUND -->
 <script>
-    // Web Audio Chime generator - works 100% offline without external mp3
     const soundEnabled = { val: true };
     function playChimeSound() {
         if (!soundEnabled.val) return;
@@ -704,6 +720,33 @@
 
 <!-- APP LOGIC -->
 <script>
+    // Firebase Config embedded directly for reliable Zero-Dependency sync
+    const fbConfig = {
+        apiKey: "AIzaSyDOYUIvE7yWCNEf_K6dHEGfEqtUwLy3rdM",
+        authDomain: "suyoms-login.firebaseapp.com",
+        databaseURL: "https://suyoms-login-default-rtdb.asia-southeast1.firebasedatabase.app",
+        projectId: "suyoms-login",
+        storageBucket: "suyoms-login.firebasestorage.app",
+        messagingSenderId: "1084425019811",
+        appId: "1:1084425019811:web:f036c2b42cb5eb4ee5ba16",
+        measurementId: "G-M5D0GP7DBD"
+    };
+
+    let fbApp = null;
+    let fbDb = null;
+
+    function initFirebaseClient() {
+        if (!window.firebase) return null;
+        try {
+            fbApp = firebase.apps && firebase.apps.length ? firebase.app() : firebase.initializeApp(fbConfig);
+            fbDb = firebase.database();
+            return fbDb;
+        } catch(e) {
+            console.error("Firebase init error:", e);
+            return null;
+        }
+    }
+
     // System State
     const AppState = {
         shopName: localStorage.getItem('sp_shop_name') || 'सुयोग ऑनलाईन झेरॉक्स सेंटर',
@@ -717,7 +760,7 @@
         customers: []
     };
 
-    // BroadcastChannel for cross-tab realtime messaging
+    // BroadcastChannel for cross-tab realtime messaging on same machine
     let channel;
     try {
         channel = new BroadcastChannel('smart_print_channel');
@@ -734,76 +777,119 @@
         console.warn('BroadcastChannel not supported', e);
     }
 
+    function updateFirebaseStatusBadge(status, text) {
+        const badge = document.getElementById('fbStatusBadge');
+        const label = document.getElementById('fbStatusText');
+        if (!badge || !label) return;
+        if (status === 'online') {
+            badge.className = 'firebase-status-pill online';
+            label.innerText = text || 'Live Sync Connected';
+        } else if (status === 'error') {
+            badge.className = 'firebase-status-pill offline';
+            label.innerText = text || 'Rules Error (Permission Denied)';
+        } else {
+            badge.className = 'firebase-status-pill offline';
+            label.innerText = text || 'Connecting...';
+        }
+    }
+
     function initFirebaseLiveListener() {
+        const dbRef = initFirebaseClient();
+        if (!dbRef) {
+            updateFirebaseStatusBadge('offline', 'Firebase Not Loaded');
+            return;
+        }
+
         try {
-            const fb = getSuyomsFirebase();
-            if (fb && fb.db) {
-                const queueRef = fb.db.ref('print_queue');
-                queueRef.on('child_added', (snapshot) => {
-                    const data = snapshot.val();
-                    if (!data) return;
-                    console.log('Firebase incoming job:', data);
+            const queueRef = dbRef.ref('print_queue');
 
-                    // Check if already in AppState to avoid duplicate alert
-                    const exists = AppState.customers.some(c => c.id === data.id);
-                    if (!exists) {
-                        playChimeSound();
-                        showToast(`नवीन फाईल आली! टोकन #${data.token_number} - ${data.customer_name || 'ग्राहक'}`);
-                        
-                        // Adapt files to jobs format
-                        const jobs = (data.files || []).map((f, idx) => ({
-                            id: f.id || ('job_' + Date.now() + '_' + idx),
-                            serial_number: idx + 1,
-                            original_filename: f.name,
-                            file_size: f.size,
-                            file_type: f.type || 'doc',
-                            copies: data.copies || 1,
-                            color_mode: data.color_mode || 'bw',
-                            pages: data.pages || 'All',
-                            status: data.status || 'pending',
-                            createdAt: data.createdAt || Date.now(),
-                            dataUrl: f.dataUrl || ''
-                        }));
+            // Test connection & listen to new jobs
+            queueRef.on('child_added', (snapshot) => {
+                updateFirebaseStatusBadge('online', 'Live Sync Online');
+                const data = snapshot.val();
+                if (!data) return;
 
-                        const newCustomer = {
-                            id: data.id,
-                            customer_name: data.customer_name || 'ग्राहक',
-                            token_number: data.token_number,
-                            phone: data.phone || '',
-                            createdAt: data.createdAt || Date.now(),
-                            jobs: jobs,
-                            _firebase: true
-                        };
+                console.log('Firebase incoming job:', data);
 
-                        AppState.customers.unshift(newCustomer);
-                        renderDashboard();
+                // Check if already in AppState
+                const exists = AppState.customers.some(c => c.id === data.id);
+                if (!exists) {
+                    playChimeSound();
+                    showToast(`नवीन फाईल आली! टोकन #${data.token_number} - ${data.customer_name || 'ग्राहक'}`);
 
-                        // Also store in IndexedDB
-                        if (db) {
-                            try {
-                                const tx = db.transaction(['customers', 'files'], 'readwrite');
-                                tx.objectStore('customers').put(newCustomer);
-                                jobs.forEach(j => {
-                                    if (j.dataUrl) {
-                                        tx.objectStore('files').put({ id: j.id, name: j.original_filename, dataUrl: j.dataUrl });
-                                    }
-                                });
-                            } catch(e){}
-                        }
+                    // Adapt files to jobs format
+                    const jobs = (data.files || []).map((f, idx) => ({
+                        id: f.id || ('job_' + Date.now() + '_' + idx),
+                        serial_number: idx + 1,
+                        original_filename: f.name,
+                        file_size: f.size,
+                        file_type: f.type || 'doc',
+                        copies: data.copies || 1,
+                        color_mode: data.color_mode || 'bw',
+                        pages: data.pages || 'All',
+                        status: data.status || 'pending',
+                        createdAt: data.createdAt || Date.now(),
+                        dataUrl: f.dataUrl || ''
+                    }));
+
+                    const newCustomer = {
+                        id: data.id,
+                        customer_name: data.customer_name || 'ग्राहक',
+                        token_number: data.token_number,
+                        phone: data.phone || '',
+                        createdAt: data.createdAt || Date.now(),
+                        jobs: jobs,
+                        _firebase: true
+                    };
+
+                    AppState.customers.unshift(newCustomer);
+                    renderDashboard();
+
+                    // Auto-print if enabled
+                    if (AppState.autoPrint && jobs.length > 0) {
+                        setTimeout(() => {
+                            triggerJobPrint(newCustomer.id, jobs[0].id);
+                        }, 800);
                     }
-                });
 
-                // Listen for removed items from other tabs/admin
-                queueRef.on('child_removed', (snapshot) => {
-                    const data = snapshot.val();
-                    if (data && data.id) {
-                        AppState.customers = AppState.customers.filter(c => c.id !== data.id);
-                        renderDashboard();
+                    // Save to IndexedDB
+                    if (db) {
+                        try {
+                            const tx = db.transaction(['customers', 'files'], 'readwrite');
+                            tx.objectStore('customers').put(newCustomer);
+                            jobs.forEach(j => {
+                                if (j.dataUrl) {
+                                    tx.objectStore('files').put({ id: j.id, name: j.original_filename, dataUrl: j.dataUrl });
+                                }
+                            });
+                        } catch(e){}
                     }
-                });
-            }
+                }
+            }, (error) => {
+                console.error('Firebase realtime listening error:', error);
+                updateFirebaseStatusBadge('error', 'Rules Blocked (Check Firebase Rules)');
+                showToast('Firebase एरर: कृपया Firebase Database Rules तपासा (Permission Denied)');
+            });
+
+            // Listen for removed items (sync across tabs/sessions)
+            queueRef.on('child_removed', (snapshot) => {
+                const data = snapshot.val();
+                if (data && data.id) {
+                    AppState.customers = AppState.customers.filter(c => c.id !== data.id);
+                    renderDashboard();
+                }
+            });
+
+            // Check connection state
+            dbRef.ref('.info/connected').on('value', (snap) => {
+                if (snap.val() === true) {
+                    updateFirebaseStatusBadge('online', 'Live Sync Online');
+                }
+            });
+
         } catch(e) {
-            console.warn('Firebase init error', e);
+            console.error('Firebase setup exception:', e);
+            updateFirebaseStatusBadge('error', 'Firebase Error');
         }
     }
 
@@ -815,10 +901,10 @@
         });
         initFirebaseLiveListener();
 
-        // Set up periodic poll or cleanup
+        // Auto delete check
         setInterval(() => {
             checkAutoDelete();
-        }, 30000); // every 30s
+        }, 30000);
     });
 
     function getCustomerLink() {
@@ -849,6 +935,11 @@
         if (posterLink) {
             posterLink.href = `poster.html?shop=${encodeURIComponent(AppState.shopSlug)}`;
         }
+
+        const custLinkHeader = document.getElementById('headerCustomerLink');
+        if (custLinkHeader) {
+            custLinkHeader.href = getCustomerLink();
+        }
     }
 
     /* --- INDEXEDDB STORAGE FOR ZERO-BACKEND DEMO & PERSISTENCE --- */
@@ -875,31 +966,13 @@
     }
 
     function loadQueue() {
-        // First try PHP backend if hosted on server
-        fetch(`api.php?action=get_queue&shop=${encodeURIComponent(AppState.shopSlug)}`)
-            .then(res => res.json())
-            .then(data => {
-                if (data && data.success) {
-                    AppState.customers = data.customers || [];
-                    renderDashboard(data);
-                } else {
-                    loadFromIndexedDb();
-                }
-            })
-            .catch(() => {
-                // Fallback to local IndexedDB
-                loadFromIndexedDb();
-            });
-    }
-
-    function loadFromIndexedDb() {
+        // Try local IndexedDB
         if (!db) return;
         const tx = db.transaction('customers', 'readonly');
         const store = tx.objectStore('customers');
         const req = store.getAll();
         req.onsuccess = () => {
             const list = req.result || [];
-            // Sort by createdAt descending
             list.sort((a, b) => b.createdAt - a.createdAt);
             AppState.customers = list;
             renderDashboard();
@@ -932,7 +1005,7 @@
         if (customers.length === 0) {
             container.innerHTML = `
                 <div class="empty-state">
-                    <i class="fa-solid fa-folder-open" style="font-size: 44px; margin-bottom: 16px; color:#94a3b8;"></i>
+                    <i class="fa-solid fa-folder-open" style="font-size: 44px; margin-bottom: 16px; color:#f95700;"></i>
                     <h3 style="font-size:18px; color:var(--text-main); margin-bottom:6px;">सध्या कोणतीही फाईल रांगेत नाही (No Customer Uploads Yet)</h3>
                     <p style="font-size:13px; max-width:440px; margin:0 auto;">तुमच्या काउंटरचा QR कोड किंवा लिंक ग्राहकांना द्या, जेणेकरून ते मोबाईलवरून थेट प्रिंटिंगसाठी फाईल्स पाठवू शकतील.</p>
                 </div>
@@ -968,7 +1041,7 @@
                         </td>
                         <td style="font-weight:700; font-size:14px;">${j.copies || 1} Copies</td>
                         <td>
-                            <span style="font-size:12px; font-weight:700; padding:4px 10px; border-radius:6px; background:${j.color_mode === 'color' ? '#fdf2f8; color:#be185d' : 'var(--border-light); color:var(--text-sub)'};">
+                            <span style="font-size:12px; font-weight:700; padding:4px 10px; border-radius:6px; background:${j.color_mode === 'color' ? 'rgba(249, 87, 0, 0.2); color:#ff8c00' : 'var(--border-light); color:var(--text-sub)'};">
                                 ${j.color_mode === 'color' ? '🎨 Color' : '⚫ B & W'}
                             </span>
                         </td>
@@ -1056,9 +1129,8 @@
         // Fetch file blob from storage
         getFileBlob(jobId, (blob, filename) => {
             if (!blob) {
-                // If backend file path is available
-                window.open(`uploads/${jobId}_${filename}`, '_blank');
-                updateJobStatus(custId, jobId, 'printed');
+                alert('फाईल उपलब्ध नाही किंवा बेस64 लोड होऊ शकले नाही.');
+                updateJobStatus(custId, jobId, 'failed');
                 return;
             }
 
@@ -1067,7 +1139,6 @@
             const isImage = blob.type.startsWith('image/') || (filename && /\.(jpe?g|png|webp)$/i.test(filename));
 
             if (isPdf) {
-                // Open in hidden iframe for silent print dialog
                 let printFrame = document.getElementById('hiddenPrintFrame');
                 if (!printFrame) {
                     printFrame = document.createElement('iframe');
@@ -1127,7 +1198,7 @@
 
         getFileBlob(jobId, (blob) => {
             if (!blob) {
-                container.innerHTML = `<p style="color:var(--text-muted);">Preview not available locally. <a href="uploads/${jobId}_${filename}" target="_blank">Open in new tab</a></p>`;
+                container.innerHTML = `<p style="color:var(--text-muted);">Preview not available locally.</p>`;
                 return;
             }
             const fileUrl = URL.createObjectURL(blob);
@@ -1156,7 +1227,7 @@
     function downloadJobFile(custId, jobId, filename) {
         getFileBlob(jobId, (blob) => {
             if (!blob) {
-                window.open(`uploads/${jobId}_${filename}`, '_blank');
+                alert('डाऊनलोड करण्यासाठी फाईल उपलब्ध नाही.');
                 return;
             }
             const a = document.createElement('a');
@@ -1167,12 +1238,10 @@
     }
 
     function updateJobStatus(custId, jobId, newStatus) {
-        // Try API first
-        fetch('api.php?action=update_status', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ customer_id: custId, job_id: jobId, status: newStatus })
-        }).catch(() => {});
+        // Sync with Firebase Realtime Database
+        if (fbDb) {
+            fbDb.ref(`print_queue/${custId}/status`).set(newStatus).catch(e => console.warn(e));
+        }
 
         // Local IndexedDB update
         if (!db) return;
@@ -1195,8 +1264,10 @@
     function deleteJob(custId, jobId) {
         if (!confirm('ही प्रिंट फाईल काढून टाकायची आहे का? (Delete this file?)')) return;
 
-        // Try API
-        fetch(`api.php?action=delete_job&job_id=${encodeURIComponent(jobId)}&customer_id=${encodeURIComponent(custId)}`, { method: 'POST' }).catch(() => {});
+        // Delete from Firebase
+        if (fbDb) {
+            fbDb.ref(`print_queue/${custId}`).remove().catch(e => console.warn(e));
+        }
 
         // Local IndexedDB
         if (!db) return;
@@ -1225,7 +1296,15 @@
     function clearCompletedJobs() {
         if (!confirm('सर्व प्रिंट झालेले आणि पूर्ण झालेले जॉब्स साफ करायचे का? (Clear all completed jobs?)')) return;
 
-        fetch('api.php?action=clear_completed', { method: 'POST' }).catch(() => {});
+        // Firebase cleanup
+        if (fbDb) {
+            AppState.customers.forEach(cust => {
+                const pending = (cust.jobs || []).filter(j => j.status !== 'printed');
+                if (pending.length === 0) {
+                    fbDb.ref(`print_queue/${cust.id}`).remove().catch(e => console.warn(e));
+                }
+            });
+        }
 
         if (!db) return;
         const tx = db.transaction('customers', 'readwrite');
@@ -1260,6 +1339,7 @@
             list.forEach(c => {
                 if (c.createdAt < cutoffTime) {
                     store.delete(c.id);
+                    if (fbDb) fbDb.ref(`print_queue/${c.id}`).remove().catch(e => console.warn(e));
                     changed = true;
                 }
             });
@@ -1338,9 +1418,9 @@
         duSelectedFiles = Array.from(input.files);
         const list = document.getElementById('duFileList');
         list.innerHTML = duSelectedFiles.map(f => `
-            <div style="padding:6px 10px; background:#fff; border:1px solid #e2e8f0; border-radius:8px; margin-bottom:5px; display:flex; justify-content:space-between; align-items:center;">
+            <div style="padding:6px 10px; background:#07070a; border:1px solid #262636; border-radius:8px; margin-bottom:5px; display:flex; justify-content:space-between; align-items:center;">
                 <span style="font-weight:600; color:var(--text-main); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:260px;">${escapeHtml(f.name)}</span>
-                <span style="color:#64748b; font-size:11px;">${formatBytes(f.size)}</span>
+                <span style="color:#ff8c00; font-size:11px;">${formatBytes(f.size)}</span>
             </div>
         `).join('');
     }
@@ -1399,19 +1479,6 @@
 
             custStore.put(customerRecord);
         }
-
-        // Also post to PHP backend if available
-        try {
-            const formData = new FormData();
-            formData.append('customer_name', custName);
-            formData.append('shop_slug', AppState.shopSlug);
-            formData.append('copies', copies);
-            formData.append('color_mode', colorMode);
-            for (let i = 0; i < duSelectedFiles.length; i++) {
-                formData.append('files[]', duSelectedFiles[i]);
-            }
-            fetch('api.php?action=upload', { method: 'POST', body: formData }).catch(() => {});
-        } catch(err) {}
 
         setTimeout(() => {
             btnText.innerText = 'Add to Live Queue';
@@ -1497,11 +1564,6 @@
         localStorage.setItem('sp_shop_name', AppState.shopName);
         localStorage.setItem('sp_shop_slug', AppState.shopSlug);
         localStorage.setItem('sp_custom_customer_url', AppState.customCustomerUrl);
-        localStorage.setItem('sp_phone', AppState.phone);
-        AppState.phone = newPhone;
-
-        localStorage.setItem('sp_shop_name', AppState.shopName);
-        localStorage.setItem('sp_shop_slug', AppState.shopSlug);
         localStorage.setItem('sp_phone', AppState.phone);
 
         applySettingsToUI();
