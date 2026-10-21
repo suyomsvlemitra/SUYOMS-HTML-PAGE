@@ -9,6 +9,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800;900&family=Noto+Sans+Devanagari:wght@400;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 
     <style>
         :root {
@@ -433,21 +435,46 @@
         if (!container) return;
 
         const urlParams = new URLSearchParams(window.location.search);
-        const shopSlug = urlParams.get('shop') || localStorage.getItem('sp_shop_slug') || 'suyomsonline';
-        const shopName = localStorage.getItem('sp_shop_name') || 'सुयोग ऑनलाईन झेरॉक्स सेंटर';
+        let shopSlug = urlParams.get('shop') || urlParams.get('mobile') || localStorage.getItem('mobile') || localStorage.getItem('sp_shop_slug') || 'suyomsonline';
+        let shopName = urlParams.get('name') || localStorage.getItem('sp_shop_name') || 'सुयोग ऑनलाईन झेरॉक्स सेंटर';
         const customUrl = urlParams.get('url') || localStorage.getItem('sp_custom_customer_url') || '';
 
         document.getElementById('shopTitlePoster').innerText = shopName;
         document.getElementById('footerShopName').innerText = shopName;
 
+        // Auto-fetch from Firebase users/{mobile}
+        try {
+            const fbConfig = {
+                apiKey: "AIzaSyDOYUIvE7yWCNEf_K6dHEGfEqtUwLy3rdM",
+                authDomain: "suyoms-login.firebaseapp.com",
+                databaseURL: "https://suyoms-login-default-rtdb.asia-southeast1.firebasedatabase.app",
+                projectId: "suyoms-login"
+            };
+            if (window.firebase && (!firebase.apps || !firebase.apps.length)) {
+                firebase.initializeApp(fbConfig);
+            }
+            if (window.firebase && shopSlug) {
+                firebase.database().ref('users/' + shopSlug).once('value').then(snap => {
+                    const u = snap.val();
+                    if (u && (u.name || u.fullName)) {
+                        shopName = u.name || u.fullName;
+                        document.getElementById('shopTitlePoster').innerText = shopName;
+                        document.getElementById('footerShopName').innerText = shopName;
+                    }
+                }).catch(e => console.log(e));
+            }
+        } catch(err) {}
+
         // Formulate customer URL
         let customerUrl = '';
         if (customUrl && customUrl.trim().length > 5) {
-            customerUrl = customUrl.trim();
+            const base = customUrl.trim();
+            const sep = base.includes('?') ? '&' : '?';
+            customerUrl = `${base}${sep}shop=${encodeURIComponent(shopSlug)}&name=${encodeURIComponent(shopName)}`;
         } else {
             const url = new URL(window.location.href);
             const path = url.pathname.substring(0, url.pathname.lastIndexOf('/') + 1);
-            customerUrl = `${url.origin}${path}customer.html?shop=${encodeURIComponent(shopSlug)}`;
+            customerUrl = `${url.origin}${path}customer.html?shop=${encodeURIComponent(shopSlug)}&name=${encodeURIComponent(shopName)}`;
         }
 
         container.innerHTML = '';
