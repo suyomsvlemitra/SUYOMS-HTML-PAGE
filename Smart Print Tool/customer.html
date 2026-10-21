@@ -744,15 +744,38 @@
     let selectedFiles = [];
     let currentCopies = 1;
     let currentColorMode = 'bw';
+    let currentShopId = 'default_shop';
 
-    // Read shop name from query params if available
+    // Read shop name & shop ID from query params
     window.addEventListener('DOMContentLoaded', () => {
         initFirebaseClient();
         const urlParams = new URLSearchParams(window.location.search);
         const shopParam = urlParams.get('shop');
+        const nameParam = urlParams.get('name');
+        
         if (shopParam) {
-            const cleanName = decodeURIComponent(shopParam).replace(/-/g, ' ');
+            currentShopId = shopParam.trim().toLowerCase().replace(/[^a-z0-9_-]/g, '');
+        }
+        if (nameParam) {
+            document.getElementById('shopTitleHeader').innerText = decodeURIComponent(nameParam);
+        } else if (shopParam) {
+            const cleanName = decodeURIComponent(shopParam).replace(/[-_]/g, ' ');
             document.getElementById('shopTitleHeader').innerText = cleanName;
+        }
+
+        // Auto-fetch Shop Name directly from Firebase 'users/mobile' node if available
+        if (currentShopId && currentShopId !== 'default_shop') {
+            setTimeout(() => {
+                const db = initFirebaseClient();
+                if (db) {
+                    db.ref('users/' + currentShopId).once('value').then(snap => {
+                        const u = snap.val();
+                        if (u && (u.name || u.fullName)) {
+                            document.getElementById('shopTitleHeader').innerText = u.name || u.fullName;
+                        }
+                    }).catch(err => console.log('User fetch error:', err));
+                }
+            }, 300);
         }
     });
 
@@ -894,6 +917,7 @@
 
         const payload = {
             id: customerId,
+            shop_id: currentShopId,
             token_number: tokenNum,
             customer_name: name || 'ग्राहक',
             phone: phone || '',
@@ -916,9 +940,9 @@
         }
 
         try {
-            // Push to Firebase Realtime Database
-            await db.ref('print_queue/' + customerId).set(payload);
-            console.log('Firebase upload success:', customerId);
+            // Push to Shop-Specific Firebase Realtime Database Queue
+            await db.ref('print_queue/' + currentShopId + '/' + customerId).set(payload);
+            console.log('Firebase upload success to shop:', currentShopId, customerId);
         } catch(fbErr) {
             console.error('Firebase error:', fbErr);
             let errMsg = 'डेटाबेस त्रुटी: ' + (fbErr.message || fbErr);
