@@ -630,9 +630,9 @@
         </div>
 
         <div style="margin-bottom:14px;">
-            <label style="display:block; font-size:12px; font-weight:700; color:#ff8c00; margin-bottom:5px;">Custom Customer Page URL (ग्राहक पेज लिंक)</label>
+            <label style="display:block; font-size:12px; font-weight:700; color:#ff8c00; margin-bottom:5px;">Custom Customer Page URL (ब्लॉगर ग्राहक पेज लिंक)</label>
             <input type="url" id="settingCustomUrl" placeholder="उदा. https://tumche-blog.blogspot.com/p/upload.html" style="width:100%; padding:10px 14px; background:#07070a; color:#ffffff; border:1.5px solid var(--border); border-radius:10px; font-size:13px; outline:none;">
-            <span style="font-size:11px; color:var(--text-muted); display:block; margin-top:3px;">तुम्ही पोर्वटलर बनवलेल्या ग्राहक पेजची पूर्ण लिंक येथे टाका म्हणजे QR कोड त्याचाच बनेल.</span>
+            <span style="font-size:11px; color:var(--text-muted); display:block; margin-top:3px;">तुम्ही ब्लॉगरवर बनवलेल्या ग्राहक पेजची पूर्ण लिंक येथे टाका म्हणजे QR कोड त्याचाच बनेल.</span>
         </div>
 
         <div style="margin-bottom:20px;">
@@ -1167,56 +1167,121 @@
         updateJobStatus(custId, jobId, 'printing');
         
         // Fetch file blob from storage
-        getFileBlob(jobId, (blob, filename) => {
-            if (!blob) {
-                alert('फाईल उपलब्ध नाही किंवा बेस64 लोड होऊ शकले नाही.');
+        getFileBlob(jobId, (blob, filename, dataUrl) => {
+            if (!blob && !dataUrl) {
+                alert('फाईल उपलब्ध नाही किंवा लोड होऊ शकले नाही.');
                 updateJobStatus(custId, jobId, 'failed');
                 return;
             }
 
-            const fileUrl = URL.createObjectURL(blob);
-            const isPdf = blob.type === 'application/pdf' || (filename && filename.toLowerCase().endsWith('.pdf'));
-            const isImage = blob.type.startsWith('image/') || (filename && /\.(jpe?g|png|webp)$/i.test(filename));
+            const effectiveType = blob ? blob.type : '';
+            const isPdf = effectiveType === 'application/pdf' || (filename && filename.toLowerCase().endsWith('.pdf'));
+            const isImage = effectiveType.startsWith('image/') || (filename && /\.(jpe?g|png|webp|gif|bmp)$/i.test(filename));
+            const fileUrl = blob ? URL.createObjectURL(blob) : dataUrl;
 
-            if (isPdf) {
+            if (isImage) {
+                // Print image directly via off-screen iframe (NO blank window)
                 let printFrame = document.getElementById('hiddenPrintFrame');
-                if (!printFrame) {
-                    printFrame = document.createElement('iframe');
-                    printFrame.id = 'hiddenPrintFrame';
-                    printFrame.style.display = 'none';
-                    document.body.appendChild(printFrame);
+                if (printFrame) printFrame.remove();
+
+                printFrame = document.createElement('iframe');
+                printFrame.id = 'hiddenPrintFrame';
+                printFrame.style.position = 'fixed';
+                printFrame.style.left = '-9999px';
+                printFrame.style.top = '-9999px';
+                printFrame.style.width = '0';
+                printFrame.style.height = '0';
+                printFrame.style.border = 'none';
+                document.body.appendChild(printFrame);
+
+                const frameDoc = printFrame.contentWindow.document;
+                frameDoc.open();
+                frameDoc.write(`
+                    <!DOCTYPE html>
+                    <html>
+                    <head>
+                        <title>Print - ${escapeHtml(filename || 'Image')}</title>
+                        <style>
+                            @page { margin: 0; size: auto; }
+                            body { margin: 0; display: flex; align-items: center; justify-content: center; min-height: 100vh; background: #fff; }
+                            img { max-width: 100%; max-height: 100vh; object-fit: contain; }
+                        </style>
+                    </head>
+                    <body>
+                        <img id="printTargetImg" src="${dataUrl || fileUrl}" />
+                    </body>
+                    </html>
+                `);
+                frameDoc.close();
+
+                const targetImg = frameDoc.getElementById('printTargetImg');
+                const runImagePrint = () => {
+                    try {
+                        printFrame.contentWindow.focus();
+                        printFrame.contentWindow.print();
+                        updateJobStatus(custId, jobId, 'printed');
+                    } catch(err) {
+                        console.warn('Iframe print error:', err);
+                        viewFile(custId, jobId, filename);
+                    }
+                };
+
+                if (targetImg.complete) {
+                    setTimeout(runImagePrint, 250);
+                } else {
+                    targetImg.onload = () => setTimeout(runImagePrint, 250);
+                    targetImg.onerror = () => viewFile(custId, jobId, filename);
                 }
+            } else if (isPdf) {
+                // Print PDF via properly positioned off-screen iframe (NOT display:none)
+                let printFrame = document.getElementById('hiddenPrintFrame');
+                if (printFrame) printFrame.remove();
+
+                printFrame = document.createElement('iframe');
+                printFrame.id = 'hiddenPrintFrame';
+                printFrame.style.position = 'fixed';
+                printFrame.style.left = '-9999px';
+                printFrame.style.top = '-9999px';
+                printFrame.style.width = '1000px';
+                printFrame.style.height = '1000px';
+                printFrame.style.border = 'none';
+                printFrame.style.opacity = '0.01';
+                printFrame.style.pointerEvents = 'none';
+                document.body.appendChild(printFrame);
+
                 printFrame.src = fileUrl;
-                printFrame.onload = () => {
+
+                let printExecuted = false;
+                const runPdfPrint = () => {
+                    if (printExecuted) return;
+                    printExecuted = true;
                     try {
                         printFrame.contentWindow.focus();
                         printFrame.contentWindow.print();
                         updateJobStatus(custId, jobId, 'printed');
                     } catch(e) {
-                        window.open(fileUrl, '_blank');
-                        updateJobStatus(custId, jobId, 'printed');
+                        console.warn('Direct PDF iframe print blocked by browser security, opening in preview modal:', e);
+                        // Open clean in-dashboard preview instead of opening an about:blank popup
+                        viewFile(custId, jobId, filename);
                     }
                 };
-            } else if (isImage) {
-                const printWindow = window.open('', '_blank');
-                printWindow.document.write(`
-                    <html>
-                    <head><title>Print: ${escapeHtml(filename)}</title>
-                    <style>
-                        @page { margin: 0; size: auto; }
-                        body { margin: 0; display: flex; align-items: center; justify-content: center; min-height: 100vh; background:#fff; }
-                        img { max-width: 100%; max-height: 100vh; object-fit: contain; }
-                    </style>
-                    </head>
-                    <body>
-                        <img src="${fileUrl}" onload="window.print(); window.close();" />
-                    </body>
-                    </html>
-                `);
-                printWindow.document.close();
-                updateJobStatus(custId, jobId, 'printed');
+
+                printFrame.onload = () => {
+                    // Chromium PDF viewer needs a short delay to initialize
+                    setTimeout(runPdfPrint, 700);
+                };
+
+                // Fallback timeout in case onload event was swallowed
+                setTimeout(() => {
+                    if (!printExecuted) runPdfPrint();
+                }, 2000);
             } else {
-                window.open(fileUrl, '_blank');
+                // For DOCX or other un-printable formats, download cleanly
+                const a = document.createElement('a');
+                a.href = fileUrl;
+                a.download = filename || 'document';
+                a.click();
+                showToast('फाईल डाऊनलोड झाली आहे, कृपया उघडून प्रिंट करा');
                 updateJobStatus(custId, jobId, 'printed');
             }
         });
@@ -1236,16 +1301,17 @@
             triggerJobPrint(custId, jobId);
         };
 
-        getFileBlob(jobId, (blob) => {
-            if (!blob) {
+        getFileBlob(jobId, (blob, origFilename, dataUrl) => {
+            if (!blob && !dataUrl) {
                 container.innerHTML = `<p style="color:var(--text-muted);">Preview not available locally.</p>`;
                 return;
             }
-            const fileUrl = URL.createObjectURL(blob);
-            if (blob.type === 'application/pdf' || filename.toLowerCase().endsWith('.pdf')) {
+            const fileUrl = blob ? URL.createObjectURL(blob) : dataUrl;
+            const effectiveType = blob ? blob.type : '';
+            if (effectiveType === 'application/pdf' || (filename && filename.toLowerCase().endsWith('.pdf'))) {
                 container.innerHTML = `<iframe src="${fileUrl}" style="width:100%; height:100%; border:none;"></iframe>`;
-            } else if (blob.type.startsWith('image/')) {
-                container.innerHTML = `<img src="${fileUrl}" style="max-width:100%; max-height:100%; object-fit:contain; border-radius:8px;">`;
+            } else if (effectiveType.startsWith('image/') || (filename && /\.(jpe?g|png|webp|gif|bmp)$/i.test(filename))) {
+                container.innerHTML = `<img src="${dataUrl || fileUrl}" style="max-width:100%; max-height:100%; object-fit:contain; border-radius:8px;">`;
             } else {
                 container.innerHTML = `
                     <div style="text-align:center;">
@@ -1399,18 +1465,21 @@
                 if (j && j.dataUrl) {
                     try {
                         const arr = j.dataUrl.split(',');
-                        const mime = arr[0].match(/:(.*?);/)[1];
-                        const bstr = atob(arr[1]);
+                        const mime = (arr[0].match(/:(.*?);/) || [])[1] || 'application/octet-stream';
+                        const cleanBase64 = (arr[1] || '').replace(/\s/g, '');
+                        const bstr = atob(cleanBase64);
                         let n = bstr.length;
                         const u8arr = new Uint8Array(n);
                         while (n--) {
                             u8arr[n] = bstr.charCodeAt(n);
                         }
                         const blob = new Blob([u8arr], { type: mime });
-                        callback(blob, j.original_filename);
+                        callback(blob, j.original_filename, j.dataUrl);
                         return;
                     } catch(e) {
                         console.warn('Error converting dataUrl to blob', e);
+                        callback(null, j.original_filename, j.dataUrl);
+                        return;
                     }
                 }
             }
@@ -1422,21 +1491,22 @@
         const req = store.get(jobId);
         req.onsuccess = () => {
             if (req.result && req.result.blob) {
-                callback(req.result.blob, req.result.name);
+                callback(req.result.blob, req.result.name, null);
             } else if (req.result && req.result.dataUrl) {
                 try {
                     const arr = req.result.dataUrl.split(',');
-                    const mime = arr[0].match(/:(.*?);/)[1];
-                    const bstr = atob(arr[1]);
+                    const mime = (arr[0].match(/:(.*?);/) || [])[1] || 'application/octet-stream';
+                    const cleanBase64 = (arr[1] || '').replace(/\s/g, '');
+                    const bstr = atob(cleanBase64);
                     let n = bstr.length;
                     const u8arr = new Uint8Array(n);
                     while (n--) {
                         u8arr[n] = bstr.charCodeAt(n);
                     }
                     const blob = new Blob([u8arr], { type: mime });
-                    callback(blob, req.result.name);
+                    callback(blob, req.result.name, req.result.dataUrl);
                 } catch(e) {
-                    callback(null, req.result.name);
+                    callback(null, req.result.name, req.result.dataUrl);
                 }
             } else {
                 callback(null);
