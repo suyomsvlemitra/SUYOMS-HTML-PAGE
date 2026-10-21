@@ -793,6 +793,38 @@
         }
     }
 
+    function getActiveShopId() {
+        const urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get('shop') || 
+               urlParams.get('mobile') ||
+               localStorage.getItem('mobile') || 
+               localStorage.getItem('user_mobile') || 
+               localStorage.getItem('loggedInUser') || 
+               localStorage.getItem('username') || 
+               localStorage.getItem('sp_shop_slug') || 
+               'suyomsonline';
+    }
+
+    function fetchShopDetailsFromFirebase() {
+        const shopId = getActiveShopId();
+        const dbRef = initFirebaseClient();
+        if (dbRef && shopId) {
+            dbRef.ref('users/' + shopId).once('value').then(snap => {
+                const u = snap.val();
+                if (u) {
+                    if (u.name) {
+                        AppState.shopName = u.name;
+                        const el = document.getElementById('shopNameDisplay');
+                        if (el) el.innerText = u.name;
+                    }
+                    if (u.mobile) {
+                        AppState.phone = u.mobile;
+                    }
+                }
+            }).catch(e => console.log('Shop fetch error:', e));
+        }
+    }
+
     function initFirebaseLiveListener() {
         const dbRef = initFirebaseClient();
         if (!dbRef) {
@@ -800,8 +832,11 @@
             return;
         }
 
+        const shopId = getActiveShopId();
+        fetchShopDetailsFromFirebase();
+
         try {
-            const queueRef = dbRef.ref('print_queue');
+            const queueRef = dbRef.ref('print_queue/' + shopId);
 
             // Test connection & listen to new jobs
             queueRef.on('child_added', (snapshot) => {
@@ -908,12 +943,16 @@
     });
 
     function getCustomerLink() {
+        const shopId = getActiveShopId();
+        const shopName = AppState.shopName || '';
         if (AppState.customCustomerUrl && AppState.customCustomerUrl.trim().length > 5) {
-            return AppState.customCustomerUrl.trim();
+            const base = AppState.customCustomerUrl.trim();
+            const sep = base.includes('?') ? '&' : '?';
+            return `${base}${sep}shop=${encodeURIComponent(shopId)}&name=${encodeURIComponent(shopName)}`;
         }
         const url = new URL(window.location.href);
         const path = url.pathname.substring(0, url.pathname.lastIndexOf('/') + 1);
-        return `${url.origin}${path}customer.html?shop=${encodeURIComponent(AppState.shopSlug)}`;
+        return `${url.origin}${path}customer.html?shop=${encodeURIComponent(shopId)}&name=${encodeURIComponent(shopName)}`;
     }
 
     function applySettingsToUI() {
@@ -933,7 +972,8 @@
 
         const posterLink = document.getElementById('posterLink');
         if (posterLink) {
-            posterLink.href = `poster.html?shop=${encodeURIComponent(AppState.shopSlug)}`;
+            const shopId = getActiveShopId();
+            posterLink.href = `poster.html?shop=${encodeURIComponent(shopId)}&name=${encodeURIComponent(AppState.shopName)}`;
         }
 
         const custLinkHeader = document.getElementById('headerCustomerLink');
@@ -1240,7 +1280,8 @@
     function updateJobStatus(custId, jobId, newStatus) {
         // Sync with Firebase Realtime Database
         if (fbDb) {
-            fbDb.ref(`print_queue/${custId}/status`).set(newStatus).catch(e => console.warn(e));
+            const shopId = getActiveShopId();
+            fbDb.ref(`print_queue/${shopId}/${custId}/status`).set(newStatus).catch(e => console.warn(e));
         }
 
         // Local IndexedDB update
@@ -1266,7 +1307,8 @@
 
         // Delete from Firebase
         if (fbDb) {
-            fbDb.ref(`print_queue/${custId}`).remove().catch(e => console.warn(e));
+            const shopId = getActiveShopId();
+            fbDb.ref(`print_queue/${shopId}/${custId}`).remove().catch(e => console.warn(e));
         }
 
         // Local IndexedDB
@@ -1298,10 +1340,11 @@
 
         // Firebase cleanup
         if (fbDb) {
+            const shopId = getActiveShopId();
             AppState.customers.forEach(cust => {
                 const pending = (cust.jobs || []).filter(j => j.status !== 'printed');
                 if (pending.length === 0) {
-                    fbDb.ref(`print_queue/${cust.id}`).remove().catch(e => console.warn(e));
+                    fbDb.ref(`print_queue/${shopId}/${cust.id}`).remove().catch(e => console.warn(e));
                 }
             });
         }
@@ -1329,6 +1372,7 @@
     function checkAutoDelete() {
         if (AppState.autoDeleteMinutes <= 0 || !db) return;
         const cutoffTime = Date.now() - (AppState.autoDeleteMinutes * 60 * 1000);
+        const shopId = getActiveShopId();
 
         const tx = db.transaction('customers', 'readwrite');
         const store = tx.objectStore('customers');
@@ -1339,7 +1383,7 @@
             list.forEach(c => {
                 if (c.createdAt < cutoffTime) {
                     store.delete(c.id);
-                    if (fbDb) fbDb.ref(`print_queue/${c.id}`).remove().catch(e => console.warn(e));
+                    if (fbDb) fbDb.ref(`print_queue/${shopId}/${c.id}`).remove().catch(e => console.warn(e));
                     changed = true;
                 }
             });
