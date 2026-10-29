@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reduce Image Size In KB Online - Smart CSC Tool</title>
+    
+    <!-- SEO Meta Tags for AdSense -->
+    <meta name="description" content="Free online tool to reduce image size in KB (20KB, 50KB, 100KB) for government forms, PAN cards, and CSC VLEs. Compress JPEG/PNG without losing quality.">
+    <meta name="keywords" content="reduce image size in kb, compress image to 20kb, photo resizer for ssc, csc vle image tools, compress jpeg online">
+
+    <!-- Favicon -->
+    <link rel="icon" href="images/favicon.png" type="image/png">
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Cropper.js CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css" rel="stylesheet">
+    
+    <style>
+        .dashed-border {
+            border-image: repeating-linear-gradient(45deg, #f97316, #f97316 10px, transparent 10px, transparent 20px) 1;
+            border-width: 2px;
+            border-style: dashed;
+            border-color: #ea580c;
+        }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        
+        /* Active Unit Button Style (Saffron / भगवा) */
+        .unit-btn-active {
+            background-color: #ea580c !important;
+            font-weight: 600;
+            color: #ffffff !important;
+        }
+
+        /* Custom Slider Styling */
+        input[type=range] {
+            accent-color: #ea580c; /* Saffron color for slider thumb */
+        }
+        
+        /* FAQ Accordion Styling */
+        details > summary { list-style: none; }
+        details > summary::-webkit-details-marker { display: none; }
+    </style>
+</head>
+<body class="bg-black text-neutral-100 flex flex-col min-h-screen">
+
+    <!-- Main Tool Content -->
+    <main class="flex-grow max-w-5xl mx-auto w-full px-4 py-10">
+        
+        <div class="text-center mb-8">
+            <h1 class="text-3xl md:text-4xl font-extrabold text-[#ea580c] mb-3">Reduce Image Size In KB</h1>
+            <p class="text-neutral-400 font-medium text-lg">Compress photos to exactly 20KB, 50KB, 100KB, or 200KB for online form submissions.</p>
+        </div>
+
+        <!-- Upload Area -->
+        <div class="relative bg-neutral-900 rounded-2xl shadow-xl p-6 md:p-10 mb-8 border-2 border-dashed border-orange-500/60 hover:border-orange-500 hover:bg-neutral-900/90 transition-colors" id="drop-zone">
+            
+            <!-- Dimension Toggles -->
+            <div class="absolute -top-4 right-4 bg-neutral-900 border border-neutral-700 rounded-md shadow-md flex items-center text-sm overflow-hidden z-10">
+                <span class="px-3 py-1 bg-neutral-800 border-r border-neutral-700 text-neutral-300 font-medium">Image Dimensions:</span>
+                <button onclick="changeUnit('px')" id="btn-px" class="unit-btn unit-btn-active px-3 py-1 text-neutral-300 hover:bg-neutral-800 transition-colors">Pixels</button>
+                <button onclick="changeUnit('mm')" id="btn-mm" class="unit-btn px-3 py-1 text-neutral-300 hover:bg-neutral-800 transition-colors">MM</button>
+                <button onclick="changeUnit('cm')" id="btn-cm" class="unit-btn px-3 py-1 text-neutral-300 hover:bg-neutral-800 transition-colors">CM</button>
+            </div>
+
+            <!-- Upload Initial State -->
+            <div id="upload-state" class="text-center py-12">
+                <div class="w-20 h-20 bg-orange-500/10 border border-orange-500/30 text-orange-500 rounded-full flex items-center justify-center mx-auto mb-4 text-3xl shadow-inner">
+                    <i class="fa-solid fa-cloud-arrow-up"></i>
+                </div>
+                <p class="text-xl text-neutral-200 mb-4 font-bold">Select Or Drag & Drop Images Here</p>
+                <input type="file" id="file-input" accept="image/jpeg, image/png, image/webp" class="hidden">
+                <button onclick="document.getElementById('file-input').click()" class="bg-gradient-to-r from-orange-500 to-amber-600 hover:from-orange-600 hover:to-amber-700 text-white font-bold py-3 px-8 rounded-full shadow-lg shadow-orange-950 transition-transform hover:-translate-y-1">
+                    Choose Image
+                </button>
+                <p class="text-neutral-500 text-sm mt-4 font-medium">Supports JPG, JPEG, PNG, WEBP</p>
+            </div>
+
+            <!-- Preview State (Hidden initially) -->
+            <div id="preview-state" class="hidden flex-col items-center">
+                <div class="relative group border border-neutral-800 rounded-xl shadow-lg overflow-hidden bg-neutral-900 max-w-sm w-full">
+                    <button onclick="resetTool()" class="absolute top-2 right-2 z-10 bg-red-600 text-white w-8 h-8 rounded-full font-bold hover:bg-red-700 shadow-md flex items-center justify-center"><i class="fa-solid fa-xmark"></i></button>
+                    
+                    <div class="absolute top-2 left-2 flex flex-col gap-2 z-10">
+                        <button onclick="openResizeModal()" class="bg-black/80 hover:bg-black text-orange-400 border border-orange-500/30 text-xs px-3 py-1.5 rounded-md flex items-center gap-1 backdrop-blur-sm shadow w-fit font-medium transition">
+                            <i class="fa-solid fa-expand"></i> Resize Pixel
+                        </button>
+                        <button onclick="openCropper()" class="bg-black/80 hover:bg-black text-orange-400 border border-orange-500/30 text-xs px-3 py-1.5 rounded-md flex items-center gap-1 backdrop-blur-sm shadow w-fit font-medium transition">
+                            <i class="fa-solid fa-crop"></i> Crop Image
+                        </button>
+                    </div>
+
+                    <div class="h-56 w-full bg-neutral-950 flex items-center justify-center overflow-hidden p-4">
+                        <img id="image-preview" src="" alt="Preview" class="max-h-full max-w-full object-contain shadow-sm">
+                    </div>
+
+                    <div class="bg-neutral-950 border-t border-neutral-800 text-white text-sm p-4">
+                        <p id="file-name" class="font-bold truncate mb-2 text-orange-400">image.jpeg</p>
+                        <div class="grid grid-cols-2 gap-2 text-neutral-300">
+                            <p><strong class="text-white">Size:</strong> <span id="file-size" class="text-orange-400 font-bold">0 KB</span></p>
+                            <p><strong class="text-white">Width:</strong> <span id="file-width">0 PX</span></p>
+                            <p><strong class="text-white">Height:</strong> <span id="file-height">0 PX</span></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Controls Area -->
+        <div class="bg-neutral-900 p-6 rounded-2xl shadow-lg border border-neutral-800 mb-10 flex flex-col sm:flex-row items-center justify-center gap-6">
+            <div class="flex items-center text-lg bg-neutral-950 p-2 rounded-xl border border-neutral-800">
+                <label for="target-size" class="mr-3 font-bold text-neutral-300 ml-2">Target Size:</label>
+                <input type="number" id="target-size" value="50" class="border border-neutral-700 bg-neutral-900 p-2 w-24 text-center font-bold text-orange-500 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500">
+                <span class="text-neutral-400 px-3 font-bold">KB</span>
+            </div>
+            <button id="reduce-btn" class="bg-gradient-to-r from-orange-500 to-amber-600 hover:from-orange-600 hover:to-amber-700 text-white font-bold py-3 px-8 rounded-xl shadow-lg shadow-orange-950 transition-transform hover:-translate-y-1 w-full sm:w-auto text-lg flex items-center justify-center">
+                <i class="fa-solid fa-compress mr-2"></i> Compress Image
+            </button>
+        </div>
+
+        
+
+        
+        <!-- 🚀 MASTER SEO TEMPLATE CONTENT ENDS HERE 🚀 -->
+
+    </main>
+
+    <!-- Modals (Resize and Crop) -->
+    <!-- Resize Modal -->
+    <div id="resize-modal" class="fixed inset-0 bg-black/85 z-[60] hidden flex-col items-center justify-center p-4">
+        <div class="bg-neutral-900 border border-neutral-800 rounded-lg max-w-sm w-full p-6 flex flex-col shadow-2xl relative text-white">
+            <h3 class="text-xl font-bold mb-4 text-orange-500">Resize Image</h3>
+            <div class="mb-4">
+                <label class="block text-sm font-medium text-neutral-300 mb-1">Select Unit</label>
+                <select id="resize-unit" class="w-full border border-neutral-700 rounded p-2 focus:ring-orange-500 focus:border-orange-500 bg-neutral-800 text-white" onchange="updateResizePlaceholder()">
+                    <option value="px">Pixels</option>
+                    <option value="mm">MM</option>
+                    <option value="cm">CM</option>
+                </select>
+            </div>
+            <div class="flex gap-4 mb-6">
+                <div class="w-1/2">
+                    <label class="block text-sm font-medium text-neutral-300 mb-1">Width</label>
+                    <input type="number" id="resize-width" class="w-full border border-neutral-700 bg-neutral-800 text-white rounded p-2 focus:ring-orange-500 focus:border-orange-500">
+                </div>
+                <div class="w-1/2">
+                    <label class="block text-sm font-medium text-neutral-300 mb-1">Height</label>
+                    <input type="number" id="resize-height" class="w-full border border-neutral-700 bg-neutral-800 text-white rounded p-2 focus:ring-orange-500 focus:border-orange-500">
+                </div>
+            </div>
+            <div class="flex justify-end gap-3 mt-2">
+                <button onclick="closeResizeModal()" class="px-4 py-2 bg-neutral-800 text-neutral-300 rounded hover:bg-neutral-700 font-medium transition-colors">Cancel</button>
+                <button onclick="applyResize()" class="px-4 py-2 bg-orange-600 text-white rounded hover:bg-orange-700 font-medium transition-colors shadow">Apply Changes</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Enhanced Crop Modal with Sliders -->
+    <div id="crop-modal" class="fixed inset-0 bg-black/85 z-[60] hidden flex-col items-center justify-center p-4 pt-10">
+        <div class="bg-neutral-900 border border-neutral-800 rounded-lg max-w-2xl w-full p-4 flex flex-col relative shadow-2xl">
+            <button onclick="closeCropper()" class="absolute -top-4 -right-4 bg-orange-600 hover:bg-orange-700 text-white w-8 h-8 rounded flex items-center justify-center shadow-lg transition-transform hover:scale-105 z-50">
+                <i class="fa-solid fa-xmark text-lg"></i>
+            </button>
+            <div class="overflow-hidden bg-neutral-950 relative h-[45vh] md:h-[50vh] flex items-center justify-center rounded border border-neutral-800">
+                <img id="cropper-image" src="" alt="To Crop" class="max-w-full max-h-full">
+            </div>
+            <div class="w-full max-w-md mx-auto mt-6 space-y-5 text-sm font-bold text-orange-400">
+                <div class="flex flex-col items-center">
+                    <label class="mb-2">Rotate Image By Moving Slider</label>
+                    <div class="flex items-center w-full gap-3">
+                        <input type="range" id="rotate-slider" min="-180" max="180" value="0" class="w-full h-2 bg-neutral-700 rounded-lg appearance-none cursor-pointer">
+                        <button onclick="resetRotate()" class="text-red-500 hover:text-red-400 transition-colors" title="Reset Rotation"><i class="fa-solid fa-ban text-xl"></i></button>
+                    </div>
+                </div>
+                <div class="flex flex-col items-center">
+                    <label class="mb-2">Zoom In Image By Moving Slider</label>
+                    <div class="flex items-center w-full gap-3">
+                        <input type="range" id="zoom-slider" min="-1" max="2" step="0.05" value="0" class="w-full h-2 bg-neutral-700 rounded-lg appearance-none cursor-pointer">
+                        <button onclick="resetZoom()" class="text-red-500 hover:text-red-400 transition-colors" title="Reset Zoom"><i class="fa-solid fa-ban text-xl"></i></button>
+                    </div>
+                </div>
+            </div>
+            <div class="flex justify-center gap-4 mt-8 mb-2">
+                <button onclick="saveCrop()" class="px-6 py-2 bg-orange-600 text-white rounded font-bold hover:bg-orange-700 transition-colors shadow">Crop Image</button>
+                <button onclick="closeCropper()" class="px-6 py-2 bg-neutral-800 text-neutral-300 rounded font-bold hover:bg-neutral-700 transition-colors shadow">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts for Functionality (Exact JavaScript Logic Preserved) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
+    <script>
+        const dropZone = document.getElementById('drop-zone');
+        const fileInput = document.getElementById('file-input');
+        const uploadState = document.getElementById('upload-state');
+        const previewState = document.getElementById('preview-state');
+        const imagePreview = document.getElementById('image-preview');
+        
+        let currentFile = null; let cropper = null; let originalImageDataUrl = null;
+        let currentWidthPx = 0; let currentHeightPx = 0; let displayUnit = 'px';
+        const DPI = 96; let defaultZoomRatio = 1;
+
+        dropZone.addEventListener('dragover', (e) => { e.preventDefault(); dropZone.classList.add('bg-neutral-800/40'); });
+        dropZone.addEventListener('dragleave', (e) => { e.preventDefault(); dropZone.classList.remove('bg-neutral-800/40'); });
+        dropZone.addEventListener('drop', (e) => { e.preventDefault(); dropZone.classList.remove('bg-neutral-800/40'); if (e.dataTransfer.files.length > 0) handleFile(e.dataTransfer.files[0]); });
+        fileInput.addEventListener('change', (e) => { if (e.target.files.length > 0) handleFile(e.target.files[0]); });
+
+        function handleFile(file) {
+            if (!file.type.match('image.*')) { alert("Please select an image file (JPEG, PNG)."); return; }
+            currentFile = file; const reader = new FileReader();
+            reader.onload = (e) => { originalImageDataUrl = e.target.result; updatePreviewUI(originalImageDataUrl, file.name, file.size); };
+            reader.readAsDataURL(file);
+        }
+
+        function updatePreviewUI(dataUrl, name, sizeBytes) {
+            imagePreview.src = dataUrl;
+            imagePreview.onload = function() {
+                currentWidthPx = this.naturalWidth; currentHeightPx = this.naturalHeight;
+                document.getElementById('file-name').innerText = name;
+                document.getElementById('file-size').innerText = formatBytes(sizeBytes);
+                updateDimensionDisplay();
+                uploadState.classList.add('hidden');
+                previewState.classList.remove('hidden'); previewState.classList.add('flex');
+            }
+        }
+
+        function changeUnit(unit) {
+            displayUnit = unit;
+            document.querySelectorAll('.unit-btn').forEach(btn => btn.classList.remove('unit-btn-active'));
+            const activeBtn = document.getElementById(`btn-${unit}`);
+            activeBtn.classList.add('unit-btn-active');
+            updateDimensionDisplay();
+        }
+
+        function updateDimensionDisplay() {
+            if (currentWidthPx === 0) return;
+            let w = currentWidthPx, h = currentHeightPx, unitLabel = 'PX';
+            if (displayUnit === 'mm') { w = (currentWidthPx * 25.4) / DPI; h = (currentHeightPx * 25.4) / DPI; unitLabel = 'MM'; } 
+            else if (displayUnit === 'cm') { w = (currentWidthPx * 25.4) / (DPI * 10); h = (currentHeightPx * 25.4) / (DPI * 10); unitLabel = 'CM'; }
+            w = displayUnit === 'px' ? Math.round(w) : w.toFixed(2);
+            h = displayUnit === 'px' ? Math.round(h) : h.toFixed(2);
+            document.getElementById('file-width').innerText = `${w} ${unitLabel}`;
+            document.getElementById('file-height').innerText = `${h} ${unitLabel}`;
+        }
+
+        function openResizeModal() {
+            const modal = document.getElementById('resize-modal');
+            modal.classList.remove('hidden'); modal.classList.add('flex');
+            document.getElementById('resize-unit').value = displayUnit;
+            updateResizePlaceholder();
+        }
+        function closeResizeModal() { document.getElementById('resize-modal').classList.add('hidden'); document.getElementById('resize-modal').classList.remove('flex'); }
+        
+        function updateResizePlaceholder() {
+            const unit = document.getElementById('resize-unit').value;
+            let w = currentWidthPx, h = currentHeightPx;
+            if (unit === 'mm') { w = (currentWidthPx * 25.4) / DPI; h = (currentHeightPx * 25.4) / DPI; } 
+            else if (unit === 'cm') { w = (currentWidthPx * 25.4) / (DPI * 10); h = (currentHeightPx * 25.4) / (DPI * 10); }
+            w = unit === 'px' ? Math.round(w) : w.toFixed(2); h = unit === 'px' ? Math.round(h) : h.toFixed(2);
+            document.getElementById('resize-width').value = w; document.getElementById('resize-height').value = h;
+        }
+
+        function applyResize() {
+            let newW = parseFloat(document.getElementById('resize-width').value);
+            let newH = parseFloat(document.getElementById('resize-height').value);
+            const unit = document.getElementById('resize-unit').value;
+            if (!newW || !newH || newW <= 0 || newH <= 0) { alert("Please enter valid numbers."); return; }
+
+            if (unit === 'mm') { newW = (newW * DPI) / 25.4; newH = (newH * DPI) / 25.4; } 
+            else if (unit === 'cm') { newW = (newW * 10 * DPI) / 25.4; newH = (newH * 10 * DPI) / 25.4; }
+            newW = Math.round(newW); newH = Math.round(newH);
+
+            const img = new Image(); img.src = originalImageDataUrl;
+            img.onload = () => {
+                const canvas = document.createElement('canvas');
+                canvas.width = newW; canvas.height = newH;
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(img, 0, 0, newW, newH);
+                originalImageDataUrl = canvas.toDataURL('image/jpeg', 1.0);
+                const sizeEstimate = Math.round((originalImageDataUrl.length * 3) / 4);
+                updatePreviewUI(originalImageDataUrl, (currentFile ? currentFile.name : "resized_image.jpg"), sizeEstimate);
+                closeResizeModal();
+            };
+        }
+
+        function formatBytes(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024, sizes = ['Bytes', 'KB', 'MB'], i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        }
+
+        function resetTool() {
+            uploadState.classList.remove('hidden'); previewState.classList.add('hidden'); previewState.classList.remove('flex');
+            fileInput.value = ''; currentFile = null; originalImageDataUrl = null; currentWidthPx = 0; currentHeightPx = 0;
+        }
+
+        function openCropper() {
+            const modal = document.getElementById('crop-modal');
+            const cropperImage = document.getElementById('cropper-image');
+            cropperImage.src = originalImageDataUrl;
+            document.getElementById('rotate-slider').value = 0; document.getElementById('zoom-slider').value = 0;
+            modal.classList.remove('hidden'); modal.classList.add('flex');
+            if (cropper) { cropper.destroy(); }
+            cropper = new Cropper(cropperImage, {
+                viewMode: 1, autoCropArea: 0.8, responsive: true, background: true,
+                ready: function () { defaultZoomRatio = cropper.getImageData().width / cropper.getImageData().naturalWidth; }
+            });
+        }
+
+        function closeCropper() {
+            document.getElementById('crop-modal').classList.add('hidden'); document.getElementById('crop-modal').classList.remove('flex');
+            if (cropper) { cropper.destroy(); }
+        }
+
+        function saveCrop() {
+            if (!cropper) return;
+            const croppedCanvas = cropper.getCroppedCanvas();
+            originalImageDataUrl = croppedCanvas.toDataURL('image/jpeg', 1.0);
+            const sizeEstimate = Math.round((originalImageDataUrl.length * 3) / 4);
+            updatePreviewUI(originalImageDataUrl, "cropped_" + (currentFile ? currentFile.name : "image.jpg"), sizeEstimate);
+            closeCropper();
+        }
+
+        document.getElementById('rotate-slider').addEventListener('input', function() { if (cropper) cropper.rotateTo(parseFloat(this.value)); });
+        document.getElementById('zoom-slider').addEventListener('input', function() {
+            if (cropper) {
+                const sliderVal = parseFloat(this.value); const newRatio = defaultZoomRatio * Math.pow(2, sliderVal);
+                cropper.zoomTo(newRatio);
+            }
+        });
+        function resetRotate() { document.getElementById('rotate-slider').value = 0; if (cropper) cropper.rotateTo(0); }
+        function resetZoom() { document.getElementById('zoom-slider').value = 0; if (cropper) cropper.zoomTo(defaultZoomRatio); }
+
+        document.getElementById('reduce-btn').addEventListener('click', () => {
+            if (!originalImageDataUrl) { alert("Please upload an image first!"); return; }
+            const targetKB = parseFloat(document.getElementById('target-size').value);
+            if (isNaN(targetKB) || targetKB <= 0) { alert("Please enter a valid target size."); return; }
+
+            const btn = document.getElementById('reduce-btn');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = "<i class='fa-solid fa-spinner fa-spin mr-2'></i> Compressing..."; btn.disabled = true;
+
+            const img = new Image(); img.src = originalImageDataUrl;
+            img.onload = () => {
+                compressToTargetSize(img, targetKB, (compressedDataUrl) => {
+                    const link = document.createElement('a');
+                    link.download = `compressed_${targetKB}kb_${currentFile ? currentFile.name : 'image.jpg'}`;
+                    link.href = compressedDataUrl;
+                    link.click();
+                    btn.innerHTML = originalText; btn.disabled = false;
+                });
+            };
+        });
+
+        function compressToTargetSize(img, targetKB, callback) {
+            const targetBytes = targetKB * 1024;
+            const canvas = document.createElement('canvas'); const ctx = canvas.getContext('2d');
+            let width = img.naturalWidth, height = img.naturalHeight, quality = 0.95, currentBytes = Infinity;
+
+            if (targetKB <= 50 && width > 1000) { const scale = 800 / width; width = width * scale; height = height * scale; }
+
+            function attempt() {
+                canvas.width = width; canvas.height = height;
+                ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, width, height);
+                ctx.drawImage(img, 0, 0, width, height);
+                const dataUrl = canvas.toDataURL('image/jpeg', quality);
+                currentBytes = Math.round((dataUrl.length * 3) / 4);
+
+                if (currentBytes <= targetBytes || (quality <= 0.1 && width < 300)) {
+                    callback(dataUrl);
+                } else {
+                    if (quality > 0.4) quality -= 0.1;
+                    else if (quality > 0.1) quality -= 0.05;
+                    else { width *= 0.85; height *= 0.85; quality = 0.5; }
+                    setTimeout(attempt, 5); 
+                }
+            }
+            attempt();
+        }
+    </script>
+</body>
+</html>
