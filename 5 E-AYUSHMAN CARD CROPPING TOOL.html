@@ -1,0 +1,1299 @@
+<!DOCTYPE html>
+<html lang="mr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SUYOMS VLE MITRA - आयुष्मान कार्ड क्रॉप आणि प्रिंट</title>
+
+<!-- Google Fonts: Khand & Noto Sans Devanagari (मराठी फॉन्ट सपोर्ट) -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Khand:wght@400;500;600;700&family=Noto+Sans+Devanagari:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --bhagwa: #ff6f00;            /* Vibrant Bhagwa (Saffron) */
+  --bhagwa-hover: #e65100;      /* Deep Bhagwa for hover */
+  --bhagwa-glow: rgba(255, 111, 0, 0.35);
+  --black-bg: #0b0c10;          /* Deep Black Background */
+  --black-card: #151720;        /* Card Black */
+  --black-card-alt: #1a1d28;    /* Elevated element Black */
+  --black-border: #292d3b;      /* Border line */
+  --text-primary: #ffffff;      /* White text */
+  --text-secondary: #9ca3af;    /* Slate muted text */
+  --front: #ff6f00;             /* Front crop box: Bhagwa */
+  --back: #00b0ff;              /* Back crop box: Cyan */
+  --ok: #22c55e;
+  --warn: #eab308;
+  --danger: #ef4444;
+  --r: 14px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--black-bg);
+  color: var(--text-primary);
+  font-family: 'Khand', 'Noto Sans Devanagari', 'Segoe UI', system-ui, sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
+  letter-spacing: 0.2px;
+}
+
+input, select, textarea, button {
+  -webkit-user-select: text !important;
+  user-select: text !important;
+  font-family: 'Khand', 'Noto Sans Devanagari', 'Segoe UI', system-ui, sans-serif;
+}
+
+.wrap {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 24px 18px 60px;
+}
+
+/* Brand Header */
+.main-header {
+  text-align: center;
+  margin-bottom: 22px;
+  padding: 16px 20px;
+  background: var(--black-card);
+  border: 1px solid var(--black-border);
+  border-radius: var(--r);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.45);
+}
+
+.brand-title {
+  margin: 0;
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--bhagwa);
+  letter-spacing: 1px;
+}
+
+.brand-sub {
+  margin: 4px 0 0;
+  font-size: 16px;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: minmax(0, 430px) minmax(0, 1fr);
+  gap: 18px;
+  align-items: start;
+}
+
+@media (max-width: 940px) {
+  .grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.col-left, .col-right {
+  min-width: 0;
+}
+
+.col-left {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.card {
+  background: var(--black-card);
+  border: 1px solid var(--black-border);
+  border-radius: var(--r);
+  padding: 18px 18px 20px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.45);
+}
+
+.card h2 {
+  margin: 0 0 14px;
+  font-size: 19px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--text-primary);
+}
+
+.step {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--bhagwa);
+  color: #000000;
+  font-size: 15px;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+}
+
+.hint {
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin: 6px 0 0;
+  line-height: 1.4;
+}
+
+/* dropzone */
+.drop {
+  display: block;
+  border: 2px dashed var(--bhagwa);
+  border-radius: 12px;
+  padding: 24px 14px;
+  text-align: center;
+  cursor: pointer;
+  background: var(--black-card-alt);
+  transition: border-color .2s, background .2s, box-shadow .2s;
+}
+
+.drop:hover, .drop.over {
+  border-color: #ffa040;
+  background: #212534;
+  box-shadow: 0 0 16px var(--bhagwa-glow);
+}
+
+.drop:focus-within {
+  outline: 3px solid var(--bhagwa);
+  outline-offset: 2px;
+}
+
+.drop b {
+  display: block;
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--bhagwa);
+}
+
+.drop span {
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+
+.drop input {
+  position: absolute;
+  opacity: 0;
+  width: 1px;
+  height: 1px;
+}
+
+.files {
+  list-style: none;
+  margin: 10px 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.files li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid var(--black-border);
+  border-radius: 10px;
+  padding: 8px 10px;
+  background: var(--black-card-alt);
+  font-size: 14px;
+  color: var(--text-primary);
+}
+
+.files li.sel {
+  border-color: var(--bhagwa);
+  box-shadow: 0 0 0 1px var(--bhagwa);
+}
+
+.files button.pick {
+  flex: 1;
+  min-width: 0;
+  text-align: left;
+  background: none;
+  border: 0;
+  padding: 0;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+}
+
+.files .nm {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-weight: 600;
+  color: #ffffff;
+  font-size: 15px;
+}
+
+.files .st {
+  display: block;
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.files .st.ok { color: var(--ok); }
+.files .st.warn { color: var(--warn); }
+.files .st.err { color: var(--danger); }
+
+.files .x {
+  border: 0;
+  background: #252937;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  cursor: pointer;
+  color: var(--text-secondary);
+  font-size: 16px;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.files .x:hover {
+  background: var(--bhagwa-hover);
+  color: #ffffff;
+}
+
+/* stage */
+.stage {
+  position: relative;
+  width: 100%;
+  border: 1px solid var(--black-border);
+  border-radius: 10px;
+  overflow: hidden;
+  background: #0e1017;
+  touch-action: none;
+  user-select: none;
+}
+
+.stage canvas {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.box {
+  position: absolute;
+  border: 2px solid;
+  border-radius: 4px;
+  cursor: move;
+  outline: none;
+}
+
+.box.front {
+  border-color: var(--front);
+  background: rgba(255, 111, 0, 0.15);
+}
+
+.box.back {
+  border-color: var(--back);
+  background: rgba(0, 176, 255, 0.15);
+}
+
+.box.on {
+  box-shadow: 0 0 0 2px #fff, 0 0 0 4px currentColor;
+}
+
+.box.front.on { color: var(--front); }
+.box.back.on { color: var(--back); }
+
+.box .tag {
+  position: absolute;
+  left: -2px;
+  top: -22px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #000000;
+  padding: 1px 7px;
+  border-radius: 5px 5px 5px 0;
+  white-space: nowrap;
+}
+
+.box.front .tag {
+  background: var(--front);
+  color: #000000;
+}
+
+.box.back .tag {
+  background: var(--back);
+  color: #000000;
+}
+
+.box .h {
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  background: #fff;
+  border: 2px solid currentColor;
+  border-radius: 50%;
+}
+
+.box.front .h { border-color: var(--front); }
+.box.back .h { border-color: var(--back); }
+
+.h.nw { left: -9px; top: -9px; cursor: nwse-resize; }
+.h.ne { right: -9px; top: -9px; cursor: nesw-resize; }
+.h.sw { left: -9px; bottom: -9px; cursor: nesw-resize; }
+.h.se { right: -9px; bottom: -9px; cursor: nwse-resize; }
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  margin-top: 10px;
+}
+
+.btn {
+  font: inherit;
+  font-size: 15px;
+  font-weight: 600;
+  border: 1px solid var(--black-border);
+  background: var(--black-card-alt);
+  color: var(--text-primary);
+  border-radius: 10px;
+  padding: 8px 14px;
+  cursor: pointer;
+  transition: background .15s, border-color .15s, color .15s;
+}
+
+.btn:hover {
+  background: #232737;
+  border-color: var(--bhagwa);
+  color: var(--bhagwa);
+}
+
+.btn:focus-visible, .seg label:focus-within {
+  outline: 3px solid var(--bhagwa);
+  outline-offset: 2px;
+}
+
+.btn.sm {
+  padding: 5px 10px;
+  font-size: 14px;
+}
+
+.btn.primary {
+  background: var(--bhagwa);
+  border-color: var(--bhagwa);
+  color: #000000;
+  font-weight: 700;
+  padding: 10px 20px;
+  font-size: 16px;
+  box-shadow: 0 4px 14px var(--bhagwa-glow);
+}
+
+.btn.primary:hover {
+  background: var(--bhagwa-hover);
+  border-color: var(--bhagwa-hover);
+  color: #ffffff;
+}
+
+.btn[disabled] {
+  opacity: .4;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.nudge {
+  display: inline-grid;
+  grid-template-columns: repeat(3, 30px);
+  grid-template-rows: repeat(2, 30px);
+  gap: 3px;
+}
+
+.nudge .btn {
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px;
+  border-radius: 8px;
+}
+
+.nudge .u { grid-column: 2; }
+.nudge .l { grid-column: 1; grid-row: 2; }
+.nudge .d { grid-column: 2; grid-row: 2; }
+.nudge .r { grid-column: 3; grid-row: 2; }
+
+.sel-side {
+  display: inline-flex;
+  border: 1px solid var(--black-border);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.sel-side button {
+  border: 0;
+  background: var(--black-card-alt);
+  font: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  padding: 7px 14px;
+  cursor: pointer;
+}
+
+.sel-side button.on.front {
+  background: var(--front);
+  color: #000000;
+  font-weight: 700;
+}
+
+.sel-side button.on.back {
+  background: var(--back);
+  color: #000000;
+  font-weight: 700;
+}
+
+/* options */
+.seg {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.seg label {
+  position: relative;
+  display: block;
+  border: 1.5px solid var(--black-border);
+  border-radius: 12px;
+  padding: 10px 12px;
+  cursor: pointer;
+  background: var(--black-card-alt);
+  transition: border-color .15s, background .15s;
+}
+
+.seg input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.seg label:has(input:checked) {
+  border-color: var(--bhagwa);
+  background: #202432;
+  box-shadow: 0 0 0 1px var(--bhagwa);
+}
+
+.seg b {
+  display: block;
+  font-size: 15px;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.seg span {
+  display: block;
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.35;
+  margin-top: 2px;
+}
+
+.seg .ill {
+  display: flex;
+  gap: 3px;
+  margin-bottom: 7px;
+}
+
+.seg .ill i {
+  display: block;
+  border: 1.5px solid var(--bhagwa);
+  border-radius: 2px;
+  background: rgba(255, 111, 0, 0.2);
+}
+
+.fld {
+  display: grid;
+  grid-template-columns: 110px 1fr auto;
+  gap: 8px 10px;
+  align-items: center;
+  margin-top: 12px;
+  font-size: 15px;
+}
+
+.fld > label {
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.fld output {
+  font-variant-numeric: tabular-nums;
+  min-width: 48px;
+  text-align: right;
+  font-size: 14px;
+  color: var(--bhagwa);
+  font-weight: 600;
+}
+
+input[type=range] {
+  width: 100%;
+  accent-color: var(--bhagwa);
+  cursor: pointer;
+}
+
+select, input[type=number], input[type=password] {
+  font: inherit;
+  font-size: 15px;
+  border: 1px solid var(--black-border);
+  border-radius: 9px;
+  padding: 8px 10px;
+  background: var(--black-card-alt);
+  color: var(--text-primary);
+  width: 100%;
+  outline: none;
+  transition: border-color .2s;
+}
+
+select:focus, input[type=number]:focus, input[type=password]:focus {
+  border-color: var(--bhagwa);
+  box-shadow: 0 0 0 2px var(--bhagwa-glow);
+}
+
+.chk {
+  display: flex;
+  gap: 9px;
+  align-items: flex-start;
+  font-size: 15px;
+  margin-top: 10px;
+  cursor: pointer;
+  color: var(--text-primary);
+}
+
+.chk input {
+  margin-top: 3px;
+  accent-color: var(--bhagwa);
+  width: 17px;
+  height: 17px;
+  flex: none;
+  cursor: pointer;
+}
+
+.chk small {
+  display: block;
+  color: var(--text-secondary);
+  font-size: 13px;
+}
+
+.two {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+/* preview */
+.col-right {
+  position: sticky;
+  top: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+@media (max-width: 940px) {
+  .col-right {
+    position: static;
+  }
+}
+
+.bench {
+  background: #0e1017;
+  border: 1px solid var(--black-border);
+  border-radius: var(--r);
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  min-height: 300px;
+  background-image: radial-gradient(#252a39 1px, transparent 1px);
+  background-size: 16px 16px;
+}
+
+.sheet-wrap {
+  max-width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+#sheet {
+  background: #ffffff;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4), 0 14px 34px -10px rgba(0, 0, 0, 0.6);
+  max-width: 100%;
+  height: auto;
+}
+
+.bench.empty #sheet {
+  display: none;
+}
+
+.empty-msg {
+  display: none;
+  text-align: center;
+  color: var(--text-secondary);
+  padding: 60px 10px;
+  font-size: 16px;
+}
+
+.bench.empty .empty-msg {
+  display: block;
+}
+
+.empty-msg b {
+  color: var(--bhagwa);
+  font-size: 18px;
+}
+
+.meta {
+  font-size: 14px;
+  color: var(--text-secondary);
+  text-align: center;
+}
+
+.pager {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+  color: var(--text-primary);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.msg {
+  font-size: 14px;
+  border-radius: 10px;
+  padding: 10px 14px;
+  background: rgba(255, 111, 0, 0.12);
+  color: #ffa040;
+  border: 1px solid var(--bhagwa);
+  display: none;
+}
+
+.msg.show {
+  display: block;
+}
+
+.msg.info {
+  background: rgba(0, 176, 255, 0.12);
+  color: #38bdf8;
+  border-color: #0284c7;
+}
+
+/* modal */
+.modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.75);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 2147483100;
+  padding: 16px;
+}
+
+.modal.show {
+  display: flex;
+}
+
+.modal .box2 {
+  background: var(--black-card);
+  border: 1px solid var(--bhagwa);
+  border-radius: 16px;
+  padding: 22px;
+  max-width: 380px;
+  width: 100%;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.7);
+}
+
+.modal h3 {
+  margin: 0 0 6px;
+  font-size: 19px;
+  font-weight: 700;
+  color: var(--bhagwa);
+}
+
+.modal p {
+  margin: 0 0 12px;
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+
+.modal .err {
+  color: var(--danger);
+  font-size: 13px;
+  margin: 6px 0 0;
+  min-height: 18px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition: none !important;
+    animation: none !important;
+  }
+}
+
+@media print {
+  body {
+    background: #fff;
+  }
+  .wrap > *:not(#sheetOnly) {
+    display: none !important;
+  }
+}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <!-- Brand Header -->
+  <header class="main-header">
+    <h1 class="brand-title">SUYOMS VLE MITRA</h1>
+    <div class="brand-sub">आयुष्मान भारत कार्ड क्रॉप आणि प्रिंट टूल</div>
+  </header>
+
+  <div class="grid">
+    <!-- ================= LEFT: controls ================= -->
+    <div class="col-left">
+
+      <section class="card" aria-labelledby="h-up">
+        <h2 id="h-up"><span class="step">1</span>आयुष्मान कार्ड PDF निवडा</h2>
+        <label class="drop" id="drop">
+          <input type="file" id="file" accept="application/pdf,image/*" multiple>
+          <b>PDF येथे ड्रॉप करा किंवा फाईल निवडण्यासाठी क्लिक करा</b>
+          <span>एकाच वेळी अनेक आयुष्मान कार्ड्स निवडू शकता (PDF, JPG, PNG)</span>
+        </label>
+        <ul class="files" id="files" aria-live="polite"></ul>
+        <p class="hint">पासवर्ड असलेली PDF असल्यास उघडताना पासवर्ड विचारला जाईल.</p>
+      </section>
+
+      <section class="card" id="cropCard" aria-labelledby="h-crop" hidden>
+        <h2 id="h-crop"><span class="step">2</span>क्रॉप तपासा</h2>
+        <div class="stage" id="stage" aria-label="आयुष्मान कार्ड पृष्ठ प्रिव्ह्यू क्रॉप बॉक्ससह">
+          <canvas id="view" width="10" height="10"></canvas>
+          <div class="box front" data-side="front" tabindex="0" aria-label="पुढील कार्ड क्रॉप बॉक्स. ॲरो कीजने हलवा">
+            <span class="tag">Front (पुढील)</span><i class="h nw" data-h="nw"></i><i class="h ne" data-h="ne"></i><i class="h sw" data-h="sw"></i><i class="h se" data-h="se"></i>
+          </div>
+          <div class="box back" data-side="back" tabindex="0" aria-label="मागील कार्ड क्रॉप बॉक्स. ॲरो कीजने हलवा">
+            <span class="tag">Back (मागील)</span><i class="h nw" data-h="nw"></i><i class="h ne" data-h="ne"></i><i class="h sw" data-h="sw"></i><i class="h se" data-h="se"></i>
+          </div>
+        </div>
+        <div class="msg" id="detMsg" role="status"></div>
+        <p class="hint">आयुष्मान कार्डच्या PDF मध्ये कार्डची प्रतिमा थोडी कॉम्प्रेस झालेली असते. PVC आकारात (85.6 × 54 मिमी) येताच ती आपोआप योग्य गुणोत्तरात (Ratio) येते.</p>
+        <p class="hint">बॉक्स ड्रॅग करून हलवा, कोपरे पकडून आकार बदला. सर्व योग्य असल्यास काहीही बदलण्याची आवश्यकता नाही.</p>
+        <div class="row">
+          <div class="sel-side" role="group" aria-label="कोणता बॉक्स ॲडजस्ट करायचा आहे">
+            <button type="button" class="front on" data-pick="front">Front (पुढील)</button>
+            <button type="button" class="back" data-pick="back">Back (मागील)</button>
+          </div>
+          <div class="nudge" aria-label="निवडलेला बॉक्स 1 पिक्सेल हलवा">
+            <button type="button" class="btn u" data-nudge="0,-1" aria-label="वर">↑</button>
+            <button type="button" class="btn l" data-nudge="-1,0" aria-label="डावीकडे">←</button>
+            <button type="button" class="btn d" data-nudge="0,1" aria-label="खाली">↓</button>
+            <button type="button" class="btn r" data-nudge="1,0" aria-label="उजवीकडे">→</button>
+          </div>
+          <button type="button" class="btn sm" data-grow="0.99" aria-label="बॉक्स लहान करा">−</button>
+          <button type="button" class="btn sm" data-grow="1.01" aria-label="बॉक्स मोठा करा">+</button>
+        </div>
+        <div class="row">
+          <label class="chk" style="margin:0"><input type="checkbox" id="lock" checked><span>बॉक्सचे गुणोत्तर (Ratio) लॉक ठेवा</span></label>
+          <button type="button" class="btn sm" id="zoomBtn">पूर्ण पृष्ठ पहा</button>
+          <button type="button" class="btn sm" id="redetect">पुन्हा ऑटो-डिटेक्ट करा</button>
+        </div>
+      </section>
+
+      <section class="card" id="layoutCard" aria-labelledby="h-lay" hidden>
+        <h2 id="h-lay"><span class="step">3</span>प्रिंट लेआउट</h2>
+        <div class="seg" role="radiogroup" aria-label="कागदाचा आकार">
+          <label><input type="radio" name="paper" value="4x6" checked>
+            <span class="ill" aria-hidden="true"><i style="width:30px;height:20px;transform:scale(.8)"></i></span>
+            <b>4 × 6 इंच</b><span>पुढील बाजू वर, मागील बाजू खाली (फोटो पेपर)</span></label>
+          <label><input type="radio" name="paper" value="a4">
+            <span class="ill" aria-hidden="true"><i style="width:19px;height:12px"></i><i style="width:19px;height:12px"></i></span>
+            <b>A4</b><span>पुढील आणि मागील बाजू शेजारी-शेजारी</span></label>
+        </div>
+
+        <div class="fld"><label for="cardSize">कार्ड आकार</label>
+          <select id="cardSize"><option value="cr80">PVC 85.6 × 54 मिमी</option><option value="custom">कस्टम आकार</option></select><span></span></div>
+        <div class="two" id="customSize" hidden>
+          <div><label class="hint" for="cw">रुंदी (मिमी)</label><input type="number" id="cw" min="30" max="120" step="0.1" value="85.6"></div>
+          <div><label class="hint" for="ch">उंची (मिमी)</label><input type="number" id="ch" min="20" max="90" step="0.1" value="54"></div>
+        </div>
+        <div class="fld"><label for="gap">अंतर (Gap)</label><input type="range" id="gap" min="0" max="30" step="1" value="10"><output id="gapV">10 mm</output></div>
+        <div class="fld" id="posRow" hidden><label for="pos">A4 वरील स्थान</label>
+          <select id="pos"><option value="top">वर (Top)</option><option value="center">मध्यभागी (Center)</option><option value="bottom">खाली (Bottom)</option></select><span></span></div>
+        <div class="fld"><label for="trim">कडा ट्रिम</label><input type="range" id="trim" min="0" max="12" step="1" value="2"><output id="trimV">2 px</output></div>
+        <label class="chk"><input type="checkbox" id="round" checked><span>गोलाकार कोपरे (Rounded corners)<small>PVC कार्डसारखे गोलाकार कोपरे (3.18 मिमी)</small></span></label>
+        <label class="chk"><input type="checkbox" id="border" checked><span>बारीक बॉर्डर लाईन<small>पांढऱ्या कार्डची कडा दिसते, कटिंग करताना मदत होते. PVC वर थेट प्रिंट करत असल्यास बंद करा.</small></span></label>
+        <label class="chk"><input type="checkbox" id="marks"><span>कट मार्क्स (कोपऱ्यांच्या खुणा)</span></label>
+      </section>
+    </div>
+
+    <!-- ================= RIGHT: preview ================= -->
+    <div class="col-right" id="sheetOnly">
+      <div class="bench empty" id="bench">
+        <div class="empty-msg"><b>येथे प्रिंट प्रिव्ह्यू दिसेल</b><br><span>आधी आयुष्मान कार्ड PDF निवडा</span></div>
+        <div class="sheet-wrap"><canvas id="sheet" width="10" height="10" aria-label="प्रिंट लेआउट प्रिव्ह्यू"></canvas></div>
+        <div class="meta" id="meta"></div>
+        <div class="pager" id="pager" hidden>
+          <button type="button" class="btn sm" id="prevP">◀</button><span id="pageNo"></span><button type="button" class="btn sm" id="nextP">▶</button>
+        </div>
+      </div>
+      <div class="msg" id="topMsg" role="status"></div>
+      <div class="actions">
+        <button type="button" class="btn primary" id="dlPdf" disabled>PDF डाउनलोड करा</button>
+        <button type="button" class="btn" id="dlPng" disabled>PNG डाउनलोड करा</button>
+        <button type="button" class="btn" id="printBtn" disabled>प्रिंट करा</button>
+      </div>
+      <p class="hint" style="margin:0">PDF चा पृष्ठ आकार कागदाच्या बरोबर आहे (4×6 इंच किंवा A4). प्रिंट करताना स्केल <b>100% / Actual size</b> ठेवा, "Fit to page" निवडू नका.</p>
+    </div>
+  </div>
+</div>
+
+<!-- password modal -->
+<div class="modal" id="pwModal" role="dialog" aria-modal="true" aria-labelledby="pwT">
+  <div class="box2">
+    <h3 id="pwT">PDF पासवर्ड</h3>
+    <p id="pwFile">ही PDF पासवर्डने सुरक्षित आहे.</p>
+    <input type="password" id="pwInput" placeholder="पासवर्ड (DOB: DDMMYYYY)" autocomplete="off">
+    <div class="err" id="pwErr"></div>
+    <div class="row" style="justify-content:flex-end">
+      <button class="btn" id="pwCancel" type="button">रद्द करा</button>
+      <button class="btn primary" id="pwOk" type="button">उघडा</button>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script>
+(function () {
+'use strict';
+var MM = 300 / 25.4;            // export: 300 dpi
+var PREV = 150 / 25.4;          // preview: 150 dpi
+var CORNER_MM = 3.18;           // CR80 corner radius
+var $ = function (s, r) { return (r || document).querySelector(s); };
+var $$ = function (s, r) { return [].slice.call((r || document).querySelectorAll(s)); };
+
+var S = {
+  items: [], sel: -1, active: null,           // active: {id, canvas}
+  side: 'front', page: 0, uid: 0, zoom: true, view: null,
+  o: { paper: '4x6', gap: 10, pos: 'top', round: true, marks: false, border: true, clean: false, trim: 2, cw: 85.6, ch: 53.98, lock: true }
+};
+
+if (window.pdfjsLib) pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
+
+/* ---------- helpers ---------- */
+function say(el, text, cls) { el.textContent = text || ''; el.className = 'msg' + (text ? ' show' : '') + (cls ? ' ' + cls : ''); }
+function clamp(v, a, b) { return Math.max(a, Math.min(b, v)); }
+function toBlob(c, type, q) { return new Promise(function (res) { c.toBlob(res, type, q); }); }
+function blobToCanvas(blob) {
+  return new Promise(function (res, rej) {
+    var u = URL.createObjectURL(blob), im = new Image();
+    im.onload = function () { var c = document.createElement('canvas'); c.width = im.naturalWidth; c.height = im.naturalHeight; c.getContext('2d').drawImage(im, 0, 0); URL.revokeObjectURL(u); res(c); };
+    im.onerror = function () { URL.revokeObjectURL(u); rej(new Error('इमेज लोड झाली नाही')); };
+    im.src = u;
+  });
+}
+
+/* ---------- password modal ---------- */
+function askPassword(name, wrong) {
+  return new Promise(function (resolve) {
+    var m = $('#pwModal'), inp = $('#pwInput');
+    $('#pwFile').textContent = name + ' पासवर्डने सुरक्षित आहे.';
+    $('#pwErr').textContent = wrong ? 'पासवर्ड चुकीचा आहे, पुन्हा प्रयत्न करा.' : '';
+    inp.value = ''; m.classList.add('show'); setTimeout(function () { inp.focus(); }, 30);
+    function done(v) { m.classList.remove('show'); $('#pwOk').onclick = $('#pwCancel').onclick = inp.onkeydown = null; resolve(v); }
+    $('#pwOk').onclick = function () { done(inp.value); };
+    $('#pwCancel').onclick = function () { done(null); };
+    inp.onkeydown = function (e) { if (e.key === 'Enter') done(inp.value); if (e.key === 'Escape') done(null); };
+  });
+}
+
+/* ---------- load PDF / image to canvas (~300 dpi) ---------- */
+async function renderPdf(file) {
+  if (!window.pdfjsLib) throw new Error('PDF लायब्ररी लोड झाली नाही. इंटरनेट तपासून पृष्ठ रिफ्रेश करा.');
+  var buf = await file.arrayBuffer();
+  var task = pdfjsLib.getDocument({ data: new Uint8Array(buf) });
+  task.onPassword = function (update, reason) {
+    askPassword(file.name, reason === 2).then(function (p) { if (p === null) { task.destroy(); } else { update(p); } });
+  };
+  var pdf;
+  try { pdf = await task.promise; } catch (e) { throw new Error(e && e.name === 'PasswordException' ? 'पासवर्डशिवाय फाईल उघडली नाही' : (e && e.message) || 'PDF उघडली नाही'); }
+  var page = await pdf.getPage(1);
+  var v1 = page.getViewport({ scale: 1 });
+  var s300 = 300 / 72, scale = s300;
+  // छोट्या पृष्ठांना जास्त dpi वर रेंडर करा जेणेकरून क्रॉप स्पष्ट राहील
+  if (v1.width * s300 * v1.height * s300 < 6e6) scale = Math.min(450 / 72, 4800 / Math.max(v1.width, v1.height));
+  else scale = Math.min(s300, 4800 / Math.max(v1.width, v1.height));
+  var vp = page.getViewport({ scale: scale });
+  var c = document.createElement('canvas'); c.width = Math.round(vp.width); c.height = Math.round(vp.height);
+  var ctx = c.getContext('2d'); ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, c.width, c.height);
+  await page.render({ canvasContext: ctx, viewport: vp }).promise;
+  pdf.destroy();
+  return c;
+}
+function renderImage(file) { return blobToCanvas(file); }
+
+/* ---------- auto detection: 2 cards side by side ----------
+   1) column projection ने दोन मोठे x-range (cards) शोधणे
+   2) प्रत्येक रेंजमध्ये ज्या ओळींमध्ये पूर्ण रुंदी व्यापली आहे ती वरची-खालची सीमा ठरवणे */
+function detectCards(c) {
+  var W = c.width, H = c.height, d = c.getContext('2d').getImageData(0, 0, W, H).data, NW = 250, colN = new Uint32Array(W), x, y, p, i, j;
+  for (y = 0; y < H; y++) { p = y * W * 4; for (x = 0; x < W; x++, p += 4) { if (Math.min(d[p], d[p + 1], d[p + 2]) < NW) colN[x]++; } }
+  var minCol = Math.max(3, Math.round(H * 0.01)), gap = Math.round(W * 0.015), runs = [], cur = null;
+  for (x = 0; x < W; x++) {
+    if (colN[x] >= minCol) { if (cur && x - cur[1] <= gap) cur[1] = x; else { cur = [x, x]; runs.push(cur); } }
+  }
+  runs = runs.filter(function (r) { var w = r[1] - r[0] + 1; return w >= W * 0.15 && w <= W * 0.6; });
+  var best = null;
+  for (i = 0; i < runs.length; i++) for (j = i + 1; j < runs.length; j++) {
+    var wa = runs[i][1] - runs[i][0] + 1, wb = runs[j][1] - runs[j][0] + 1, rr = wa / wb;
+    if (rr < 0.85 || rr > 1.18) continue;
+    if (!best || wa + wb > best.sc) best = { a: runs[i], b: runs[j], sc: wa + wb };
+  }
+  if (best) {
+    var out = [];
+    [best.a, best.b].forEach(function (r) {
+      var rw = r[1] - r[0] + 1, need = rw * 0.85, y1 = -1, y2 = -1;
+      for (y = 0; y < H; y++) {
+        p = (y * W + r[0]) * 4; var first = -1, last = -1;
+        for (x = 0; x < rw; x++, p += 4) { if (Math.min(d[p], d[p + 1], d[p + 2]) < NW) { if (first < 0) first = x; last = x; } }
+        if (first >= 0 && last - first + 1 >= need) { if (y1 < 0) y1 = y; y2 = y; }
+      }
+      out.push(y1 < 0 ? null : { x: r[0], y: y1, w: rw, h: y2 - y1 + 1 });
+    });
+    var f = out[0], b2 = out[1];
+    if (f && b2) {
+      var asp = f.w / f.h, rh = f.h / b2.h;
+      if (asp >= 1.3 && asp <= 2.4 && rh > 0.85 && rh < 1.18) return { ok: true, front: f, back: b2 };
+    }
+  }
+  // fallback: standard Ayushman card PDF (side by side) - fractions of the page
+  var fr = { x: Math.round(W * 0.1234), y: Math.round(H * 0.316), w: Math.round(W * 0.3602), h: Math.round(H * 0.5144) };
+  return { ok: false, front: fr, back: { x: Math.round(W * 0.5237), y: fr.y, w: fr.w, h: fr.h } };
+}
+
+/* ---------- cards (crops) ---------- */
+function cropCanvas(src, r) {
+  var x = clamp(Math.round(r.x), 0, src.width - 2), y = clamp(Math.round(r.y), 0, src.height - 2);
+  var w = clamp(Math.round(r.w), 2, src.width - x), h = clamp(Math.round(r.h), 2, src.height - y);
+  var c = document.createElement('canvas'); c.width = w; c.height = h;
+  c.getContext('2d').drawImage(src, x, y, w, h, 0, 0, w, h); return c;
+}
+function rebuildCards(item, src) { item.cards = { front: cropCanvas(src, item.rects.front), back: cropCanvas(src, item.rects.back) }; item.clean = {}; }
+// कात्रीचे चिन्ह आणि कटिंग लाईन्स पांढऱ्या करणे
+function whitenGuides(card) {
+  var c = document.createElement('canvas'); c.width = card.width; c.height = card.height;
+  var ctx = c.getContext('2d'); ctx.drawImage(card, 0, 0);
+  var x0 = Math.floor(card.width * 0.68), bh = Math.min(14, card.height), w = card.width - x0, im = ctx.getImageData(x0, 0, w, bh), d = im.data;
+  for (var i = 0; i < d.length; i += 4) {
+    var r = d[i], g = d[i + 1], b = d[i + 2], l = r * 0.299 + g * 0.587 + b * 0.114, sat = Math.max(r, g, b) - Math.min(r, g, b);
+    if (l < 225 && sat < 50) { d[i] = d[i + 1] = d[i + 2] = 255; }
+  }
+  ctx.putImageData(im, x0, 0); return c;
+}
+function pickCard(it, side) {
+  if (!S.o.clean) return it.cards[side];
+  if (!it.clean) it.clean = {};
+  return it.clean[side] || (it.clean[side] = whitenGuides(it.cards[side]));
+}
+
+/* ---------- add files ---------- */
+async function addFile(file) {
+  var item = { id: ++S.uid, name: file.name, status: 'loading', msg: 'लोड होत आहे…' };
+  S.items.push(item); renderList();
+  try {
+    var canvas = /pdf$/i.test(file.type) || /\.pdf$/i.test(file.name) ? await renderPdf(file) : await renderImage(file);
+    var det = detectCards(canvas);
+    item.W = canvas.width; item.H = canvas.height; item.rects = { front: det.front, back: det.back }; item.detected = det.ok;
+    item.pageBlob = await toBlob(canvas, 'image/jpeg', 0.92);
+    rebuildCards(item, canvas);
+    item.status = det.ok ? 'ready' : 'check';
+    item.msg = det.ok ? 'पुढील व मागील बाजू ओळखली' : 'ऑटो-डिटेक्ट खात्रीशीर नाही, बॉक्स तपासा';
+    if (S.sel < 0 || !S.items[S.sel] || S.items[S.sel].status === 'error') await selectItem(S.items.indexOf(item), canvas);
+  } catch (e) {
+    item.status = 'error'; item.msg = (e && e.message) || 'फाईल उघडली नाही';
+  }
+  renderList(); refreshAll();
+}
+
+async function selectItem(idx, canvasHint) {
+  var it = S.items[idx]; if (!it || !it.pageBlob) { return; }
+  S.sel = idx;
+  var canvas = canvasHint || (S.active && S.active.id === it.id ? S.active.canvas : await blobToCanvas(it.pageBlob));
+  S.active = { id: it.id, canvas: canvas };
+  drawStage(); renderList(); refreshAll();
+}
+
+function renderList() {
+  var ul = $('#files'); ul.innerHTML = '';
+  S.items.forEach(function (it, i) {
+    var li = document.createElement('li'); if (i === S.sel) li.className = 'sel';
+    var b = document.createElement('button'); b.type = 'button'; b.className = 'pick';
+    var cls = it.status === 'ready' ? 'ok' : it.status === 'check' ? 'warn' : it.status === 'error' ? 'err' : '';
+    b.innerHTML = '<span class="nm"></span><span class="st ' + cls + '"></span>';
+    b.firstChild.textContent = it.name; b.lastChild.textContent = (it.status === 'ready' ? '✓ ' : it.status === 'check' ? '! ' : '') + it.msg;
+    b.onclick = function () { if (it.pageBlob) selectItem(i); };
+    var x = document.createElement('button'); x.type = 'button'; x.className = 'x'; x.setAttribute('aria-label', it.name + ' काढून टाका'); x.textContent = '×';
+    x.onclick = function () { removeItem(i); };
+    li.appendChild(b); li.appendChild(x); ul.appendChild(li);
+  });
+}
+async function removeItem(i) {
+  S.items.splice(i, 1);
+  if (!S.items.length) { S.sel = -1; S.active = null; }
+  else { var ni = clamp(i - (i >= S.items.length ? 1 : 0), 0, S.items.length - 1); S.sel = -1; S.active = null; renderList(); await selectItem(ni); }
+  S.page = 0; renderList(); refreshAll();
+}
+
+/* ---------- crop stage ---------- */
+function computeView() {
+  var it = S.items[S.sel]; if (!it) return;
+  if (!S.zoom) { S.view = { x: 0, y: 0, w: it.W, h: it.H }; return; }
+  var f = it.rects.front, b = it.rects.back;
+  var x1 = Math.min(f.x, b.x), y1 = Math.min(f.y, b.y), x2 = Math.max(f.x + f.w, b.x + b.w), y2 = Math.max(f.y + f.h, b.y + b.h);
+  var m = Math.round((x2 - x1) * 0.07);
+  x1 = clamp(x1 - m, 0, it.W - 10); y1 = clamp(y1 - m, 0, it.H - 10); x2 = clamp(x2 + m, 10, it.W); y2 = clamp(y2 + m, 10, it.H);
+  S.view = { x: x1, y: y1, w: x2 - x1, h: y2 - y1 };
+}
+function drawStage() {
+  if (!S.active) return;
+  computeView();
+  var src = S.active.canvas, V = S.view, vw = Math.min(1100, Math.round(V.w)), vh = Math.round(V.h * vw / V.w);
+  var v = $('#view'); v.width = vw; v.height = vh;
+  var ctx = v.getContext('2d'); ctx.imageSmoothingQuality = 'high'; ctx.drawImage(src, V.x, V.y, V.w, V.h, 0, 0, vw, vh);
+  positionBoxes();
+}
+function positionBoxes() {
+  var it = S.items[S.sel], V = S.view; if (!it || !S.active || !V) return;
+  ['front', 'back'].forEach(function (s) {
+    var r = it.rects[s], el = $('.box.' + s);
+    el.style.left = ((r.x - V.x) / V.w * 100) + '%'; el.style.top = ((r.y - V.y) / V.h * 100) + '%';
+    el.style.width = (r.w / V.w * 100) + '%'; el.style.height = (r.h / V.h * 100) + '%';
+    el.classList.toggle('on', S.side === s);
+  });
+  $$('[data-pick]').forEach(function (b) { b.classList.toggle('on', b.dataset.pick === S.side); });
+  $('#zoomBtn').textContent = S.zoom ? 'पूर्ण पृष्ठ पहा' : 'कार्ड्सवर झूम करा';
+  var m = $('#detMsg');
+  if (it.status === 'check') say(m, 'ऑटो-डिटेक्ट पूर्ण खात्रीशीर नाही. "पूर्ण पृष्ठ पहा" दाबून केशरी (पुढील) आणि निळ्या (मागील) बॉक्सला कार्डवर व्यवस्थित ॲडजस्ट करा.', '');
+  else say(m, '', '');
+}
+function setRect(side, r) {
+  var it = S.items[S.sel]; if (!it) return;
+  r.w = clamp(r.w, 60, it.W); r.h = clamp(r.h, 40, it.H);
+  r.x = clamp(r.x, 0, it.W - r.w); r.y = clamp(r.y, 0, it.H - r.h);
+  it.rects[side] = { x: Math.round(r.x), y: Math.round(r.y), w: Math.round(r.w), h: Math.round(r.h) };
+  if (it.status === 'check') { it.status = 'ready'; it.msg = 'मॅन्युअली सेट केले'; renderList(); }
+  rebuildCards(it, S.active.canvas); positionBoxes(); schedulePreview();
+}
+
+var drag = null, stage = $('#stage');
+stage.addEventListener('pointerdown', function (e) {
+  var el = e.target.closest('.box'); if (!el) return;
+  var it = S.items[S.sel]; if (!it) return;
+  var side = el.dataset.side; S.side = side; positionBoxes();
+  var rc = stage.getBoundingClientRect();
+  drag = { side: side, h: e.target.dataset.h || null, sx: e.clientX, sy: e.clientY, r: Object.assign({}, it.rects[side]), k: S.view.w / rc.width };
+  try { stage.setPointerCapture(e.pointerId); } catch (x) {}
+  el.focus({ preventScroll: true }); e.preventDefault();
+});
+stage.addEventListener('pointermove', function (e) {
+  if (!drag) return;
+  var dx = (e.clientX - drag.sx) * drag.k, dy = (e.clientY - drag.sy) * drag.k, r = drag.r, n = { x: r.x, y: r.y, w: r.w, h: r.h };
+  if (!drag.h) { n.x = r.x + dx; n.y = r.y + dy; }
+  else {
+    var h = drag.h, asp = r.w / r.h;
+    if (h.indexOf('e') > -1) n.w = r.w + dx; if (h.indexOf('w') > -1) n.w = r.w - dx;
+    if (h.indexOf('s') > -1) n.h = r.h + dy; if (h.indexOf('n') > -1) n.h = r.h - dy;
+    if (S.o.lock) { if (Math.abs(dx) >= Math.abs(dy * asp)) n.h = n.w / asp; else n.w = n.h * asp; }
+    n.w = Math.max(60, n.w); n.h = Math.max(40, n.h);
+    if (h.indexOf('w') > -1) n.x = r.x + r.w - n.w; if (h.indexOf('n') > -1) n.y = r.y + r.h - n.h;
+  }
+  setRect(drag.side, n);
+});
+function endDrag(e) { if (drag) { drag = null; try { stage.releasePointerCapture(e.pointerId); } catch (x) {} } }
+stage.addEventListener('pointerup', endDrag); stage.addEventListener('pointercancel', endDrag);
+stage.addEventListener('keydown', function (e) {
+  var el = e.target.closest('.box'); if (!el) return;
+  var d = { ArrowLeft: [-1, 0], ArrowRight: [1, 0], ArrowUp: [0, -1], ArrowDown: [0, 1] }[e.key]; if (!d) return;
+  var it = S.items[S.sel], r = it.rects[el.dataset.side], st = e.shiftKey ? 10 : 1;
+  S.side = el.dataset.side; setRect(S.side, { x: r.x + d[0] * st, y: r.y + d[1] * st, w: r.w, h: r.h }); e.preventDefault();
+});
+$$('[data-pick]').forEach(function (b) { b.onclick = function () { S.side = b.dataset.pick; positionBoxes(); }; });
+$$('[data-nudge]').forEach(function (b) {
+  b.onclick = function () {
+    var it = S.items[S.sel]; if (!it) return; var d = b.dataset.nudge.split(',').map(Number), r = it.rects[S.side];
+    setRect(S.side, { x: r.x + d[0], y: r.y + d[1], w: r.w, h: r.h });
+  };
+});
+$$('[data-grow]').forEach(function (b) {
+  b.onclick = function () {
+    var it = S.items[S.sel]; if (!it) return; var f = parseFloat(b.dataset.grow), r = it.rects[S.side];
+    var w = r.w * f, h = S.o.lock ? r.h * f : r.h;
+    setRect(S.side, { x: r.x - (w - r.w) / 2, y: r.y - (h - r.h) / 2, w: w, h: h });
+  };
+});
+$('#lock').onchange = function () { S.o.lock = this.checked; };
+$('#redetect').onclick = function () {
+  var it = S.items[S.sel]; if (!it || !S.active) return;
+  var det = detectCards(S.active.canvas); it.rects = { front: det.front, back: det.back }; it.detected = det.ok;
+  it.status = det.ok ? 'ready' : 'check'; it.msg = det.ok ? 'पुढील व मागील बाजू ओळखली' : 'ऑटो-डिटेक्ट खात्रीशीर नाही, बॉक्स तपासा';
+  rebuildCards(it, S.active.canvas); renderList(); drawStage(); schedulePreview();
+};
+$('#zoomBtn').onclick = function () { S.zoom = !S.zoom; drawStage(); };
+
+/* ---------- layout ---------- */
+function buildPages() {
+  var o = S.o, items = S.items.filter(function (i) { return i.cards; }), pages = [], pw, ph, cw = o.cw, ch = o.ch;
+  if (o.paper === '4x6') {
+    pw = 101.6; ph = 152.4;
+    items.forEach(function (it) {
+      var total = 2 * ch + o.gap, fx = (pw - cw) / 2, fy = Math.max(0, (ph - total) / 2);
+      pages.push([{ it: it, fx: fx, fy: fy, bx: fx, by: fy + ch + o.gap }]);
+    });
+  } else {
+    pw = 210; ph = 297;
+    var margin = 10, pitch = ch + o.gap, cap = Math.max(1, Math.floor((ph - 2 * margin + o.gap) / pitch));
+    var fx = (pw - (2 * cw + o.gap)) / 2;
+    for (var i = 0; i < items.length; i += cap) {
+      var chunk = items.slice(i, i + cap), bh = chunk.length * ch + (chunk.length - 1) * o.gap, y0;
+      y0 = o.pos === 'center' ? (ph - bh) / 2 : o.pos === 'bottom' ? ph - margin - bh : 12;
+      pages.push(chunk.map(function (it, j) { var y = y0 + j * pitch; return { it: it, fx: fx, fy: y, bx: fx + cw + o.gap, by: y }; }));
+    }
+  }
+  return { pw: pw, ph: ph, pages: pages };
+}
+function rr(ctx, x, y, w, h, r) {
+  ctx.beginPath(); ctx.moveTo(x + r, y); ctx.arcTo(x + w, y, x + w, y + h, r); ctx.arcTo(x + w, y + h, x, y + h, r);
+  ctx.arcTo(x, y + h, x, y, r); ctx.arcTo(x, y, x + w, y, r); ctx.closePath();
+}
+function drawCard(ctx, card, xmm, ymm, k) {
+  var o = S.o, x = xmm * k, y = ymm * k, w = o.cw * k, h = o.ch * k, t = Math.min(o.trim, Math.floor(Math.min(card.width, card.height) / 4));
+  ctx.save(); if (o.round) { rr(ctx, x, y, w, h, CORNER_MM * k); ctx.clip(); }
+  ctx.drawImage(card, t, t, card.width - 2 * t, card.height - 2 * t, x, y, w, h); ctx.restore();
+  if (o.border) { ctx.save(); ctx.lineWidth = Math.max(1, 0.2 * k); ctx.strokeStyle = '#8b94a3'; if (o.round) { rr(ctx, x, y, w, h, CORNER_MM * k); ctx.stroke(); } else ctx.strokeRect(x, y, w, h); ctx.restore(); }
+  if (o.marks) {
+    var off = 1.5 * k, len = 3 * k; ctx.save(); ctx.strokeStyle = '#6b7280'; ctx.lineWidth = Math.max(1, 0.15 * k); ctx.beginPath();
+    [[x, y, -1, -1], [x + w, y, 1, -1], [x, y + h, -1, 1], [x + w, y + h, 1, 1]].forEach(function (c) {
+      ctx.moveTo(c[0] + c[2] * off, c[1]); ctx.lineTo(c[0] + c[2] * (off + len), c[1]);
+      ctx.moveTo(c[0], c[1] + c[3] * off); ctx.lineTo(c[0], c[1] + c[3] * (off + len));
+    }); ctx.stroke(); ctx.restore();
+  }
+}
+function drawPageCanvas(L, pi, k, into) {
+  var c = into || document.createElement('canvas'); c.width = Math.round(L.pw * k); c.height = Math.round(L.ph * k);
+  var ctx = c.getContext('2d'); ctx.imageSmoothingEnabled = true; ctx.imageSmoothingQuality = 'high';
+  ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, c.width, c.height);
+  L.pages[pi].forEach(function (s) { drawCard(ctx, pickCard(s.it, 'front'), s.fx, s.fy, k); drawCard(ctx, pickCard(s.it, 'back'), s.bx, s.by, k); });
+  return c;
+}
+
+/* ---------- preview ---------- */
+var raf = 0;
+function schedulePreview() { if (!raf) raf = requestAnimationFrame(function () { raf = 0; renderPreview(); }); }
+function renderPreview() {
+  var L = buildPages(), has = L.pages.length > 0;
+  $('#bench').classList.toggle('empty', !has);
+  ['dlPdf', 'dlPng', 'printBtn'].forEach(function (id) { $('#' + id).disabled = !has; });
+  if (!has) { $('#meta').textContent = ''; $('#pager').hidden = true; return; }
+  S.page = clamp(S.page, 0, L.pages.length - 1);
+  drawPageCanvas(L, S.page, PREV, $('#sheet'));
+  var sc = $('#sheet'); sc.style.width = Math.min(sc.width, L.pw === 210 ? 440 : 330) + 'px';
+  var paperTxt = S.o.paper === '4x6' ? '4 × 6 इंच' : 'A4';
+  $('#meta').textContent = paperTxt + ' · कार्ड ' + S.o.cw + ' × ' + S.o.ch + ' मिमी · 300 dpi PDF' + (L.pages.length > 1 ? ' · ' + L.pages.length + ' पृष्ठे' : '');
+  $('#pager').hidden = L.pages.length < 2; $('#pageNo').textContent = 'पृष्ठ ' + (S.page + 1) + ' / ' + L.pages.length;
+  var tall = 2 * S.o.ch + S.o.gap > L.ph - 2;
+  say($('#topMsg'), (S.o.paper === '4x6' && tall) ? 'कार्डचा आकार आणि अंतर 4×6 पृष्ठात मावत नाही. अंतर (Gap) कमी करा.' : '', '');
+}
+function refreshAll() {
+  var has = S.items.some(function (i) { return i.cards; });
+  $('#cropCard').hidden = !has; $('#layoutCard').hidden = !has; renderPreview();
+}
+$('#prevP').onclick = function () { S.page--; renderPreview(); };
+$('#nextP').onclick = function () { S.page++; renderPreview(); };
+
+/* ---------- options ---------- */
+$$('input[name=paper]').forEach(function (r) {
+  r.onchange = function () {
+    S.o.paper = r.value; var a4 = r.value === 'a4';
+    $('#posRow').hidden = !a4; S.o.gap = a4 ? 8 : 10; $('#gap').value = S.o.gap; $('#gapV').textContent = S.o.gap + ' mm'; S.page = 0; renderPreview();
+  };
+});
+$('#gap').oninput = function () { S.o.gap = +this.value; $('#gapV').textContent = this.value + ' mm'; schedulePreview(); };
+$('#trim').oninput = function () { S.o.trim = +this.value; $('#trimV').textContent = this.value + ' px'; schedulePreview(); };
+$('#pos').onchange = function () { S.o.pos = this.value; renderPreview(); };
+['round', 'border', 'marks'].forEach(function (k) { $('#' + k).onchange = function () { S.o[k] = this.checked; renderPreview(); }; });
+$('#cardSize').onchange = function () {
+  var c = this.value === 'custom'; $('#customSize').hidden = !c;
+  if (!c) { S.o.cw = 85.6; S.o.ch = 53.98; $('#cw').value = 85.6; $('#ch').value = 54; } renderPreview();
+};
+['cw', 'ch'].forEach(function (id) {
+  $('#' + id).oninput = function () { var v = parseFloat(this.value); if (v > 10) { S.o[id] = v; schedulePreview(); } };
+});
+
+/* ---------- file input / drop ---------- */
+function handleFiles(list) { Array.prototype.forEach.call(list, function (f) { if (/pdf$|^image\//i.test(f.type) || /\.(pdf|jpe?g|png|webp)$/i.test(f.name)) addFile(f); }); }
+$('#file').onchange = function () { handleFiles(this.files); this.value = ''; };
+var drop = $('#drop');
+['dragenter', 'dragover'].forEach(function (ev) { drop.addEventListener(ev, function (e) { e.preventDefault(); drop.classList.add('over'); }); });
+['dragleave', 'drop'].forEach(function (ev) { drop.addEventListener(ev, function (e) { e.preventDefault(); drop.classList.remove('over'); }); });
+drop.addEventListener('drop', function (e) { handleFiles(e.dataTransfer.files); });
+
+/* ---------- export ---------- */
+function makePdf() {
+  var L = buildPages(); if (!L.pages.length) return null;
+  var J = window.jspdf && window.jspdf.jsPDF; if (!J) { say($('#topMsg'), 'PDF लायब्ररी लोड झाली नाही. इंटरनेट तपासून रिफ्रेश करा.', ''); return null; }
+  var pdf = new J({ unit: 'mm', format: [L.pw, L.ph], orientation: 'portrait', compress: true });
+  L.pages.forEach(function (_, i) {
+    if (i) pdf.addPage([L.pw, L.ph], 'portrait');
+    var c = drawPageCanvas(L, i, MM); pdf.addImage(c.toDataURL('image/jpeg', 0.95), 'JPEG', 0, 0, L.pw, L.ph);
+  });
+  return pdf;
+}
+function fname(ext) { return 'SUYOMS-VLE-MITRA-Ayushman-Card-' + (S.o.paper === '4x6' ? '4x6' : 'A4') + '.' + ext; }
+$('#dlPdf').onclick = function () { var p = makePdf(); if (p) p.save(fname('pdf')); };
+$('#printBtn').onclick = function () {
+  var p = makePdf(); if (!p) return;
+  var u = URL.createObjectURL(p.output('blob')); var w = window.open(u, '_blank');
+  if (!w) say($('#topMsg'), 'पॉपअप ब्लॉक झाला आहे. कृपया पॉपअपला अनुमती द्या किंवा PDF डाउनलोड पर्याय वापरा.', 'info');
+};
+$('#dlPng').onclick = async function () {
+  var L = buildPages(); if (!L.pages.length) return;
+  var c = drawPageCanvas(L, S.page, MM), b = await toBlob(c, 'image/png');
+  var a = document.createElement('a'); a.href = URL.createObjectURL(b);
+  a.download = fname('png').replace('.png', L.pages.length > 1 ? '-p' + (S.page + 1) + '.png' : '.png'); document.body.appendChild(a); a.click();
+  setTimeout(function () { URL.revokeObjectURL(a.href); a.remove(); }, 500);
+};
+
+/* test hook */
+window.__pan = { S: S, detectCards: detectCards };
+renderPreview();
+})();
+</script>
+
+</body>
+</html>
