@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html lang="mr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>महा आयडी कार्ड क्रॉप आणि प्रिंट टूल - पीव्हीसी आणि ४x६ लेआउट</title>
+<meta name="description" content="मोफत ऑनलाइन महा आयडी / महासारथी कार्ड क्रॉप आणि प्रिंट टूल. ४x६ आणि A4 फोटो पेपर प्रिंटिंगसाठी पुढील आणि मागील कार्ड स्वयंचलितपणे पीव्हीसी आकारात (८५.६ x ५४ मिमी) क्रॉप करा.">
+<meta name="keywords" content="महा आयडी कार्ड क्रॉप, महासारथी कार्ड प्रिंट 4x6, Maha ID card PVC size, MahaSarathi card crop marathi, Maha ID A4 print, CSC tools, VLE tools">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Khand:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"महा आयडी कार्ड PDF ला PVC कार्ड साईझ मध्ये कसे क्रॉप करावे?","acceptedAnswer":{"@type":"Answer","text":"महा आयडी PDF अपलोड करा. हे टूल आपोआप Front आणि Back बाजू अचूक ओळखते आणि त्यांना 85.6 x 54 mm (PVC Standard CR80) साईझमध्ये सेट करते."}},
+{"@type":"Question","name":"महा आयडी कार्ड 4x6 पेपरवर कसे प्रिंट करावे?","acceptedAnswer":{"@type":"Answer","text":"Print layout मध्ये 4 x 6 in निवडा. Front कार्ड वर आणि Back कार्ड खाली येते. Download PDF वर क्लिक करा आणि 4x6 फोटो पेपरवर 100% स्केलवर प्रिंट करा."}},
+{"@type":"Question","name":"महा आयडी कार्ड PDF चा पासवर्ड काय असतो?","acceptedAnswer":{"@type":"Answer","text":"महा आयडी कार्ड PDF चा पासवर्ड आधार कार्ड प्रमाणे नावाचे पहिले ४ इंग्रजी अक्षरे CAPITAL आणि जन्म वर्ष असतो (उदा. नाव YOGESH आणि जन्म वर्ष 1988 असल्यास पासवर्ड YOGE1988 असा टाकावा)."}},
+{"@type":"Question","name":"माझी PDF फाईल सुरक्षित आहे का?","acceptedAnswer":{"@type":"Answer","text":"होय, पूर्ण प्रोसेसिंग तुमच्या स्वतःच्या ब्राउझरमध्ये होते. तुमची फाईल कोणत्याही सर्व्हरवर अपलोड होत नाही."}}
+]}
+</script>
+<style>
+:root{
+  --ink:#ffffff; --ink2:#a1a1aa; --line:#33333d; --bench:#0d0d10; --panel:#18181c;
+  --brand:#ff7518; --brand-d:#e65c00; --front:#ff7518; --back:#ff9f43; --ok:#22c55e; --warn:#f59e0b;
+  --r:14px;
+}
+*{box-sizing:border-box;font-family:'Khand',sans-serif}
+[hidden]{display:none!important}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bench);color:var(--ink);font-family:'Khand',sans-serif;font-size:16px;line-height:1.45;letter-spacing:0.3px}
+input,select,textarea,button{font-family:'Khand',sans-serif;-webkit-user-select:text!important;user-select:text!important}
+.wrap{max-width:1200px;margin:0 auto;padding:24px 18px 60px}
+.grid{display:grid;grid-template-columns:minmax(0,430px) minmax(0,1fr);gap:18px;align-items:start}
+@media(max-width:940px){.grid{grid-template-columns:minmax(0,1fr)}}
+.col-left,.col-right{min-width:0}
+.col-left{display:flex;flex-direction:column;gap:14px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:16px 16px 18px;box-shadow:0 4px 20px rgba(0,0,0,0.5)}
+.card h2{margin:0 0 12px;font-size:19px;font-weight:600;letter-spacing:0.3px;display:flex;align-items:center;gap:10px;color:#fff}
+.step{width:26px;height:26px;border-radius:50%;background:var(--brand);color:#000;font-size:14px;font-weight:700;display:inline-flex;align-items:center;justify-content:center;flex:none}
+.hint{font-size:13.5px;color:var(--ink2);margin:6px 0 0}
+/* dropzone */
+.drop{display:block;border:2px dashed #444450;border-radius:12px;padding:22px 14px;text-align:center;cursor:pointer;background:#202026;transition:border-color .2s,background .2s}
+.drop:hover,.drop.over{border-color:var(--brand);background:#2a221d}
+.drop:focus-within{outline:3px solid rgba(255,117,24,0.4);outline-offset:2px}
+.drop b{display:block;font-size:16px;color:#fff}
+.drop span{font-size:13.5px;color:var(--ink2)}
+.drop input{position:absolute;opacity:0;width:1px;height:1px}
+.files{list-style:none;margin:10px 0 0;padding:0;display:flex;flex-direction:column;gap:6px}
+.files li{display:flex;align-items:center;gap:8px;border:1px solid var(--line);border-radius:10px;padding:7px 8px 7px 10px;background:#22222a;font-size:14px;color:#fff}
+.files li.sel{border-color:var(--brand);box-shadow:0 0 0 1px var(--brand)}
+.files button.pick{flex:1;min-width:0;text-align:left;background:none;border:0;padding:0;font:inherit;color:inherit;cursor:pointer}
+.files .nm{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:500}
+.files .st{display:block;font-size:12.5px;color:var(--ink2)}
+.files .st.ok{color:var(--ok)} .files .st.warn{color:var(--warn)} .files .st.err{color:#ef4444}
+.files .x{border:0;background:#33333d;width:26px;height:26px;border-radius:50%;cursor:pointer;color:var(--ink2);font-size:16px;line-height:1}
+.files .x:hover{background:#ff7518;color:#000}
+/* stage */
+.stage{position:relative;width:100%;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:#141418;touch-action:none;user-select:none}
+.stage canvas{display:block;width:100%;height:auto}
+.box{position:absolute;border:2px solid;border-radius:4px;cursor:move;outline:none}
+.box.front{border-color:var(--front);background:rgba(255,117,24,.15)}
+.box.back{border-color:var(--back);background:rgba(255,159,67,.15)}
+.box.on{box-shadow:0 0 0 2px #000,0 0 0 4px currentColor}
+.box.front.on{color:var(--front)} .box.back.on{color:var(--back)}
+.box .tag{position:absolute;left:-2px;top:-22px;font-size:12px;font-weight:600;color:#000;padding:1px 7px;border-radius:5px 5px 5px 0;white-space:nowrap}
+.box.front .tag{background:var(--front)} .box.back .tag{background:var(--back)}
+.box .h{position:absolute;width:16px;height:16px;background:#000;border:2px solid currentColor;border-radius:50%}
+.box.front .h{border-color:var(--front)} .box.back .h{border-color:var(--back)}
+.h.nw{left:-9px;top:-9px;cursor:nwse-resize}.h.ne{right:-9px;top:-9px;cursor:nesw-resize}
+.h.sw{left:-9px;bottom:-9px;cursor:nesw-resize}.h.se{right:-9px;bottom:-9px;cursor:nwse-resize}
+.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:10px}
+.btn{font:inherit;font-size:14px;font-weight:500;border:1px solid var(--line);background:#24242c;color:#fff;border-radius:10px;padding:8px 13px;cursor:pointer;transition:background .15s,border-color .15s}
+.btn:hover{background:#30303a;border-color:var(--brand)}
+.btn:focus-visible,.seg label:focus-within{outline:3px solid rgba(255,117,24,0.4);outline-offset:2px}
+.btn.sm{padding:5px 10px;font-size:13.5px}
+.btn.primary{background:var(--brand);border-color:var(--brand);color:#000;font-weight:700;padding:10px 18px}
+.btn.primary:hover{background:var(--brand-d);border-color:var(--brand-d);color:#fff}
+.btn[disabled]{opacity:.35;cursor:not-allowed}
+.nudge{display:inline-grid;grid-template-columns:repeat(3,30px);grid-template-rows:repeat(2,30px);gap:3px}
+.nudge .btn{padding:0;display:flex;align-items:center;justify-content:center;font-size:14px;border-radius:8px}
+.nudge .u{grid-column:2}.nudge .l{grid-column:1;grid-row:2}.nudge .d{grid-column:2;grid-row:2}.nudge .r{grid-column:3;grid-row:2}
+.sel-side{display:inline-flex;border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.sel-side button{border:0;background:#24242c;color:#fff;font:inherit;font-size:13.5px;padding:6px 12px;cursor:pointer}
+.sel-side button.on.front{background:var(--front);color:#000;font-weight:600}.sel-side button.on.back{background:var(--back);color:#000;font-weight:600}
+/* options */
+.seg{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.seg label{position:relative;display:block;border:1.5px solid var(--line);border-radius:12px;padding:10px 12px;cursor:pointer;background:#202026;transition:border-color .15s,background .15s;color:#fff}
+.seg input{position:absolute;opacity:0;pointer-events:none}
+.seg label:has(input:checked){border-color:var(--brand);background:#2c241e;box-shadow:0 0 0 1px var(--brand)}
+.seg b{display:block;font-size:15px;color:#fff}.seg span{display:block;font-size:12.5px;color:var(--ink2);line-height:1.35;margin-top:2px}
+.seg .ill{display:flex;gap:3px;margin-bottom:7px}
+.seg .ill i{display:block;border:1.5px solid var(--ink2);border-radius:2px;background:#383844}
+.fld{display:grid;grid-template-columns:110px 1fr auto;gap:8px 10px;align-items:center;margin-top:12px;font-size:14px}
+.fld>label{color:var(--ink2)}
+.fld output{font-variant-numeric:tabular-nums;min-width:48px;text-align:right;font-size:13.5px;color:#fff}
+input[type=range]{width:100%;accent-color:var(--brand)}
+select,input[type=number],input[type=text],input[type=password]{font:inherit;font-size:14.5px;border:1px solid var(--line);border-radius:9px;padding:7px 9px;background:#202026;color:#fff;width:100%}
+select:focus,input[type=number]:focus,input[type=text]:focus,input[type=password]:focus{border-color:var(--brand);outline:none}
+.chk{display:flex;gap:9px;align-items:flex-start;font-size:14px;margin-top:10px;cursor:pointer;color:#fff}
+.chk input{margin-top:3px;accent-color:var(--brand);width:16px;height:16px;flex:none}
+.chk small{display:block;color:var(--ink2);font-size:12.5px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
+/* preview */
+.col-right{position:sticky;top:12px;display:flex;flex-direction:column;gap:12px}
+@media(max-width:940px){.col-right{position:static}}
+.bench{background:#121216;border:1px solid var(--line);border-radius:var(--r);padding:18px;display:flex;flex-direction:column;align-items:center;gap:10px;min-height:300px;background-image:radial-gradient(#2d2d38 1px,transparent 1px);background-size:16px 16px;box-shadow:0 4px 20px rgba(0,0,0,0.5)}
+.sheet-wrap{max-width:100%;display:flex;justify-content:center}
+#sheet{background:#fff;box-shadow:0 1px 4px rgba(0,0,0,.6),0 14px 34px -10px rgba(0,0,0,.9);max-width:100%;height:auto}
+.bench.empty #sheet{display:none}
+.empty-msg{display:none;text-align:center;color:var(--ink2);padding:60px 10px}
+.empty-msg b{color:#fff}
+.bench.empty .empty-msg{display:block}
+.meta{font-size:13px;color:var(--ink2);text-align:center}
+.pager{display:flex;align-items:center;gap:10px;font-size:13.5px;color:#fff}
+.actions{display:flex;flex-wrap:wrap;gap:10px}
+.msg{font-size:13.5px;border-radius:10px;padding:9px 12px;background:#2d1b0a;color:#ff9f43;border:1px solid #7c3a0e;display:none}
+.msg.show{display:block}
+.msg.info{background:#112233;color:#60a5fa;border-color:#1e3a5f}
+/* modal */
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.8);display:none;align-items:center;justify-content:center;z-index:2147483100;padding:16px}
+.modal.show{display:flex}
+.modal .box2{background:#1a1a20;border:1px solid var(--line);border-radius:16px;padding:20px;max-width:400px;width:100%;box-shadow:0 24px 60px rgba(0,0,0,.8);color:#fff}
+.modal h3{margin:0 0 6px;font-size:18px;color:var(--brand)}.modal p{margin:0 0 12px;font-size:14px;color:var(--ink2)}
+.modal .err{color:#ef4444;font-size:13.5px;margin:6px 0 0;min-height:18px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+@media print{body{background:#fff;color:#000}.wrap>*:not(#sheetOnly){display:none!important}}
+</style>
+
+<meta name="copyright" content="&copy; 2026 Maha ID Card Cropping Tool. All rights reserved.">
+</head>
+<body>
+
+<div class="wrap">
+
+  <div class="grid">
+    <!-- ================= LEFT: controls ================= -->
+    <div class="col-left">
+
+      <section class="card" aria-labelledby="h-up">
+        <h2 id="h-up"><span class="step">१</span>महा आयडी कार्ड PDF निवडा</h2>
+        <label class="drop" id="drop">
+          <input type="file" id="file" accept="application/pdf,image/*" multiple>
+          <b>महा आयडी कार्ड PDF येथे टाका (Drop) किंवा क्लिक करा</b>
+          <span>एकाच वेळी अनेक महा आयडी फाईल्स निवडू शकता (PDF, JPG, PNG)</span>
+        </label>
+        <ul class="files" id="files" aria-live="polite"></ul>
+        <p class="hint">महा आयडी PDF चा पासवर्ड: आधार कार्ड प्रमाणे नावाचे पहिले ४ इंग्रजी अक्षरे CAPITAL आणि जन्म वर्ष (उदा. YOGE1988). फाईल उघडताच विचारला जाईल.</p>
+      </section>
+
+      <section class="card" id="cropCard" aria-labelledby="h-crop" hidden>
+        <h2 id="h-crop"><span class="step">२</span>क्रॉप (Crop) तपासा</h2>
+        <div class="stage" id="stage" aria-label="महा आयडी कार्ड पृष्ठ प्रिव्ह्यू आणि क्रॉप बॉक्स">
+          <canvas id="view" width="10" height="10"></canvas>
+          <div class="box front" data-side="front" tabindex="0" aria-label="पुढील बाजू क्रॉप बॉक्स. बाण कीज (Arrow keys) ने हलवा">
+            <span class="tag">पुढील बाजू</span><i class="h nw" data-h="nw"></i><i class="h ne" data-h="ne"></i><i class="h sw" data-h="sw"></i><i class="h se" data-h="se"></i>
+          </div>
+          <div class="box back" data-side="back" tabindex="0" aria-label="मागील बाजू क्रॉप बॉक्स. बाण कीज (Arrow keys) ने हलवा">
+            <span class="tag">मागील बाजू</span><i class="h nw" data-h="nw"></i><i class="h ne" data-h="ne"></i><i class="h sw" data-h="sw"></i><i class="h se" data-h="se"></i>
+          </div>
+        </div>
+        <div class="msg" id="detMsg" role="status"></div>
+        <p class="hint">बॉक्स ड्रॅग करून हलवा, कोपरे धरून साईझ बदला. योग्य असल्यास काही करण्याची गरज नाही.</p>
+        <div class="row">
+          <div class="sel-side" role="group" aria-label="कोणता बॉक्स ॲडजस्ट करायचा आहे">
+            <button type="button" class="front on" data-pick="front">पुढील बाजू</button>
+            <button type="button" class="back" data-pick="back">मागील बाजू</button>
+          </div>
+          <div class="nudge" aria-label="निवडलेला बॉक्स १ पिक्सेलने हलवा">
+            <button type="button" class="btn u" data-nudge="0,-1" aria-label="वर">↑</button>
+            <button type="button" class="btn l" data-nudge="-1,0" aria-label="डावीकडे">←</button>
+            <button type="button" class="btn d" data-nudge="0,1" aria-label="खाली">↓</button>
+            <button type="button" class="btn r" data-nudge="1,0" aria-label="उजवीकडे">→</button>
+          </div>
+          <button type="button" class="btn sm" data-grow="0.99" aria-label="बॉक्स लहान करा">−</button>
+          <button type="button" class="btn sm" data-grow="1.01" aria-label="बॉक्स मोठा करा">+</button>
+        </div>
+        <div class="row">
+          <label class="chk" style="margin:0"><input type="checkbox" id="lock" checked><span>बॉक्सचे प्रमाण (Ratio) लॉक ठेवा</span></label>
+          <button type="button" class="btn sm" id="zoomBtn">संपूर्ण पृष्ठ पहा</button>
+          <button type="button" class="btn sm" id="redetect">पुन्हा ऑटो-डिटेक्ट करा</button>
+        </div>
+      </section>
+
+      <section class="card" id="layoutCard" aria-labelledby="h-lay" hidden>
+        <h2 id="h-lay"><span class="step">३</span>प्रिंट लेआउट (Print Layout)</h2>
+        <div class="seg" role="radiogroup" aria-label="कागदाचा आकार">
+          <label><input type="radio" name="paper" value="4x6" checked>
+            <span class="ill" aria-hidden="true"><i style="width:30px;height:20px;transform:scale(.8)"></i></span>
+            <b>४ × ६ इंच</b><span>पुढील बाजू वर, मागील बाजू खाली (फोटो पेपर)</span></label>
+          <label><input type="radio" name="paper" value="a4">
+            <span class="ill" aria-hidden="true"><i style="width:19px;height:12px"></i><i style="width:19px;height:12px"></i></span>
+            <b>A4 कागद</b><span>पुढील आणि मागील बाजू शेजारी-शेजारी (Side by Side)</span></label>
+        </div>
+
+        <div class="fld"><label for="cardSize">कार्ड आकार</label>
+          <select id="cardSize"><option value="cr80">पीव्हीसी (PVC) ८५.६ × ५४ मिमी</option><option value="custom">इच्छित आकार (Custom size)</option></select><span></span></div>
+        <div class="two" id="customSize" hidden>
+          <div><label class="hint" for="cw">रुंदी / Width (मिमी)</label><input type="number" id="cw" min="30" max="120" step="0.1" value="85.6"></div>
+          <div><label class="hint" for="ch">उंची / Height (मिमी)</label><input type="number" id="ch" min="20" max="90" step="0.1" value="54"></div>
+        </div>
+        <div class="fld"><label for="gap">अंतर (Gap)</label><input type="range" id="gap" min="0" max="30" step="1" value="10"><output id="gapV">10 मिमी</output></div>
+        <div class="fld" id="posRow" hidden><label for="pos">A4 वरील जागा</label>
+          <select id="pos"><option value="top">वर (Top)</option><option value="center">मध्यभागी (Center)</option><option value="bottom">खाली (Bottom)</option></select><span></span></div>
+        <div class="fld"><label for="trim">कडेची छाटणी (Trim)</label><input type="range" id="trim" min="0" max="12" step="1" value="1"><output id="trimV">1 px</output></div>
+        <label class="chk"><input type="checkbox" id="clean" checked><span>कट/फोल्ड रेषा काढा<small>कार्डच्या कडेला आलेली कटिंग किंवा फोल्ड लाईन स्वच्छ करते</small></span></label>
+        <label class="chk"><input type="checkbox" id="round" checked><span>गोलाकार कोपरे (Rounded Corners)<small>PVC कार्डसारखे गोल कोपरे (३.१८ मिमी)</small></span></label>
+        <label class="chk"><input type="checkbox" id="border" checked><span>बारीक बॉर्डर लाईन (Border)<small>कार्डची कडा दाखवते, कटिंग करताना मदत होते. PVC वर थेट प्रिंट असल्यास बंद करा.</small></span></label>
+        <label class="chk"><input type="checkbox" id="marks"><span>कट मार्क्स (Cut Marks / कोपऱ्यावरील खुणा)</span></label>
+      </section>
+    </div>
+
+    <!-- ================= RIGHT: preview ================= -->
+    <div class="col-right" id="sheetOnly">
+      <div class="bench empty" id="bench">
+        <div class="empty-msg"><b>येथे प्रिंट प्रिव्ह्यू दिसेल</b><br><span>प्रथम महा आयडी कार्ड PDF निवडा</span></div>
+        <div class="sheet-wrap"><canvas id="sheet" width="10" height="10" aria-label="प्रिंट लेआउट प्रिव्ह्यू"></canvas></div>
+        <div class="meta" id="meta"></div>
+        <div class="pager" id="pager" hidden>
+          <button type="button" class="btn sm" id="prevP">◀</button><span id="pageNo"></span><button type="button" class="btn sm" id="nextP">▶</button>
+        </div>
+      </div>
+      <div class="msg" id="topMsg" role="status"></div>
+      <div class="actions">
+        <button type="button" class="btn primary" id="dlPdf" disabled>पीडीएफ डाउनलोड करा</button>
+        <button type="button" class="btn" id="dlPng" disabled>पीएनजी डाउनलोड करा</button>
+        <button type="button" class="btn" id="printBtn" disabled>प्रिंट करा</button>
+      </div>
+      <p class="hint" style="margin:0">PDF ची पेज साईझ पेपरच्या बरोबर आहे (४×६ इंच किंवा A4). प्रिंट करताना स्केल <b>100% / Actual size</b> ठेवा, "Fit to page" करू नका.</p>
+    </div>
+  </div>
+
+</div>
+
+<!-- password modal -->
+<div class="modal" id="pwModal" role="dialog" aria-modal="true" aria-labelledby="pwT">
+  <div class="box2">
+    <h3 id="pwT">महा आयडी कार्ड PDF पासवर्ड</h3>
+    <p id="pwFile">ही महा आयडी PDF पासवर्डने सुरक्षित आहे.</p>
+    <input type="text" id="pwInput" placeholder="उदा. YOGE1988 (नावाचे पहिले ४ अक्षरे + जन्म वर्ष)" autocomplete="off" style="text-transform:uppercase">
+    <div class="err" id="pwErr"></div>
+    <div class="row" style="justify-content:flex-end"><button class="btn" id="pwCancel" type="button">रद्द करा (Cancel)</button><button class="btn primary" id="pwOk" type="button">उघडा (Open)</button></div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script>
+(function () {
+'use strict';
+var MM = 300 / 25.4;            // export: 300 dpi
+var PREV = 150 / 25.4;          // preview: 150 dpi
+var CORNER_MM = 3.18;           // CR80 corner radius
+var $ = function (s, r) { return (r || document).querySelector(s); };
+var $$ = function (s, r) { return [].slice.call((r || document).querySelectorAll(s)); };
+
+var S = {
+  items: [], sel: -1, active: null,           // active: {id, canvas}
+  side: 'front', page: 0, uid: 0, zoom: true, view: null,
+  o: { paper: '4x6', gap: 10, pos: 'top', round: true, marks: false, border: true, clean: true, trim: 1, cw: 85.6, ch: 53.98, lock: true }
+};
+
+if (window.pdfjsLib) pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
+
+/* ---------- helpers ---------- */
+function say(el, text, cls) { el.textContent = text || ''; el.className = 'msg' + (text ? ' show' : '') + (cls ? ' ' + cls : ''); }
+function clamp(v, a, b) { return Math.max(a, Math.min(b, v)); }
+function toBlob(c, type, q) { return new Promise(function (res) { c.toBlob(res, type, q); }); }
+function blobToCanvas(blob) {
+  return new Promise(function (res, rej) {
+    var u = URL.createObjectURL(blob), im = new Image();
+    im.onload = function () { var c = document.createElement('canvas'); c.width = im.naturalWidth; c.height = im.naturalHeight; c.getContext('2d').drawImage(im, 0, 0); URL.revokeObjectURL(u); res(c); };
+    im.onerror = function () { URL.revokeObjectURL(u); rej(new Error('इमेज लोड झाली नाही')); };
+    im.src = u;
+  });
+}
+
+/* ---------- password modal ---------- */
+function askPassword(name, wrong) {
+  return new Promise(function (resolve) {
+    var m = $('#pwModal'), inp = $('#pwInput');
+    $('#pwFile').textContent = name + ' पासवर्डने सुरक्षित आहे.';
+    $('#pwErr').textContent = wrong ? 'पासवर्ड चुकीचा आहे, पुन्हा प्रयत्न करा (नावाचे पहिले ४ कॅपिटल अक्षरे + जन्म वर्ष, उदा. YOGE1988).' : '';
+    inp.value = ''; m.classList.add('show'); setTimeout(function () { inp.focus(); }, 30);
+    function done(v) {
+      m.classList.remove('show');
+      $('#pwOk').onclick = $('#pwCancel').onclick = inp.onkeydown = inp.oninput = null;
+      resolve(v ? v.trim().toUpperCase() : null);
+    }
+    inp.oninput = function () { inp.value = inp.value.toUpperCase(); };
+    $('#pwOk').onclick = function () { done(inp.value); };
+    $('#pwCancel').onclick = function () { done(null); };
+    inp.onkeydown = function (e) { if (e.key === 'Enter') done(inp.value); if (e.key === 'Escape') done(null); };
+  });
+}
+
+/* ---------- load PDF / image to canvas (~300 dpi) ---------- */
+async function renderPdf(file) {
+  if (!window.pdfjsLib) throw new Error('PDF लायब्ररी लोड झाली नाही. कृपया इंटरनेट तपासून पेज रिफ्रेश करा.');
+  var buf = await file.arrayBuffer();
+  var task = pdfjsLib.getDocument({ data: new Uint8Array(buf) });
+  task.onPassword = function (update, reason) {
+    askPassword(file.name, reason === 2).then(function (p) {
+      if (p === null) {
+        task.destroy();
+      } else {
+        update(p);
+      }
+    });
+  };
+  var pdf;
+  try {
+    pdf = await task.promise;
+  } catch (e) {
+    throw new Error(e && e.name === 'PasswordException' ? 'पासवर्डशिवाय फाईल उघडू शकत नाही' : (e && e.message) || 'PDF उघडली नाही');
+  }
+  var page = await pdf.getPage(1);
+  var v1 = page.getViewport({ scale: 1 });
+  var scale = Math.min(300 / 72, 4800 / Math.max(v1.width, v1.height));
+  var vp = page.getViewport({ scale: scale });
+  var c = document.createElement('canvas'); c.width = Math.round(vp.width); c.height = Math.round(vp.height);
+  var ctx = c.getContext('2d'); ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, c.width, c.height);
+  await page.render({ canvasContext: ctx, viewport: vp }).promise;
+  pdf.destroy();
+  return c;
+}
+function renderImage(file) { return blobToCanvas(file); }
+
+/* ---------- auto detection: Maha ID / MahaSarathi Card ---------- */
+function detectCards(c) {
+  var W = c.width, H = c.height;
+
+  // Calibrated exact standard coordinates for Maha ID Card:
+  var fx_cal = Math.round(W * 0.0504);
+  var fy_cal = Math.round(H * 0.01995);
+  var fw_cal = Math.round(W * 0.5476);
+  var fh_cal = Math.round(H * 0.2474);
+
+  var bx_cal = Math.round(W * 0.0504);
+  var by_cal = Math.round(H * 0.3049);
+  var bw_cal = Math.round(W * 0.5476);
+  var bh_cal = Math.round(H * 0.2496);
+
+  try {
+    var ctx = c.getContext('2d');
+    var imgData = ctx.getImageData(0, 0, W, H);
+    var d = imgData.data;
+
+    function isBlue(r, g, b) {
+      return r < 65 && g >= 50 && g <= 145 && b > 125;
+    }
+
+    var c1_blue_rows = [], c2_blue_rows = [];
+    var yStep = 2;
+    var xStep = 4;
+    var h40 = Math.floor(H * 0.40);
+    var h70 = Math.floor(H * 0.70);
+
+    for (var y = 0; y < h70; y += yStep) {
+      var blue_cnt = 0;
+      var rowOffset = y * W * 4;
+      for (var x = 0; x < W; x += xStep) {
+        var idx = rowOffset + x * 4;
+        if (isBlue(d[idx], d[idx + 1], d[idx + 2])) {
+          blue_cnt++;
+        }
+      }
+      if (blue_cnt > 30) {
+        if (y < h40) {
+          c1_blue_rows.push(y);
+        } else {
+          c2_blue_rows.push(y);
+        }
+      }
+    }
+
+    if (c1_blue_rows.length > 5 && c2_blue_rows.length > 5) {
+      var c1_bottom = c1_blue_rows[c1_blue_rows.length - 1] + yStep;
+      var c2_bottom = c2_blue_rows[c2_blue_rows.length - 1] + yStep;
+
+      var c1_mid_y = c1_blue_rows[Math.floor(c1_blue_rows.length / 2)];
+      var c2_mid_y = c2_blue_rows[Math.floor(c2_blue_rows.length / 2)];
+
+      var c1_min_x = W, c1_max_x = 0;
+      var off1 = c1_mid_y * W * 4;
+      for (var x = 0; x < W; x++) {
+        var i1 = off1 + x * 4;
+        if (isBlue(d[i1], d[i1 + 1], d[i1 + 2])) {
+          if (x < c1_min_x) c1_min_x = x;
+          if (x > c1_max_x) c1_max_x = x;
+        }
+      }
+
+      var c2_min_x = W, c2_max_x = 0;
+      var off2 = c2_mid_y * W * 4;
+      for (var x = 0; x < W; x++) {
+        var i2 = off2 + x * 4;
+        if (isBlue(d[i2], d[i2 + 1], d[i2 + 2])) {
+          if (x < c2_min_x) c2_min_x = x;
+          if (x > c2_max_x) c2_max_x = x;
+        }
+      }
+
+      var x1 = (c1_min_x < c1_max_x) ? c1_min_x : fx_cal;
+      var w1 = (c1_min_x < c1_max_x) ? (c1_max_x - c1_min_x + 1) : fw_cal;
+      var x2 = (c2_min_x < c2_max_x) ? c2_min_x : bx_cal;
+      var w2 = (c2_min_x < c2_max_x) ? (c2_max_x - c2_min_x + 1) : bw_cal;
+
+      var midX1 = Math.floor(x1 + w1 / 2);
+      var c1_top = fy_cal;
+      for (var y = 0; y < c1_blue_rows[0]; y++) {
+        var pi = (y * W + midX1) * 4;
+        if (d[pi] < 245 || d[pi + 1] < 245 || d[pi + 2] < 245) {
+          c1_top = y;
+          break;
+        }
+      }
+
+      var midX2 = Math.floor(x2 + w2 / 2);
+      var c2_top = by_cal;
+      for (var y = c1_bottom + 10; y < c2_blue_rows[0]; y++) {
+        var pi = (y * W + midX2) * 4;
+        if (d[pi] < 245 || d[pi + 1] < 245 || d[pi + 2] < 245) {
+          c2_top = y;
+          break;
+        }
+      }
+
+      var h1 = c1_bottom - c1_top;
+      var h2 = c2_bottom - c2_top;
+
+      return {
+        ok: true,
+        front: { x: x1, y: c1_top, w: w1, h: h1 },
+        back: { x: x2, y: c2_top, w: w2, h: h2 }
+      };
+    }
+  } catch (err) {
+    // Canvas security or memory fallback
+  }
+
+  return {
+    ok: true,
+    front: { x: fx_cal, y: fy_cal, w: fw_cal, h: fh_cal },
+    back: { x: bx_cal, y: by_cal, w: bw_cal, h: bh_cal }
+  };
+}
+
+/* ---------- cards (crops) ---------- */
+function cropCanvas(src, r) {
+  var x = clamp(Math.round(r.x), 0, src.width - 2), y = clamp(Math.round(r.y), 0, src.height - 2);
+  var w = clamp(Math.round(r.w), 2, src.width - x), h = clamp(Math.round(r.h), 2, src.height - y);
+  var c = document.createElement('canvas'); c.width = w; c.height = h;
+  c.getContext('2d').drawImage(src, x, y, w, h, 0, 0, w, h); return c;
+}
+function rebuildCards(item, src) { item.cards = { front: cropCanvas(src, item.rects.front), back: cropCanvas(src, item.rects.back) }; item.clean = {}; }
+
+function whitenGuides(card) {
+  var c = document.createElement('canvas'); c.width = card.width; c.height = card.height;
+  var ctx = c.getContext('2d'); ctx.drawImage(card, 0, 0);
+  return c;
+}
+function pickCard(it, side) {
+  if (!S.o.clean) return it.cards[side];
+  if (!it.clean) it.clean = {};
+  return it.clean[side] || (it.clean[side] = whitenGuides(it.cards[side]));
+}
+
+/* ---------- add files ---------- */
+async function addFile(file) {
+  var item = { id: ++S.uid, name: file.name, status: 'loading', msg: 'लोड होत आहे…' };
+  S.items.push(item); renderList();
+  try {
+    var canvas = /pdf$/i.test(file.type) || /\.pdf$/i.test(file.name) ? await renderPdf(file) : await renderImage(file);
+    var det = detectCards(canvas);
+    item.W = canvas.width; item.H = canvas.height; item.rects = { front: det.front, back: det.back }; item.detected = det.ok;
+    item.pageBlob = await toBlob(canvas, 'image/jpeg', 0.92);
+    rebuildCards(item, canvas);
+    item.status = det.ok ? 'ready' : 'check';
+    item.msg = det.ok ? 'पुढील आणि मागील कार्ड मिळाले' : 'क्रॉप बॉक्स तपासून खात्री करा';
+    if (S.sel < 0 || !S.items[S.sel] || S.items[S.sel].status === 'error') await selectItem(S.items.indexOf(item), canvas);
+  } catch (e) {
+    item.status = 'error'; item.msg = (e && e.message) || 'फाईल उघडली नाही';
+  }
+  renderList(); refreshAll();
+}
+
+async function selectItem(idx, canvasHint) {
+  var it = S.items[idx]; if (!it || !it.pageBlob) { return; }
+  S.sel = idx;
+  var canvas = canvasHint || (S.active && S.active.id === it.id ? S.active.canvas : await blobToCanvas(it.pageBlob));
+  S.active = { id: it.id, canvas: canvas };
+  drawStage(); renderList(); refreshAll();
+}
+
+function renderList() {
+  var ul = $('#files'); ul.innerHTML = '';
+  S.items.forEach(function (it, i) {
+    var li = document.createElement('li'); if (i === S.sel) li.className = 'sel';
+    var b = document.createElement('button'); b.type = 'button'; b.className = 'pick';
+    var cls = it.status === 'ready' ? 'ok' : it.status === 'check' ? 'warn' : it.status === 'error' ? 'err' : '';
+    b.innerHTML = '<span class="nm"></span><span class="st ' + cls + '"></span>';
+    b.firstChild.textContent = it.name; b.lastChild.textContent = (it.status === 'ready' ? '✓ ' : it.status === 'check' ? '! ' : '') + it.msg;
+    b.onclick = function () { if (it.pageBlob) selectItem(i); };
+    var x = document.createElement('button'); x.type = 'button'; x.className = 'x'; x.setAttribute('aria-label', it.name + ' काढा'); x.textContent = '×';
+    x.onclick = function () { removeItem(i); };
+    li.appendChild(b); li.appendChild(x); ul.appendChild(li);
+  });
+}
+async function removeItem(i) {
+  S.items.splice(i, 1);
+  if (!S.items.length) { S.sel = -1; S.active = null; }
+  else { var ni = clamp(i - (i >= S.items.length ? 1 : 0), 0, S.items.length - 1); S.sel = -1; S.active = null; renderList(); await selectItem(ni); }
+  S.page = 0; renderList(); refreshAll();
+}
+
+/* ---------- crop stage ---------- */
+function computeView() {
+  var it = S.items[S.sel]; if (!it) return;
+  if (!S.zoom) { S.view = { x: 0, y: 0, w: it.W, h: it.H }; return; }
+  var f = it.rects.front, b = it.rects.back;
+  var x1 = Math.min(f.x, b.x), y1 = Math.min(f.y, b.y), x2 = Math.max(f.x + f.w, b.x + b.w), y2 = Math.max(f.y + f.h, b.y + b.h);
+  var m = Math.round((x2 - x1) * 0.07);
+  x1 = clamp(x1 - m, 0, it.W - 10); y1 = clamp(y1 - m, 0, it.H - 10); x2 = clamp(x2 + m, 10, it.W); y2 = clamp(y2 + m, 10, it.H);
+  S.view = { x: x1, y: y1, w: x2 - x1, h: y2 - y1 };
+}
+function drawStage() {
+  if (!S.active) return;
+  computeView();
+  var src = S.active.canvas, V = S.view, vw = Math.min(1100, Math.round(V.w)), vh = Math.round(V.h * vw / V.w);
+  var v = $('#view'); v.width = vw; v.height = vh;
+  var ctx = v.getContext('2d'); ctx.imageSmoothingQuality = 'high'; ctx.drawImage(src, V.x, V.y, V.w, V.h, 0, 0, vw, vh);
+  positionBoxes();
+}
+function positionBoxes() {
+  var it = S.items[S.sel], V = S.view; if (!it || !S.active || !V) return;
+  ['front', 'back'].forEach(function (s) {
+    var r = it.rects[s], el = $('.box.' + s);
+    el.style.left = ((r.x - V.x) / V.w * 100) + '%'; el.style.top = ((r.y - V.y) / V.h * 100) + '%';
+    el.style.width = (r.w / V.w * 100) + '%'; el.style.height = (r.h / V.h * 100) + '%';
+    el.classList.toggle('on', S.side === s);
+  });
+  $$('[data-pick]').forEach(function (b) { b.classList.toggle('on', b.dataset.pick === S.side); });
+  $('#zoomBtn').textContent = S.zoom ? 'संपूर्ण पृष्ठ पहा' : 'कार्डवर झूम करा';
+  var m = $('#detMsg');
+  if (it.status === 'check') say(m, 'ऑटो-डिटेक्ट तपासून घ्या. "संपूर्ण पृष्ठ पहा" दाबून पुढील आणि मागील बॉक्स कार्डवर व्यवस्थित लावा.', '');
+  else say(m, '', '');
+}
+function setRect(side, r) {
+  var it = S.items[S.sel]; if (!it) return;
+  r.w = clamp(r.w, 60, it.W); r.h = clamp(r.h, 40, it.H);
+  r.x = clamp(r.x, 0, it.W - r.w); r.y = clamp(r.y, 0, it.H - r.h);
+  it.rects[side] = { x: Math.round(r.x), y: Math.round(r.y), w: Math.round(r.w), h: Math.round(r.h) };
+  if (it.status === 'check') { it.status = 'ready'; it.msg = 'मॅन्युअली सेट केले'; renderList(); }
+  rebuildCards(it, S.active.canvas); positionBoxes(); schedulePreview();
+}
+
+var drag = null, stage = $('#stage');
+stage.addEventListener('pointerdown', function (e) {
+  var el = e.target.closest('.box'); if (!el) return;
+  var it = S.items[S.sel]; if (!it) return;
+  var side = el.dataset.side; S.side = side; positionBoxes();
+  var rc = stage.getBoundingClientRect();
+  drag = { side: side, h: e.target.dataset.h || null, sx: e.clientX, sy: e.clientY, r: Object.assign({}, it.rects[side]), k: S.view.w / rc.width };
+  try { stage.setPointerCapture(e.pointerId); } catch (x) {}
+  el.focus({ preventScroll: true }); e.preventDefault();
+});
+stage.addEventListener('pointermove', function (e) {
+  if (!drag) return;
+  var dx = (e.clientX - drag.sx) * drag.k, dy = (e.clientY - drag.sy) * drag.k, r = drag.r, n = { x: r.x, y: r.y, w: r.w, h: r.h };
+  if (!drag.h) { n.x = r.x + dx; n.y = r.y + dy; }
+  else {
+    var h = drag.h, asp = r.w / r.h;
+    if (h.indexOf('e') > -1) n.w = r.w + dx; if (h.indexOf('w') > -1) n.w = r.w - dx;
+    if (h.indexOf('s') > -1) n.h = r.h + dy; if (h.indexOf('n') > -1) n.h = r.h - dy;
+    if (S.o.lock) { if (Math.abs(dx) >= Math.abs(dy * asp)) n.h = n.w / asp; else n.w = n.h * asp; }
+    n.w = Math.max(60, n.w); n.h = Math.max(40, n.h);
+    if (h.indexOf('w') > -1) n.x = r.x + r.w - n.w; if (h.indexOf('n') > -1) n.y = r.y + r.h - n.h;
+  }
+  setRect(drag.side, n);
+});
+function endDrag(e) { if (drag) { drag = null; try { stage.releasePointerCapture(e.pointerId); } catch (x) {} } }
+stage.addEventListener('pointerup', endDrag); stage.addEventListener('pointercancel', endDrag);
+stage.addEventListener('keydown', function (e) {
+  var el = e.target.closest('.box'); if (!el) return;
+  var d = { ArrowLeft: [-1, 0], ArrowRight: [1, 0], ArrowUp: [0, -1], ArrowDown: [0, 1] }[e.key]; if (!d) return;
+  var it = S.items[S.sel], r = it.rects[el.dataset.side], st = e.shiftKey ? 10 : 1;
+  S.side = el.dataset.side; setRect(S.side, { x: r.x + d[0] * st, y: r.y + d[1] * st, w: r.w, h: r.h }); e.preventDefault();
+});
+$$('[data-pick]').forEach(function (b) { b.onclick = function () { S.side = b.dataset.pick; positionBoxes(); }; });
+$$('[data-nudge]').forEach(function (b) {
+  b.onclick = function () {
+    var it = S.items[S.sel]; if (!it) return; var d = b.dataset.nudge.split(',').map(Number), r = it.rects[S.side];
+    setRect(S.side, { x: r.x + d[0], y: r.y + d[1], w: r.w, h: r.h });
+  };
+});
+$$('[data-grow]').forEach(function (b) {
+  b.onclick = function () {
+    var it = S.items[S.sel]; if (!it) return; var f = parseFloat(b.dataset.grow), r = it.rects[S.side];
+    var w = r.w * f, h = S.o.lock ? r.h * f : r.h;
+    setRect(S.side, { x: r.x - (w - r.w) / 2, y: r.y - (h - r.h) / 2, w: w, h: h });
+  };
+});
+$('#lock').onchange = function () { S.o.lock = this.checked; };
+$('#redetect').onclick = function () {
+  var it = S.items[S.sel]; if (!it || !S.active) return;
+  var det = detectCards(S.active.canvas); it.rects = { front: det.front, back: det.back }; it.detected = det.ok;
+  it.status = det.ok ? 'ready' : 'check'; it.msg = det.ok ? 'पुढील आणि मागील कार्ड मिळाले' : 'क्रॉप बॉक्स तपासून खात्री करा';
+  rebuildCards(it, S.active.canvas); renderList(); drawStage(); schedulePreview();
+};
+$('#zoomBtn').onclick = function () { S.zoom = !S.zoom; drawStage(); };
+
+/* ---------- layout ---------- */
+function buildPages() {
+  var o = S.o, items = S.items.filter(function (i) { return i.cards; }), pages = [], pw, ph, cw = o.cw, ch = o.ch;
+  if (o.paper === '4x6') {
+    pw = 101.6; ph = 152.4;
+    items.forEach(function (it) {
+      var total = 2 * ch + o.gap, fx = (pw - cw) / 2, fy = Math.max(0, (ph - total) / 2);
+      pages.push([{ it: it, fx: fx, fy: fy, bx: fx, by: fy + ch + o.gap }]);
+    });
+  } else {
+    pw = 210; ph = 297;
+    var margin = 10, pitch = ch + o.gap, cap = Math.max(1, Math.floor((ph - 2 * margin + o.gap) / pitch));
+    var fx = (pw - (2 * cw + o.gap)) / 2;
+    for (var i = 0; i < items.length; i += cap) {
+      var chunk = items.slice(i, i + cap), bh = chunk.length * ch + (chunk.length - 1) * o.gap, y0;
+      y0 = o.pos === 'center' ? (ph - bh) / 2 : o.pos === 'bottom' ? ph - margin - bh : 12;
+      pages.push(chunk.map(function (it, j) { var y = y0 + j * pitch; return { it: it, fx: fx, fy: y, bx: fx + cw + o.gap, by: y }; }));
+    }
+  }
+  return { pw: pw, ph: ph, pages: pages };
+}
+function rr(ctx, x, y, w, h, r) {
+  if (typeof ctx.roundRect === 'function') {
+    ctx.beginPath();
+    ctx.roundRect(x, y, w, h, r);
+    return;
+  }
+  ctx.beginPath();
+  ctx.moveTo(x + r, y);
+  ctx.arcTo(x + w, y, x + w, y + h, r);
+  ctx.arcTo(x + w, y + h, x, y + h, r);
+  ctx.arcTo(x, y + h, x, y, r);
+  ctx.arcTo(x, y + w, y, r);
+  ctx.closePath();
+}
+function drawCard(ctx, card, xmm, ymm, k) {
+  var o = S.o, x = xmm * k, y = ymm * k, w = o.cw * k, h = o.ch * k, t = Math.min(o.trim, Math.floor(Math.min(card.width, card.height) / 4));
+  ctx.save(); if (o.round) { rr(ctx, x, y, w, h, CORNER_MM * k); ctx.clip(); }
+  ctx.drawImage(card, t, t, card.width - 2 * t, card.height - 2 * t, x, y, w, h); ctx.restore();
+  if (o.border) { ctx.save(); ctx.lineWidth = Math.max(1, 0.2 * k); ctx.strokeStyle = '#8b94a3'; if (o.round) { rr(ctx, x, y, w, h, CORNER_MM * k); ctx.stroke(); } else ctx.strokeRect(x, y, w, h); ctx.restore(); }
+  if (o.marks) {
+    var off = 1.5 * k, len = 3 * k; ctx.save(); ctx.strokeStyle = '#6b7280'; ctx.lineWidth = Math.max(1, 0.15 * k); ctx.beginPath();
+    [[x, y, -1, -1], [x + w, y, 1, -1], [x, y + h, -1, 1], [x + w, y + h, 1, 1]].forEach(function (c) {
+      ctx.moveTo(c[0] + c[2] * off, c[1]); ctx.lineTo(c[0] + c[2] * (off + len), c[1]);
+      ctx.moveTo(c[0], c[1] + c[3] * off); ctx.lineTo(c[0], c[1] + c[3] * (off + len));
+    }); ctx.stroke(); ctx.restore();
+  }
+}
+function drawPageCanvas(L, pi, k, into) {
+  var c = into || document.createElement('canvas'); c.width = Math.round(L.pw * k); c.height = Math.round(L.ph * k);
+  var ctx = c.getContext('2d'); ctx.imageSmoothingEnabled = true; ctx.imageSmoothingQuality = 'high';
+  ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, c.width, c.height);
+  L.pages[pi].forEach(function (s) { drawCard(ctx, pickCard(s.it, 'front'), s.fx, s.fy, k); drawCard(ctx, pickCard(s.it, 'back'), s.bx, s.by, k); });
+  return c;
+}
+
+/* ---------- preview ---------- */
+var raf = 0;
+function schedulePreview() { if (!raf) raf = requestAnimationFrame(function () { raf = 0; renderPreview(); }); }
+function renderPreview() {
+  var L = buildPages(), has = L.pages.length > 0;
+  $('#bench').classList.toggle('empty', !has);
+  ['dlPdf', 'dlPng', 'printBtn'].forEach(function (id) { $('#' + id).disabled = !has; });
+  if (!has) { $('#meta').textContent = ''; $('#pager').hidden = true; return; }
+  S.page = clamp(S.page, 0, L.pages.length - 1);
+  drawPageCanvas(L, S.page, PREV, $('#sheet'));
+  var sc = $('#sheet'); sc.style.width = Math.min(sc.width, L.pw === 210 ? 440 : 330) + 'px';
+  var paperTxt = S.o.paper === '4x6' ? '४ × ६ इंच' : 'A4';
+  $('#meta').textContent = paperTxt + ' · कार्ड ' + S.o.cw + ' × ' + S.o.ch + ' मिमी · ३०० DPI PDF' + (L.pages.length > 1 ? ' · ' + L.pages.length + ' पृष्ठे' : '');
+  $('#pager').hidden = L.pages.length < 2; $('#pageNo').textContent = 'पृष्ठ ' + (S.page + 1) + ' / ' + L.pages.length;
+  var tall = 2 * S.o.ch + S.o.gap > L.ph - 2;
+  say($('#topMsg'), (S.o.paper === '4x6' && tall) ? 'कार्ड साईझ आणि अंतर ४×६ पेजमध्ये पूर्ण बसत नाही. अंतर थोडे कमी करा.' : '', '');
+}
+function refreshAll() {
+  var has = S.items.some(function (i) { return i.cards; });
+  $('#cropCard').hidden = !has; $('#layoutCard').hidden = !has; renderPreview();
+}
+$('#prevP').onclick = function () { S.page--; renderPreview(); };
+$('#nextP').onclick = function () { S.page++; renderPreview(); };
+
+/* ---------- options ---------- */
+$$('input[name=paper]').forEach(function (r) {
+  r.onchange = function () {
+    S.o.paper = r.value; var a4 = r.value === 'a4';
+    $('#posRow').hidden = !a4; S.o.gap = a4 ? 8 : 10; $('#gap').value = S.o.gap; $('#gapV').textContent = S.o.gap + ' मिमी'; S.page = 0; renderPreview();
+  };
+});
+$('#gap').oninput = function () { S.o.gap = +this.value; $('#gapV').textContent = this.value + ' मिमी'; schedulePreview(); };
+$('#trim').oninput = function () { S.o.trim = +this.value; $('#trimV').textContent = this.value + ' px'; schedulePreview(); };
+$('#pos').onchange = function () { S.o.pos = this.value; renderPreview(); };
+['clean', 'round', 'border', 'marks'].forEach(function (k) { $('#' + k).onchange = function () { S.o[k] = this.checked; renderPreview(); }; });
+$('#cardSize').onchange = function () {
+  var c = this.value === 'custom'; $('#customSize').hidden = !c;
+  if (!c) { S.o.cw = 85.6; S.o.ch = 53.98; $('#cw').value = 85.6; $('#ch').value = 54; } renderPreview();
+};
+['cw', 'ch'].forEach(function (id) {
+  $('#' + id).oninput = function () { var v = parseFloat(this.value); if (v > 10) { S.o[id] = v; schedulePreview(); } };
+});
+
+/* ---------- file input / drop ---------- */
+function handleFiles(list) { Array.prototype.forEach.call(list, function (f) { if (/pdf$|^image\//i.test(f.type) || /\.(pdf|jpe?g|png|webp)$/i.test(f.name)) addFile(f); }); }
+$('#file').onchange = function () { handleFiles(this.files); this.value = ''; };
+var drop = $('#drop');
+['dragenter', 'dragover'].forEach(function (ev) { drop.addEventListener(ev, function (e) { e.preventDefault(); drop.classList.add('over'); }); });
+['dragleave', 'drop'].forEach(function (ev) { drop.addEventListener(ev, function (e) { e.preventDefault(); drop.classList.remove('over'); }); });
+drop.addEventListener('drop', function (e) { handleFiles(e.dataTransfer.files); });
+
+/* ---------- export ---------- */
+function makePdf() {
+  var L = buildPages(); if (!L.pages.length) return null;
+  var J = window.jspdf && window.jspdf.jsPDF; if (!J) { say($('#topMsg'), 'PDF लायब्ररी लोड झाली नाही. इंटरनेट तपासून रिफ्रेश करा.', ''); return null; }
+  var pdf = new J({ unit: 'mm', format: [L.pw, L.ph], orientation: 'portrait', compress: true });
+  L.pages.forEach(function (_, i) {
+    if (i) pdf.addPage([L.pw, L.ph], 'portrait');
+    var c = drawPageCanvas(L, i, MM); pdf.addImage(c.toDataURL('image/jpeg', 0.95), 'JPEG', 0, 0, L.pw, L.ph);
+  });
+  return pdf;
+}
+function fname(ext) { return 'MAHA-ID-Card-' + (S.o.paper === '4x6' ? '4x6' : 'A4') + '.' + ext; }
+$('#dlPdf').onclick = function () { var p = makePdf(); if (p) p.save(fname('pdf')); };
+$('#printBtn').onclick = function () {
+  var p = makePdf(); if (!p) return;
+  var u = URL.createObjectURL(p.output('blob')); var w = window.open(u, '_blank');
+  if (!w) say($('#topMsg'), 'पॉपअप ब्लॉक झाले आहे. कृपया पॉपअपला परवानगी द्या किंवा "पीडीएफ डाउनलोड करा" वापरा.', 'info');
+};
+$('#dlPng').onclick = async function () {
+  var L = buildPages(); if (!L.pages.length) return;
+  var c = drawPageCanvas(L, S.page, MM), b = await toBlob(c, 'image/png');
+  var a = document.createElement('a'); a.href = URL.createObjectURL(b);
+  a.download = fname('png').replace('.png', L.pages.length > 1 ? '-p' + (S.page + 1) + '.png' : '.png'); document.body.appendChild(a); a.click();
+  setTimeout(function () { URL.revokeObjectURL(a.href); a.remove(); }, 500);
+};
+
+/* test hook */
+window.__pan = { S: S, detectCards: detectCards };
+renderPreview();
+})();
+</script>
+
+</body>
+</html>
