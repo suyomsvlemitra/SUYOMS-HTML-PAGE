@@ -45,7 +45,7 @@
 
         @page {
             size: A4 portrait;
-            margin: 6mm 8mm;
+            margin: 8mm 8mm 8mm 8mm;
         }
 
         @media print {
@@ -55,7 +55,7 @@
                 padding: 0 !important;
                 margin: 0 !important;
                 width: 100% !important;
-                height: auto !important;
+                height: 100% !important;
                 overflow: visible !important;
                 -webkit-print-color-adjust: exact !important;
                 print-color-adjust: exact !important;
@@ -71,7 +71,7 @@
                 overflow: visible !important;
             }
             header,
-            .xl\:col-span-5,
+            [class*="col-span-5"],
             .bg-gradient-to-r,
             #print-window-frame {
                 display: none !important;
@@ -81,7 +81,7 @@
                 padding: 0 !important;
                 margin: 0 !important;
             }
-            .xl\:col-span-7 {
+            [class*="col-span-7"] {
                 display: block !important;
                 width: 100% !important;
                 max-width: 100% !important;
@@ -108,44 +108,61 @@
                 right: auto !important;
                 width: 100% !important; 
                 max-width: 100% !important;
+                height: 278mm !important;
+                min-height: 278mm !important;
+                max-height: 278mm !important;
                 box-sizing: border-box !important;
                 border: 2px solid #000000 !important;
                 box-shadow: none !important;
                 border-radius: 0 !important;
-                padding: 32px 36px !important; 
+                padding: 26px 30px !important; 
                 margin: 0 auto !important;
                 transform: none !important; 
-                font-size: 13.5px !important; 
-                line-height: 1.85 !important;
+                font-size: 14px !important; 
+                line-height: 1.92 !important;
                 color: #000000 !important;
                 background: #ffffff !important;
+                display: flex !important;
+                flex-direction: column !important;
+                justify-content: space-between !important;
                 page-break-inside: avoid !important;
                 break-inside: avoid !important;
             }
             #print-area h2 {
-                font-size: 17px !important;
-                margin-bottom: 4px !important;
+                font-size: 17.5px !important;
+                margin-bottom: 2px !important;
                 line-height: 1.35 !important;
+                font-weight: bold !important;
+                text-align: center !important;
             }
             #print-area h3 {
                 font-size: 15px !important;
-                margin-bottom: 4px !important;
+                margin-bottom: 2px !important;
                 line-height: 1.35 !important;
+                font-weight: bold !important;
+                text-align: center !important;
+            }
+            #print-area .text-slate-800 {
+                font-size: 11.5px !important;
+                line-height: 1.45 !important;
+                text-align: center !important;
             }
             #print-area .text-justify {
-                font-size: 13.5px !important;
-                line-height: 1.85 !important;
+                font-size: 14px !important;
+                line-height: 1.92 !important;
+                text-align: justify !important;
+                text-justify: inter-word !important;
+            }
+            #print-area .text-justify p {
+                font-size: 14px !important;
+                line-height: 1.92 !important;
+                margin-bottom: 12px !important;
+                text-align: justify !important;
+                text-justify: inter-word !important;
             }
             #print-area .space-y-3 > :not([hidden]) ~ :not([hidden]) {
                 margin-top: 10px !important;
                 margin-bottom: 0 !important;
-            }
-            #print-area .mt-8 {
-                margin-top: 36px !important;
-            }
-            #print-area .my-4 {
-                margin-top: 14px !important;
-                margin-bottom: 14px !important;
             }
             #stamp-preview-zone.hidden {
                 display: none !important;
@@ -172,7 +189,7 @@
     <div class="max-w-[1600px] mx-auto border-2 border-orange-500 rounded-xl overflow-hidden bg-neutral-900 shadow-xl">
         
         <!-- HEADER -->
-        <header class="bg-gradient-to-r from-neutral-950 via-neutral-900 to-neutral-950 p-4 flex flex-col xl:flex-row justify-between items-center border-b-4 border-orange-500 gap-4">
+        <header class="bg-gradient-to-r from-neutral-950 via-neutral-900 to-neutral-950 p-4 flex flex-col md:flex-row justify-between items-center border-b-4 border-orange-500 gap-4">
             <div class="flex items-center gap-4">
                 <div class="bg-neutral-900 text-orange-500 p-3 rounded-xl shadow-lg border border-orange-500/50 shrink-0">
                     <i class="fa-solid fa-file-signature text-3xl text-orange-500"></i>
@@ -184,7 +201,7 @@
             </div>
 
             <!-- BUTTONS CONTAINER -->
-            <div class="flex flex-wrap items-center gap-2 xl:ml-auto w-full xl:w-auto justify-end">
+            <div class="flex flex-wrap items-center gap-2 md:ml-auto w-full md:w-auto justify-end">
                 <button onclick="triggerPrint()" class="bg-neutral-800 hover:bg-neutral-700 border border-neutral-700 px-3 py-2 rounded-lg flex flex-col items-center justify-center min-w-[65px] shadow-md transition cursor-pointer">
                     <i class="fa-solid fa-print text-lg text-sky-400 mb-0.5"></i>
                     <span class="text-[11px] text-white">Print</span>
@@ -208,10 +225,10 @@
         </header>
 
         <!-- WORKSPACE -->
-        <div class="grid grid-cols-1 xl:grid-cols-12 gap-4 p-4">
+        <div class="grid grid-cols-1 md:grid-cols-12 lg:grid-cols-12 gap-4 p-4">
             
-            <!-- FORM INPUTS -->
-            <div class="xl:col-span-5 bg-neutral-950/80 border border-orange-500/30 rounded-xl p-4 flex flex-col h-[880px] overflow-y-auto">
+            <!-- FORM INPUTS (LEFT SIDE) -->
+            <div class="md:col-span-5 lg:col-span-5 bg-neutral-950/80 border border-orange-500/30 rounded-xl p-4 flex flex-col h-[880px] overflow-y-auto">
                 
                 <div class="mb-4">
                     <label class="block text-xs font-bold text-orange-400 mb-2 uppercase tracking-wider"><i class="fa-solid fa-stamp mr-1"></i> स्टॅम्प प्रिव्ह्यू निवडा</label>
@@ -346,8 +363,8 @@
                 </div>
             </div>
 
-            <!-- LIVE PREVIEW (A4 SHEET) -->
-            <div class="xl:col-span-7 bg-neutral-950/80 border border-orange-500/30 rounded-xl p-4 flex flex-col h-[880px]">
+            <!-- LIVE PREVIEW (A4 SHEET - RIGHT SIDE) -->
+            <div class="md:col-span-7 lg:col-span-7 bg-neutral-950/80 border border-orange-500/30 rounded-xl p-4 flex flex-col h-[880px]">
                 <div class="bg-gradient-to-r from-neutral-900 via-neutral-800 to-neutral-900 px-4 py-1.5 rounded-lg font-bold text-sm mb-3 flex justify-between items-center shadow border border-orange-500/40 text-orange-400">
                     <span>A4 Live Preview</span>
                     <div class="flex items-center gap-2 text-xs bg-neutral-950 px-2 py-1 rounded border border-neutral-800">
@@ -358,64 +375,68 @@
                 </div>
 
                 <div class="flex-1 bg-neutral-900 p-4 rounded-lg overflow-y-auto flex justify-center items-start border border-neutral-800">
-                    <div id="print-area" class="w-[595px] min-h-[842px] bg-white p-10 shadow-2xl rounded relative text-[13px] leading-relaxed text-black">
+                    <div id="print-area" class="w-[595px] min-h-[842px] bg-white p-8 shadow-2xl rounded relative text-[13px] leading-relaxed text-black flex flex-col justify-between">
                         
-                        <div id="stamp-preview-zone" class="mb-4 hidden text-center border border-dashed border-transparent rounded overflow-hidden h-[220px]">
-                            <img id="stamp-img" src="" alt="Stamp" class="w-full h-[220px] object-contain">
-                        </div>
-
-                        <div id="dynamic-space-holder" style="height: 0px;"></div>
-
-                        <div class="text-center font-bold text-[15px] mb-1 leading-snug">
-                            <h2>अर्जासोबत जोडावयाच्या स्वयंघोषणापत्र नमुना</h2>
-                            <h3 class="text-[14px]">(परिशिष्ट “ब”)</h3>
-                        </div>
-                      
-                        <div class="text-center text-[11px] leading-snug mb-1 text-slate-800 pb-2">
-                            <p>महाराष्ट्र शासनाच्या विमुक्त जाती/भटक्या जमाती/इतर मागासवर्गीय/विशेष मागास प्रवर्गातील अर्जदारांना आरक्षणाचा फायदा मिळण्याकरिता उत्पन्न व प्रगतव्यक्ती/गट (क्रिमिलियर) यामध्ये मोडत नसल्याबाबत सादर करावयाचे.</p>
-                        </div>
-                        <div class="text-center font-bold text-[15px] mb-1 leading-snug">
-                            <h3 class="text-center text-[14px]">स्वयंघोषणापत्र</h3>
-                        </div>
-
-                        <div class="text-center text-[11px] leading-snug mb-3 text-slate-800 border-b border-slate-300 pb-2">
-                            <p>केंद्र शासनाच्या इतर मागासप्रवर्गात मोडणाऱ्या अर्जदाराने आरक्षणाचा फायदा मिळवण्याकरिता उत्पन्न व प्रगत व्यक्ति गट (क्रिमिलियर) यामध्ये मोडत नसल्याबाबत सादर करावाच स्वयंघोषणापत्र</p>
-                        </div>
-                        
-                        <div class="text-justify text-[13px] leading-[1.8] space-y-3">
-                            <p class="indent-8">
-                                मी <span id="view-title" class="font-semibold">श्री.</span> <span id="view-applicant-name" class="font-bold px-1">योगेश शंकर पिंपळे</span> श्री. <span id="view-father-name" class="font-bold px-1">शंकर पिंपळे</span> <span id="view-relation" class="font-semibold">यांचा मुलगा</span>, वय: <span id="view-age" class="font-bold px-1">२५</span> वर्ष, व्यवसाय: <span id="view-occupation" class="font-bold px-1">शेतकरी</span>, रा.: <span id="view-residence" class="font-bold px-1">पाचोरा</span>, गाव/शहर: <span id="view-village" class="font-bold px-1">पाचोरा</span>, तहसील: <span id="view-taluka" class="font-bold px-1">पाचोरा</span>, जिल्हा: <span id="view-dist" class="font-bold px-1">जळगांव</span>, राज्य महाराष्ट्र येथील रहिवासी असून याद्वारे कथन करतो की मी <span id="view-caste" class="font-bold px-1">कुणबी</span> या जातीचा/जमातीचा असून ही जात/जमात केंद्र शासन मिनीस्ट्री ऑफ पर्सोनेल, पब्लिक गीव्हन्सेस डिपार्टमेंट ऑफ पर्सोनेल अँड ट्रेनिंग कडील कार्यालयीन ज्ञापक क्रमांक ३६०१२/२२/९३ इएसटीटी (एसटीटी) दिनांक ०८ सप्टेंबर १९९३ अन्वये सुधारित केल्याप्रमाणे तसेच केंद्र शासनाचे आणि राज्य शासनाचे या संदर्भात वेळोवेळी निर्गमित केलेल्या सूचने (NOTIFICATION) नुसार/शासन निर्णय नुसार शासन सेवेतील आरक्षणाच्या फायद्याकरिता इतर मागास प्रवर्गात गणल्या जाते. सदर जात/जमात राज्य शासनाने विहित केलेल्या मागासवर्गीयांच्या यादीमधील. <span id="view-category" class="font-bold px-1">इतर मागासवर्ग (OBC)</span> या प्रवर्गात मोडते.
-                            </p>
-
-                            <p class="indent-8">
-                                मी दृढपूर्वक असेही कथन करतो/करते की, केंद्र शासनाच्या क्रमांक ३६०१२/२२/९३ इएसटीटी (एससीटी) दिनांक ०८ सप्टेंबर १९९३ च्या कार्यालयीन/ज्ञापनासोबतच्या परिशिष्टातील स्तंभ क्रमांक. ३ मध्ये नमूद केलेल्या व कार्यालयीन ज्ञापन क्रमांक ३६०३३/५/२००४ इएसटीटी (आर.ई.एस) दिनांक १४ ऑक्टोबर २००४ कार्यालयीन ज्ञापक क्रमांक ३६०३३/५/२००४ इएसटीटी (आर.ई.एस) दिनांक १४ ऑक्टोबर २००८ अन्वये सुधारित केल्याप्रमाणे तसेच केंद्र शासनाचे आणि राज्य शासनाचे या संदर्भात वेळोवेळी निर्गमित केलेल्या सूचने (NOTIFICATION) नुसार/शासन निर्णय नुसार आरक्षणाच्या फायद्या करिता मी विमुक्त जाती/भटक्या जमाती/इतर मागासवर्ग/विशेष मागास प्रवर्गातील उत्पन्न व प्रगत व्यक्ति/गट (क्रिमिलियर) यामध्ये मी मोडत नाही.
-                            </p>
-
-                            <p class="indent-8">
-                                मी दृढपूर्वक असेही कथन करतो/करते की, माझ्या आई किंवा वडिलांचा किंवा आई आणि वडील या दोघांचाही दर्जा उत्पन्न हे ३१ मार्च २०२६ रोजी संपणाऱ्या आर्थिक वर्ष अखेरीस वेळोवेळी विहित केलेल्या अटी व शर्तीनुसार इतर मागासवर्ग प्रवर्गातील उत्पन्न व प्रगत व्यक्ति/गट (क्रिमिलियर) यांच्या करिता असलेल्या मर्यादेमध्ये मोडते. भारतीय न्याय संहिता २०२३ चे कलम २३६ व २३७ नुसार मी गुन्ह्यास पात्र राहील व कलम २२९ (२) याच्या तरतुदीनुसार माझ्यावर खटला भरला जाईल व मी शिक्षक पात्र राहील. 
-                            </p>
-                        </div>
-
-                        <div class="mt-8 flex justify-between items-end text-[13px]">
-                            <div class="space-y-1">
-                                <p><strong>स्थळ:</strong> <span id="view-place" class="font-bold">पाचोरा</span></p>
-                                <p><strong>दिनांक:</strong> <span id="view-date" class="font-bold">22/07/2026</span></p>
+                        <div>
+                            <div id="stamp-preview-zone" class="mb-3 hidden text-center border border-dashed border-transparent rounded overflow-hidden h-[200px]">
+                                <img id="stamp-img" src="" alt="Stamp" class="w-full h-[200px] object-contain">
                             </div>
-                            <div class="text-center min-w-[200px]">
-                                <br><br>
-                                <div class="border-t border-black pt-1">
-                                    <p class="font-bold">( <span id="view-footer-name">योगेश शंकर पिंपळे</span> )</p>
-                                    <p class="text-xs">स्वयंघोषणापत्र करून देणाऱ्याचे नाव व सही</p>
+
+                            <div id="dynamic-space-holder" style="height: 0px;"></div>
+
+                            <div class="text-center font-bold text-[15px] mb-1 leading-snug">
+                                <h2 class="text-[16px]">अर्जासोबत जोडावयाच्या स्वयंघोषणापत्र नमुना</h2>
+                                <h3 class="text-[14px]">(परिशिष्ट “ब”)</h3>
+                            </div>
+                          
+                            <div class="text-center text-[11px] leading-snug mb-1 text-slate-800 pb-1">
+                                <p>महाराष्ट्र शासनाच्या विमुक्त जाती/भटक्या जमाती/इतर मागासवर्गीय/विशेष मागास प्रवर्गातील अर्जदारांना आरक्षणाचा फायदा मिळण्याकरिता उत्पन्न व प्रगतव्यक्ती/गट (क्रिमिलियर) यामध्ये मोडत नसल्याबाबत सादर करावयाचे.</p>
+                            </div>
+                            <div class="text-center font-bold text-[15px] mb-1 leading-snug">
+                                <h3 class="text-center text-[14px]">स्वयंघोषणापत्र</h3>
+                            </div>
+
+                            <div class="text-center text-[11px] leading-snug mb-3 text-slate-800 border-b border-slate-300 pb-2">
+                                <p>केंद्र शासनाच्या इतर मागासप्रवर्गात मोडणाऱ्या अर्जदाराने आरक्षणाचा फायदा मिळवण्याकरिता उत्पन्न व प्रगत व्यक्ति गट (क्रिमिलियर) यामध्ये मोडत नसल्याबाबत सादर करावाच स्वयंघोषणापत्र</p>
+                            </div>
+                            
+                            <div class="text-justify text-[13px] leading-[1.85] space-y-3">
+                                <p class="indent-8">
+                                    मी <span id="view-title" class="font-semibold">श्री.</span> <span id="view-applicant-name" class="font-bold px-1">योगेश शंकर पिंपळे</span> श्री. <span id="view-father-name" class="font-bold px-1">शंकर पिंपळे</span> <span id="view-relation" class="font-semibold">यांचा मुलगा</span>, वय: <span id="view-age" class="font-bold px-1">२५</span> वर्ष, व्यवसाय: <span id="view-occupation" class="font-bold px-1">शेतकरी</span>, रा.: <span id="view-residence" class="font-bold px-1">पाचोरा</span>, गाव/शहर: <span id="view-village" class="font-bold px-1">पाचोरा</span>, तहसील: <span id="view-taluka" class="font-bold px-1">पाचोरा</span>, जिल्हा: <span id="view-dist" class="font-bold px-1">जळगांव</span>, राज्य महाराष्ट्र येथील रहिवासी असून याद्वारे कथन करतो की मी <span id="view-caste" class="font-bold px-1">कुणबी</span> या जातीचा/जमातीचा असून ही जात/जमात केंद्र शासन मिनीस्ट्री ऑफ पर्सोनेल, पब्लिक गीव्हन्सेस डिपार्टमेंट ऑफ पर्सोनेल अँड ट्रेनिंग कडील कार्यालयीन ज्ञापक क्रमांक ३६०१२/२२/९३ इएसटीटी (एसटीटी) दिनांक ०८ सप्टेंबर १९९३ अन्वये सुधारित केल्याप्रमाणे तसेच केंद्र शासनाचे आणि राज्य शासनाचे या संदर्भात वेळोवेळी निर्गमित केलेल्या सूचने (NOTIFICATION) नुसार/शासन निर्णय नुसार शासन सेवेतील आरक्षणाच्या फायद्याकरिता इतर मागास प्रवर्गात गणल्या जाते. सदर जात/जमात राज्य शासनाने विहित केलेल्या मागासवर्गीयांच्या यादीमधील. <span id="view-category" class="font-bold px-1">इतर मागासवर्ग (OBC)</span> या प्रवर्गात मोडते.
+                                </p>
+
+                                <p class="indent-8">
+                                    मी दृढपूर्वक असेही कथन करतो/करते की, केंद्र शासनाच्या क्रमांक ३६०१२/२२/९३ इएसटीटी (एससीटी) दिनांक ०८ सप्टेंबर १९९३ च्या कार्यालयीन/ज्ञापनासोबतच्या परिशिष्टातील स्तंभ क्रमांक. ३ मध्ये नमूद केलेल्या व कार्यालयीन ज्ञापन क्रमांक ३६०३३/५/२००४ इएसटीटी (आर.ई.एस) दिनांक १४ ऑक्टोबर २००४ कार्यालयीन ज्ञापक क्रमांक ३६०३३/५/२००४ इएसटीटी (आर.ई.एस) दिनांक १४ ऑक्टोबर २००८ अन्वये सुधारित केल्याप्रमाणे तसेच केंद्र शासनाचे आणि राज्य शासनाचे या संदर्भात वेळोवेळी निर्गमित केलेल्या सूचने (NOTIFICATION) नुसार/शासन निर्णय नुसार आरक्षणाच्या फायद्या करिता मी विमुक्त जाती/भटक्या जमाती/इतर मागासवर्ग/विशेष मागास प्रवर्गातील उत्पन्न व प्रगत व्यक्ति/गट (क्रिमिलियर) यामध्ये मी मोडत नाही.
+                                </p>
+
+                                <p class="indent-8">
+                                    मी दृढपूर्वक असेही कथन करतो/करते की, माझ्या आई किंवा वडिलांचा किंवा आई आणि वडील या दोघांचाही दर्जा उत्पन्न हे ३१ मार्च २०२६ रोजी संपणाऱ्या आर्थिक वर्ष अखेरीस वेळोवेळी विहित केलेल्या अटी व शर्तीनुसार इतर मागासवर्ग प्रवर्गातील उत्पन्न व प्रगत व्यक्ति/गट (क्रिमिलियर) यांच्या करिता असलेल्या मर्यादेमध्ये मोडते. भारतीय न्याय संहिता २०२३ चे कलम २३६ व २३७ नुसार मी गुन्ह्यास पात्र राहील व कलम २२९ (२) याच्या तरतुदीनुसार माझ्यावर खटला भरला जाईल व मी शिक्षक पात्र राहील. 
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="mt-6 pt-2">
+                            <div class="flex justify-between items-end text-[13px]">
+                                <div class="space-y-1">
+                                    <p><strong>स्थळ:</strong> <span id="view-place" class="font-bold">पाचोरा</span></p>
+                                    <p><strong>दिनांक:</strong> <span id="view-date" class="font-bold">22/07/2026</span></p>
+                                </div>
+                                <div class="text-center min-w-[200px]">
+                                    <br><br>
+                                    <div class="border-t border-black pt-1">
+                                        <p class="font-bold">( <span id="view-footer-name">योगेश शंकर पिंपळे</span> )</p>
+                                        <p class="text-xs">स्वयंघोषणापत्र करून देणाऱ्याचे नाव व सही</p>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
 
-                        <div class="border-t-2 border-dashed border-black my-4 pt-1 text-center text-xs font-semibold">
-                            (उमेदवाराने स्वतः साक्षरी न केलेले शपथपत्र/खुलासा रद्दबातल ठरविण्यात येईल)
-                        </div>
+                            <div class="border-t-2 border-dashed border-black my-3 pt-1 text-center text-xs font-semibold">
+                                (उमेदवाराने स्वतः साक्षरी न केलेले शपथपत्र/खुलासा रद्दबातल ठरविण्यात येईल)
+                            </div>
 
-                        <div class="text-justify text-[9px] leading-tight text-slate-700">
-                            <strong>(सूचना:</strong> सदरहू आरक्षणाचा फायदा हा तात्पुरता स्वरूपाचा असून तो उमेदवाराने जात प्रमाणपत्र/उत्पन्न व प्रगत गट व्यक्ति यामध्ये मोडत नसल्यासंदर्भात सादर केलेल्या कागदपत्रांचा/पुराव्याच्या पडताळणी संदर्भात विहित केलेल्या कार्यपद्धतीचा अधिन राहील. जर उमेदवाराने इतर मागासवर्गात मोडत असल्याबाबत किंवा उत्पन्न व प्रगत गट व्यक्ती यामध्ये मोडत नसल्यासंदर्भात संबंधित अर्जासोबत जोडलेली कागदपत्रे आणि पुरावे पडताळणी अंति खोटे अथवा बनावट आढळल्यास कोणतेही पूर्व सूचना किंवा कोणतीही कारणीमासा न देता त्या उमेदवारास देण्यात आलेल्या आरक्षण विषयक फायदा कायमस्वरूपी रद्द बाबत ठरविण्यात येईल. तसेच सदर प्रकरणी संबंधित उमेदवारास जबाबदार धरण्यात ईऊन खोटे अथवा बनावट कागदपत्रे पुरावे दाखल दाखल केल्याबद्दल त्याच्याविरुद्ध भारतीय दंड विधान कायद्यानुसार विहीर केलेली कारवाई करण्यात येईल.<strong>)</strong>
+                            <div class="text-justify text-[9.5px] leading-tight text-slate-700">
+                                <strong>(सूचना:</strong> सदरहू आरक्षणाचा फायदा हा तात्पुरता स्वरूपाचा असून तो उमेदवाराने जात प्रमाणपत्र/उत्पन्न व प्रगत गट व्यक्ति यामध्ये मोडत नसल्यासंदर्भात सादर केलेल्या कागदपत्रांचा/पुराव्याच्या पडताळणी संदर्भात विहित केलेल्या कार्यपद्धतीचा अधिन राहील. जर उमेदवाराने इतर मागासवर्गात मोडत असल्याबाबत किंवा उत्पन्न व प्रगत गट व्यक्ती यामध्ये मोडत नसल्यासंदर्भात संबंधित अर्जासोबत जोडलेली कागदपत्रे आणि पुरावे पडताळणी अंति खोटे अथवा बनावट आढळल्यास कोणतेही पूर्व सूचना किंवा कोणतीही कारणीमासा न देता त्या उमेदवारास देण्यात आलेल्या आरक्षण विषयक फायदा कायमस्वरूपी रद्द बाबत ठरविण्यात येईल. तसेच सदर प्रकरणी संबंधित उमेदवारास जबाबदार धरण्यात ईऊन खोटे अथवा बनावट कागदपत्रे पुरावे दाखल दाखल केल्याबद्दल त्याच्याविरुद्ध भारतीय दंड विधान कायद्यानुसार विहीर केलेली कारवाई करण्यात येईल.<strong>)</strong>
+                            </div>
                         </div>
 
                     </div>
@@ -632,7 +653,7 @@
             });
         });
 
-        /* PDF डाऊनलोड - Generate & Download Live A4 PDF */
+        /* PDF डाऊनलोड - Generate & Download Live Full-Page A4 PDF */
         function triggerPDFDownload() {
             const printArea = document.getElementById('print-area');
             if (!printArea) return;
@@ -640,18 +661,80 @@
             const applicant = (inputApplicantName.value || 'परिशिष्ट_ब').trim().replace(/[/\\?%*:|"<>]/g, '_');
             const filename = 'स्वयंघोषणापत्र_' + applicant + '.pdf';
 
-            const oldTransform = printArea.style.transform;
-            const oldTransition = printArea.style.transition;
-            printArea.style.transform = 'none';
-            printArea.style.transition = 'none';
+            // Create dedicated full-page A4 clone element (794px x 1120px at 96 DPI)
+            const clone = printArea.cloneNode(true);
+            clone.id = 'pdf-render-clone';
+            clone.style.width = '794px';
+            clone.style.maxWidth = '794px';
+            clone.style.minHeight = '1120px';
+            clone.style.height = '1120px';
+            clone.style.maxHeight = '1120px';
+            clone.style.boxSizing = 'border-box';
+            clone.style.padding = '30px 34px';
+            clone.style.margin = '0 auto';
+            clone.style.border = '2px solid #000000';
+            clone.style.borderRadius = '0';
+            clone.style.boxShadow = 'none';
+            clone.style.transform = 'none';
+            clone.style.background = '#ffffff';
+            clone.style.color = '#000000';
+            clone.style.display = 'flex';
+            clone.style.flexDirection = 'column';
+            clone.style.justifyContent = 'space-between';
+            clone.style.fontFamily = "'Noto Serif Devanagari', 'Noto Sans Devanagari', serif";
+
+            // Optimize typography for full A4 sheet
+            clone.querySelectorAll('h2').forEach(h => {
+                h.style.fontSize = '18px';
+                h.style.lineHeight = '1.35';
+                h.style.fontWeight = 'bold';
+                h.style.marginBottom = '2px';
+                h.style.textAlign = 'center';
+            });
+            clone.querySelectorAll('h3').forEach(h => {
+                h.style.fontSize = '15px';
+                h.style.lineHeight = '1.35';
+                h.style.fontWeight = 'bold';
+                h.style.marginBottom = '2px';
+                h.style.textAlign = 'center';
+            });
+            clone.querySelectorAll('.text-slate-800').forEach(n => {
+                n.style.fontSize = '11.5px';
+                n.style.lineHeight = '1.45';
+                n.style.textAlign = 'center';
+            });
+            clone.querySelectorAll('.text-justify').forEach(div => {
+                div.style.fontSize = '14px';
+                div.style.lineHeight = '1.92';
+                div.style.textAlign = 'justify';
+            });
+            clone.querySelectorAll('.text-justify p').forEach(p => {
+                p.style.fontSize = '14px';
+                p.style.lineHeight = '1.92';
+                p.style.marginBottom = '12px';
+                p.style.textAlign = 'justify';
+            });
+
+            const wrapper = document.createElement('div');
+            wrapper.style.position = 'fixed';
+            wrapper.style.left = '-9999px';
+            wrapper.style.top = '0';
+            wrapper.style.width = '794px';
+            wrapper.style.zIndex = '-9999';
+            wrapper.style.background = '#ffffff';
+            wrapper.appendChild(clone);
+            document.body.appendChild(wrapper);
 
             const opt = {
-                margin: [4, 6, 4, 6],
+                margin: [0, 0, 0, 0],
                 filename: filename,
                 image: { type: 'jpeg', quality: 0.98 },
                 html2canvas: {
                     scale: 2,
                     useCORS: true,
+                    width: 794,
+                    height: 1120,
+                    windowWidth: 794,
                     scrollX: 0,
                     scrollY: 0,
                     logging: false
@@ -660,18 +743,15 @@
             };
 
             if (window.html2pdf) {
-                window.html2pdf().set(opt).from(printArea).save().then(() => {
-                    printArea.style.transform = oldTransform;
-                    printArea.style.transition = oldTransition;
+                window.html2pdf().set(opt).from(clone).save().then(() => {
+                    wrapper.remove();
                 }).catch(function(err) {
                     console.error('PDF error:', err);
-                    printArea.style.transform = oldTransform;
-                    printArea.style.transition = oldTransition;
+                    wrapper.remove();
                     triggerPrint();
                 });
             } else {
-                printArea.style.transform = oldTransform;
-                printArea.style.transition = oldTransition;
+                wrapper.remove();
                 triggerPrint();
             }
         }
@@ -1005,60 +1085,72 @@
 '    <style>\n' +
 '        @page {\n' +
 '            size: A4 portrait;\n' +
-'            margin: 8mm 10mm;\n' +
+'            margin: 8mm 8mm 8mm 8mm;\n' +
 '        }\n' +
 '        * {\n' +
 '            box-sizing: border-box;\n' +
 '            font-family: "Noto Serif Devanagari", "Noto Sans Devanagari", serif !important;\n' +
 '        }\n' +
 '        html, body {\n' +
-'            margin: 0;\n' +
-'            padding: 0;\n' +
+'            margin: 0 !important;\n' +
+'            padding: 0 !important;\n' +
 '            background: #ffffff !important;\n' +
 '            color: #000000 !important;\n' +
-'            width: 100%;\n' +
+'            width: 100% !important;\n' +
+'            height: 100% !important;\n' +
 '            -webkit-print-color-adjust: exact !important;\n' +
 '            print-color-adjust: exact !important;\n' +
 '        }\n' +
 '        #print-area {\n' +
 '            width: 100% !important;\n' +
 '            max-width: 100% !important;\n' +
+'            height: 278mm !important;\n' +
+'            min-height: 278mm !important;\n' +
+'            max-height: 278mm !important;\n' +
 '            margin: 0 auto !important;\n' +
 '            border: 2px solid #000000 !important;\n' +
 '            box-shadow: none !important;\n' +
 '            border-radius: 0 !important;\n' +
-'            padding: 24px 28px !important;\n' +
+'            padding: 26px 30px !important;\n' +
 '            background: #ffffff !important;\n' +
 '            color: #000000 !important;\n' +
-'            font-size: 13px !important;\n' +
-'            line-height: 1.75 !important;\n' +
+'            display: flex !important;\n' +
+'            flex-direction: column !important;\n' +
+'            justify-content: space-between !important;\n' +
 '            page-break-inside: avoid !important;\n' +
 '            break-inside: avoid !important;\n' +
 '        }\n' +
 '        #print-area h2 {\n' +
-'            font-size: 16px !important;\n' +
-'            line-height: 1.3 !important;\n' +
+'            font-size: 17.5px !important;\n' +
+'            line-height: 1.35 !important;\n' +
 '            margin-bottom: 2px !important;\n' +
+'            font-weight: bold !important;\n' +
+'            text-align: center !important;\n' +
 '        }\n' +
 '        #print-area h3 {\n' +
-'            font-size: 14.5px !important;\n' +
-'            line-height: 1.3 !important;\n' +
+'            font-size: 15px !important;\n' +
+'            line-height: 1.35 !important;\n' +
 '            margin-bottom: 2px !important;\n' +
+'            font-weight: bold !important;\n' +
+'            text-align: center !important;\n' +
+'        }\n' +
+'        #print-area .text-slate-800 {\n' +
+'            font-size: 11.5px !important;\n' +
+'            line-height: 1.45 !important;\n' +
+'            text-align: center !important;\n' +
 '        }\n' +
 '        #print-area .text-justify {\n' +
-'            font-size: 13px !important;\n' +
-'            line-height: 1.75 !important;\n' +
+'            font-size: 14px !important;\n' +
+'            line-height: 1.92 !important;\n' +
+'            text-align: justify !important;\n' +
+'            text-justify: inter-word !important;\n' +
 '        }\n' +
-'        #print-area .space-y-3 > :not([hidden]) ~ :not([hidden]) {\n' +
-'            margin-top: 8px !important;\n' +
-'            margin-bottom: 0 !important;\n' +
-'        }\n' +
-'        #print-area .mt-8 {\n' +
-'            margin-top: 20px !important;\n' +
-'        }\n' +
-'        #print-area .my-4 {\n' +
-'            margin-top: 8px !important;\n' +
-'            margin-bottom: 8px !important;\n' +
+'        #print-area .text-justify p {\n' +
+'            font-size: 14px !important;\n' +
+'            line-height: 1.92 !important;\n' +
+'            margin-bottom: 12px !important;\n' +
+'            text-align: justify !important;\n' +
+'            text-justify: inter-word !important;\n' +
 '        }\n' +
 '        #stamp-preview-zone.hidden {\n' +
 '            display: none !important;\n' +
