@@ -1,0 +1,1051 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <link rel="canonical" href="https://www.ikprinthub.in/finopassbook.html">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fino Payments Bank Passbook Print Generator - Free CSP Tool | IK Print Hub</title>
+    <meta name="title" content="Fino Payments Bank Passbook Print Generator - Free CSP Tool | IK Print Hub">
+    <meta name="description" content="Generate & print Fino Payments Bank passbooks online for CSP agents with IK Print Hub. HD front cover formatting, custom customer account details, IFSC code & logo options.">
+    
+    <!-- Google Fonts for bilingual text & UI -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Hind:wght@400;500;600;700&family=Noto+Sans:wght@400;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome for UI Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            --fino-red: #E21D24;
+            --fino-navy: #2e1065; 
+            --bg-gradient: linear-gradient(135deg, #130628 0%, #2e1065 50%, #1e1b4b 100%);
+            --card-bg: rgba(46, 16, 101, 0.4);
+            --card-border: rgba(168, 85, 247, 0.2);
+            --text-primary: #ffffff;
+            --text-secondary: #d8b4fe;
+            --input-bg: rgba(15, 5, 35, 0.4);
+            --input-border: rgba(168, 85, 247, 0.3);
+            --input-focus: #E21D24;
+        }
+
+        body {
+            font-family: 'Poppins', 'Noto Sans', sans-serif;
+            background: var(--bg-gradient);
+            color: var(--text-primary);
+            margin: 0;
+            padding: 0;
+            height: 100vh !important;
+            max-height: 100vh !important;
+            overflow: hidden !important;
+        }
+
+        .workspace-container {
+            display: flex;
+            width: 100%;
+            height: 100vh !important;
+            max-height: 100vh !important;
+            overflow: hidden !important;
+            position: relative;
+        }
+
+        .form-panel {
+            width: 460px;
+            background: var(--card-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-right: 1px solid var(--card-border);
+            padding: 12px 15px;
+            box-sizing: border-box;
+            overflow-y: auto !important;
+            overflow-x: hidden;
+            height: 100% !important;
+            max-height: 100% !important;
+            flex-shrink: 0;
+            z-index: 10;
+        }
+
+        .preview-panel {
+            flex-grow: 1;
+            overflow-y: auto !important;
+            height: 100% !important;
+            max-height: 100% !important;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 10px;
+            box-sizing: border-box;
+            position: relative;
+        }
+
+        .form-header {
+            text-align: center;
+            margin-bottom: 10px;
+            border-bottom: 1px solid rgba(168, 85, 247, 0.2);
+            padding-bottom: 6px;
+        }
+
+        .form-header img {
+            width: 32px;
+            height: 32px;
+            object-fit: contain;
+            margin-bottom: 4px;
+        }
+
+        .form-header h2 {
+            margin: 4px 0 0 0;
+            font-size: 20px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #ffffff 0%, #e9d5ff 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .form-header p {
+            margin: 4px 0 0 0;
+            font-size: 11px;
+            color: var(--text-secondary);
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px 10px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .form-group label {
+            font-size: 11px;
+            font-weight: 500;
+            color: #f3e8ff;
+            margin-bottom: 2px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .form-group label i {
+            color: var(--fino-red);
+            font-size: 11px;
+        }
+
+        .form-group input, .form-group textarea, .form-group select {
+            background: var(--input-bg);
+            border: 1px solid var(--input-border);
+            border-radius: 6px;
+            padding: 6px 10px;
+            font-size: 12px;
+            color: #ffffff;
+            font-family: inherit;
+            transition: all 0.3s ease;
+            box-sizing: border-box;
+        }
+
+        .form-group input:focus, .form-group textarea:focus, .form-group select:focus {
+            outline: none;
+            border-color: var(--input-focus);
+            box-shadow: 0 0 0 2px rgba(226, 29, 36, 0.3);
+            background: rgba(30, 10, 60, 0.6);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 50px;
+        }
+
+        .form-group select option {
+            background: #2e1065;
+            color: white;
+        }
+
+        .btn-row {
+            grid-column: 1 / -1;
+            margin-top: 15px;
+        }
+
+        .btn-secondary {
+            width: 100%;
+            background: rgba(168, 85, 247, 0.1);
+            border: 1px solid rgba(168, 85, 247, 0.3);
+            border-radius: 6px;
+            padding: 10px;
+            color: #f3e8ff;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(168, 85, 247, 0.25);
+            color: white;
+        }
+
+        /* Control Panel */
+        .control-panel {
+            position: sticky;
+            top: 0;
+            width: 100%;
+            background: #3b0764;
+            border-bottom: 2px solid var(--fino-red);
+            padding: 8px 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            z-index: 1000;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+            box-sizing: border-box;
+        }
+
+        .control-panel .tip-box {
+            font-size: 12px;
+            color: #f3e8ff;
+            background: rgba(168, 85, 247, 0.15);
+            padding: 4px 12px;
+            border-radius: 20px;
+            border: 1px dashed rgba(168, 85, 247, 0.4);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .control-panel .tip-box i {
+            color: #fde047;
+        }
+
+        .btn-ctrl {
+            padding: 6px 14px;
+            font-size: 13px;
+            font-weight: 600;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            text-decoration: none;
+        }
+
+        .btn-ctrl-print {
+            background: var(--fino-red);
+            color: white;
+            box-shadow: 0 2px 8px rgba(226, 29, 36, 0.4);
+        }
+
+        .btn-ctrl-print:hover {
+            background: #ff2a31;
+        }
+
+        /* --- PASSBOOK CONTAINER WITH INCREASED ZOOM (0.84) --- */
+        .passbook-container {
+            width: 207mm;
+            height: 172mm;
+            background: white;
+            box-sizing: border-box;
+            padding: 4.2mm 6.4mm;
+            margin: 10px auto;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+            color: #000000;
+            overflow: hidden;
+            zoom: 0.84;
+        }
+
+        /* Fold Guideline Split */
+        .fold-divider {
+            width: 100%;
+            height: 1px;
+            border-top: 1px dashed #cccccc;
+            margin: 3px 0;
+            position: relative;
+        }
+
+        .fold-divider::after {
+            content: 'FOLD HERE';
+            position: absolute;
+            right: 10px;
+            top: -6px;
+            background: white;
+            padding: 0 6px;
+            font-size: 7px;
+            color: #999999;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+
+        /* --- TOP HALF --- */
+        .passbook-top {
+            height: 81mm;
+            position: relative;
+            box-sizing: border-box;
+            background: #ffffff;
+        }
+
+        .top-banner {
+            width: 100%;
+            background: linear-gradient(90deg, #4A60D4 0%, #7F5AD4 100%);
+            color: #ffffff;
+            text-align: center;
+            font-size: 9.5px;
+            font-weight: bold;
+            padding: 4px 8px;
+            border-radius: 3px;
+            box-sizing: border-box;
+            line-height: 1.2;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .top-content {
+            display: flex;
+            margin-top: 5px;
+            position: relative;
+            height: 58mm;
+        }
+
+        .pills-column {
+            width: 114mm;
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            z-index: 2;
+        }
+
+        .service-pill {
+            width: 109mm;
+            height: 10mm;
+            border-radius: 5mm;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 4px 0 10px;
+            box-sizing: border-box;
+        }
+
+        .service-pill .pill-text {
+            font-size: 8px;
+            line-height: 1.15;
+            font-weight: 600;
+            text-align: left;
+            flex: 1;
+            padding-right: 4px;
+        }
+
+        .service-pill .pill-icon-circle {
+            width: 8.5mm;
+            height: 8.5mm;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .pill-orange { background: linear-gradient(90deg, #FF9900 0%, #FF5A00 100%); }
+        .pill-blue { background: linear-gradient(90deg, #0088CC 0%, #0044AA 100%); }
+        .pill-red { background: linear-gradient(90deg, #FF4444 0%, #CC0000 100%); }
+        .pill-green { background: linear-gradient(90deg, #00AA55 0%, #007733 100%); }
+        .pill-purple { background: linear-gradient(90deg, #AA00AA 0%, #660066 100%); }
+
+        .pill-icon-circle svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        .center-ring-logo {
+            position: absolute;
+            left: 110mm;
+            top: 15mm;
+            width: 27mm;
+            height: 27mm;
+            z-index: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .dotted-ring-bg {
+            position: absolute;
+            border: 1px dashed #b2b2b2;
+            border-radius: 50%;
+            pointer-events: none;
+        }
+        .ring-inner { width: 28mm; height: 28mm; }
+        .ring-outer { width: 36mm; height: 36mm; }
+
+        .fino-pay-badge {
+            width: 25mm;
+            height: 25mm;
+            background: radial-gradient(circle, #252e6c 0%, #0f143c 100%);
+            border: 2px solid #ffffff;
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 3;
+            color: white;
+            text-align: center;
+            overflow: hidden;
+            padding-top: 2px;
+        }
+
+        .fino-pay-badge img {
+            width: 9.5mm;
+            height: 9.5mm;
+            object-fit: contain;
+            margin-bottom: -1px;
+        }
+
+        .badge-text-row {
+            font-family: 'Poppins', Arial, sans-serif;
+            font-size: 5.5px;
+            font-weight: 800;
+            line-height: 1;
+            letter-spacing: -0.2px;
+        }
+        .badge-text-row span:nth-child(1) { color: #ffffff; }
+        .badge-text-row span:nth-child(2) { color: #38bdf8; }
+
+        .phone-wrapper {
+            position: absolute;
+            right: 1mm;
+            top: 1mm;
+            width: 29mm;
+            height: 57mm;
+            background: #000000;
+            border-radius: 3mm;
+            padding: 1mm;
+            box-sizing: border-box;
+            z-index: 2;
+        }
+
+        .photo-paste-box {
+            position: absolute;
+            left: 139.5mm;
+            top: 15mm;
+            width: 21mm;
+            height: 27mm;
+            border: 1.2px dashed #444444;
+            border-radius: 4px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 3px;
+            z-index: 2;
+            box-sizing: border-box;
+        }
+
+        .photo-paste-box i {
+            font-size: 13px;
+            color: #555555;
+        }
+        .photo-paste-box span {
+            font-size: 6.5px;
+            font-weight: 700;
+            color: #444444;
+            text-transform: uppercase;
+            text-align: center;
+        }
+
+        .phone-screen {
+            width: 100%;
+            height: 100%;
+            background: #ffffff;
+            border-radius: 2.5mm;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            font-family: Arial, sans-serif;
+        }
+
+        .phone-status-bar {
+            height: 3mm;
+            background: #eeeeee;
+            padding: 0 2mm;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 5.5px;
+            color: #555555;
+            font-weight: bold;
+        }
+
+        .phone-app-content {
+            flex: 1;
+            background: #fdfdfd;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .phone-app-header {
+            background: #E21D24;
+            color: white;
+            padding: 4px 3px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .phone-app-header .app-version {
+            font-size: 4.5px;
+            align-self: flex-start;
+            opacity: 0.8;
+            margin-bottom: 1px;
+        }
+
+        .phone-app-header .app-title-group {
+            display: flex;
+            align-items: center;
+            gap: 2.5px;
+        }
+
+        .phone-app-header .app-title-logo {
+            width: 8.5px;
+            height: 8.5px;
+            object-fit: contain;
+        }
+
+        .phone-app-header .app-title-fino { font-size: 9px; font-weight: 800; line-height: 1; }
+        .phone-app-header .app-title-pay { font-size: 11px; font-weight: 900; line-height: 1; }
+        .phone-app-header .app-welcome-text { font-size: 5.5px; margin-top: 2px; font-weight: 500; }
+
+        .phone-app-body {
+            flex: 1;
+            padding: 8px 5px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .phone-biometric-btn {
+            border: 1px solid #d1d5db;
+            border-radius: 3px;
+            padding: 3px 5px;
+            font-size: 6.5px;
+            color: #4b5563;
+            font-weight: bold;
+            width: 85%;
+            text-align: center;
+            background: #f9fafb;
+        }
+
+        .phone-mpin-prompt { font-size: 7px; color: #374151; font-weight: bold; text-align: center; }
+        .phone-mpin-links { display: flex; justify-content: space-between; width: 90%; font-size: 5.5px; color: #1F285F; font-weight: bold; text-decoration: underline; }
+
+        .phone-app-footer {
+            border-top: 1px solid #e5e7eb;
+            padding: 3px 0;
+            display: flex;
+            justify-content: space-around;
+            background: #f9fafb;
+        }
+
+        .phone-footer-item { display: flex; flex-direction: column; align-items: center; font-size: 4.5px; color: #4b5563; font-weight: bold; }
+        .phone-footer-item i { font-size: 6px; color: var(--fino-red); margin-bottom: 1px; }
+
+        .phone-bottom-note {
+            background: var(--fino-red);
+            color: white;
+            font-size: 3.5px;
+            padding: 2px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .top-bottom-bar {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            border-top: 1px solid #c2c2c2;
+            padding-top: 3.5px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .top-bottom-left { width: 82mm; font-size: 7.5px; font-weight: bold; line-height: 1.25; color: #333333; }
+        .top-bottom-center { width: 18mm; display: flex; justify-content: center; }
+        .top-bottom-right { width: 82mm; font-size: 7.2px; font-weight: bold; line-height: 1.25; text-align: right; color: #333333; }
+
+        /* --- BOTTOM HALF --- */
+        .passbook-bottom {
+            height: 77mm;
+            position: relative;
+            box-sizing: border-box;
+            padding-top: 3.5px;
+            background: #ffffff;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .details-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1.5px solid #000000;
+            padding-bottom: 3.5px;
+            margin-bottom: 5px;
+            z-index: 1;
+            position: relative;
+        }
+
+        .details-header-left { display: flex; align-items: center; gap: 6px; }
+        .fino-bank-logo-text { margin-left: 2px; font-family: Arial, sans-serif; line-height: 1.1; }
+        .logo-row1 { font-size: 17px; font-weight: bold; color: #000000; }
+        .logo-row1 span { color: var(--fino-red); }
+        .logo-row2 { font-size: 10px; font-weight: bold; color: #000000; margin-top: 1px; }
+
+        .details-header-center {
+            font-family: 'Poppins', Arial, sans-serif;
+            font-size: 13px;
+            font-weight: 800;
+            color: #000000;
+            text-align: right;
+            padding-right: 4px;
+        }
+
+        .details-grid {
+            display: flex;
+            justify-content: space-between;
+            z-index: 1;
+            position: relative;
+            flex: 1;
+        }
+
+        .details-col-left { width: 114mm; display: flex; flex-direction: column; gap: 3.5px; }
+        .details-col-right { width: 80mm; display: flex; flex-direction: column; gap: 3.5px; padding-left: 4px; }
+
+        .details-row {
+            display: flex;
+            align-items: flex-start;
+            font-family: Arial, sans-serif;
+            font-size: 11px;
+            line-height: 1.2;
+        }
+
+        .row-label { font-weight: bold; color: #000000; width: 44mm; flex-shrink: 0; text-align: left; }
+        .details-col-right .row-label { width: 34mm; }
+
+        .row-value-container { display: flex; align-items: flex-start; flex-grow: 1; }
+        .colon-symbol { font-weight: bold; margin-right: 6px; flex-shrink: 0; }
+        .row-value { font-weight: bold; color: #222222; word-break: break-word; flex-grow: 1; min-height: 15px; outline: none; }
+
+        .details-footer {
+            border-top: 1px solid #000000;
+            padding-top: 4px;
+            margin-top: 4px;
+            font-family: Arial, sans-serif;
+            font-size: 7.8px;
+            line-height: 1.25;
+            color: #222222;
+            z-index: 1;
+            position: relative;
+        }
+
+        .footer-note-p { margin: 0 0 3px 0; text-align: justify; }
+
+        @media print {
+            body { 
+                background: white !important; 
+                color: black !important; 
+                overflow: visible !important; 
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+            .form-panel, .control-panel { display: none !important; }
+            .workspace-container { display: block !important; height: auto !important; overflow: visible !important; }
+            .preview-panel { padding: 0 !important; height: auto !important; background: white !important; }
+            .passbook-container { 
+                box-shadow: none !important; 
+                border: none !important; 
+                margin: 0 auto !important; 
+                width: 207mm !important; 
+                height: 172mm !important; 
+                zoom: 1 !important; 
+                page-break-after: avoid !important; 
+                page-break-inside: avoid !important; 
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="workspace-container">
+        <!-- Left Side: Input Form Sidebar -->
+        <div class="form-panel">
+            <div class="form-header">
+                <img src="https://cdn.jsdelivr.net/gh/suyomsvlemitra/AI-Images@Suyoms-images/FINO.webp" alt="Fino Logo">
+                <h2>Fino Passbook Maker</h2>
+                <p>Generate professional Fino digital passbooks</p>
+            </div>
+
+            <div class="form-grid">
+                <div class="form-group">
+                    <label><i class="fa-solid fa-building-columns"></i> Branch IFSC Code</label>
+                    <input type="text" id="in-ifsc" value="FINO0009112">
+                </div>
+                <div class="form-group">
+                    <label><i class="fa-solid fa-house-chimney"></i> Branch Name</label>
+                    <input type="text" id="in-branch" value="Pachora">
+                </div>
+                <div class="form-group">
+                    <label><i class="fa-solid fa-id-card-clip"></i> CIF Number</label>
+                    <input type="text" id="in-cif" value="482910356">
+                </div>
+                <div class="form-group">
+                    <label><i class="fa-solid fa-hashtag"></i> Account Number</label>
+                    <input type="text" id="in-account" value="912012345678">
+                </div>
+                <div class="form-group full-width">
+                    <label><i class="fa-solid fa-user"></i> Customer Name</label>
+                    <input type="text" id="in-name" value="RAHUL DNYANESHWAR PATIL">
+                </div>
+                <div class="form-group">
+                    <label><i class="fa-solid fa-phone"></i> Mobile Number</label>
+                    <input type="text" id="in-mobile" value="9850123456">
+                </div>
+                <div class="form-group">
+                    <label><i class="fa-solid fa-calendar-day"></i> Issue Date</label>
+                    <input type="text" id="in-date" value="">
+                </div>
+                <div class="form-group full-width">
+                    <label><i class="fa-solid fa-location-dot"></i> Communication Address</label>
+                    <textarea id="in-address" rows="2">At Post Pachora, Ganesh Colony,
+Near Bus Stand, Taluka Pachora,
+Jalgaon, Maharashtra, 424201</textarea>
+                </div>
+                <div class="form-group">
+                    <label><i class="fa-solid fa-users"></i> Nomination Status</label>
+                    <select id="in-nomination">
+                        <option value="Not Registered">Not Registered</option>
+                        <option value="Registered" selected>Registered</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label><i class="fa-solid fa-handshake"></i> Mode Of Operation</label>
+                    <input type="text" id="in-mode" value="SELF">
+                </div>
+                <div class="form-group">
+                    <label><i class="fa-solid fa-wallet"></i> Account Type</label>
+                    <select id="in-type">
+                        <option value="Savings Account" selected>Savings Account</option>
+                        <option value="Current Account">Current Account</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label><i class="fa-solid fa-tags"></i> Account Variant</label>
+                    <select id="in-variant">
+                        <option value="Gati Savings Account" selected>Gati Savings Account</option>
+                        <option value="Shubh Savings Account">Shubh Savings Account</option>
+                        <option value="Jan Saving Account">Jan Saving Account</option>
+                    </select>
+                </div>
+
+                <div class="btn-row">
+                    <button class="btn-secondary" type="button" onclick="loadSampleData()">
+                        <i class="fa-solid fa-rotate-left"></i> Reset Sample Data
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Side: Preview Display Panel -->
+        <div class="preview-panel" id="passbook-view">
+            <div class="control-panel">
+                <div class="tip-box">
+                    <i class="fa-solid fa-circle-info"></i>
+                    <span>Values update in real-time. You can also edit any text directly on the passbook page!</span>
+                </div>
+                <button class="btn-ctrl btn-ctrl-print" onclick="window.print()">
+                    <i class="fa-solid fa-print"></i> Print Passbook
+                </button>
+            </div>
+
+            <!-- The Passbook Document -->
+            <div class="passbook-container">
+                <!-- TOP HALF -->
+                <div class="passbook-top">
+                    <div class="top-banner" contenteditable="true">
+                        Download FinoPay application to enjoy the below list of offering digitally anywhere anytime.
+                    </div>
+
+                    <div class="top-content">
+                        <div class="pills-column">
+                            <div class="service-pill pill-orange">
+                                <div class="pill-text" contenteditable="true">UPI का उपयोग करके पैसे भेजें<br>Send Money using UPI</div>
+                                <div class="pill-icon-circle">
+                                    <svg viewBox="0 0 24 24" width="14" height="14"><path fill="#FF7700" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 14h-2v-2h2v2zm0-4h-2V7h2v5z"/></svg>
+                                </div>
+                            </div>
+                            <div class="service-pill pill-blue">
+                                <div class="pill-text" contenteditable="true">IMPS के माध्यम से मनी ट्रांसफर<br>Money Transfer through IMPS</div>
+                                <div class="pill-icon-circle">
+                                    <svg viewBox="0 0 24 24" width="14" height="14"><path fill="#0066CC" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm4 0h-2V8h2v8z"/></svg>
+                                </div>
+                            </div>
+                            <div class="service-pill pill-red">
+                                <div class="pill-text" contenteditable="true">FinoPay ऐप के माध्यम से उधार वापसी, बिल भुगतान और रिचार्ज करें<br>Loan Repayment, Bill Payment & Recharge through FinoPay App</div>
+                                <div class="pill-icon-circle">
+                                    <svg viewBox="0 0 24 24" width="14" height="14"><path fill="#CC0000" d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
+                                </div>
+                            </div>
+                            <div class="service-pill pill-green">
+                                <div class="pill-text" contenteditable="true">24x7 पहुंच ट्रांजेक्शन इतिहास और बयान तक<br>24x7 access to transaction history and statement</div>
+                                <div class="pill-icon-circle">
+                                    <svg viewBox="0 0 24 24" width="14" height="14"><path fill="#008000" d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/></svg>
+                                </div>
+                            </div>
+                            <div class="service-pill pill-purple">
+                                <div class="pill-text" contenteditable="true">अपना खाता और डेबिट कार्ड कभी भी कहीं भी प्रबंधित करें<br>Manage your account and debit card anytime anywhere</div>
+                                <div class="pill-icon-circle">
+                                    <svg viewBox="0 0 24 24" width="14" height="14"><path fill="#800080" d="M20 4H4c-1.11 0-1.99.89-1.99 2L2 18c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V6c0-1.11-.89-2-2-2zm0 14H4v-6h16v6zm0-10H4V6h16v2z"/></svg>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- सेंटर रिंगमधील लोगो आणि 'fino pay' नाव -->
+                        <div class="center-ring-logo">
+                            <div class="dotted-ring-bg ring-inner"></div>
+                            <div class="dotted-ring-bg ring-outer"></div>
+                            <div class="fino-pay-badge">
+                                <img src="https://cdn.jsdelivr.net/gh/suyomsvlemitra/AI-Images@Suyoms-images/FINO.webp" alt="Fino Logo">
+                                <div class="badge-text-row">
+                                    <span>fino</span><span>pay</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="phone-wrapper">
+                            <div class="phone-screen">
+                                <div class="phone-status-bar">
+                                    <span>09:41</span>
+                                    <div>
+                                        <i class="fa-solid fa-signal" style="margin-right:2px;"></i>
+                                        <i class="fa-solid fa-wifi" style="margin-right:2px;"></i>
+                                        <i class="fa-solid fa-battery-three-quarters"></i>
+                                    </div>
+                                </div>
+                                <div class="phone-app-content">
+                                    <div class="phone-app-header">
+                                        <div class="app-version">App Version 3.7.1</div>
+                                        <div class="app-title-group">
+                                            <img src="https://cdn.jsdelivr.net/gh/suyomsvlemitra/AI-Images@Suyoms-images/FINO.webp" alt="Fino Logo" class="app-title-logo">
+                                            <span class="app-title-fino">Fino</span>
+                                            <span class="app-title-pay">pay</span>
+                                        </div>
+                                        <div class="app-welcome-text" id="phone-welcome-name">Welcome, RAHUL DNYANESHWAR PATIL</div>
+                                    </div>
+                                    <div class="phone-app-body">
+                                        <div class="phone-biometric-btn"><i class="fa-solid fa-fingerprint" style="margin-right:3px;"></i>Enable Biometric</div>
+                                        <div>
+                                            <div class="phone-mpin-prompt">Enter 4 Digit Login MPIN</div>
+                                            <div style="display:flex; gap:3px; justify-content:center; margin-top:4px;">
+                                                <div style="width:10px; height:10px; border:1px solid #ccc; border-radius:2px;"></div>
+                                                <div style="width:10px; height:10px; border:1px solid #ccc; border-radius:2px;"></div>
+                                                <div style="width:10px; height:10px; border:1px solid #ccc; border-radius:2px;"></div>
+                                                <div style="width:10px; height:10px; border:1px solid #ccc; border-radius:2px;"></div>
+                                            </div>
+                                        </div>
+                                        <div class="phone-mpin-links"><span>Forgot MPIN?</span><span>Register/Bind</span></div>
+                                        <div style="width:100%;">
+                                            <div class="phone-app-footer">
+                                                <div class="phone-footer-item"><i class="fa-solid fa-qrcode"></i><span>Scan & Pay</span></div>
+                                                <div class="phone-footer-item"><i class="fa-solid fa-paper-plane"></i><span>Send Money</span></div>
+                                                <div class="phone-footer-item"><i class="fa-solid fa-user-plus"></i><span>Digital A/C</span></div>
+                                            </div>
+                                            <div class="phone-bottom-note">BIOMETRIC LOGIN SECURED</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="photo-paste-box">
+                            <i class="fa-solid fa-camera"></i>
+                            <span>Paste Photo<br>Here</span>
+                        </div>
+                    </div>
+
+                    <div class="top-bottom-bar">
+                        <div class="top-bottom-left" contenteditable="true">Download now. Visit Google Playstore and type FinoPay or scan the QR on the right.</div>
+                        <div class="top-bottom-center">
+                            <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://bit.ly/30zCKlU" alt="QR Code" style="width: 52px; height: 52px; display: block; border: none;">
+                        </div>
+                        <div class="top-bottom-right" contenteditable="true">Reach us on Email ID: customercare@finobank.com for<br>any query and assistance.</div>
+                    </div>
+                </div>
+
+                <!-- FOLD GUIDE DASHED LINE -->
+                <div class="fold-divider"></div>
+
+                <!-- BOTTOM HALF -->
+                <div class="passbook-bottom">
+                    <div>
+                        <div class="details-header">
+                            <div class="details-header-left">
+                                <img src="https://cdn.jsdelivr.net/gh/suyomsvlemitra/AI-Images@Suyoms-images/FINO.webp" alt="Fino Logo" style="width: 32px; height: 32px; object-fit: contain; border-radius: 4px;">
+                                <div class="fino-bank-logo-text">
+                                    <div class="logo-row1">Fino<span>|</span><span style="font-size:13px; font-weight:normal; color:#000000; margin-left:3px; vertical-align:middle;">Payments Bank</span></div>
+                                    <div class="logo-row2">फिनो पेमेंट्स बैंक</div>
+                                </div>
+                            </div>
+                            <div class="details-header-center">खाता विवरण ACCOUNT DETAILS</div>
+                        </div>
+
+                        <div class="details-grid">
+                            <div class="details-col-left">
+                                <div class="details-row">
+                                    <div class="row-label">Customer Branch IFSC Code</div>
+                                    <div class="row-value-container" style="display: flex; align-items: flex-start; justify-content: space-width; width: 100%;">
+                                        <div style="display: flex; align-items: flex-start;">
+                                            <div class="colon-symbol">:</div>
+                                            <div class="row-value" id="out-ifsc" contenteditable="true"></div>
+                                        </div>
+                                        <div style="font-weight: bold; color: #000000; font-family: Arial, sans-serif; display: flex; align-items: flex-start; white-space: nowrap; margin-left: 15px;">
+                                            <span>Branch :&nbsp;</span>
+                                            <span id="out-branch" contenteditable="true" style="text-transform: uppercase; outline: none;">PACHORA</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="details-row">
+                                    <div class="row-label">Customer Identification Number</div>
+                                    <div class="row-value-container"><div class="colon-symbol">:</div><div class="row-value" id="out-cif" contenteditable="true"></div></div>
+                                </div>
+
+                                <div class="details-row">
+                                    <div class="row-label">Customer Account Number</div>
+                                    <div class="row-value-container"><div class="colon-symbol">:</div><div class="row-value" id="out-account" contenteditable="true"></div></div>
+                                </div>
+
+                                <div class="details-row">
+                                    <div class="row-label">Customer Name</div>
+                                    <div class="row-value-container"><div class="colon-symbol">:</div><div class="row-value" id="out-name" contenteditable="true"></div></div>
+                                </div>
+
+                                <div class="details-row">
+                                    <div class="row-label">Customer Communication Address</div>
+                                    <div class="row-value-container"><div class="colon-symbol">:</div><div class="row-value" id="out-address" contenteditable="true"></div></div>
+                                </div>
+                            </div>
+
+                            <div class="details-col-right">
+                                <div class="details-row">
+                                    <div class="row-label">Nomination Status</div>
+                                    <div class="row-value-container"><div class="colon-symbol">:</div><div class="row-value" id="out-nomination" contenteditable="true"></div></div>
+                                </div>
+
+                                <div class="details-row">
+                                    <div class="row-label">Mode Of Operation</div>
+                                    <div class="row-value-container"><div class="colon-symbol">:</div><div class="row-value" id="out-mode" contenteditable="true"></div></div>
+                                </div>
+
+                                <div class="details-row">
+                                    <div class="row-label">Customer Account Type</div>
+                                    <div class="row-value-container"><div class="colon-symbol">:</div><div class="row-value" id="out-type" contenteditable="true"></div></div>
+                                </div>
+
+                                <div class="details-row">
+                                    <div class="row-label">Customer Account variant</div>
+                                    <div class="row-value-container"><div class="colon-symbol">:</div><div class="row-value" id="out-variant" contenteditable="true"></div></div>
+                                </div>
+
+                                <div class="details-row">
+                                    <div class="row-label">Customer Mobile Number</div>
+                                    <div class="row-value-container"><div class="colon-symbol">:</div><div class="row-value" id="out-mobile" contenteditable="true"></div></div>
+                                </div>
+
+                                <div class="details-row">
+                                    <div class="row-label">Date of Issue</div>
+                                    <div class="row-value-container"><div class="colon-symbol">:</div><div class="row-value" id="out-date" contenteditable="true"></div></div>
+                                </div>
+
+                                <div class="signature-block" style="margin-top: auto; align-self: flex-end; text-align: center; width: 120px; padding-top: 8px;">
+                                    <div style="border-top: 1.5px solid #000000; margin-bottom: 3px;"></div>
+                                    <div style="font-family: Arial, sans-serif; font-size: 10px; font-weight: bold; color: #000000; text-transform: uppercase;">CSP Branch Manager</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="details-footer">
+                        <p class="footer-note-p" contenteditable="true">This passbook is system generated and does not require any initials or stamp. Your account is linked to a central branch, in case of any concern kindly contact our customer care at - +91 22 68681414.</p>
+                        <p class="footer-note-p" contenteditable="true">For more information about our other products kindly visit www.finobank.com or incase if any grievance write us at customercare@finobank.com</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function getTodayDateString() {
+            const today = new Date();
+            const dd = String(today.getDate()).padStart(2, '0');
+            const mm = String(today.getMonth() + 1).padStart(2, '0');
+            const yyyy = today.getFullYear();
+            return `${dd}-${mm}-${yyyy}`;
+        }
+
+        function loadSampleData() {
+            document.getElementById('in-ifsc').value = "FINO0009112";
+            document.getElementById('in-branch').value = "Pachora";
+            document.getElementById('in-cif').value = "482910356";
+            document.getElementById('in-account').value = "912012345678";
+            document.getElementById('in-name').value = "RAHUL DNYANESHWAR PATIL";
+            document.getElementById('in-mobile').value = "9850123456";
+            document.getElementById('in-date').value = getTodayDateString();
+            document.getElementById('in-address').value = "At Post Pachora, Ganesh Colony,\nNear Bus Stand, Taluka Pachora,\nJalgaon, Maharashtra, 424201";
+            document.getElementById('in-nomination').value = "Registered";
+            document.getElementById('in-mode').value = "SELF";
+            document.getElementById('in-type').value = "Savings Account";
+            document.getElementById('in-variant').value = "Gati Savings Account";
+            
+            updateLivePreview();
+        }
+
+        function updateLivePreview() {
+            document.getElementById('out-ifsc').textContent = document.getElementById('in-ifsc').value;
+            document.getElementById('out-branch').textContent = document.getElementById('in-branch').value.toUpperCase();
+            document.getElementById('out-cif').textContent = document.getElementById('in-cif').value;
+            document.getElementById('out-account').textContent = document.getElementById('in-account').value;
+            document.getElementById('out-name').textContent = document.getElementById('in-name').value;
+            document.getElementById('out-mobile').textContent = document.getElementById('in-mobile').value;
+            document.getElementById('out-date').textContent = document.getElementById('in-date').value;
+            document.getElementById('out-address').innerHTML = document.getElementById('in-address').value.replace(/\n/g, '<br>');
+            document.getElementById('out-nomination').textContent = document.getElementById('in-nomination').value;
+            document.getElementById('out-mode').textContent = document.getElementById('in-mode').value;
+            document.getElementById('out-type').textContent = document.getElementById('in-type').value;
+            document.getElementById('out-variant').textContent = document.getElementById('in-variant').value;
+            document.getElementById('phone-welcome-name').textContent = "Welcome, " + document.getElementById('in-name').value;
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            loadSampleData();
+            ['in-ifsc', 'in-branch', 'in-cif', 'in-account', 'in-name', 'in-mobile', 'in-date', 'in-address', 'in-nomination', 'in-mode', 'in-type', 'in-variant'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) {
+                    el.addEventListener('input', updateLivePreview);
+                    el.addEventListener('change', updateLivePreview);
+                }
+            });
+        });
+    </script>
+</body>
+</html>
