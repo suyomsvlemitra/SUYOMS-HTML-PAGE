@@ -1,0 +1,1150 @@
+
+<!DOCTYPE html>
+<html lang="mr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>स्वयंघोषणापत्र (परिशिष्ट "ब") जनरेटर</title>
+    <!-- Tailwind CSS v3 CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- GOOGLE FONTS (Noto Serif Devanagari) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;500;600;700&family=Noto+Serif+Devanagari:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- PDF Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <!-- JSZip for Word Docx generation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+
+    <style>
+        body, 
+        input, 
+        select,
+        button, 
+        #print-area, 
+        #print-area *, 
+        .marathi-font,
+        h1, h2, h3, h4, p, span, label {
+            font-family: 'Noto Serif Devanagari', 'Noto Sans Devanagari', serif !important;
+        }
+
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #1a1a1a; }
+        ::-webkit-scrollbar-thumb { background: #f97316; border-radius: 4px; }
+
+        #print-area {
+            transform-origin: top center;
+            transition: transform 0.2s ease;
+            color: #000000 !important;
+            border: 2px solid #000000 !important;
+        }
+
+        @page {
+            size: A4 portrait;
+            margin: 6mm 8mm;
+        }
+
+        @media print {
+            html, body {
+                background: #ffffff !important;
+                color: #000000 !important;
+                padding: 0 !important;
+                margin: 0 !important;
+                width: 100% !important;
+                height: auto !important;
+                overflow: visible !important;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+            body > div {
+                border: none !important;
+                border-radius: 0 !important;
+                box-shadow: none !important;
+                background: #ffffff !important;
+                max-width: 100% !important;
+                padding: 0 !important;
+                margin: 0 !important;
+                overflow: visible !important;
+            }
+            header,
+            .xl\:col-span-5,
+            .bg-gradient-to-r,
+            #print-window-frame {
+                display: none !important;
+            }
+            .grid {
+                display: block !important;
+                padding: 0 !important;
+                margin: 0 !important;
+            }
+            .xl\:col-span-7 {
+                display: block !important;
+                width: 100% !important;
+                max-width: 100% !important;
+                padding: 0 !important;
+                margin: 0 !important;
+                background: transparent !important;
+                border: none !important;
+                overflow: visible !important;
+                height: auto !important;
+            }
+            .flex-1 {
+                background: transparent !important;
+                padding: 0 !important;
+                margin: 0 !important;
+                border: none !important;
+                overflow: visible !important;
+                display: block !important;
+                height: auto !important;
+            }
+            #print-area {
+                position: relative !important;
+                left: auto !important;
+                top: auto !important;
+                right: auto !important;
+                width: 100% !important; 
+                max-width: 100% !important;
+                box-sizing: border-box !important;
+                border: 2px solid #000000 !important;
+                box-shadow: none !important;
+                border-radius: 0 !important;
+                padding: 32px 36px !important; 
+                margin: 0 auto !important;
+                transform: none !important; 
+                font-size: 13.5px !important; 
+                line-height: 1.85 !important;
+                color: #000000 !important;
+                background: #ffffff !important;
+                page-break-inside: avoid !important;
+                break-inside: avoid !important;
+            }
+            #print-area h2 {
+                font-size: 17px !important;
+                margin-bottom: 4px !important;
+                line-height: 1.35 !important;
+            }
+            #print-area h3 {
+                font-size: 15px !important;
+                margin-bottom: 4px !important;
+                line-height: 1.35 !important;
+            }
+            #print-area .text-justify {
+                font-size: 13.5px !important;
+                line-height: 1.85 !important;
+            }
+            #print-area .space-y-3 > :not([hidden]) ~ :not([hidden]) {
+                margin-top: 10px !important;
+                margin-bottom: 0 !important;
+            }
+            #print-area .mt-8 {
+                margin-top: 36px !important;
+            }
+            #print-area .my-4 {
+                margin-top: 14px !important;
+                margin-bottom: 14px !important;
+            }
+            #stamp-preview-zone.hidden {
+                display: none !important;
+                height: 0 !important;
+                min-height: 0 !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                border: none !important;
+            }
+            #stamp-preview-zone:not(.hidden) {
+                display: block !important;
+                visibility: visible !important;
+                opacity: 1 !important;
+                height: auto !important;
+                max-height: 220px !important;
+                border: none !important;
+                margin-bottom: 6px !important;
+            }
+        }
+    </style>
+</head>
+<body class="bg-black text-white">
+
+    <div class="max-w-[1600px] mx-auto border-2 border-orange-500 rounded-xl overflow-hidden bg-neutral-900 shadow-xl">
+        
+        <!-- HEADER -->
+        <header class="bg-gradient-to-r from-neutral-950 via-neutral-900 to-neutral-950 p-4 flex flex-col xl:flex-row justify-between items-center border-b-4 border-orange-500 gap-4">
+            <div class="flex items-center gap-4">
+                <div class="bg-neutral-900 text-orange-500 p-3 rounded-xl shadow-lg border border-orange-500/50 shrink-0">
+                    <i class="fa-solid fa-file-signature text-3xl text-orange-500"></i>
+                </div>
+                <div>
+                    <h1 class="text-2xl md:text-3xl font-bold text-orange-400 tracking-wide">नॉनक्रिमीलेयर स्वयंघोषणापत्र (परिशिष्ट "ब")</h1>
+                    <p class="text-xs md:text-sm text-neutral-300 font-semibold mt-1">SUYOMS VLE MITRA Tools | स्मार्ट स्वयंघोषणापत्र जनरेटर</p>
+                </div>
+            </div>
+
+            <!-- BUTTONS CONTAINER -->
+            <div class="flex flex-wrap items-center gap-2 xl:ml-auto w-full xl:w-auto justify-end">
+                <button onclick="triggerPrint()" class="bg-neutral-800 hover:bg-neutral-700 border border-neutral-700 px-3 py-2 rounded-lg flex flex-col items-center justify-center min-w-[65px] shadow-md transition cursor-pointer">
+                    <i class="fa-solid fa-print text-lg text-sky-400 mb-0.5"></i>
+                    <span class="text-[11px] text-white">Print</span>
+                </button>
+
+                <button onclick="triggerPDFDownload()" class="bg-neutral-800 hover:bg-neutral-700 border border-neutral-700 px-3 py-2 rounded-lg flex flex-col items-center justify-center min-w-[110px] shadow-md transition cursor-pointer">
+                    <i class="fa-solid fa-file-arrow-down text-lg text-rose-500 mb-0.5"></i>
+                    <span class="text-[11px] text-white font-medium">PDF Download</span>
+                </button>
+
+                <button onclick="exportToWord()" class="bg-neutral-800 hover:bg-neutral-700 border border-neutral-700 px-3 py-2 rounded-lg flex flex-col items-center justify-center min-w-[110px] shadow-md transition cursor-pointer">
+                    <i class="fa-solid fa-file-word text-lg text-blue-400 mb-0.5"></i>
+                    <span class="text-[11px] text-white font-medium">Word Download</span>
+                </button>
+
+                <button onclick="saveFormData()" class="bg-neutral-800 hover:bg-neutral-700 border border-neutral-700 px-3 py-2 rounded-lg flex flex-col items-center justify-center min-w-[65px] shadow-md transition cursor-pointer">
+                    <i class="fa-solid fa-floppy-disk text-lg text-yellow-400 mb-0.5"></i>
+                    <span class="text-[11px] text-white">Save</span>
+                </button>
+            </div>
+        </header>
+
+        <!-- WORKSPACE -->
+        <div class="grid grid-cols-1 xl:grid-cols-12 gap-4 p-4">
+            
+            <!-- FORM INPUTS -->
+            <div class="xl:col-span-5 bg-neutral-950/80 border border-orange-500/30 rounded-xl p-4 flex flex-col h-[880px] overflow-y-auto">
+                
+                <div class="mb-4">
+                    <label class="block text-xs font-bold text-orange-400 mb-2 uppercase tracking-wider"><i class="fa-solid fa-stamp mr-1"></i> स्टॅम्प प्रिव्ह्यू निवडा</label>
+                    <div class="grid grid-cols-4 gap-2">
+                        <button onclick="changeStamp('10')" class="stamp-btn border-2 border-neutral-700 bg-neutral-900 hover:bg-neutral-800 text-sky-400 font-bold py-2 px-1 rounded-lg text-xs transition cursor-pointer text-center">Rs. 10</button>
+                        <button onclick="changeStamp('20')" class="stamp-btn border-2 border-neutral-700 bg-neutral-900 hover:bg-neutral-800 text-purple-400 font-bold py-2 px-1 rounded-lg text-xs transition cursor-pointer text-center">Rs. 20</button>
+                        <button onclick="changeStamp('50')" class="stamp-btn border-2 border-neutral-700 bg-neutral-900 hover:bg-neutral-800 text-emerald-400 font-bold py-2 px-1 rounded-lg text-xs transition cursor-pointer text-center">Rs. 50</button>
+                        <button onclick="changeStamp('100')" class="stamp-btn border-2 border-neutral-700 bg-neutral-900 hover:bg-neutral-800 text-blue-400 font-bold py-2 px-1 rounded-lg text-xs transition cursor-pointer text-center">Rs. 100</button>
+                    </div>
+                    <button onclick="changeStamp('none')" class="w-full mt-2 bg-neutral-800 hover:bg-neutral-700 border border-neutral-700 text-neutral-200 text-xs py-1 rounded font-semibold cursor-pointer">स्टॅम्प काढा (Blank Paper)</button>
+                </div>
+
+                <div class="mb-4 bg-neutral-900 p-3 rounded-lg border border-neutral-800">
+                    <div class="flex justify-between items-center mb-1">
+                        <label class="text-xs font-bold text-orange-400"><i class="fa-solid fa-arrows-up-down mr-1"></i> वरील मार्जिन / स्पेस कमी-जास्त करा</label>
+                        <span id="space-val" class="text-xs font-bold text-yellow-400">0 px</span>
+                    </div>
+                    <input type="range" id="input-top-space" min="0" max="300" value="0" class="w-full accent-orange-500 cursor-pointer">
+                </div>
+
+                <div class="bg-gradient-to-r from-yellow-500 via-orange-500 to-red-600 text-center py-1.5 rounded-lg font-bold text-sm mb-3 shadow border border-orange-400 text-black">
+                    माहिती भरा (टाईप करून Space दाबा)
+                </div>
+                
+                <div class="bg-neutral-900/80 p-4 rounded-lg border border-neutral-800 text-sm flex-1 space-y-3">
+                    
+                    <div class="grid grid-cols-12 gap-2">
+                        <div class="col-span-5">
+                            <label class="block text-xs text-neutral-300 mb-1">आदरार्थी</label>
+                            <select id="input-title" class="w-full bg-neutral-950 border border-neutral-700 rounded p-2 text-white focus:outline-none focus:border-orange-500">
+                                <option value="श्री.">श्री.</option>
+                                <option value="श्रीमती">श्रीमती</option>
+                                <option value="कुमार">कुमार</option>
+                                <option value="कुमारी">कुमारी</option>
+                            </select>
+                        </div>
+                        <div class="col-span-7">
+                            <label class="block text-xs text-neutral-300 mb-1">अर्जदाराचे पूर्ण नाव</label>
+                            <input type="text" id="input-applicant-name" value="योगेश शंकर पिंपळे" class="marathi-input w-full bg-neutral-950 border border-neutral-700 rounded p-2 text-white focus:outline-none focus:border-orange-500">
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-12 gap-2">
+                        <div class="col-span-5">
+                            <label class="block text-xs text-neutral-300 mb-1">नाते</label>
+                            <select id="input-relation" class="w-full bg-neutral-950 border border-neutral-700 rounded p-2 text-white focus:outline-none focus:border-orange-500">
+                                <option value="यांचा मुलगा">यांचा मुलगा</option>
+                                <option value="यांची मुलगी">यांची मुलगी</option>
+                            </select>
+                        </div>
+                        <div class="col-span-7">
+                            <label class="block text-xs text-neutral-300 mb-1">वडिलांचे / पतीचे नाव</label>
+                            <input type="text" id="input-father-name" value="शंकर पिंपळे" class="marathi-input w-full bg-neutral-950 border border-neutral-700 rounded p-2 text-white focus:outline-none focus:border-orange-500">
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-2">
+                        <div>
+                            <label class="block text-xs text-neutral-300 mb-1">वय (वर्षे)</label>
+                            <input type="text" id="input-age" value="२५" class="marathi-input w-full bg-neutral-950 border border-neutral-700 rounded p-2 text-white focus:outline-none focus:border-orange-500">
+                        </div>
+                        <div>
+                            <label class="block text-xs text-neutral-300 mb-1">व्यवसाय</label>
+                            <select id="input-occupation" class="w-full bg-neutral-950 border border-neutral-700 rounded p-2 text-white focus:outline-none focus:border-orange-500">
+                                <option value="शेतकरी">शेतकरी</option>
+                                <option value="खाजगी नोकरी">खाजगी नोकरी</option>
+                                <option value="सरकारी नोकरी">सरकारी नोकरी</option>
+                                <option value="मोलमजुरी">मोलमजुरी</option>
+                                <option value="व्यापारी">व्यापारी</option>
+                                <option value="गृहिणी">गृहिणी</option>
+                                <option value="सेवा निवृत्त">सेवा निवृत्त</option>
+                                <option value="इतर">इतर</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-2">
+                        <div>
+                            <label class="block text-xs text-neutral-300 mb-1">राहणार (रा.)</label>
+                            <input type="text" id="input-residence" value="पाचोरा" class="marathi-input w-full bg-neutral-950 border border-neutral-700 rounded p-2 text-white focus:outline-none focus:border-orange-500">
+                        </div>
+                        <div>
+                            <label class="block text-xs text-neutral-300 mb-1">गाव/शहर</label>
+                            <input type="text" id="input-village" value="पाचोरा" class="marathi-input w-full bg-neutral-950 border border-neutral-700 rounded p-2 text-white focus:outline-none focus:border-orange-500">
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-2">
+                        <div>
+                            <label class="block text-xs text-neutral-300 mb-1">तहसील</label>
+                            <input type="text" id="input-taluka" value="पाचोरा" class="marathi-input w-full bg-neutral-950 border border-neutral-700 rounded p-2 text-white focus:outline-none focus:border-orange-500">
+                        </div>
+                        <div>
+                            <label class="block text-xs text-neutral-300 mb-1">जिल्हा</label>
+                            <input type="text" id="input-dist" value="जळगांव" class="marathi-input w-full bg-neutral-950 border border-neutral-700 rounded p-2 text-white focus:outline-none focus:border-orange-500">
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-2">
+                        <div>
+                            <label class="block text-xs text-neutral-300 mb-1">जात/जमात</label>
+                            <input type="text" id="input-caste" value="कुणबी" class="marathi-input w-full bg-neutral-950 border border-neutral-700 rounded p-2 text-white focus:outline-none focus:border-orange-500">
+                        </div>
+                        <div>
+                            <label class="block text-xs text-neutral-300 mb-1">मागास वर्ग प्रवर्ग</label>
+                            <select id="input-category" class="w-full bg-neutral-950 border border-neutral-700 rounded p-2 text-white focus:outline-none focus:border-orange-500">
+                                <option value="इतर मागासवर्ग (OBC)">इतर मागासवर्ग (OBC)</option>
+                                <option value="विमुक्त जाती (VJ-A)">विमुक्त जाती (VJ-A)</option>
+                                <option value="भटक्या जमाती (NT-B)">भटक्या जमाती (NT-B)</option>
+                                <option value="भटक्या जमाती (NT-C)">भटक्या जमाती (NT-C)</option>
+                                <option value="भटक्या जमाती (NT-D)">भटक्या जमाती (NT-D)</option>
+                                <option value="विशेष मागास प्रवर्ग (SBC)">विशेष मागास प्रवर्ग (SBC)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-2">
+                        <div>
+                            <label class="block text-xs text-neutral-300 mb-1">स्थळ</label>
+                            <input type="text" id="input-place" value="पाचोरा" class="marathi-input w-full bg-neutral-950 border border-neutral-700 rounded p-2 text-white focus:outline-none focus:border-orange-500">
+                        </div>
+                        <div>
+                            <label class="block text-xs text-neutral-300 mb-1">दिनांक</label>
+                            <input type="text" id="input-date" value="22/07/2026" class="w-full bg-neutral-950 border border-neutral-700 rounded p-2 text-white focus:outline-none focus:border-orange-500">
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-2 pt-2">
+                        <button onclick="saveFormData()" class="bg-gradient-to-r from-orange-500 to-red-600 hover:opacity-90 py-2 rounded font-bold shadow text-xs cursor-pointer text-black"><i class="fa-solid fa-save mr-1"></i> सेव्ह करा</button>
+                        <button onclick="resetFormFields()" class="bg-neutral-800 hover:bg-neutral-700 border border-neutral-700 py-2 rounded font-bold shadow text-xs cursor-pointer text-white"><i class="fa-solid fa-rotate-left mr-1"></i> रीसेट</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- LIVE PREVIEW (A4 SHEET) -->
+            <div class="xl:col-span-7 bg-neutral-950/80 border border-orange-500/30 rounded-xl p-4 flex flex-col h-[880px]">
+                <div class="bg-gradient-to-r from-neutral-900 via-neutral-800 to-neutral-900 px-4 py-1.5 rounded-lg font-bold text-sm mb-3 flex justify-between items-center shadow border border-orange-500/40 text-orange-400">
+                    <span>A4 Live Preview</span>
+                    <div class="flex items-center gap-2 text-xs bg-neutral-950 px-2 py-1 rounded border border-neutral-800">
+                        <i onclick="zoomOut()" class="fa-solid fa-minus cursor-pointer hover:text-orange-400 transition"></i>
+                        <span id="zoom-text">100%</span>
+                        <i onclick="zoomIn()" class="fa-solid fa-plus cursor-pointer hover:text-orange-400 transition"></i>
+                    </div>
+                </div>
+
+                <div class="flex-1 bg-neutral-900 p-4 rounded-lg overflow-y-auto flex justify-center items-start border border-neutral-800">
+                    <div id="print-area" class="w-[595px] min-h-[842px] bg-white p-10 shadow-2xl rounded relative text-[13px] leading-relaxed text-black">
+                        
+                        <div id="stamp-preview-zone" class="mb-4 hidden text-center border border-dashed border-transparent rounded overflow-hidden h-[220px]">
+                            <img id="stamp-img" src="" alt="Stamp" class="w-full h-[220px] object-contain">
+                        </div>
+
+                        <div id="dynamic-space-holder" style="height: 0px;"></div>
+
+                        <div class="text-center font-bold text-[15px] mb-1 leading-snug">
+                            <h2>अर्जासोबत जोडावयाच्या स्वयंघोषणापत्र नमुना</h2>
+                            <h3 class="text-[14px]">(परिशिष्ट “ब”)</h3>
+                        </div>
+                      
+                        <div class="text-center text-[11px] leading-snug mb-1 text-slate-800 pb-2">
+                            <p>महाराष्ट्र शासनाच्या विमुक्त जाती/भटक्या जमाती/इतर मागासवर्गीय/विशेष मागास प्रवर्गातील अर्जदारांना आरक्षणाचा फायदा मिळण्याकरिता उत्पन्न व प्रगतव्यक्ती/गट (क्रिमिलियर) यामध्ये मोडत नसल्याबाबत सादर करावयाचे.</p>
+                        </div>
+                        <div class="text-center font-bold text-[15px] mb-1 leading-snug">
+                            <h3 class="text-center text-[14px]">स्वयंघोषणापत्र</h3>
+                        </div>
+
+                        <div class="text-center text-[11px] leading-snug mb-3 text-slate-800 border-b border-slate-300 pb-2">
+                            <p>केंद्र शासनाच्या इतर मागासप्रवर्गात मोडणाऱ्या अर्जदाराने आरक्षणाचा फायदा मिळवण्याकरिता उत्पन्न व प्रगत व्यक्ति गट (क्रिमिलियर) यामध्ये मोडत नसल्याबाबत सादर करावाच स्वयंघोषणापत्र</p>
+                        </div>
+                        
+                        <div class="text-justify text-[13px] leading-[1.8] space-y-3">
+                            <p class="indent-8">
+                                मी <span id="view-title" class="font-semibold">श्री.</span> <span id="view-applicant-name" class="font-bold px-1">योगेश शंकर पिंपळे</span> श्री. <span id="view-father-name" class="font-bold px-1">शंकर पिंपळे</span> <span id="view-relation" class="font-semibold">यांचा मुलगा</span>, वय: <span id="view-age" class="font-bold px-1">२५</span> वर्ष, व्यवसाय: <span id="view-occupation" class="font-bold px-1">शेतकरी</span>, रा.: <span id="view-residence" class="font-bold px-1">पाचोरा</span>, गाव/शहर: <span id="view-village" class="font-bold px-1">पाचोरा</span>, तहसील: <span id="view-taluka" class="font-bold px-1">पाचोरा</span>, जिल्हा: <span id="view-dist" class="font-bold px-1">जळगांव</span>, राज्य महाराष्ट्र येथील रहिवासी असून याद्वारे कथन करतो की मी <span id="view-caste" class="font-bold px-1">कुणबी</span> या जातीचा/जमातीचा असून ही जात/जमात केंद्र शासन मिनीस्ट्री ऑफ पर्सोनेल, पब्लिक गीव्हन्सेस डिपार्टमेंट ऑफ पर्सोनेल अँड ट्रेनिंग कडील कार्यालयीन ज्ञापक क्रमांक ३६०१२/२२/९३ इएसटीटी (एसटीटी) दिनांक ०८ सप्टेंबर १९९३ अन्वये सुधारित केल्याप्रमाणे तसेच केंद्र शासनाचे आणि राज्य शासनाचे या संदर्भात वेळोवेळी निर्गमित केलेल्या सूचने (NOTIFICATION) नुसार/शासन निर्णय नुसार शासन सेवेतील आरक्षणाच्या फायद्याकरिता इतर मागास प्रवर्गात गणल्या जाते. सदर जात/जमात राज्य शासनाने विहित केलेल्या मागासवर्गीयांच्या यादीमधील. <span id="view-category" class="font-bold px-1">इतर मागासवर्ग (OBC)</span> या प्रवर्गात मोडते.
+                            </p>
+
+                            <p class="indent-8">
+                                मी दृढपूर्वक असेही कथन करतो/करते की, केंद्र शासनाच्या क्रमांक ३६०१२/२२/९३ इएसटीटी (एससीटी) दिनांक ०८ सप्टेंबर १९९३ च्या कार्यालयीन/ज्ञापनासोबतच्या परिशिष्टातील स्तंभ क्रमांक. ३ मध्ये नमूद केलेल्या व कार्यालयीन ज्ञापन क्रमांक ३६०३३/५/२००४ इएसटीटी (आर.ई.एस) दिनांक १४ ऑक्टोबर २००४ कार्यालयीन ज्ञापक क्रमांक ३६०३३/५/२००४ इएसटीटी (आर.ई.एस) दिनांक १४ ऑक्टोबर २००८ अन्वये सुधारित केल्याप्रमाणे तसेच केंद्र शासनाचे आणि राज्य शासनाचे या संदर्भात वेळोवेळी निर्गमित केलेल्या सूचने (NOTIFICATION) नुसार/शासन निर्णय नुसार आरक्षणाच्या फायद्या करिता मी विमुक्त जाती/भटक्या जमाती/इतर मागासवर्ग/विशेष मागास प्रवर्गातील उत्पन्न व प्रगत व्यक्ति/गट (क्रिमिलियर) यामध्ये मी मोडत नाही.
+                            </p>
+
+                            <p class="indent-8">
+                                मी दृढपूर्वक असेही कथन करतो/करते की, माझ्या आई किंवा वडिलांचा किंवा आई आणि वडील या दोघांचाही दर्जा उत्पन्न हे ३१ मार्च २०२६ रोजी संपणाऱ्या आर्थिक वर्ष अखेरीस वेळोवेळी विहित केलेल्या अटी व शर्तीनुसार इतर मागासवर्ग प्रवर्गातील उत्पन्न व प्रगत व्यक्ति/गट (क्रिमिलियर) यांच्या करिता असलेल्या मर्यादेमध्ये मोडते. भारतीय न्याय संहिता २०२३ चे कलम २३६ व २३७ नुसार मी गुन्ह्यास पात्र राहील व कलम २२९ (२) याच्या तरतुदीनुसार माझ्यावर खटला भरला जाईल व मी शिक्षक पात्र राहील. 
+                            </p>
+                        </div>
+
+                        <div class="mt-8 flex justify-between items-end text-[13px]">
+                            <div class="space-y-1">
+                                <p><strong>स्थळ:</strong> <span id="view-place" class="font-bold">पाचोरा</span></p>
+                                <p><strong>दिनांक:</strong> <span id="view-date" class="font-bold">22/07/2026</span></p>
+                            </div>
+                            <div class="text-center min-w-[200px]">
+                                <br><br>
+                                <div class="border-t border-black pt-1">
+                                    <p class="font-bold">( <span id="view-footer-name">योगेश शंकर पिंपळे</span> )</p>
+                                    <p class="text-xs">स्वयंघोषणापत्र करून देणाऱ्याचे नाव व सही</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="border-t-2 border-dashed border-black my-4 pt-1 text-center text-xs font-semibold">
+                            (उमेदवाराने स्वतः साक्षरी न केलेले शपथपत्र/खुलासा रद्दबातल ठरविण्यात येईल)
+                        </div>
+
+                        <div class="text-justify text-[9px] leading-tight text-slate-700">
+                            <strong>(सूचना:</strong> सदरहू आरक्षणाचा फायदा हा तात्पुरता स्वरूपाचा असून तो उमेदवाराने जात प्रमाणपत्र/उत्पन्न व प्रगत गट व्यक्ति यामध्ये मोडत नसल्यासंदर्भात सादर केलेल्या कागदपत्रांचा/पुराव्याच्या पडताळणी संदर्भात विहित केलेल्या कार्यपद्धतीचा अधिन राहील. जर उमेदवाराने इतर मागासवर्गात मोडत असल्याबाबत किंवा उत्पन्न व प्रगत गट व्यक्ती यामध्ये मोडत नसल्यासंदर्भात संबंधित अर्जासोबत जोडलेली कागदपत्रे आणि पुरावे पडताळणी अंति खोटे अथवा बनावट आढळल्यास कोणतेही पूर्व सूचना किंवा कोणतीही कारणीमासा न देता त्या उमेदवारास देण्यात आलेल्या आरक्षण विषयक फायदा कायमस्वरूपी रद्द बाबत ठरविण्यात येईल. तसेच सदर प्रकरणी संबंधित उमेदवारास जबाबदार धरण्यात ईऊन खोटे अथवा बनावट कागदपत्रे पुरावे दाखल दाखल केल्याबद्दल त्याच्याविरुद्ध भारतीय दंड विधान कायद्यानुसार विहीर केलेली कारवाई करण्यात येईल.<strong>)</strong>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- JAVASCRIPT CODE -->
+    <script>
+        let currentZoom = 100;
+        const printAreaEl = document.getElementById('print-area');
+        const zoomTextEl = document.getElementById('zoom-text');
+
+        function zoomIn() { if (currentZoom < 150) { currentZoom += 10; applyZoom(); } }
+        function zoomOut() { if (currentZoom > 50) { currentZoom -= 10; applyZoom(); } }
+        function applyZoom() { printAreaEl.style.transform = `scale(${currentZoom / 100})`; zoomTextEl.innerText = currentZoom + '%'; }
+
+        const inputTopSpace = document.getElementById('input-top-space');
+        const spaceVal = document.getElementById('space-val');
+        const dynamicSpaceHolder = document.getElementById('dynamic-space-holder');
+        const stampPreviewZone = document.getElementById('stamp-preview-zone');
+        const stampImg = document.getElementById('stamp-img');
+
+        inputTopSpace.addEventListener('input', function() {
+            const val = this.value + 'px';
+            spaceVal.innerText = val;
+            dynamicSpaceHolder.style.height = val;
+        });
+
+        function changeStamp(stampType) {
+            document.querySelectorAll('.stamp-btn').forEach(b => {
+                b.classList.remove('border-yellow-400', 'bg-neutral-800');
+                b.classList.add('border-neutral-700', 'bg-neutral-900');
+            });
+
+            if (stampType === 'none') {
+                stampPreviewZone.classList.add('hidden');
+                stampImg.src = "";
+                return;
+            }
+
+            stampPreviewZone.classList.remove('hidden');
+            let imgUrl = "";
+            if (stampType === '10') imgUrl = "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEg7mq_7gCvZW3cc75f-qIALj9mRpzmmqZPWYem4-pQVBbjS1M4XCTJcBACnHYAGs23Bhrmq2ykM6fU4wK7v-XERe97SoRt3kV4LrFl8Iz68LYPrzjU9-YL7xqMGxCCzrGdBfagsB13GM3VDvatJo9Dn1xg_Hybk1UtbkDi_BfKf0hfrlCE2jw3rdc2R6G9K/s1600/10-stamp.webp";
+            if (stampType === '20') imgUrl = "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhRXeVGtEgwzVwKfuoIXyHafAiSrkzgcW0fQkIaPDrpvY1bEbLVKBOJtuvwFKC2nQXhFcbtLkkpOdt4WD9lMNSkfQp9frjd6956IlD4wKLNiX4JcQeFINicJjofNCYEMggVoEOdD6k3MvvwmhW_GsF-6XQxAQqyCGOBe0M0lxPZqOJMVSPUN6p-0XI7_Lsl/s1600/20-stamp.webp";
+            if (stampType === '50') imgUrl = "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgpJ9P0X6_uLApvAMM8gdRpPFEUh2S8ml4uLPrAUUsS_bE2vRbJeW2B-XMTdj7DsLg2fSf3oHsQAQfLZDcJxnfLTZWBL3G-J4x87oMp0WtLnECtfCBu79AnSG3XjIQYBxtV63BgmdkBfwf8ezxIxfR_s71mfGL2orVMBGhOEpBxlp2hY74He4VwpTXAsVzP/s1600/50-stamp.webp";
+            if (stampType === '100') imgUrl = "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEikfcoMpL09CYoQKEzh5y_Qb5AeBHaGpbNaFx31Z0mEDajTUv-T9u4a5Hxm2W7KyDjwvbxi0gZ1YW6XMpCsySQuqFJd0Te8JCt1RM-7epNysDIm42H3nhi4KzgKIaztWjwzZDRHn6MeXG8mjShkU6C37zF793rmXCUUUcwHX_y-Yo-L77bH4Vtf9tPs_Yk5/s1600/100-stamp.webp";
+            
+            stampImg.src = imgUrl;
+            if(window.event && window.event.currentTarget) {
+                window.event.currentTarget.classList.remove('border-neutral-700', 'bg-neutral-900');
+                window.event.currentTarget.classList.add('border-yellow-400', 'bg-neutral-800');
+            }
+        }
+
+        const inputTitle = document.getElementById('input-title');
+        const inputApplicantName = document.getElementById('input-applicant-name');
+        const inputRelation = document.getElementById('input-relation');
+        const inputFatherName = document.getElementById('input-father-name');
+        const inputAge = document.getElementById('input-age');
+        const inputOccupation = document.getElementById('input-occupation');
+        const inputResidence = document.getElementById('input-residence');
+        const inputVillage = document.getElementById('input-village');
+        const inputTaluka = document.getElementById('input-taluka');
+        const inputDist = document.getElementById('input-dist');
+        const inputCaste = document.getElementById('input-caste');
+        const inputCategory = document.getElementById('input-category');
+        const inputPlace = document.getElementById('input-place');
+        const inputDate = document.getElementById('input-date');
+
+        const viewTitle = document.getElementById('view-title');
+        const viewApplicantName = document.getElementById('view-applicant-name');
+        const viewRelation = document.getElementById('view-relation');
+        const viewFatherName = document.getElementById('view-father-name');
+        const viewAge = document.getElementById('view-age');
+        const viewOccupation = document.getElementById('view-occupation');
+        const viewResidence = document.getElementById('view-residence');
+        const viewVillage = document.getElementById('view-village');
+        const viewTaluka = document.getElementById('view-taluka');
+        const viewDist = document.getElementById('view-dist');
+        const viewCaste = document.getElementById('view-caste');
+        const viewCategory = document.getElementById('view-category');
+        const viewPlace = document.getElementById('view-place');
+        const viewDate = document.getElementById('view-date');
+        const viewFooterName = document.getElementById('view-footer-name');
+
+        function decodeHtmlEntities(text) {
+            if (!text) return '';
+            var res = String(text);
+            for (var i = 0; i < 3; i++) {
+                if (!/&#|&amp;#/i.test(res)) break;
+                res = res.replace(/&amp;#x([0-9a-fA-F]+);?/gi, function(_, hex) {
+                    var code = parseInt(hex, 16);
+                    return code ? String.fromCodePoint(code) : '';
+                });
+                res = res.replace(/&#x([0-9a-fA-F]+);?/gi, function(_, hex) {
+                    var code = parseInt(hex, 16);
+                    return code ? String.fromCodePoint(code) : '';
+                });
+                res = res.replace(/&amp;#(\d+);?/gi, function(_, dec) {
+                    var code = parseInt(dec, 10);
+                    return code ? String.fromCodePoint(code) : '';
+                });
+                res = res.replace(/&#(\d+);?/gi, function(_, dec) {
+                    var code = parseInt(dec, 10);
+                    return code ? String.fromCodePoint(code) : '';
+                });
+            }
+            try {
+                var parser = new DOMParser();
+                var doc = parser.parseFromString(res, 'text/html');
+                if (doc && doc.body) {
+                    res = doc.body.textContent || res;
+                }
+            } catch(e) {
+                var txt = document.createElement('textarea');
+                txt.innerHTML = res;
+                res = txt.value || res;
+            }
+            return res;
+        }
+
+        function cleanInputEntities(inputEl) {
+            if (inputEl && inputEl.value && (/&#|&amp;#/i.test(inputEl.value))) {
+                inputEl.value = decodeHtmlEntities(inputEl.value);
+            }
+        }
+
+        function updatePreview() {
+            const allFormInputs = [inputTitle, inputApplicantName, inputRelation, inputFatherName, inputAge, inputOccupation, inputResidence, inputVillage, inputTaluka, inputDist, inputCaste, inputCategory, inputPlace, inputDate];
+            allFormInputs.forEach(cleanInputEntities);
+
+            viewTitle.textContent = decodeHtmlEntities(inputTitle.value);
+            const fullName = decodeHtmlEntities(inputApplicantName.value || '___________');
+            viewApplicantName.textContent = fullName;
+            viewFooterName.textContent = fullName;
+            
+            viewRelation.textContent = decodeHtmlEntities(inputRelation.value);
+            viewFatherName.textContent = decodeHtmlEntities(inputFatherName.value || '___________');
+            viewAge.textContent = decodeHtmlEntities(inputAge.value || '___');
+            viewOccupation.textContent = decodeHtmlEntities(inputOccupation.value || '___________');
+            viewResidence.textContent = decodeHtmlEntities(inputResidence.value || '___________');
+            viewVillage.textContent = decodeHtmlEntities(inputVillage.value || '___________');
+            viewTaluka.textContent = decodeHtmlEntities(inputTaluka.value || '___________');
+            viewDist.textContent = decodeHtmlEntities(inputDist.value || '___________');
+            viewCaste.textContent = decodeHtmlEntities(inputCaste.value || '___________');
+            viewCategory.textContent = decodeHtmlEntities(inputCategory.value || '___________');
+            viewPlace.textContent = decodeHtmlEntities(inputPlace.value || '___________');
+            viewDate.textContent = decodeHtmlEntities(inputDate.value || '-----/-----/-----');
+        }
+
+        const unicodeMap = {
+            'yogesh': 'योगेश', 'pachora': 'पाचोरा', 'shankar': 'शंकर', 'gopal': 'गोपाळ', 
+            'tukaram': 'तुकाराम', 'wankhade': 'वानखडे', 'chandur': 'चांदूर', 'bazar': 'बाजार', 
+            'jalgaon': 'जळगांव', 'shree': 'श्री.', 'mr': 'श्री.', 'kunbi': 'कुणबी'
+        };
+
+        function convertPhonetic(text) {
+            let lower = text.toLowerCase().trim();
+            if (unicodeMap[lower]) return unicodeMap[lower];
+
+            if (/[\u0900-\u097F]/.test(text)) return text;
+
+            const charMap = {
+                'aa': 'ा', 'a': '', 'i': 'ि', 'ee': 'ी', 'u': 'ु', 'oo': 'ू',
+                'e': 'े', 'ai': 'ै', 'o': 'ो', 'au': 'ौ', 'am': 'ं', 'ah': 'ः',
+                'k': 'क्', 'ka': 'क', 'kh': 'ख्', 'kha': 'ख', 'g': 'ग्', 'ga': 'ग', 'gh': 'घ्', 'gha': 'घ',
+                'ch': 'च्', 'cha': 'च', 'chh': 'छ्ह', 'j': 'ज्', 'ja': 'ज', 'jh': 'झ्ह', 'jha': 'झ',
+                't': 'त्', 'ta': 'त', 'th': 'थ्', 'tha': 'थ', 'd': 'द्', 'da': 'द', 'dh': 'ध्', 'dha': 'ध',
+                'n': 'न्', 'na': 'न', 'p': 'प्', 'pa': 'प', 'f': 'फ्', 'fa': 'फ', 'b': 'ब्', 'ba': 'ब',
+                'bh': 'भ्', 'bha': 'भ', 'm': 'म्', 'ma': 'म', 'y': 'य्', 'ya': 'य', 'r': 'र्', 'ra': 'र',
+                'l': 'ल्', 'la': 'ल', 'v': 'व्', 'va': 'व', 'w': 'व्', 'wa': 'व', 'sh': 'श्', 'sha': 'श',
+                'ss': 'ष्', 'ssa': 'ष', 's': 'स्', 'sa': 'स', 'h': 'ह्', 'ha': 'ह', 'L': 'ळ्', 'La': 'ळ',
+                'Ksh': 'क्ष्', 'Ksha': 'क्ष', 'Jn': 'ज्ञ्', 'Jna': 'ज्ञ'
+            };
+
+            let res = text;
+            for (let key in charMap) {
+                let regex = new RegExp(key, 'g');
+                res = res.replace(regex, charMap[key]);
+            }
+            return res;
+        }
+
+        document.querySelectorAll('.marathi-input').forEach(input => {
+            input.addEventListener('keydown', function(e) {
+                if (e.key === ' ' || e.keyCode === 32) {
+                    let words = this.value.split(' ');
+                    let lastWord = words[words.length - 1];
+                    
+                    if (lastWord && !/[ऀ-ॿ]/.test(lastWord)) {
+                        words[words.length - 1] = convertPhonetic(lastWord);
+                        this.value = decodeHtmlEntities(words.join(' '));
+                        updatePreview();
+                    }
+                }
+            });
+            input.addEventListener('input', function() {
+                cleanInputEntities(this);
+                updatePreview();
+            });
+            input.addEventListener('paste', function() {
+                setTimeout(() => {
+                    cleanInputEntities(this);
+                    updatePreview();
+                }, 10);
+            });
+            input.addEventListener('blur', function() {
+                cleanInputEntities(this);
+                updatePreview();
+            });
+        });
+
+        /* PDF डाऊनलोड - Generate & Download Live A4 PDF */
+        function triggerPDFDownload() {
+            const printArea = document.getElementById('print-area');
+            if (!printArea) return;
+
+            const applicant = (inputApplicantName.value || 'परिशिष्ट_ब').trim().replace(/[/\\?%*:|"<>]/g, '_');
+            const filename = 'स्वयंघोषणापत्र_' + applicant + '.pdf';
+
+            const oldTransform = printArea.style.transform;
+            const oldTransition = printArea.style.transition;
+            printArea.style.transform = 'none';
+            printArea.style.transition = 'none';
+
+            const opt = {
+                margin: [4, 6, 4, 6],
+                filename: filename,
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: {
+                    scale: 2,
+                    useCORS: true,
+                    scrollX: 0,
+                    scrollY: 0,
+                    logging: false
+                },
+                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+            };
+
+            if (window.html2pdf) {
+                window.html2pdf().set(opt).from(printArea).save().then(() => {
+                    printArea.style.transform = oldTransform;
+                    printArea.style.transition = oldTransition;
+                }).catch(function(err) {
+                    console.error('PDF error:', err);
+                    printArea.style.transform = oldTransform;
+                    printArea.style.transition = oldTransition;
+                    triggerPrint();
+                });
+            } else {
+                printArea.style.transform = oldTransform;
+                printArea.style.transition = oldTransition;
+                triggerPrint();
+            }
+        }
+
+        /* Word (.docx / .doc) डाऊनलोड - Generate Clean Word Document with Pure Marathi Text */
+        function exportToWord() {
+            const applicant = (inputApplicantName.value || 'परिशिष्ट_ब').trim().replace(/[/\\?%*:|"<>]/g, '_');
+            const filename = 'स्वयंघोषणापत्र_' + applicant + '.docx';
+
+            const data = {
+                title: decodeHtmlEntities(inputTitle.value || 'श्री.'),
+                applicant: decodeHtmlEntities(inputApplicantName.value || '___________'),
+                father: decodeHtmlEntities(inputFatherName.value || '___________'),
+                relation: decodeHtmlEntities(inputRelation.value || 'यांचा मुलगा'),
+                age: decodeHtmlEntities(inputAge.value || '___'),
+                occ: decodeHtmlEntities(inputOccupation.value || '___________'),
+                res: decodeHtmlEntities(inputResidence.value || '___________'),
+                vil: decodeHtmlEntities(inputVillage.value || '___________'),
+                tal: decodeHtmlEntities(inputTaluka.value || '___________'),
+                dist: decodeHtmlEntities(inputDist.value || '___________'),
+                caste: decodeHtmlEntities(inputCaste.value || '___________'),
+                cat: decodeHtmlEntities(inputCategory.value || '___________'),
+                place: decodeHtmlEntities(inputPlace.value || '___________'),
+                date: decodeHtmlEntities(inputDate.value || '-----/-----/-----')
+            };
+
+            if (window.JSZip) {
+                generateDocx(data, filename);
+            } else {
+                generateWordHtml(data, 'स्वयंघोषणापत्र_' + applicant + '.doc');
+            }
+        }
+
+        function generateDocx(data, filename) {
+            const contentTypes = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n' +
+'<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types">\n' +
+'  <Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/>\n' +
+'  <Default Extension="xml" ContentType="application/xml"/>\n' +
+'  <Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/>\n' +
+'</Types>';
+
+            const rels = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n' +
+'<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">\n' +
+'  <Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="word/document.xml"/>\n' +
+'</Relationships>';
+
+            function escXml(str) {
+                if (!str) return '';
+                return String(str)
+                    .replace(/&/g, '&amp;')
+                    .replace(/</g, '&lt;')
+                    .replace(/>/g, '&gt;')
+                    .replace(/"/g, '&quot;')
+                    .replace(/'/g, '&apos;');
+            }
+
+            const title = escXml(data.title);
+            const applicant = escXml(data.applicant);
+            const father = escXml(data.father);
+            const relation = escXml(data.relation);
+            const age = escXml(data.age);
+            const occ = escXml(data.occ);
+            const res = escXml(data.res);
+            const vil = escXml(data.vil);
+            const tal = escXml(data.tal);
+            const dist = escXml(data.dist);
+            const caste = escXml(data.caste);
+            const cat = escXml(data.cat);
+            const place = escXml(data.place);
+            const date = escXml(data.date);
+
+            const docXml = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n' +
+'<w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main">\n' +
+'  <w:body>\n' +
+'    <w:p>\n' +
+'      <w:pPr><w:jc w:val="center"/><w:spacing w:after="40" w:line="240" w:lineRule="auto"/></w:pPr>\n' +
+'      <w:r><w:rPr><w:rFonts w:ascii="Noto Serif Devanagari" w:hAnsi="Noto Serif Devanagari" w:cs="Mangal"/><w:b/><w:sz w:val="26"/><w:szCs w:val="26"/></w:rPr><w:t>अर्जासोबत जोडावयाच्या स्वयंघोषणापत्र नमुना</w:t></w:r>\n' +
+'    </w:p>\n' +
+'    <w:p>\n' +
+'      <w:pPr><w:jc w:val="center"/><w:spacing w:after="60" w:line="240" w:lineRule="auto"/></w:pPr>\n' +
+'      <w:r><w:rPr><w:rFonts w:ascii="Noto Serif Devanagari" w:hAnsi="Noto Serif Devanagari" w:cs="Mangal"/><w:b/><w:sz w:val="24"/><w:szCs w:val="24"/></w:rPr><w:t>(परिशिष्ट “ब”)</w:t></w:r>\n' +
+'    </w:p>\n' +
+'    <w:p>\n' +
+'      <w:pPr><w:jc w:val="center"/><w:spacing w:after="60" w:line="220" w:lineRule="auto"/></w:pPr>\n' +
+'      <w:r><w:rPr><w:rFonts w:ascii="Noto Serif Devanagari" w:hAnsi="Noto Serif Devanagari" w:cs="Mangal"/><w:sz w:val="19"/><w:szCs w:val="19"/><w:color w:val="1E293B"/></w:rPr><w:t>महाराष्ट्र शासनाच्या विमुक्त जाती/भटक्या जमाती/इतर मागासवर्गीय/विशेष मागास प्रवर्गातील अर्जदारांना आरक्षणाचा फायदा मिळण्याकरिता उत्पन्न व प्रगतव्यक्ती/गट (क्रिमिलियर) यामध्ये मोडत नसल्याबाबत सादर करावयाचे.</w:t></w:r>\n' +
+'    </w:p>\n' +
+'    <w:p>\n' +
+'      <w:pPr><w:jc w:val="center"/><w:spacing w:after="40" w:line="240" w:lineRule="auto"/></w:pPr>\n' +
+'      <w:r><w:rPr><w:rFonts w:ascii="Noto Serif Devanagari" w:hAnsi="Noto Serif Devanagari" w:cs="Mangal"/><w:b/><w:sz w:val="24"/><w:szCs w:val="24"/></w:rPr><w:t>स्वयंघोषणापत्र</w:t></w:r>\n' +
+'    </w:p>\n' +
+'    <w:p>\n' +
+'      <w:pPr><w:jc w:val="center"/><w:spacing w:after="120" w:line="220" w:lineRule="auto"/><w:pBdr><w:bottom w:val="single" w:sz="6" w:space="4" w:color="CBD5E1"/></w:pBdr></w:pPr>\n' +
+'      <w:r><w:rPr><w:rFonts w:ascii="Noto Serif Devanagari" w:hAnsi="Noto Serif Devanagari" w:cs="Mangal"/><w:sz w:val="19"/><w:szCs w:val="19"/><w:color w:val="1E293B"/></w:rPr><w:t>केंद्र शासनाच्या इतर मागासप्रवर्गात मोडणाऱ्या अर्जदाराने आरक्षणाचा फायदा मिळवण्याकरिता उत्पन्न व प्रगत व्यक्ति गट (क्रिमिलियर) यामध्ये मोडत नसल्याबाबत सादर करावाच स्वयंघोषणापत्र</w:t></w:r>\n' +
+'    </w:p>\n' +
+'    <w:p>\n' +
+'      <w:pPr><w:jc w:val="both"/><w:ind w:firstLine="400"/><w:spacing w:after="100" w:line="290" w:lineRule="auto"/></w:pPr>\n' +
+'      <w:r><w:rPr><w:rFonts w:ascii="Noto Serif Devanagari" w:hAnsi="Noto Serif Devanagari" w:cs="Mangal"/><w:sz w:val="22"/><w:szCs w:val="22"/></w:rPr><w:t xml:space="preserve">मी </w:t></w:r>\n' +
+'      <w:r><w:rPr><w:rFonts w:ascii="Noto Serif Devanagari" w:hAnsi="Noto Serif Devanagari" w:cs="Mangal"/><w:b/><w:sz w:val="22"/><w:szCs w:val="22"/></w:rPr><w:t xml:space="preserve">' + title + ' </w:t></w:r>\n' +
+'      <w:r><w:rPr><w:rFonts w:ascii="Noto Serif Devanagari" w:hAnsi="Noto Serif Devanagari" w:cs="Mangal"/><w:b/><w:sz w:val="22"/><w:szCs w:val="22"/></w:rPr><w:t xml:space="preserve">' + applicant + ' </w:t></w:r>\n' +
+'      <w:r><w:rPr><w:rFonts w:ascii="Noto Serif Devanagari" w:hAnsi="Noto Serif Devanagari" w:cs="Mangal"/><w:sz w:val="22"/><w:szCs w:val="22"/></w:rPr><w:t xml:space="preserve">श्री. </w:t></w:r>\n' +
+'      <w:r><w:rPr><w:rFonts w:ascii="Noto Serif Devanagari" w:hAnsi="Noto Serif Devanagari" w:cs="Mangal"/><w:b/><w:sz w:val="22"/><w:szCs w:val="22"/></w:rPr><w:t xml:space="preserve">' + father + ' </w:t></w:r>\n' +
+'      <w:r><w:rPr><w:rFonts w:ascii="Noto Serif Devanagari" w:hAnsi="Noto Serif Devanagari" w:cs="Mangal"/><w:b/><w:sz w:val="22"/><w:szCs w:val="22"/></w:rPr><w:t xml:space="preserve">' + relation + '</w:t></w:r>\n' +
+'      <w:r><w:rPr><w:rFonts w:ascii="Noto Serif Devanagari" w:hAnsi="Noto Serif Devanagari" w:cs="Mangal"/><w:sz w:val="22"/><w:szCs w:val="22"/></w:rPr><w:t xml:space="preserve">, वय: </w:t></w:r>\n' +
+'      <w:r><w:rPr><w:rFonts w:ascii="Noto Serif Devanagari" w:hAnsi="Noto Serif Devanagari" w:cs="Mangal"/><w:b/><w:sz w:val="22"/><w:szCs w:val="22"/></w:rPr><w:t xml:space="preserve">' + age + '</w:t></w:r>\n' +
+'      <w:r><w:rPr><w:rFonts w:ascii="Noto Serif Devanagari" w:hAnsi="Noto Serif Devanagari" w:cs="Mangal"/><w:sz w:val="22"/><w:szCs w:val="22"/></w:rPr><w:t xml:space="preserve"> वर्ष, व्यवसाय: </w:t></w:r>\n' +
+'      <w:r><w:rPr><w:rFonts w:ascii="Noto Serif Devanagari" w:hAnsi="Noto Serif Devanagari" w:cs="Mangal"/><w:b/><w:sz w:val="22"/><w:szCs w:val="22"/></w:rPr><w:t xml:space="preserve">' + occ + '</w:t></w:r>\n' +
+'      <w:r><w:rPr><w:rFonts w:ascii="Noto Serif Devanagari" w:hAnsi="Noto Serif Devanagari" w:cs="Mangal"/><w:sz w:val="22"/><w:szCs w:val="22"/></w:rPr><w:t xml:space="preserve">, रा.: </w:t></w:r>\n' +
+'      <w:r><w:rPr><w:rFonts w:ascii="Noto Serif Devanagari" w:hAnsi="Noto Serif Devanagari" w:cs="Mangal"/><w:b/><w:sz w:val="22"/><w:szCs w:val="22"/></w:rPr><w:t xml:space="preserve">' + res + '</w:t></w:r>\n' +
+'      <w:r><w:rPr><w:rFonts w:ascii="Noto Serif Devanagari" w:hAnsi="Noto Serif Devanagari" w:cs="Mangal"/><w:sz w:val="22"/><w:szCs w:val="22"/></w:rPr><w:t xml:space="preserve">, गाव/शहर: </w:t></w:r>\n' +
+'      <w:r><w:rPr><w:rFonts w:ascii="Noto Serif Devanagari" w:hAnsi="Noto Serif Devanagari" w:cs="Mangal"/><w:b/><w:sz w:val="22"/><w:szCs w:val="22"/></w:rPr><w:t xml:space="preserve">' + vil + '</w:t></w:r>\n' +
+'      <w:r><w:rPr><w:rFonts w:ascii="Noto Serif Devanagari" w:hAnsi="Noto Serif Devanagari" w:cs="Mangal"/><w:sz w:val="22"/><w:szCs w:val="22"/></w:rPr><w:t xml:space="preserve">, तहसील: </w:t></w:r>\n' +
+'      <w:r><w:rPr><w:rFonts w:ascii="Noto Serif Devanagari" w:hAnsi="Noto Serif Devanagari" w:cs="Mangal"/><w:b/><w:sz w:val="22"/><w:szCs w:val="22"/></w:rPr><w:t xml:space="preserve">' + tal + '</w:t></w:r>\n' +
+'      <w:r><w:rPr><w:rFonts w:ascii="Noto Serif Devanagari" w:hAnsi="Noto Serif Devanagari" w:cs="Mangal"/><w:sz w:val="22"/><w:szCs w:val="22"/></w:rPr><w:t xml:space="preserve">, जिल्हा: </w:t></w:r>\n' +
+'      <w:r><w:rPr><w:rFonts w:ascii="Noto Serif Devanagari" w:hAnsi="Noto Serif Devanagari" w:cs="Mangal"/><w:b/><w:sz w:val="22"/><w:szCs w:val="22"/></w:rPr><w:t xml:space="preserve">' + dist + '</w:t></w:r>\n' +
+'      <w:r><w:rPr><w:rFonts w:ascii="Noto Serif Devanagari" w:hAnsi="Noto Serif Devanagari" w:cs="Mangal"/><w:sz w:val="22"/><w:szCs w:val="22"/></w:rPr><w:t xml:space="preserve">, राज्य महाराष्ट्र येथील रहिवासी असून याद्वारे कथन करतो की मी </w:t></w:r>\n' +
+'      <w:r><w:rPr><w:rFonts w:ascii="Noto Serif Devanagari" w:hAnsi="Noto Serif Devanagari" w:cs="Mangal"/><w:b/><w:sz w:val="22"/><w:szCs w:val="22"/></w:rPr><w:t xml:space="preserve">' + caste + '</w:t></w:r>\n' +
+'      <w:r><w:rPr><w:rFonts w:ascii="Noto Serif Devanagari" w:hAnsi="Noto Serif Devanagari" w:cs="Mangal"/><w:sz w:val="22"/><w:szCs w:val="22"/></w:rPr><w:t xml:space="preserve"> या जातीचा/जमातीचा असून ही जात/जमात केंद्र शासन मिनीस्ट्री ऑफ पर्सोनेल, पब्लिक गीव्हन्सेस डिपार्टमेंट ऑफ पर्सोनेल अँड ट्रेनिंग कडील कार्यालयीन ज्ञापक क्रमांक ३६०१२/२२/९३ इएसटीटी (एसटीटी) दिनांक ०८ सप्टेंबर १९९३ अन्वये सुधारित केल्याप्रमाणे तसेच केंद्र शासनाचे आणि राज्य शासनाचे या संदर्भात वेळोवेळी निर्गमित केलेल्या सूचने (NOTIFICATION) नुसार/शासन निर्णय नुसार शासन सेवेतील आरक्षणाच्या फायद्याकरिता इतर मागास प्रवर्गात गणल्या जाते. सदर जात/जमात राज्य शासनाने विहित केलेल्या मागासवर्गीयांच्या यादीमधील. </w:t></w:r>\n' +
+'      <w:r><w:rPr><w:rFonts w:ascii="Noto Serif Devanagari" w:hAnsi="Noto Serif Devanagari" w:cs="Mangal"/><w:b/><w:sz w:val="22"/><w:szCs w:val="22"/></w:rPr><w:t xml:space="preserve">' + cat + '</w:t></w:r>\n' +
+'      <w:r><w:rPr><w:rFonts w:ascii="Noto Serif Devanagari" w:hAnsi="Noto Serif Devanagari" w:cs="Mangal"/><w:sz w:val="22"/><w:szCs w:val="22"/></w:rPr><w:t xml:space="preserve"> या प्रवर्गात मोडते.</w:t></w:r>\n' +
+'    </w:p>\n' +
+'    <w:p>\n' +
+'      <w:pPr><w:jc w:val="both"/><w:ind w:firstLine="400"/><w:spacing w:after="100" w:line="290" w:lineRule="auto"/></w:pPr>\n' +
+'      <w:r><w:rPr><w:rFonts w:ascii="Noto Serif Devanagari" w:hAnsi="Noto Serif Devanagari" w:cs="Mangal"/><w:sz w:val="22"/><w:szCs w:val="22"/></w:rPr><w:t>मी दृढपूर्वक असेही कथन करतो/करते की, केंद्र शासनाच्या क्रमांक ३६०१२/२२/९३ इएसटीटी (एससीटी) दिनांक ०८ सप्टेंबर १९९३ च्या कार्यालयीन/ज्ञापनासोबतच्या परिशिष्टातील स्तंभ क्रमांक. ३ मध्ये नमूद केलेल्या व कार्यालयीन ज्ञापन क्रमांक ३६०३३/५/२००४ इएसटीटी (आर.ई.एस) दिनांक १४ ऑक्टोबर २००४ कार्यालयीन ज्ञापक क्रमांक ३६०३३/५/२००४ इएसटीटी (आर.ई.एस) दिनांक १४ ऑक्टोबर २००८ अन्वये सुधारित केल्याप्रमाणे तसेच केंद्र शासनाचे आणि राज्य शासनाचे या संदर्भात वेळोवेळी निर्गमित केलेल्या सूचने (NOTIFICATION) नुसार/शासन निर्णय नुसार आरक्षणाच्या फायद्या करिता मी विमुक्त जाती/भटक्या जमाती/इतर मागासवर्ग/विशेष मागास प्रवर्गातील उत्पन्न व प्रगत व्यक्ति/गट (क्रिमिलियर) यामध्ये मी मोडत नाही.</w:t></w:r>\n' +
+'    </w:p>\n' +
+'    <w:p>\n' +
+'      <w:pPr><w:jc w:val="both"/><w:ind w:firstLine="400"/><w:spacing w:after="160" w:line="290" w:lineRule="auto"/></w:pPr>\n' +
+'      <w:r><w:rPr><w:rFonts w:ascii="Noto Serif Devanagari" w:hAnsi="Noto Serif Devanagari" w:cs="Mangal"/><w:sz w:val="22"/><w:szCs w:val="22"/></w:rPr><w:t>मी दृढपूर्वक असेही कथन करतो/करते की, माझ्या आई किंवा वडिलांचा किंवा आई आणि वडील या दोघांचाही दर्जा उत्पन्न हे ३१ मार्च २०२६ रोजी संपणाऱ्या आर्थिक वर्ष अखेरीस वेळोवेळी विहित केलेल्या अटी व शर्तीनुसार इतर मागासवर्ग प्रवर्गातील उत्पन्न व प्रगत व्यक्ति/गट (क्रिमिलियर) यांच्या करिता असलेल्या मर्यादेमध्ये मोडते. भारतीय न्याय संहिता २०२३ चे कलम २३६ व २३७ नुसार मी गुन्ह्यास पात्र राहील व कलम २२९ (२) याच्या तरतुदीनुसार माझ्यावर खटला भरला जाईल व मी शिक्षक पात्र राहील.</w:t></w:r>\n' +
+'    </w:p>\n' +
+'    <w:tbl>\n' +
+'      <w:tblPr>\n' +
+'        <w:tblW w:w="0" w:type="auto"/>\n' +
+'        <w:tblBorders>\n' +
+'          <w:top w:val="none"/><w:left w:val="none"/><w:bottom w:val="none"/><w:right w:val="none"/>\n' +
+'          <w:insideH w:val="none"/><w:insideV w:val="none"/>\n' +
+'        </w:tblBorders>\n' +
+'      </w:tblPr>\n' +
+'      <w:tr>\n' +
+'        <w:tc>\n' +
+'          <w:tcPr><w:tcW w:w="5200" w:type="dxa"/></w:tcPr>\n' +
+'          <w:p>\n' +
+'            <w:r><w:rPr><w:rFonts w:ascii="Noto Serif Devanagari" w:hAnsi="Noto Serif Devanagari" w:cs="Mangal"/><w:b/><w:sz w:val="22"/><w:szCs w:val="22"/></w:rPr><w:t>स्थळ: </w:t></w:r>\n' +
+'            <w:r><w:rPr><w:rFonts w:ascii="Noto Serif Devanagari" w:hAnsi="Noto Serif Devanagari" w:cs="Mangal"/><w:b/><w:sz w:val="22"/><w:szCs w:val="22"/></w:rPr><w:t>' + place + '</w:t></w:r>\n' +
+'          </w:p>\n' +
+'          <w:p>\n' +
+'            <w:r><w:rPr><w:rFonts w:ascii="Noto Serif Devanagari" w:hAnsi="Noto Serif Devanagari" w:cs="Mangal"/><w:b/><w:sz w:val="22"/><w:szCs w:val="22"/></w:rPr><w:t>दिनांक: </w:t></w:r>\n' +
+'            <w:r><w:rPr><w:rFonts w:ascii="Noto Serif Devanagari" w:hAnsi="Noto Serif Devanagari" w:cs="Mangal"/><w:b/><w:sz w:val="22"/><w:szCs w:val="22"/></w:rPr><w:t>' + date + '</w:t></w:r>\n' +
+'          </w:p>\n' +
+'        </w:tc>\n' +
+'        <w:tc>\n' +
+'          <w:tcPr><w:tcW w:w="4800" w:type="dxa"/></w:tcPr>\n' +
+'          <w:p><w:pPr><w:jc w:val="center"/></w:pPr><w:r><w:t></w:t></w:r></w:p>\n' +
+'          <w:p>\n' +
+'            <w:pPr>\n' +
+'              <w:jc w:val="center"/>\n' +
+'              <w:pBdr><w:top w:val="single" w:sz="6" w:space="4" w:color="000000"/></w:pBdr>\n' +
+'              <w:spacing w:after="20"/>\n' +
+'            </w:pPr>\n' +
+'            <w:r>\n' +
+'              <w:rPr><w:rFonts w:ascii="Noto Serif Devanagari" w:hAnsi="Noto Serif Devanagari" w:cs="Mangal"/><w:b/><w:sz w:val="22"/><w:szCs w:val="22"/></w:rPr>\n' +
+'              <w:t>( ' + applicant + ' )</w:t>\n' +
+'            </w:r>\n' +
+'          </w:p>\n' +
+'          <w:p>\n' +
+'            <w:pPr><w:jc w:val="center"/></w:pPr>\n' +
+'            <w:r>\n' +
+'              <w:rPr><w:rFonts w:ascii="Noto Serif Devanagari" w:hAnsi="Noto Serif Devanagari" w:cs="Mangal"/><w:sz w:val="18"/><w:szCs w:val="18"/></w:rPr>\n' +
+'              <w:t>स्वयंघोषणापत्र करून देणाऱ्याचे नाव व सही</w:t>\n' +
+'            </w:r>\n' +
+'          </w:p>\n' +
+'        </w:tc>\n' +
+'      </w:tr>\n' +
+'    </w:tbl>\n' +
+'    <w:p>\n' +
+'      <w:pPr>\n' +
+'        <w:jc w:val="center"/>\n' +
+'        <w:spacing w:before="140" w:after="80"/>\n' +
+'        <w:pBdr><w:top w:val="dashed" w:sz="8" w:space="4" w:color="000000"/></w:pBdr>\n' +
+'      </w:pPr>\n' +
+'      <w:r>\n' +
+'        <w:rPr><w:rFonts w:ascii="Noto Serif Devanagari" w:hAnsi="Noto Serif Devanagari" w:cs="Mangal"/><w:b/><w:sz w:val="18"/><w:szCs w:val="18"/></w:rPr>\n' +
+'        <w:t>(उमेदवाराने स्वतः साक्षरी न केलेले शपथपत्र/खुलासा रद्दबातल ठरविण्यात येईल)</w:t>\n' +
+'      </w:r>\n' +
+'    </w:p>\n' +
+'    <w:p>\n' +
+'      <w:pPr>\n' +
+'        <w:jc w:val="both"/>\n' +
+'        <w:spacing w:line="200" w:lineRule="auto"/>\n' +
+'      </w:pPr>\n' +
+'      <w:r>\n' +
+'        <w:rPr><w:rFonts w:ascii="Noto Serif Devanagari" w:hAnsi="Noto Serif Devanagari" w:cs="Mangal"/><w:b/><w:sz w:val="15"/><w:szCs w:val="15"/><w:color w:val="334155"/></w:rPr>\n' +
+'        <w:t>(सूचना: </w:t>\n' +
+'      </w:r>\n' +
+'      <w:r>\n' +
+'        <w:rPr><w:rFonts w:ascii="Noto Serif Devanagari" w:hAnsi="Noto Serif Devanagari" w:cs="Mangal"/><w:sz w:val="15"/><w:szCs w:val="15"/><w:color w:val="334155"/></w:rPr>\n' +
+'        <w:t>सदरहू आरक्षणाचा फायदा हा तात्पुरता स्वरूपाचा असून तो उमेदवाराने जात प्रमाणपत्र/उत्पन्न व प्रगत गट व्यक्ति यामध्ये मोडत नसल्यासंदर्भात सादर केलेल्या कागदपत्रांचा/पुराव्याच्या पडताळणी संदर्भात विहित केलेल्या कार्यपद्धतीचा अधिन राहील. जर उमेदवाराने इतर मागासवर्गात मोडत असल्याबाबत किंवा उत्पन्न व प्रगत गट व्यक्ती यामध्ये मोडत नसल्यासंदर्भात संबंधित अर्जासोबत जोडलेली कागदपत्रे आणि पुरावे पडताळणी अंति खोटे अथवा बनावट आढळल्यास कोणतेही पूर्व सूचना किंवा कोणतीही कारणीमासा न देता त्या उमेदवारास देण्यात आलेल्या आरक्षण विषयक फायदा कायमस्वरूपी रद्द बाबत ठरविण्यात येईल. तसेच सदर प्रकरणी संबंधित उमेदवारास जबाबदार धरण्यात ईऊन खोटे अथवा बनावट कागदपत्रे पुरावे दाखल दाखल केल्याबद्दल त्याच्याविरुद्ध भारतीय दंड विधान कायद्यानुसार विहीर केलेली कारवाई करण्यात येईल.</w:t>\n' +
+'      </w:r>\n' +
+'      <w:r>\n' +
+'        <w:rPr><w:rFonts w:ascii="Noto Serif Devanagari" w:hAnsi="Noto Serif Devanagari" w:cs="Mangal"/><w:b/><w:sz w:val="15"/><w:szCs w:val="15"/><w:color w:val="334155"/></w:rPr>\n' +
+'        <w:t>)</w:t>\n' +
+'      </w:r>\n' +
+'    </w:p>\n' +
+'    <w:sectPr>\n' +
+'      <w:pgSz w:w="11906" w:h="16838"/>\n' +
+'      <w:pgMar w:top="720" w:right="800" w:bottom="720" w:left="800"/>\n' +
+'      <w:pgBorders w:offsetFrom="page">\n' +
+'        <w:top w:val="single" w:sz="12" w:space="20" w:color="000000"/>\n' +
+'        <w:left w:val="single" w:sz="12" w:space="20" w:color="000000"/>\n' +
+'        <w:bottom w:val="single" w:sz="12" w:space="20" w:color="000000"/>\n' +
+'        <w:right w:val="single" w:sz="12" w:space="20" w:color="000000"/>\n' +
+'      </w:pgBorders>\n' +
+'    </w:sectPr>\n' +
+'  </w:body>\n' +
+'</w:document>';
+
+            const zip = new window.JSZip();
+            zip.file('[Content_Types].xml', contentTypes);
+            zip.file('_rels/.rels', rels);
+            zip.file('word/document.xml', docXml);
+
+            zip.generateAsync({ type: 'blob', mimeType: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' })
+                .then(function(blob) {
+                    const link = document.createElement('a');
+                    link.href = URL.createObjectURL(blob);
+                    link.download = filename;
+                    document.body.appendChild(link);
+                    link.click();
+                    setTimeout(() => {
+                        document.body.removeChild(link);
+                        URL.revokeObjectURL(link.href);
+                    }, 500);
+                });
+        }
+
+        function generateWordHtml(data, filename) {
+            const printArea = document.getElementById('print-area');
+            const clone = printArea.cloneNode(true);
+            clone.style.transform = 'none';
+            clone.style.boxShadow = 'none';
+            clone.style.border = '2px solid #000000';
+            clone.style.padding = '24px';
+            clone.style.background = '#ffffff';
+            clone.style.color = '#000000';
+
+            const wordHtml = '<!DOCTYPE html>\n' +
+'<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40">\n' +
+'<head>\n' +
+'    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">\n' +
+'    <title>स्वयंघोषणापत्र</title>\n' +
+'    <!--[if gte mso 9]>\n' +
+'    <xml>\n' +
+'    <w:WordDocument>\n' +
+'      <w:View>Print</w:View>\n' +
+'      <w:Zoom>100</w:Zoom>\n' +
+'      <w:DoNotOptimizeForBrowser/>\n' +
+'    </w:WordDocument>\n' +
+'    </xml>\n' +
+'    <![endif]-->\n' +
+'    <style>\n' +
+'        @page Section1 {\n' +
+'            size: 21.0cm 29.7cm;\n' +
+'            margin: 1.5cm 1.5cm 1.5cm 1.5cm;\n' +
+'            mso-page-orientation: portrait;\n' +
+'        }\n' +
+'        div.Section1 { page: Section1; }\n' +
+'        body, p, span, div, h2, h3 {\n' +
+'            font-family: "Noto Serif Devanagari", "Mangal", "Noto Sans Devanagari", "Arial Unicode MS", serif !important;\n' +
+'            color: #000000 !important;\n' +
+'        }\n' +
+'    </style>\n' +
+'</head>\n' +
+'<body>\n' +
+'    <div class="Section1">\n' +
+'        ' + clone.outerHTML + '\n' +
+'    </div>\n' +
+'</body>\n' +
+'</html>';
+
+            const blob = new Blob(['\ufeff' + wordHtml], { type: 'application/msword;charset=utf-8' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = filename;
+            document.body.appendChild(link);
+            link.click();
+            setTimeout(() => {
+                document.body.removeChild(link);
+                URL.revokeObjectURL(link.href);
+            }, 500);
+        }
+
+        /* प्रिंट - Flawless Full Page Isolated A4 Print */
+        function triggerPrint() {
+            const printArea = document.getElementById('print-area');
+            if (!printArea) {
+                window.print();
+                return;
+            }
+
+            let iframe = document.getElementById('print-window-frame');
+            if (iframe) iframe.remove();
+
+            iframe = document.createElement('iframe');
+            iframe.id = 'print-window-frame';
+            iframe.style.position = 'fixed';
+            iframe.style.right = '0';
+            iframe.style.bottom = '0';
+            iframe.style.width = '0';
+            iframe.style.height = '0';
+            iframe.style.border = '0';
+            document.body.appendChild(iframe);
+
+            const clone = printArea.cloneNode(true);
+            clone.style.transform = 'none';
+            clone.style.margin = '0 auto';
+            clone.style.boxShadow = 'none';
+            clone.style.borderRadius = '0';
+            clone.style.width = '100%';
+            clone.style.maxWidth = '100%';
+            clone.style.boxSizing = 'border-box';
+
+            const doc = iframe.contentWindow.document;
+            doc.open();
+            doc.write('<!DOCTYPE html>\n' +
+'<html lang="mr">\n' +
+'<head>\n' +
+'    <meta charset="UTF-8">\n' +
+'    <title>स्वयंघोषणापत्र (परिशिष्ट "ब")</title>\n' +
+'    <link rel="preconnect" href="https://fonts.googleapis.com">\n' +
+'    <link rel="preconnect" href="https://fonts.gstatic.com">\n' +
+'    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;500;600;700&family=Noto+Serif+Devanagari:wght@400;500;600;700&display=swap" rel="stylesheet">\n' +
+'    <script src="https://cdn.tailwindcss.com"><\/script>\n' +
+'    <style>\n' +
+'        @page {\n' +
+'            size: A4 portrait;\n' +
+'            margin: 8mm 10mm;\n' +
+'        }\n' +
+'        * {\n' +
+'            box-sizing: border-box;\n' +
+'            font-family: "Noto Serif Devanagari", "Noto Sans Devanagari", serif !important;\n' +
+'        }\n' +
+'        html, body {\n' +
+'            margin: 0;\n' +
+'            padding: 0;\n' +
+'            background: #ffffff !important;\n' +
+'            color: #000000 !important;\n' +
+'            width: 100%;\n' +
+'            -webkit-print-color-adjust: exact !important;\n' +
+'            print-color-adjust: exact !important;\n' +
+'        }\n' +
+'        #print-area {\n' +
+'            width: 100% !important;\n' +
+'            max-width: 100% !important;\n' +
+'            margin: 0 auto !important;\n' +
+'            border: 2px solid #000000 !important;\n' +
+'            box-shadow: none !important;\n' +
+'            border-radius: 0 !important;\n' +
+'            padding: 24px 28px !important;\n' +
+'            background: #ffffff !important;\n' +
+'            color: #000000 !important;\n' +
+'            font-size: 13px !important;\n' +
+'            line-height: 1.75 !important;\n' +
+'            page-break-inside: avoid !important;\n' +
+'            break-inside: avoid !important;\n' +
+'        }\n' +
+'        #print-area h2 {\n' +
+'            font-size: 16px !important;\n' +
+'            line-height: 1.3 !important;\n' +
+'            margin-bottom: 2px !important;\n' +
+'        }\n' +
+'        #print-area h3 {\n' +
+'            font-size: 14.5px !important;\n' +
+'            line-height: 1.3 !important;\n' +
+'            margin-bottom: 2px !important;\n' +
+'        }\n' +
+'        #print-area .text-justify {\n' +
+'            font-size: 13px !important;\n' +
+'            line-height: 1.75 !important;\n' +
+'        }\n' +
+'        #print-area .space-y-3 > :not([hidden]) ~ :not([hidden]) {\n' +
+'            margin-top: 8px !important;\n' +
+'            margin-bottom: 0 !important;\n' +
+'        }\n' +
+'        #print-area .mt-8 {\n' +
+'            margin-top: 20px !important;\n' +
+'        }\n' +
+'        #print-area .my-4 {\n' +
+'            margin-top: 8px !important;\n' +
+'            margin-bottom: 8px !important;\n' +
+'        }\n' +
+'        #stamp-preview-zone.hidden {\n' +
+'            display: none !important;\n' +
+'        }\n' +
+'        #stamp-preview-zone:not(.hidden) {\n' +
+'            display: block !important;\n' +
+'            opacity: 1 !important;\n' +
+'            visibility: visible !important;\n' +
+'        }\n' +
+'    </style>\n' +
+'</head>\n' +
+'<body>\n' +
+'    ' + clone.outerHTML + '\n' +
+'</body>\n' +
+'</html>');
+            doc.close();
+
+            setTimeout(() => {
+                iframe.contentWindow.focus();
+                iframe.contentWindow.print();
+            }, 350);
+        }
+
+        function saveFormData() {
+            const formData = {
+                title: inputTitle.value, applicantName: inputApplicantName.value, relation: inputRelation.value, fatherName: inputFatherName.value,
+                age: inputAge.value, occupation: inputOccupation.value, residence: inputResidence.value,
+                village: inputVillage.value, taluka: inputTaluka.value, dist: inputDist.value,
+                caste: inputCaste.value, category: inputCategory.value, place: inputPlace.value,
+                date: inputDate.value, topSpace: inputTopSpace.value
+            };
+            localStorage.setItem('vle_self_declaration_data', JSON.stringify(formData));
+            alert('माहिती सेव्ह झाली आहे!');
+        }
+
+        function resetFormFields() {
+            localStorage.removeItem('vle_self_declaration_data');
+            inputTitle.value = "श्री.";
+            inputApplicantName.value = "योगेश शंकर पिंपळे"; 
+            inputRelation.value = "यांचा मुलगा";
+            inputFatherName.value = "शंकर पिंपळे";
+            inputAge.value = "२५";
+            inputOccupation.value = "शेतकरी";
+            inputResidence.value = "पाचोरा";
+            inputVillage.value = "पाचोरा"; 
+            inputTaluka.value = "पाचोरा"; 
+            inputDist.value = "जळगांव";
+            inputCaste.value = "कुणबी";
+            inputCategory.value = "इतर मागासवर्ग (OBC)";
+            inputPlace.value = "पाचोरा";
+            inputDate.value = "22/07/2026";
+            inputTopSpace.value = 0; spaceVal.innerText = "0 px"; dynamicSpaceHolder.style.height = "0px";
+            changeStamp('none'); updatePreview(); currentZoom = 100; applyZoom();
+        }
+
+        function cleanAllInitialEntities() {
+            document.querySelectorAll('input, select, textarea').forEach(el => {
+                if (el.value && (/&#|&amp;#/i.test(el.value))) {
+                    el.value = decodeHtmlEntities(el.value);
+                }
+            });
+            function walkTextNodes(node) {
+                if (node.nodeType === Node.TEXT_NODE) {
+                    if (/&#|&amp;#/i.test(node.nodeValue)) {
+                        node.nodeValue = decodeHtmlEntities(node.nodeValue);
+                    }
+                } else {
+                    node.childNodes.forEach(walkTextNodes);
+                }
+            }
+            const printArea = document.getElementById('print-area');
+            if (printArea) walkTextNodes(printArea);
+        }
+
+        window.addEventListener('load', function() {
+            if (typeof resetInactivityTimer === 'function') resetInactivityTimer();
+            resetFormFields();
+            cleanAllInitialEntities();
+            updatePreview();
+        });
+
+        const allFields = [inputTitle, inputApplicantName, inputRelation, inputFatherName, inputAge, inputOccupation, inputResidence, inputVillage, inputTaluka, inputDist, inputCaste, inputCategory, inputPlace, inputDate];
+        allFields.forEach(field => {
+            field.addEventListener('input', updatePreview);
+            field.addEventListener('change', updatePreview);
+        });
+    </script>
+</body>
+</html>
