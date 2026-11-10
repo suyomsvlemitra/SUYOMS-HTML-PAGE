@@ -1,0 +1,956 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Primary Meta Tags -->
+    <title>Airtel Bank Passbook Print Generator - Free CSP Tool | SUYOMS VLE MITRA</title>
+    <meta name="title" content="Airtel Bank Passbook Print Generator - Free CSP Tool | ">
+    <meta name="description" content="Generate and print official-style Airtel Payments Bank digital passbooks online for CSP agents & retailers. Easy customer details formatting, IFSC, account number & HD printable PDF.">
+    <meta name="keywords" content="airtel passbook printing online, csp passbook action file, airtel passbook print online, passbook">
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    
+    <meta property="og:title" content="Airtel Bank Passbook Print Generator">
+    <meta property="og:description" content="Generate and print digital passbooks online for CSP agents and retailers. Standard dimension HD printable passbook.">
+    
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    
+    <meta name="twitter:title" content="Airtel Bank Passbook Print Generator">
+    <meta name="twitter:description" content="Generate and print digital passbooks online for CSP agents and retailers.">
+    
+
+    <!-- Structured Data (Schema.org JSON-LD) -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "WebApplication",
+          "name": "Airtel Passbook Generator",
+          "url": "",
+          "applicationCategory": "BusinessApplication",
+          "operatingSystem": "All",
+          "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "INR"
+          },
+          "description": "Online tool to quickly format and print digital passbooks for Airtel Payments Bank for CSP agents."
+        },
+        {
+          "@type": "BreadcrumbList",
+          "itemListElement": [
+            { "@type": "ListItem", "position": 1, "name": "Home", "item": "" },
+            { "@type": "ListItem", "position": 2, "name": "Bank Passbook Print", "item": "" }
+          ]
+        }
+      ]
+    }
+    </script>
+
+    <!-- Google Fonts for bilingual text & UI -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Roboto:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <!-- FontAwesome for UI Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            --theme-color: #e40000;
+            --theme-color-dark: #b80000;
+            --theme-color-light: #ff3333;
+            --bg-gradient: linear-gradient(135deg, #130922 0%, #251642 100%);
+            --card-bg: rgba(45, 27, 78, 0.45);
+            --card-border: rgba(168, 85, 247, 0.2);
+            --text-primary: #ffffff;
+            --text-secondary: #d8b4fe;
+            --input-bg: rgba(15, 5, 30, 0.4);
+            --input-border: rgba(168, 85, 247, 0.3);
+            --input-focus: #c084fc;
+        }
+
+        body {
+            font-family: 'Poppins', 'Roboto', sans-serif;
+            background: var(--bg-gradient);
+            color: var(--text-primary);
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
+
+        /* --- WORKSPACE CONTAINER (SPLIT-SCREEN) --- */
+        .workspace-container {
+            display: flex;
+            width: 100%;
+            min-height: 100vh;
+            position: relative;
+        }
+
+        /* Left Side: Input Form Sidebar */
+        .form-panel {
+            width: 460px;
+            background: var(--card-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-right: 1px solid var(--card-border);
+            padding: 14px 16px;
+            box-sizing: border-box;
+            height: 100vh;
+            position: sticky;
+            top: 0;
+            overflow-y: auto;
+            flex-shrink: 0;
+            z-index: 10;
+        }
+
+        .form-panel::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at center, rgba(168,85,247,0.12) 0%, transparent 70%);
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .preview-panel {
+            flex-grow: 1;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 16px;
+            box-sizing: border-box;
+            position: relative;
+            overflow-y: auto;
+        }
+
+        .form-header {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            margin-bottom: 10px;
+            border-bottom: 1px solid rgba(168, 85, 247, 0.2);
+            padding-bottom: 6px;
+        }
+
+        .form-header h2 {
+            margin: 4px 0 0 0;
+            font-size: 20px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            background: linear-gradient(135deg, #ffffff 0%, #e9d5ff 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .form-header p {
+            margin: 3px 0 0 0;
+            font-size: 11px;
+            color: var(--text-secondary);
+        }
+
+        .form-grid {
+            position: relative;
+            z-index: 1;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 7px 9px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .form-group label {
+            font-size: 10.5px;
+            font-weight: 500;
+            color: #e9d5ff;
+            margin-bottom: 2px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .form-group label i {
+            color: #c084fc;
+        }
+
+        .form-group input, .form-group select {
+            background: var(--input-bg);
+            border: 1px solid var(--input-border);
+            border-radius: 6px;
+            padding: 6px 9px;
+            color: #ffffff;
+            font-size: 11.5px;
+            font-family: inherit;
+            transition: all 0.25s ease;
+            box-sizing: border-box;
+            width: 100%;
+        }
+
+        .form-group input:focus, .form-group select:focus {
+            outline: none;
+            border-color: var(--input-focus);
+            box-shadow: 0 0 0 2px rgba(192, 132, 252, 0.25);
+            background: rgba(15, 5, 30, 0.6);
+        }
+
+        .btn-row {
+            grid-column: 1 / -1;
+            display: flex;
+            gap: 8px;
+            margin-top: 8px;
+        }
+
+        .btn-secondary {
+            background: rgba(168, 85, 247, 0.15);
+            color: #ffffff;
+            border: 1px solid rgba(168, 85, 247, 0.3);
+            padding: 7px 12px;
+            border-radius: 6px;
+            font-size: 11.5px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            width: 100%;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(168, 85, 247, 0.25);
+            border-color: rgba(168, 85, 247, 0.5);
+        }
+
+        /* --- CONTROL PANEL (TOP BAR IN PREVIEW AREA) --- */
+        .control-panel {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            max-width: 680px;
+            margin-bottom: 12px;
+            background: rgba(45, 27, 78, 0.45);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(168, 85, 247, 0.2);
+            border-radius: 10px;
+            padding: 8px 14px;
+            box-sizing: border-box;
+            gap: 10px;
+        }
+
+        .control-panel .tip-box {
+            font-size: 11px;
+            color: #e9d5ff;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .control-panel .tip-box i {
+            color: #fbd38d;
+        }
+
+        .btn-ctrl {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 16px;
+            font-size: 12.5px;
+            font-weight: 600;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+            text-decoration: none;
+        }
+
+        .btn-ctrl-print {
+            background: linear-gradient(135deg, #9333ea 0%, #c084fc 100%);
+            color: #ffffff;
+            box-shadow: 0 4px 12px rgba(147, 51, 234, 0.35);
+        }
+
+        .btn-ctrl-print:hover {
+            background: linear-gradient(135deg, #a855f7 0%, #d8b4fe 100%);
+            transform: translateY(-1px);
+            box-shadow: 0 6px 18px rgba(147, 51, 234, 0.45);
+        }
+
+        /* --- PASSBOOK VIEW (COMPACT PREVIEW MODE) --- */
+        #passbook-view {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            padding-bottom: 40px;
+        }
+
+        .passbook-container {
+            width: 680px;
+            background: #ffffff;
+            color: #0f172a;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+            border: 1px solid #cbd5e1;
+            position: relative;
+            border-radius: 5px;
+            overflow: hidden;
+            font-family: 'Roboto', Arial, sans-serif;
+            padding: 16px 22px;
+            box-sizing: border-box;
+        }
+
+        /* Zoom scaling for smaller screens */
+        @media (max-width: 1200px) {
+            .passbook-container { zoom: 0.9; }
+        }
+        @media (max-width: 1100px) {
+            .passbook-container { zoom: 0.82; }
+        }
+        @media (max-width: 1024px) {
+            .passbook-container { zoom: 1; }
+        }
+
+        /* Watermark Background */
+        .half-watermark {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 320px;
+            height: 320px;
+            pointer-events: none;
+            opacity: 0.075;
+            z-index: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .half-watermark img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+
+        /* TOP HALF: Digital Savings Account Features */
+        .passbook-top-half {
+            position: relative;
+            z-index: 1;
+            padding-bottom: 8px;
+        }
+
+        .top-header-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 12px;
+        }
+
+        .top-feature-title {
+            color: #e40000;
+            font-family: 'Poppins', sans-serif;
+            font-size: 15.5px;
+            font-weight: 700;
+            margin: 0;
+            letter-spacing: -0.2px;
+        }
+
+        .top-header-logo {
+            height: 26px;
+            width: auto;
+            object-fit: contain;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px 18px;
+            margin-bottom: 10px;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .feature-icon-circle {
+            width: 36px;
+            height: 36px;
+            min-width: 36px;
+            border-radius: 50%;
+            border: 2px solid #e40000;
+            box-shadow: inset 0 0 0 1.5px #ffffff, 0 2px 6px rgba(228, 0, 0, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #ffffff;
+            color: #e40000;
+            font-size: 15px;
+            flex-shrink: 0;
+        }
+
+        .feature-text {
+            font-size: 10.5px;
+            font-weight: 500;
+            color: #1e293b;
+            line-height: 1.3;
+        }
+
+        .feature-footer-notice {
+            font-size: 9px;
+            color: #334155;
+            line-height: 1.35;
+            border-top: 1px solid #e2e8f0;
+            padding-top: 6px;
+            margin-top: 6px;
+            font-weight: 500;
+        }
+
+        /* FOLD DIVIDER WITH LOGO */
+        .fold-line {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 14px 0;
+            position: relative;
+            z-index: 1;
+        }
+
+        .fold-line::before,
+        .fold-line::after {
+            content: '';
+            flex-grow: 1;
+            border-top: 1px dashed #cbd5e1;
+        }
+
+        .fold-content {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 0 12px;
+            background: #ffffff;
+        }
+
+        .fold-logo {
+            height: 16px;
+            width: auto;
+            object-fit: contain;
+        }
+
+        .fold-text {
+            font-size: 8.5px;
+            color: #64748b;
+            letter-spacing: 0.8px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        /* BOTTOM HALF: Account Details */
+        .passbook-bottom-half {
+            position: relative;
+            z-index: 1;
+            padding-top: 2px;
+        }
+
+        .account-details-heading {
+            text-align: center;
+            font-size: 14px;
+            font-weight: 800;
+            color: #000000;
+            letter-spacing: 0.6px;
+            margin: 2px 0 14px 0;
+            font-family: 'Roboto', sans-serif;
+            text-transform: uppercase;
+        }
+
+        .details-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 11px;
+            color: #000000;
+            font-family: 'Roboto', Arial, sans-serif;
+        }
+
+        .details-table td {
+            padding: 3.5px 0;
+            vertical-align: top;
+        }
+
+        .td-label {
+            font-weight: 400;
+            color: #000000;
+            width: 130px;
+            white-space: nowrap;
+        }
+
+        .td-value {
+            font-weight: 400;
+            color: #000000;
+            padding-right: 12px;
+            outline: none;
+        }
+
+        .td-value.bold {
+            font-weight: 600;
+        }
+
+        .address-block {
+            line-height: 1.4;
+            font-size: 10.5px;
+            white-space: pre-line;
+        }
+
+        /* CSP BRANCH MANAGER SIGNATURE SECTION */
+        .signature-section {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 14px;
+            margin-bottom: 6px;
+        }
+
+        .signature-box {
+            text-align: center;
+            width: 170px;
+        }
+
+        .sig-line {
+            border-top: 1.5px solid #000000;
+            margin-bottom: 4px;
+        }
+
+        .sig-title {
+            font-family: 'Roboto', Arial, sans-serif;
+            font-size: 10.5px;
+            font-weight: 700;
+            color: #000000;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            outline: none;
+        }
+
+        .sig-sub {
+            font-size: 9px;
+            color: #475569;
+            font-weight: 500;
+            margin-top: 1px;
+            outline: none;
+        }
+
+        .bottom-disclaimer {
+            font-size: 8.5px;
+            color: #000000;
+            line-height: 1.4;
+            margin-top: 14px;
+            border-top: 1.5px solid #000000;
+            padding-top: 6px;
+            text-align: justify;
+            font-weight: 400;
+        }
+
+        /* PRINT SETTINGS */
+        @media print {
+            body {
+                background: #ffffff !important;
+                overflow: visible !important;
+            }
+            .form-panel, .control-panel {
+                display: none !important;
+            }
+            .workspace-container {
+                display: block !important;
+                height: auto !important;
+                overflow: visible !important;
+            }
+            .preview-panel {
+                padding: 0 !important;
+                height: auto !important;
+                overflow: visible !important;
+                background: #ffffff !important;
+                margin-right: 0 !important;
+            }
+            #passbook-view {
+                display: block !important;
+                margin: 0;
+                padding: 0;
+            }
+            .passbook-container {
+                box-shadow: none !important;
+                border: none !important;
+                width: 100% !important;
+                zoom: 1 !important;
+                padding: 12px 16px !important;
+            }
+        }
+    </style>
+    <script src="ads-manager.js?v=37.0.0" defer></script>
+</head>
+<body>
+
+    <!-- Main Workspace Container -->
+    <div class="workspace-container">
+        
+        <!-- Left Side: Input Form Sidebar -->
+        <div class="form-panel">
+            <div class="form-header">
+                <h2>Passbook Generator</h2>
+                <p>Generate & print official-style Airtel digital passbooks</p>
+            </div>
+
+            <div class="form-grid">
+                <div class="form-group full-width">
+                    <label><i class="fa-solid fa-user"></i> Customer Name</label>
+                    <input type="text" id="in-name" placeholder="Customer Full Name">
+                </div>
+
+                <div class="form-group">
+                    <label><i class="fa-solid fa-id-badge"></i> Customer ID</label>
+                    <input type="text" id="in-customer-id" placeholder="e.g. 201295184">
+                </div>
+
+                <div class="form-group">
+                    <label><i class="fa-solid fa-file-invoice"></i> CKYC ID</label>
+                    <input type="text" id="in-ckyc" placeholder="Optional">
+                </div>
+
+                <div class="form-group">
+                    <label><i class="fa-solid fa-user-check"></i> Nominee Status</label>
+                    <select id="in-nominee">
+                        <option value="Registered" selected>Registered</option>
+                        <option value="Not Registered">Not Registered</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label><i class="fa-solid fa-hashtag"></i> Customer A/c No.</label>
+                    <input type="text" id="in-account" placeholder="e.g. 9321287779">
+                </div>
+
+                <div class="form-group">
+                    <label><i class="fa-solid fa-barcode"></i> MICR Code</label>
+                    <input type="text" id="in-micr" value="110753001">
+                </div>
+
+                <div class="form-group">
+                    <label><i class="fa-solid fa-building-columns"></i> IFSC Code</label>
+                    <input type="text" id="in-ifsc" value="AIRP0000001">
+                </div>
+
+                <div class="form-group">
+                    <label><i class="fa-solid fa-wallet"></i> Type of Bank A/C</label>
+                    <input type="text" id="in-ac-type" value="SBA">
+                </div>
+
+                <div class="form-group">
+                    <label><i class="fa-solid fa-calendar-day"></i> Opening A/C Date</label>
+                    <input type="text" id="in-date" placeholder="DD/MM/YYYY">
+                </div>
+
+                <div class="form-group full-width">
+                    <label><i class="fa-solid fa-code-branch"></i> Branch Name</label>
+                    <input type="text" id="in-branch" value="AIRTEL PAYMENTS BANK BRANCH">
+                </div>
+
+                <div class="form-group">
+                    <label><i class="fa-solid fa-phone"></i> Tel / Mobile No.</label>
+                    <input type="text" id="in-mobile" placeholder="e.g. 9321287779">
+                </div>
+
+                <div class="form-group">
+                    <label><i class="fa-solid fa-signature"></i> Signature Label</label>
+                    <input type="text" id="in-sig-label" value="CSP BRANCH MANAGER">
+                </div>
+
+                <div class="form-group full-width">
+                    <label><i class="fa-solid fa-location-dot"></i> Customer Address</label>
+                    <input type="text" id="in-address" placeholder="Complete Customer Address">
+                </div>
+
+                <div class="btn-row">
+                    <button class="btn-secondary" type="button" onclick="loadSampleData()">
+                        <i class="fa-solid fa-rotate-left"></i> Reset Sample Data
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Side: Preview Display Panel -->
+        <div class="preview-panel" id="passbook-view">
+            
+            <!-- Sticky Action Header -->
+            <div class="control-panel">
+                <div class="tip-box">
+                    <i class="fa-solid fa-circle-info"></i>
+                    <span>Values update in real-time. Edit text directly on the sheet!</span>
+                </div>
+                <button class="btn-ctrl btn-ctrl-print" onclick="window.print()">
+                    <i class="fa-solid fa-print"></i> Print Passbook
+                </button>
+            </div>
+
+            <!-- The Passbook Document -->
+            <div class="passbook-container">
+                
+                <!-- TOP HALF: Digital Savings Account Features -->
+                <div class="passbook-top-half">
+                    <div class="half-watermark">
+                        <img src="https://cdn.jsdelivr.net/gh/suyomsvlemitra/AI-Images@Suyoms-images/logoairtel.png" id="watermark-logo" alt="Bank Logo Watermark" class="watermark-img">
+                    </div>
+                    <div class="top-header-bar">
+                        <h2 class="top-feature-title">Digital Savings Account for Daily Transactions*</h2>
+                        <img src="https://cdn.jsdelivr.net/gh/suyomsvlemitra/AI-Images@Suyoms-images/logoairtel.png" id="top-logo" alt="Bank Logo" class="top-header-logo">
+                    </div>
+                    
+                    <div class="features-grid">
+                        <div class="feature-item">
+                            <div class="feature-icon-circle">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" class="theme-svg">
+                                    <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                                </svg>
+                            </div>
+                            <div class="feature-text">Earn attractive interest rates on your deposits*</div>
+                        </div>
+
+                        <div class="feature-item">
+                            <div class="feature-icon-circle">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="theme-svg">
+                                    <line x1="3" y1="21" x2="21" y2="21"></line>
+                                    <line x1="6" y1="18" x2="6" y2="11"></line>
+                                    <line x1="10" y1="18" x2="10" y2="11"></line>
+                                    <line x1="14" y1="18" x2="14" y2="11"></line>
+                                    <line x1="18" y1="18" x2="18" y2="11"></line>
+                                    <polygon points="12 3 2 10 22 10 12 3"></polygon>
+                                </svg>
+                            </div>
+                            <div class="feature-text" id="feature-banking-point">Deposit and withdraw cash from your nearest Airtel Payments Bank banking point</div>
+                        </div>
+
+                        <div class="feature-item">
+                            <div class="feature-icon-circle">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="theme-svg">
+                                    <path d="M12 22v-8"></path>
+                                    <path d="M12 14a8 8 0 0 0 8-8H4a8 8 0 0 0 8 8z"></path>
+                                    <path d="M12 2a2 2 0 0 1 2 2"></path>
+                                </svg>
+                            </div>
+                            <div class="feature-text">Get free personal accidental insurance*</div>
+                        </div>
+
+                        <div class="feature-item">
+                            <div class="feature-icon-circle">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="theme-svg">
+                                    <path d="M7 4v16M7 4l-4 4M7 4l4 4"></path>
+                                    <path d="M17 20V4M17 20l4-4M17 20l-4-4"></path>
+                                </svg>
+                            </div>
+                            <div class="feature-text">Receive Direct Benefit Transfers (DBTs) in your account*</div>
+                        </div>
+
+                        <div class="feature-item">
+                            <div class="feature-icon-circle">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="theme-svg">
+                                    <rect x="2" y="5" width="20" height="14" rx="2"></rect>
+                                    <line x1="2" y1="10" x2="22" y2="10"></line>
+                                </svg>
+                            </div>
+                            <div class="feature-text">Get an instant debit card*</div>
+                        </div>
+
+                        <div class="feature-item">
+                            <div class="feature-icon-circle">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="theme-svg">
+                                    <rect x="2" y="6" width="20" height="12" rx="2"></rect>
+                                    <circle cx="12" cy="12" r="3"></circle>
+                                    <path d="M6 12h.01M18 12h.01"></path>
+                                </svg>
+                            </div>
+                            <div class="feature-text">Send and receive money across India</div>
+                        </div>
+                    </div>
+
+                    <div class="feature-footer-notice">
+                        The passbook serves as a record of transactions. It is the customer's responsibility to review and ensure the accuracy of the entries.<br>
+                        *Subject to applicable terms and condition and fulfillment of eligibility criteria.
+                    </div>
+                </div>
+
+                <!-- FOLD DIVIDER -->
+                <div class="fold-line">
+                    <div class="fold-content">
+                        <img src="https://cdn.jsdelivr.net/gh/suyomsvlemitra/AI-Images@Suyoms-images/logoairtel.png" id="fold-logo-1" alt="Logo" class="fold-logo">
+                        <span class="fold-text">FOLD HERE</span>
+                        <img src="https://cdn.jsdelivr.net/gh/suyomsvlemitra/AI-Images@Suyoms-images/logoairtel.png" id="fold-logo-2" alt="Logo" class="fold-logo">
+                    </div>
+                </div>
+
+                <!-- BOTTOM HALF: Account Details -->
+                <div class="passbook-bottom-half">
+                    <div class="half-watermark">
+                        <img src="https://cdn.jsdelivr.net/gh/suyomsvlemitra/AI-Images@Suyoms-images/logoairtel.png" id="watermark-logo-2" alt="Bank Logo Watermark" class="watermark-img">
+                    </div>
+                    <h3 class="account-details-heading">ACCOUNT DETAILS</h3>
+
+                    <table class="details-table">
+                        <tr>
+                            <td class="td-label">Customer Name</td>
+                            <td class="td-value" id="out-name" contenteditable="true">AMOL SHANKAR PATIL</td>
+                            <td class="td-label">Customer ID</td>
+                            <td class="td-value" id="out-customer-id" contenteditable="true">405821963</td>
+                        </tr>
+                        <tr>
+                            <td class="td-label">CKYC ID</td>
+                            <td class="td-value" id="out-ckyc" contenteditable="true"></td>
+                            <td class="td-label">Nominee Registered</td>
+                            <td class="td-value" id="out-nominee" contenteditable="true">Registered</td>
+                        </tr>
+                        <tr>
+                            <td class="td-label">Customer A/c No.</td>
+                            <td class="td-value bold" id="out-account" contenteditable="true">9158426730</td>
+                            <td class="td-label">MICR Code</td>
+                            <td class="td-value" id="out-micr" contenteditable="true">110753001</td>
+                        </tr>
+                        <tr>
+                            <td class="td-label">IFSC Code</td>
+                            <td class="td-value bold" id="out-ifsc" contenteditable="true">AIRP0000001</td>
+                            <td class="td-label">Type of Bank A/C</td>
+                            <td class="td-value" id="out-ac-type" contenteditable="true">SBA</td>
+                        </tr>
+                        <tr>
+                            <td class="td-label">Opening A/C Date</td>
+                            <td class="td-value" id="out-date" contenteditable="true">12/06/2024</td>
+                            <td class="td-label">Branch name</td>
+                            <td class="td-value" id="out-branch" contenteditable="true">AIRTEL PAYMENTS BANK BRANCH</td>
+                        </tr>
+                        <tr>
+                            <td class="td-label" style="padding-top: 8px;">Customer Address</td>
+                            <td class="td-value address-block" style="padding-top: 8px;" id="out-address" contenteditable="true">MUKAPOST- PACHORA, GANESH COLONY, TAL- PACHORA, DIST- JALGAON, MAHARASHTRA, PIN- 425201
+Tel.:9158426730</td>
+                            <td class="td-label" style="padding-top: 8px;">Bank Address</td>
+                            <td class="td-value address-block" style="padding-top: 8px;" id="out-bank-address">Name: Airtel Payments Bank Limited
+Bharti Crescent, 1, Nelson Mandela Road, Vasant Kunj,
+Phase - II, New Delhi - 110070
+CIN: U65100DL2010PLC201058
+E-mail: customercare@airtelbank.com
+Tel.: 1800-23400</td>
+                        </tr>
+                    </table>
+
+                    <!-- CSP Branch Manager Signature Block -->
+                    <div class="signature-section">
+                        <div class="signature-box">
+                            <div class="sig-line"></div>
+                            <div class="sig-title" id="out-sig-title" contenteditable="true">CSP BRANCH MANAGER</div>
+                            <div class="sig-sub" contenteditable="true">(Authorized Signatory & Stamp)</div>
+                        </div>
+                    </div>
+
+                    <div class="bottom-disclaimer">
+                        Disclaimer: Each depositor in a bank is insured up to a maximum of Rs.200,000 (Rupees Two Lakh) for both principal and interest amount held by him in the same right and same capacity.
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts for Live Updates -->
+    <script>
+        const bankData = {
+            name: "Airtel Payments Bank",
+            logo: "https://cdn.jsdelivr.net/gh/suyomsvlemitra/AI-Images@Suyoms-images/logoairtel.png",
+            primaryColor: "#e40000",
+            primaryColorLight: "#ff3333",
+            ifsc: "AIRP0000001",
+            micr: "110753001",
+            branch: "AIRTEL PAYMENTS BANK BRANCH",
+            bankingPoint: "Deposit and withdraw cash from your nearest Airtel Payments Bank banking point",
+            bankAddress: "Name: Airtel Payments Bank Limited\nBharti Crescent, 1, Nelson Mandela Road, Vasant Kunj,\nPhase - II, New Delhi - 110070\nCIN: U65100DL2010PLC201058\nE-mail: customercare@airtelbank.com\nTel.: 1800-23400"
+        };
+
+        function loadSampleData() {
+            document.getElementById('in-name').value = "AMOL SHANKAR PATIL";
+            document.getElementById('in-customer-id').value = "405821963";
+            document.getElementById('in-account').value = "9158426730";
+            document.getElementById('in-mobile').value = "9158426730";
+            document.getElementById('in-address').value = "MUKAPOST- PACHORA, GANESH COLONY, TAL- PACHORA, DIST- JALGAON, MAHARASHTRA, PIN- 425201";
+            document.getElementById('in-ckyc').value = "";
+            document.getElementById('in-nominee').value = "Registered";
+            document.getElementById('in-ac-type').value = "SBA";
+            document.getElementById('in-date').value = "12/06/2024";
+            document.getElementById('in-sig-label').value = "CSP BRANCH MANAGER";
+            
+            updateLivePreview();
+        }
+
+        function updateLivePreview() {
+            const name = document.getElementById('in-name').value;
+            const customerId = document.getElementById('in-customer-id').value;
+            const ckyc = document.getElementById('in-ckyc').value;
+            const nominee = document.getElementById('in-nominee').value;
+            const account = document.getElementById('in-account').value;
+            const micr = document.getElementById('in-micr').value;
+            const ifsc = document.getElementById('in-ifsc').value;
+            const acType = document.getElementById('in-ac-type').value;
+            const date = document.getElementById('in-date').value;
+            const branch = document.getElementById('in-branch').value;
+            const mobile = document.getElementById('in-mobile').value;
+            const sigLabel = document.getElementById('in-sig-label').value;
+            const address = document.getElementById('in-address').value;
+
+            document.getElementById('out-name').textContent = name;
+            document.getElementById('out-customer-id').textContent = customerId;
+            document.getElementById('out-ckyc').textContent = ckyc;
+            document.getElementById('out-nominee').textContent = nominee;
+            document.getElementById('out-account').textContent = account;
+            document.getElementById('out-micr').textContent = micr;
+            document.getElementById('out-ifsc').textContent = ifsc;
+            document.getElementById('out-ac-type').textContent = acType;
+            document.getElementById('out-date').textContent = date;
+            document.getElementById('out-branch').textContent = branch;
+            document.getElementById('out-sig-title').textContent = sigLabel || "CSP BRANCH MANAGER";
+            
+            let fullAddress = address;
+            if (mobile && mobile.trim() !== "") {
+                fullAddress += "\nTel.:" + mobile;
+            }
+            document.getElementById('out-address').innerText = fullAddress;
+        }
+
+        // Initialize values on first load
+        window.addEventListener('DOMContentLoaded', () => {
+            loadSampleData();
+            
+            const inputIds = [
+                'in-name', 'in-customer-id', 'in-ckyc', 'in-nominee',
+                'in-account', 'in-micr', 'in-ifsc', 'in-ac-type',
+                'in-date', 'in-branch', 'in-mobile', 'in-sig-label', 'in-address'
+            ];
+            
+            inputIds.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) {
+                    el.addEventListener('input', updateLivePreview);
+                    el.addEventListener('change', updateLivePreview);
+                }
+            });
+        });
+    </script>
+</body>
+</html>
