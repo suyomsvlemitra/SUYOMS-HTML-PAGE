@@ -1,0 +1,857 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="canonical" href="https://www.ikprinthub.in/passbook.html">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Primary Meta Tags -->
+    <title>Bank Passbook Printer & Digital Statement Formatting Tool | CSP Banking - SUYOMS VLE MITRA</title>
+    <meta name="title" content="Bank Passbook Printer & Digital Statement Formatting Tool | CSP Banking - SUYOMS VLE MITRA">
+    <meta name="description" content="Generate and print digital bank passbooks online. Professional tool for customer service points (CSP), SBI, IndusInd Bank, and banking agents to format layouts.">
+    <meta name="keywords" content="Bank Passbook Printer, digital bank passbook generator, print bank passbook online, csp banking tools, customer service point printing, bank statement formatting, SUYOMS VLE MITRA">
+    <meta name="robots" content="index, follow">
+
+    <!-- Google Fonts for bilingual text & UI -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Hind:wght@400;500;600;700&family=Noto+Sans:wght@400;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome for UI Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            --indus-brand: #7d1919;
+            --indus-brand-light: #9c2828;
+            /* Theme: Dark and Light Purple (जंभळा / Purple Palette) */
+            --bg-gradient: linear-gradient(135deg, #1a0b2e 0%, #31114d 50%, #4a1d70 100%);
+            --card-bg: rgba(74, 29, 112, 0.25);
+            --card-border: rgba(216, 180, 254, 0.2);
+            --text-primary: #ffffff;
+            --text-secondary: #e9d5ff;
+            --input-bg: rgba(26, 11, 46, 0.4);
+            --input-border: rgba(216, 180, 254, 0.3);
+            --input-focus: #a855f7;
+        }
+
+        body {
+            font-family: 'Poppins', 'Noto Sans', sans-serif;
+            background: var(--bg-gradient);
+            color: var(--text-primary);
+            margin: 0;
+            padding: 0;
+            height: 100vh !important;
+            max-height: 100vh !important;
+            overflow: hidden !important;
+        }
+
+        /* --- WORKSPACE CONTAINER (SPLIT-SCREEN) --- */
+        .workspace-container {
+            display: flex;
+            width: 100%;
+            height: 100vh !important;
+            max-height: 100vh !important;
+            overflow: hidden !important;
+            position: relative;
+        }
+
+        /* Left Side: Input Form Sidebar */
+        .form-panel {
+            width: 500px;
+            background: var(--card-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-right: 1px solid var(--card-border);
+            padding: 15px 18px;
+            box-sizing: border-box;
+            overflow-y: auto !important;
+            overflow-x: hidden;
+            height: 100% !important;
+            max-height: 100% !important;
+            flex-shrink: 0;
+            z-index: 10;
+            position: relative;
+        }
+
+        .form-panel::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at center, rgba(168,85,247,0.15) 0%, transparent 70%);
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        /* Right Side: Preview Display Canvas */
+        .preview-panel {
+            flex-grow: 1;
+            overflow-y: auto !important;
+            height: 100% !important;
+            max-height: 100% !important;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 15px;
+            box-sizing: border-box;
+            position: relative;
+        }
+
+        .form-header {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            margin-bottom: 12px;
+            border-bottom: 1px solid rgba(216, 180, 254, 0.2);
+            padding-bottom: 8px;
+        }
+
+        .form-header .logo-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 6px;
+        }
+
+        .form-header h2 {
+            margin: 5px 0 0 0;
+            font-size: 22px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            background: linear-gradient(135deg, #ffffff 0%, #e9d5ff 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .form-header p {
+            margin: 6px 0 0 0;
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .form-grid {
+            position: relative;
+            z-index: 1;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 9px 12px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .form-group label {
+            font-size: 11.5px;
+            font-weight: 500;
+            color: #f3e8ff;
+            margin-bottom: 3px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .form-group label i {
+            color: #d8b4fe;
+            font-size: 12px;
+        }
+
+        .form-group input, .form-group textarea {
+            background: var(--input-bg);
+            border: 1px solid var(--input-border);
+            border-radius: 8px;
+            padding: 7px 11px;
+            font-size: 13px;
+            color: #ffffff;
+            font-family: inherit;
+            transition: all 0.3s ease;
+            box-sizing: border-box;
+        }
+
+        .form-group input:focus, .form-group textarea:focus {
+            border-color: var(--input-focus);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.3);
+            background: rgba(26, 11, 46, 0.6);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 65px;
+        }
+
+        .btn-row {
+            margin-top: 10px;
+        }
+
+        .btn-secondary {
+            display: block;
+            width: 100%;
+            background: rgba(168, 85, 247, 0.15);
+            border: 1px solid rgba(216, 180, 254, 0.3);
+            color: #ffffff;
+            padding: 12px;
+            font-size: 14px;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(168, 85, 247, 0.3);
+        }
+
+        @media (max-width: 1024px) {
+            body {
+                overflow: auto;
+            }
+            .workspace-container {
+                display: flex;
+                flex-direction: column;
+                height: auto;
+                overflow: visible;
+            }
+            .form-panel {
+                width: 100%;
+                height: auto;
+                border-right: none;
+                border-bottom: 1px solid var(--card-border);
+                position: relative;
+                padding: 30px 24px;
+            }
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            .preview-panel {
+                width: 100%;
+                height: auto;
+                overflow: visible;
+            }
+        }
+
+        /* --- STICKY CONTROL PANEL --- */
+        .control-panel {
+            position: sticky;
+            top: 0;
+            width: 100%;
+            max-width: 210mm;
+            background: #230e38;
+            border-bottom: 2px solid #a855f7;
+            padding: 8px 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            z-index: 1000;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+            box-sizing: border-box;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+
+        .control-panel .tip-box {
+            font-size: 12px;
+            color: #f3e8ff;
+            background: rgba(168, 85, 247, 0.2);
+            padding: 4px 12px;
+            border-radius: 20px;
+            border: 1px dashed rgba(216, 180, 254, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            flex-grow: 1;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .control-panel .tip-box i {
+            color: #d8b4fe;
+        }
+
+        .btn-ctrl {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 7px 16px;
+            font-size: 13px;
+            font-weight: 600;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+            text-decoration: none;
+            white-space: nowrap;
+        }
+
+        .btn-ctrl-print {
+            background: linear-gradient(135deg, #7e22ce 0%, #a855f7 100%);
+            color: #ffffff;
+            box-shadow: 0 4px 15px rgba(168, 85, 247, 0.4);
+        }
+
+        .btn-ctrl-print:hover {
+            background: linear-gradient(135deg, #9333ea 0%, #c084fc 100%);
+            transform: translateY(-1px);
+            box-shadow: 0 6px 20px rgba(168, 85, 247, 0.5);
+        }
+
+        /* --- PASSBOOK VIEW (PREVIEW MODE) --- */
+        #passbook-view {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            padding-bottom: 20px;
+        }
+
+        .passbook-container {
+            width: 210mm; /* A4 Width */
+            background-color: white;
+            padding: 0;
+            margin: 0 auto;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            display: flex;
+            flex-direction: column;
+            font-family: 'Courier New', Courier, monospace;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        /* Optimized Balanced Zoom scaling for perfect fit */
+        @media (max-width: 1550px) {
+            .passbook-container, .control-panel {
+                zoom: 0.82;
+            }
+        }
+        @media (max-width: 1350px) {
+            .passbook-container, .control-panel {
+                zoom: 0.74;
+            }
+        }
+        @media (max-width: 1150px) {
+            .passbook-container, .control-panel {
+                zoom: 0.62;
+            }
+        }
+        @media (max-width: 1024px) {
+            .passbook-container, .control-panel {
+                zoom: 1;
+            }
+        }
+
+        .content-area {
+            padding: 10px 20px 18px 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Passbook Watermark Background Pseudo-Element */
+        .content-area::before {
+            content: '';
+            position: absolute;
+            top: 55%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 320px;
+            max-width: 60%;
+            height: 120px;
+            background-image: url('https://cdn.jsdelivr.net/gh/suyomsvlemitra/AI-Images@Suyoms-images/INDUSLOGO.png');
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            opacity: 0.055;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .content-area > * {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Hindi Rules */
+        .hindi-rules {
+            background-color: #fffbe8; 
+            border-bottom: 1px solid #ccc;
+            padding: 9px 18px;
+            font-family: 'Arial Unicode MS', 'Noto Sans', sans-serif;
+            font-size: 8.5px;
+            line-height: 1.25;
+            margin-bottom: 5px;
+            color: #222;
+        }
+
+        .hindi-rules h3 {
+            font-size: 10.5px;
+            text-decoration: underline;
+            margin: 0 0 3px 0;
+            font-weight: bold;
+            color: #000;
+        }
+
+        .hindi-rules ul {
+            margin: 0;
+            padding-left: 18px;
+        }
+
+        .hindi-rules li {
+            margin-bottom: 1px;
+        }
+
+        /* Header */
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 2px solid var(--indus-brand);
+            padding-bottom: 6px;
+            margin-bottom: 10px;
+            padding-top: 4px;
+            margin-top: 4px;
+        }
+
+        .header-logo-img {
+            height: 36px;
+            width: auto;
+            object-fit: contain;
+        }
+
+        .bank-title {
+            font-size: 20px;
+            font-weight: 800;
+            color: var(--indus-brand);
+            font-family: Arial, sans-serif;
+            text-transform: uppercase;
+            line-height: 1.1;
+            letter-spacing: 0.5px;
+        }
+
+        /* Rows */
+        .passbook-row {
+            display: flex;
+            margin-bottom: 3.5px;
+            align-items: baseline;
+        }
+
+        .label {
+            font-weight: bold;
+            font-family: Arial, sans-serif;
+            font-size: 10.2px;
+            width: 135px;
+            flex-shrink: 0;
+            color: #000000;
+        }
+
+        .data {
+            flex-grow: 1;
+            font-size: 11.2px;
+            border-bottom: 1px dotted #ccc;
+            padding: 0 5px;
+            color: #000000;
+            line-height: 1.2;
+            outline: none;
+        }
+
+        .cols-2 { 
+            display: flex; 
+            justify-content: space-between; 
+        }
+
+        .half { 
+            width: 49%; 
+        }
+
+        /* Print Styles */
+        @media print {
+            body { 
+                margin: 0; 
+                padding: 0; 
+                background: white; 
+                overflow: visible !important;
+            }
+            .form-panel, .control-panel { 
+                display: none !important; 
+            }
+            .workspace-container {
+                display: block !important;
+                height: auto !important;
+                overflow: visible !important;
+            }
+            .preview-panel {
+                padding: 0 !important;
+                height: auto !important;
+                overflow: visible !important;
+                background: white !important;
+            }
+            #passbook-view { 
+                display: block !important; 
+                margin: 0;
+                padding: 0;
+            }
+            .passbook-container { 
+                box-shadow: none; 
+                width: 210mm; 
+                margin: 0 auto; 
+                border-radius: 0;
+                zoom: 1 !important;
+                position: static !important;
+            }
+            .content-area {
+                position: relative !important;
+            }
+            .content-area::before {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+                opacity: 0.07 !important;
+                top: 55% !important;
+                left: 50% !important;
+                transform: translate(-50%, -50%) !important;
+            }
+            .data { 
+                border-bottom: none !important; 
+            }
+            .hindi-rules { 
+                -webkit-print-color-adjust: exact !important; 
+                print-color-adjust: exact !important; 
+            }
+        }
+    </style>
+    <script src="ads-manager.js?v=37.0.0" defer></script>
+</head>
+<body>
+
+    <!-- Main Workspace Container -->
+    <div class="workspace-container">
+        
+        <!-- Left Side: Input Form Sidebar -->
+        <div class="form-panel">
+            <div class="form-header">
+                <div class="logo-container">
+                    <img src="https://cdn.jsdelivr.net/gh/suyomsvlemitra/AI-Images@Suyoms-images/INDUSLOGO.png" alt="IndusInd Logo" style="height: 48px; width: auto; object-fit: contain; vertical-align: middle;">
+                </div>
+                <h2>IndusInd Passbook</h2>
+                <p>Generate high-fidelity IndusInd Bank digital passbooks online</p>
+            </div>
+
+            <div class="form-grid">
+                <div class="form-group">
+                    <label><i class="fa-solid fa-building-columns"></i> Branch Name</label>
+                    <input type="text" id="in_branchName" value="PACHORA">
+                </div>
+
+                <div class="form-group">
+                    <label><i class="fa-solid fa-key"></i> IFSC Code</label>
+                    <input type="text" id="in_ifsc" value="INDB0000412">
+                </div>
+
+                <div class="form-group full-width">
+                    <label><i class="fa-solid fa-map-location-dot"></i> Branch Address</label>
+                    <input type="text" id="in_branchAddress" value="GANESH COLONY MAIN ROAD PACHORA DIST JALGAON MAHARASHTRA 424201">
+                </div>
+
+                <div class="form-group">
+                    <label><i class="fa-solid fa-fingerprint"></i> MICR Code</label>
+                    <input type="text" id="in_micr" value="424234101">
+                </div>
+
+                <div class="form-group">
+                    <label><i class="fa-solid fa-hashtag"></i> Account Number</label>
+                    <input type="text" id="in_accountNo" value="2500123456789" style="font-weight:bold;">
+                </div>
+
+                <div class="form-group full-width">
+                    <label><i class="fa-solid fa-user"></i> Account Holder Name</label>
+                    <input type="text" id="in_holderName" value="YOGESH SHANKAR PIMPALE">
+                </div>
+
+                <div class="form-group">
+                    <label><i class="fa-solid fa-id-badge"></i> Customer ID</label>
+                    <input type="text" id="in_custId" value="MAH987654">
+                </div>
+
+                <div class="form-group">
+                    <label><i class="fa-solid fa-address-card"></i> PAN Number</label>
+                    <input type="text" id="in_pan" value="ABCYP1234K">
+                </div>
+
+                <div class="form-group full-width">
+                    <label><i class="fa-solid fa-location-dot"></i> Customer Address</label>
+                    <textarea id="in_custAddress" rows="3">AT POST PACHORA, GANESH COLONY,
+TALUKA PACHORA, DISTRICT JALGAON,
+MAHARASHTRA, INDIA - 424201</textarea>
+                </div>
+
+                <div class="form-group">
+                    <label><i class="fa-solid fa-phone"></i> Mobile Number</label>
+                    <input type="text" id="in_mobile" value="9822098220">
+                </div>
+
+                <div class="form-group">
+                    <label><i class="fa-solid fa-id-card"></i> UID (Aadhaar)</label>
+                    <input type="text" id="in_uid" value="XXXX XXXX 4589">
+                </div>
+
+                <div class="form-group">
+                    <label><i class="fa-solid fa-calendar-day"></i> Opened On</label>
+                    <input type="text" id="in_openedOn" value="">
+                </div>
+
+                <div class="form-group">
+                    <label><i class="fa-solid fa-calendar-check"></i> Issue Date</label>
+                    <input type="text" id="in_issueDate" value="">
+                </div>
+
+                <div class="form-group">
+                    <label><i class="fa-solid fa-users"></i> Nominee</label>
+                    <input type="text" id="in_nominee" value="REGISTERED">
+                </div>
+
+                <div class="form-group">
+                    <label><i class="fa-solid fa-handshake"></i> Operated By</label>
+                    <input type="text" id="in_operatedBy" value="SELF">
+                </div>
+
+                <div class="form-group">
+                    <label><i class="fa-solid fa-envelope"></i> Email ID</label>
+                    <input type="text" id="in_email" value="yosusai@gmail.com">
+                </div>
+
+                <div class="btn-row">
+                    <button class="btn-secondary" type="button" onclick="loadSampleData()">
+                        <i class="fa-solid fa-rotate-left"></i> Reset Maharashtrian Data
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Side: Preview Display Panel -->
+        <div class="preview-panel" id="passbook-view">
+            
+            <!-- Sticky Action Header -->
+            <div class="control-panel">
+                <div class="tip-box">
+                    <i class="fa-solid fa-circle-info"></i>
+                    <span>Values update in real-time. Click & edit text directly on passbook!</span>
+                </div>
+                <button class="btn-ctrl btn-ctrl-print" onclick="window.print()">
+                    <i class="fa-solid fa-print"></i> Print Passbook
+                </button>
+            </div>
+
+            <!-- The Passbook Document -->
+            <div class="passbook-container">
+                
+                <div class="hindi-rules">
+                    <h3>ग्राहकों के लिए महत्वपूर्ण संदेश:</h3>
+                    <ul>
+                        <li>ग्राहक किसी भी प्रारंभिक पैसे के जमा के बिना गांव/वार्ड/शाखा में बचत बैंक खाता खोल सकते हैं।</li>
+                        <li>बचत बैंक खाता केवल एक ही के नाम से तभी खोला जाएगा जब वह बायोमीट्रिक विशेषताओं के साथ बैंक मित्र के माध्यम से खोला गया हो।</li>
+                        <li>आधार कार्ड रखने वाले ग्राहक ई-केवाईसी सुविधा के द्वारा शाखा / बैंक मित्र के माध्यम से बचत बैंक खाता खोल सकते हैं।</li>
+                        <li>सरकारी लाभ उठाने के लिए, ग्राहक अपने खातों को शाखा और बैंक मित्र, दोनों के साथ अपने खाते को आधार सीडिंग सुविधा से संपर्कित कर सकते हैं।</li>
+                        <li>केवल शाखा में इस योजना के तहत संयुक्त खाता ही खोला जाएगा।</li>
+                        <li>प्रधानमंत्री जन-धन योजना के तहत सभी ग्राहकों के लिए नामांकन सुविधा उपलब्ध है।</li>
+                        <li>सामान्य बचत बैंक दर के अनुसार ब्याज दिया जाएगा।</li>
+                        <li>आप बैंक के प्राधिकृत प्रतिनिधि यथा, बैंक मित्र द्वारा संचालित अति लघु शाखाओं से जमा या आहरण कर सकते हैं।</li>
+                        <li>बैंक मित्र / एटीएम / शाखा से रुपे डेबिट कार्ड के माध्यम से ग्राहक नकद आहरण कर सकते हैं और व्यापारिक माल के किसी भी पीओएस मशीन के माध्यम से बिना नकद लेन-देन कर सकते हैं।</li>
+                        <li>गोपनीयता बनाए रखें और किसी को भी अपना पिन नंबर का खुलासा नहीं करें।</li>
+                        <li>स्मार्ट कार्ड धारक मौजूदा ग्राहक अपने बायोमीट्रिक प्रमाणीकरण के आधार पर बैंक मित्र के माध्यम से भी परिचालन कर सकते हैं।</li>
+                        <li>आधार कार्ड धारक ग्राहक भी बैंक मित्र के माध्यम से परिचालन कर सकते हैं।</li>
+                        <li>किसी भी लेन-देन के लिए लेनदेन की पूरी जानकारी देते हुए एचएचडी / पीओएस मशीन लेन-देन पर्ची देगा।</li>
+                        <li>आप बिना लागत से अपने गांव में सेवारत बैंक मित्र से पिछले 10 लेन-देन का लघु विवरण मांग सकते हैं। इसके अलावा, आप को बिना किसी प्रभार के एक पास-बुक भी उपलब्ध कराया जाएगा।</li>
+                        <li>रुपे कार्ड के खो जाने या हानि के मामले में, आप के द्वारा लागत का भुगतान करके और आवश्यक औपचारिकताओं को पूरा करने के बाद आपको एक डुप्लीकेट कार्ड उपलब्ध कराया जाएगा।</li>
+                        <li>एहतियात के रूप में बिना लापरवाही के कृपया अपने पास बुक और रुपे कार्ड को सुरक्षित अभिरक्षा में रखें।</li>
+                    </ul>
+                </div>
+
+                <div class="content-area">
+                    
+                    <div class="header" style="position: relative;">
+                        <img src="https://cdn.jsdelivr.net/gh/suyomsvlemitra/AI-Images@Suyoms-images/INDUSLOGO.png" alt="IndusInd Bank Logo" class="header-logo-img">
+                        <div style="text-align: center; flex-grow: 1; margin: 0 10px;">
+                            <div style="font-size: 14px; font-weight: 800; color: var(--indus-brand); letter-spacing: 0.5px; font-family: Arial, sans-serif; text-transform: uppercase;">SAVINGS BANK ACCOUNT PASSBOOK</div>
+                            <div style="font-size: 9.2px; font-weight: bold; color: #333; letter-spacing: 0.5px; margin-top: 1px;">NEW / CONTINUATION PASSBOOK</div>
+                        </div>
+                    </div>
+
+                    <div class="passbook-row">
+                        <span class="label">BRANCH NAME:</span>
+                        <span class="data" id="out_branchName" contenteditable="true"></span>
+                        <span class="label" style="width: 45px; text-align:right; margin-right:8px;">IFSC:</span>
+                        <span class="data" id="out_ifsc" contenteditable="true"></span>
+                    </div>
+
+                    <div class="passbook-row">
+                        <span class="label">BRANCH ADDRESS:</span>
+                        <span class="data" id="out_branchAddress" contenteditable="true"></span>
+                    </div>
+                    
+                    <div class="passbook-row">
+                        <span class="label">MICR CODE:</span>
+                        <span class="data" id="out_micr" contenteditable="true"></span>
+                    </div>
+
+                    <hr style="border-top: 1.5px solid #000; margin: 7px 0; border-bottom: none;">
+
+                    <div class="passbook-row">
+                        <span class="label">ACCOUNT NO:</span>
+                        <span class="data" id="out_accountNo" style="font-size: 13px; font-weight:bold;" contenteditable="true"></span>
+                    </div>
+
+                    <div class="passbook-row">
+                        <span class="label">ACCOUNT HOLDER:</span>
+                        <span class="data" id="out_holderName" contenteditable="true"></span>
+                    </div>
+
+                    <div class="passbook-row">
+                        <span class="label">CUSTOMER ID:</span>
+                        <span class="data" id="out_custId" contenteditable="true"></span>
+                        <span class="label" style="width: 45px; text-align:right; margin-right:8px;">PAN:</span>
+                        <span class="data" id="out_pan" contenteditable="true"></span>
+                    </div>
+
+                    <div class="passbook-row">
+                        <span class="label">CUSTOMER ADDRESS:</span>
+                        <div class="data" id="out_custAddress" style="white-space: pre-wrap;" contenteditable="true"></div>
+                    </div>
+
+                    <div class="passbook-row">
+                        <span class="label">MOBILE NO:</span>
+                        <span class="data" id="out_mobile" contenteditable="true"></span>
+                        <span class="label" style="width: 45px; text-align:right; margin-right:8px;">UID:</span>
+                        <span class="data" id="out_uid" contenteditable="true"></span>
+                    </div>
+
+                    <div class="cols-2">
+                        <div class="half">
+                            <div class="passbook-row">
+                                <span class="label" style="width:85px">OPENED ON:</span>
+                                <span class="data" id="out_openedOn" contenteditable="true"></span>
+                            </div>
+                            <div class="passbook-row">
+                                <span class="label" style="width:85px">ISSUE DATE:</span>
+                                <span class="data" id="out_issueDate" contenteditable="true"></span>
+                            </div>
+                        </div>
+                        <div class="half">
+                            <div class="passbook-row">
+                                <span class="label" style="width:85px">NOMINEE:</span>
+                                <span class="data" id="out_nominee" contenteditable="true"></span>
+                            </div>
+                            <div class="passbook-row">
+                                <span class="label" style="width:85px">OPERATED BY:</span>
+                                <span class="data" id="out_operatedBy" contenteditable="true"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="passbook-row">
+                        <span class="label">EMAIL ID:</span>
+                        <span class="data" id="out_email" contenteditable="true"></span>
+                    </div>
+
+                    <div style="display: flex; justify-content: flex-end; padding-right: 20px; margin-top: 4px; margin-bottom: 5px;">
+                        <div style="text-align: center;">
+                            <div style="height: 18px;"></div>
+                            <div style="font-weight: bold; font-size: 11px; color: #000;">Branch Manager</div>
+                            <div style="font-size: 10px; color: #333;">(Signature & Seal)</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts for Logic & Interactive Operations -->
+    <script>
+        function getTodayDateString() {
+            const today = new Date();
+            const dd = String(today.getDate()).padStart(2, '0');
+            const mm = String(today.getMonth() + 1).padStart(2, '0');
+            const yyyy = today.getFullYear();
+            return `${dd}-${mm}-${yyyy}`;
+        }
+
+        function loadSampleData() {
+            document.getElementById('in_branchName').value = "PACHORA";
+            document.getElementById('in_ifsc').value = "INDB0000412";
+            document.getElementById('in_branchAddress').value = "GANESH COLONY MAIN ROAD PACHORA DIST JALGAON MAHARASHTRA 424201";
+            document.getElementById('in_micr').value = "424234101";
+            document.getElementById('in_accountNo').value = "2500123456789";
+            document.getElementById('in_holderName').value = "YOGESH SHANKAR PIMPALE";
+            document.getElementById('in_custId').value = "MAH987654";
+            document.getElementById('in_pan').value = "ABCYP1234K";
+            document.getElementById('in_custAddress').value = "AT POST PACHORA, GANESH COLONY,\nTALUKA PACHORA, DISTRICT JALGAON,\nMAHARASHTRA, INDIA - 424201";
+            document.getElementById('in_mobile').value = "9822098220";
+            document.getElementById('in_uid').value = "XXXX XXXX 4589";
+            document.getElementById('in_openedOn').value = getTodayDateString();
+            document.getElementById('in_issueDate').value = getTodayDateString();
+            document.getElementById('in_nominee').value = "REGISTERED";
+            document.getElementById('in_operatedBy').value = "SELF";
+            document.getElementById('in_email').value = "yosusai@gmail.com";
+            
+            updateLivePreview();
+        }
+
+        function updateLivePreview() {
+            const map = {
+                'in_branchName': 'out_branchName',
+                'in_ifsc': 'out_ifsc',
+                'in_branchAddress': 'out_branchAddress',
+                'in_micr': 'out_micr',
+                'in_accountNo': 'out_accountNo',
+                'in_holderName': 'out_holderName',
+                'in_custId': 'out_custId',
+                'in_pan': 'out_pan',
+                'in_custAddress': 'out_custAddress',
+                'in_mobile': 'out_mobile',
+                'in_uid': 'out_uid',
+                'in_openedOn': 'out_openedOn',
+                'in_issueDate': 'out_issueDate',
+                'in_nominee': 'out_nominee',
+                'in_operatedBy': 'out_operatedBy',
+                'in_email': 'out_email'
+            };
+
+            for (let inId in map) {
+                let outId = map[inId];
+                const el = document.getElementById(inId);
+                const outEl = document.getElementById(outId);
+                if (el && outEl) {
+                    if (inId === 'in_custAddress') {
+                        outEl.innerHTML = el.value.replace(/\n/g, '<br>');
+                    } else {
+                        outEl.innerText = el.value;
+                    }
+                }
+            }
+        }
+
+        // Initialize values on first load
+        window.addEventListener('DOMContentLoaded', () => {
+            loadSampleData();
+            
+            // Attach input event listeners for live preview
+            const inputIds = [
+                'in_branchName', 'in_ifsc', 'in_branchAddress', 'in_micr', 
+                'in_accountNo', 'in_holderName', 'in_custId', 'in_pan', 
+                'in_custAddress', 'in_mobile', 'in_uid', 'in_openedOn', 
+                'in_issueDate', 'in_nominee', 'in_operatedBy', 'in_email'
+            ];
+            
+            inputIds.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) {
+                    el.addEventListener('input', updateLivePreview);
+                    el.addEventListener('change', updateLivePreview);
+                }
+            });
+        });
+    </script>
+</body>
+</html>
