@@ -176,10 +176,18 @@
                 display: block !important;
                 visibility: visible !important;
                 opacity: 1 !important;
-                height: auto !important;
-                max-height: 220px !important;
+                height: 190px !important;
+                min-height: 190px !important;
+                max-height: 190px !important;
+                background: transparent !important;
                 border: none !important;
                 margin-bottom: 6px !important;
+            }
+            #stamp-preview-zone img,
+            #stamp-img {
+                display: none !important;
+                visibility: hidden !important;
+                opacity: 0 !important;
             }
         }
     </style>
@@ -715,6 +723,25 @@
                 p.style.textAlign = 'justify';
             });
 
+            // Demo poster should not appear in PDF - only keep blank space
+            const cloneStampZone = clone.querySelector('#stamp-preview-zone');
+            const cloneStampImg = clone.querySelector('#stamp-img');
+            const isStampActive = !stampPreviewZone.classList.contains('hidden');
+            if (cloneStampZone) {
+                if (isStampActive) {
+                    cloneStampZone.classList.remove('hidden');
+                    cloneStampZone.style.display = 'block';
+                    cloneStampZone.style.height = '190px';
+                    cloneStampZone.style.minHeight = '190px';
+                    cloneStampZone.style.maxHeight = '190px';
+                    cloneStampZone.style.border = 'none';
+                    cloneStampZone.style.background = 'transparent';
+                    if (cloneStampImg) cloneStampImg.remove();
+                } else {
+                    cloneStampZone.remove();
+                }
+            }
+
             const wrapper = document.createElement('div');
             wrapper.style.position = 'fixed';
             wrapper.style.left = '-9999px';
@@ -760,6 +787,8 @@
         function exportToWord() {
             const applicant = (inputApplicantName.value || 'परिशिष्ट_ब').trim().replace(/[/\\?%*:|"<>]/g, '_');
             const filename = 'स्वयंघोषणापत्र_' + applicant + '.docx';
+            const isStampActive = !stampPreviewZone.classList.contains('hidden');
+            const topSpaceVal = parseInt(inputTopSpace.value) || 0;
 
             const data = {
                 title: decodeHtmlEntities(inputTitle.value || 'श्री.'),
@@ -775,7 +804,9 @@
                 caste: decodeHtmlEntities(inputCaste.value || '___________'),
                 cat: decodeHtmlEntities(inputCategory.value || '___________'),
                 place: decodeHtmlEntities(inputPlace.value || '___________'),
-                date: decodeHtmlEntities(inputDate.value || '-----/-----/-----')
+                date: decodeHtmlEntities(inputDate.value || '-----/-----/-----'),
+                stampSpace: isStampActive ? 2800 : 0, // Blank space for physical stamp paper (~50mm)
+                sliderSpace: Math.round(topSpaceVal * 15)
             };
 
             if (window.JSZip) {
@@ -823,9 +854,18 @@
             const place = escXml(data.place);
             const date = escXml(data.date);
 
+            const totalBlankSpace = (data.stampSpace || 0) + (data.sliderSpace || 0);
+            let blankSpaceXml = '';
+            if (totalBlankSpace > 0) {
+                blankSpaceXml = '    <w:p>\n' +
+'      <w:pPr><w:spacing w:before="' + totalBlankSpace + '" w:after="0"/></w:pPr>\n' +
+'    </w:p>\n';
+            }
+
             const docXml = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n' +
 '<w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main">\n' +
 '  <w:body>\n' +
+blankSpaceXml +
 '    <w:p>\n' +
 '      <w:pPr><w:jc w:val="center"/><w:spacing w:after="40" w:line="240" w:lineRule="auto"/></w:pPr>\n' +
 '      <w:r><w:rPr><w:rFonts w:ascii="Noto Serif Devanagari" w:hAnsi="Noto Serif Devanagari" w:cs="Mangal"/><w:b/><w:sz w:val="26"/><w:szCs w:val="26"/></w:rPr><w:t>अर्जासोबत जोडावयाच्या स्वयंघोषणापत्र नमुना</w:t></w:r>\n' +
@@ -995,6 +1035,23 @@
             clone.style.background = '#ffffff';
             clone.style.color = '#000000';
 
+            // Remove demo poster image in Word HTML, keep blank space if active
+            const cloneStampZone = clone.querySelector('#stamp-preview-zone');
+            const cloneStampImg = clone.querySelector('#stamp-img');
+            const isStampActive = !stampPreviewZone.classList.contains('hidden');
+            if (cloneStampZone) {
+                if (isStampActive) {
+                    cloneStampZone.classList.remove('hidden');
+                    cloneStampZone.style.display = 'block';
+                    cloneStampZone.style.height = '190px';
+                    cloneStampZone.style.border = 'none';
+                    cloneStampZone.style.background = 'transparent';
+                    if (cloneStampImg) cloneStampImg.remove();
+                } else {
+                    cloneStampZone.remove();
+                }
+            }
+
             const wordHtml = '<!DOCTYPE html>\n' +
 '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40">\n' +
 '<head>\n' +
@@ -1070,6 +1127,25 @@
             clone.style.width = '100%';
             clone.style.maxWidth = '100%';
             clone.style.boxSizing = 'border-box';
+
+            // Demo poster should not appear in Print - only keep equivalent blank space
+            const cloneStampZone = clone.querySelector('#stamp-preview-zone');
+            const cloneStampImg = clone.querySelector('#stamp-img');
+            const isStampActive = !stampPreviewZone.classList.contains('hidden');
+            if (cloneStampZone) {
+                if (isStampActive) {
+                    cloneStampZone.classList.remove('hidden');
+                    cloneStampZone.style.display = 'block';
+                    cloneStampZone.style.height = '190px';
+                    cloneStampZone.style.minHeight = '190px';
+                    cloneStampZone.style.maxHeight = '190px';
+                    cloneStampZone.style.border = 'none';
+                    cloneStampZone.style.background = 'transparent';
+                    if (cloneStampImg) cloneStampImg.remove();
+                } else {
+                    cloneStampZone.remove();
+                }
+            }
 
             const doc = iframe.contentWindow.document;
             doc.open();
@@ -1154,11 +1230,21 @@
 '        }\n' +
 '        #stamp-preview-zone.hidden {\n' +
 '            display: none !important;\n' +
+'            height: 0 !important;\n' +
 '        }\n' +
 '        #stamp-preview-zone:not(.hidden) {\n' +
 '            display: block !important;\n' +
-'            opacity: 1 !important;\n' +
-'            visibility: visible !important;\n' +
+'            height: 190px !important;\n' +
+'            min-height: 190px !important;\n' +
+'            max-height: 190px !important;\n' +
+'            border: none !important;\n' +
+'            background: transparent !important;\n' +
+'            margin-bottom: 6px !important;\n' +
+'        }\n' +
+'        #stamp-preview-zone img, #stamp-img {\n' +
+'            display: none !important;\n' +
+'            visibility: hidden !important;\n' +
+'            opacity: 0 !important;\n' +
 '        }\n' +
 '    </style>\n' +
 '</head>\n' +
