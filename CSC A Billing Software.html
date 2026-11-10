@@ -1,0 +1,3118 @@
+
+
+
+<!DOCTYPE html>
+<html lang="mr" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5, user-scalable=yes">
+    
+    <title>सीएससी बिलिंग सॉफ्टवेअर | सुयोम्स व्हीएलई मित्र | CSC VLE संपूर्ण बिलिंग प्रणाली</title>
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Complete offline billing software for CSC VLE - Manage services, customers, GST billing, reports, and data backup. Professional invoice generator with QR code payments.">
+    <meta name="keywords" content="CSC billing software, VLE billing system, GST billing software, offline billing, CSC center software, invoice generator, QR code billing">
+    <meta name="author" content="SUYOMS VLE MITRA">
+    <meta name="robots" content="index, follow">
+    
+    <!-- Open Graph / Social Media -->
+    <meta property="og:title" content="SUYOMS VLE MITRA - Complete Offline Billing Solution">
+    <meta property="og:description" content="Professional billing software for Common Service Centers with GST, reports, customer management, and QR code payments">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://suyoms.com">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- html2pdf for PDF generation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    
+    <!-- Google Fonts for better typography -->
+    
+    <!-- Google Fonts: Khand (खंड फॉन्ट) & Devanagari Typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Khand:wght@300;400;500;600;700&family=Noto+Sans+Devanagari:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    
+    <style>
+        /* ==========================================================
+           CSC Billing Software - आकर्षक काळा आणि भगवा (Black & Saffron) थीम
+           पूर्ण मराठी भाषा सपोर्टसह (With Full Marathi Devanagari Support)
+           ========================================================== */
+        :root {
+            /* मुख्य काळा आणि भगवा रंगसंगती (Black & Saffron Palette) */
+            --bg-primary: #121215;       /* कार्डचा गडद काळा रंग (Dark card surface) */
+            --bg-secondary: #08080a;     /* मुख्य पार्श्वभूमी - एकदम काळी (Pitch black background) */
+            --bg-tertiary: #1a1a20;      /* इनपुट्स व घटकांसाठी */
+            --bg-card: #141418;
+            --bg-input: #17171c;
+            
+            --border-primary: #27272e;
+            --border-saffron: #ea580c;
+            --border-saffron-light: rgba(255, 119, 0, 0.35);
+            
+            --text-primary: #f9fafb;     /* ठळक पांढरा मजकूर */
+            --text-secondary: #ff9933;   /* आकर्षक भगवा टेक्स्ट */
+            --text-muted: #9ca3af;       /* फिकट करडा टेक्स्ट */
+            
+            /* भगवा / केसरी ॲक्सेंट (Saffron / Kesari Accents) */
+            --accent-primary: #ff7700;   /* मुख्य भगवा */
+            --accent-secondary: #ea580c; /* गडद केसरी */
+            --accent-gold: #ffb74d;      /* सोनेरी भगवा */
+            --accent-glow: rgba(255, 119, 0, 0.35);
+            
+            /* बटणे (Buttons) */
+            --btn-gradient: linear-gradient(135deg, #ff8c00 0%, #ea580c 100%);
+            --btn-hover: linear-gradient(135deg, #ffa726 0%, #f57c00 100%);
+            --btn-success-gradient: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            --btn-danger-gradient: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            
+            /* इनव्हॉइस सेटिंग्ज (डिफॉल्ट भगवा रंग) */
+            --invoice-primary: #ea580c;
+            --invoice-secondary: #c2410c;
+            --invoice-border: 2px solid #ea580c;
+            --invoice-border-radius: 12px;
+            --invoice-header-bg: #fff7ed;
+            --invoice-font-size: 14px;
+            --invoice-show-border: true;
+        }
+
+        /* गडद थीम (काळा व भगवा) */
+        .dark-mode {
+            --bg-primary: #0d0d10;
+            --bg-secondary: #000000;     /* अस्सल काळी रात्र */
+            --bg-tertiary: #15151a;
+            --bg-card: #101014;
+            --bg-input: #141418;
+            --border-primary: #222228;
+            --text-primary: #ffffff;
+            --text-secondary: #ff9933;
+            --accent-primary: #ff851b;
+            --accent-secondary: #ff6600;
+        }
+        
+        
+        * {
+            box-sizing: border-box;
+            font-family: 'Khand', 'Noto Sans Devanagari', sans-serif;
+        }
+        
+        body, input, button, select, textarea, table, h1, h2, h3, h4, h5, h6, p, span, div, a, label {
+            font-family: 'Khand', 'Noto Sans Devanagari', sans-serif !important;
+            letter-spacing: 0.02em;
+        }
+
+        
+        body {
+            background-color: var(--bg-secondary) !important;
+            color: var(--text-primary) !important;
+            font-family: 'Khand', 'Noto Sans Devanagari', sans-serif !important;
+            letter-spacing: 0.01em;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+        
+        /* कार्ड डिझाइन - काळा आणि भगवा बॉर्डर */
+        .card {
+            background-color: var(--bg-primary) !important;
+            border: 1px solid var(--border-primary);
+            border-radius: 1rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5), 0 0 1px rgba(255, 119, 0, 0.15);
+            color: var(--text-primary) !important;
+            transition: all 0.3s ease;
+        }
+        
+        .card:hover {
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.7), 0 0 16px rgba(255, 119, 0, 0.25);
+            border-color: var(--border-saffron-light);
+            transform: translateY(-2px);
+        }
+        
+        /* ग्रेडियंट्स */
+        .gradient-primary, .gradient-saffron {
+            background: linear-gradient(135deg, #ff8c00 0%, #ea580c 100%) !important;
+        }
+        
+        .gradient-success {
+            background: linear-gradient(135deg, #059669 0%, #047857 100%) !important;
+        }
+        
+        .gradient-warning {
+            background: linear-gradient(135deg, #d97706 0%, #b45309 100%) !important;
+        }
+        
+        .gradient-danger {
+            background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%) !important;
+        }
+        
+        /* आकर्षक भगवा ॲनिमेटेड बॅज */
+        .smart-badge, .smart-badge-saffron {
+            background: linear-gradient(135deg, #ff8c00, #ff5722, #ea580c, #f59e0b);
+            background-size: 300% 300%;
+            animation: gradientFlow 5s ease infinite;
+            padding: 8px 18px;
+            border-radius: 30px;
+            color: white;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 18px rgba(255, 119, 0, 0.35);
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(255, 183, 77, 0.6);
+        }
+        
+        .smart-badge:hover, .smart-badge-saffron:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 25px rgba(255, 119, 0, 0.5);
+            border-color: #ffd54f;
+        }
+        
+        .smart-badge::before, .smart-badge-saffron::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(
+                45deg,
+                transparent,
+                rgba(255, 255, 255, 0.35),
+                transparent
+            );
+            transform: rotate(45deg);
+            animation: shine 3.5s infinite;
+        }
+        
+        @keyframes gradientFlow {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        @keyframes shine {
+            0% { left: -50%; top: -50%; }
+            100% { left: 150%; top: 150%; }
+        }
+        
+        .badge-text {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .badge-text i {
+            font-size: 1.2rem;
+            filter: drop-shadow(0 2px 2px rgba(0,0,0,0.3));
+        }
+        
+        /* टॅब स्टाईल्स - भगवा ॲक्टिव्ह टॅब */
+        .tab-btn {
+            color: var(--text-muted);
+            background: transparent;
+            border-bottom: 3px solid transparent;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.25s ease;
+        }
+        
+        .tab-btn:hover {
+            color: #ff9933;
+            background-color: rgba(255, 119, 0, 0.08);
+        }
+        
+        .tab-active, .tab-btn.active {
+            border-bottom: 3px solid #ff7700 !important;
+            color: #ff9933 !important;
+            font-weight: 700 !important;
+            background-color: rgba(255, 119, 0, 0.15) !important;
+            border-radius: 0.5rem 0.5rem 0 0;
+            box-shadow: inset 0 -2px 8px rgba(255, 119, 0, 0.2);
+        }
+        
+        .dark-mode .tab-active, .dark-mode .tab-btn.active {
+            border-bottom-color: #ff8c00 !important;
+            color: #ffb74d !important;
+            background-color: rgba(255, 140, 0, 0.18) !important;
+        }
+        
+        /* फॉर्म इनपुट्स व सिलेक्ट्स - डार्क थीम सपोर्ट */
+        input[type="text"],
+        input[type="number"],
+        input[type="email"],
+        input[type="tel"],
+        input[type="date"],
+        select,
+        textarea {
+            background-color: var(--bg-input) !important;
+            color: #ffffff !important;
+            border: 1px solid var(--border-primary) !important;
+            border-radius: 0.5rem;
+            padding: 0.65rem 0.85rem;
+            outline: none;
+            transition: all 0.2s ease;
+        }
+        
+        input::placeholder, textarea::placeholder {
+            color: #71717a !important;
+        }
+        
+        input:focus,
+        select:focus,
+        textarea:focus {
+            border-color: #ff7700 !important;
+            box-shadow: 0 0 0 2px rgba(255, 119, 0, 0.3) !important;
+        }
+        
+        /* टेबल्स */
+        table {
+            border-color: var(--border-primary) !important;
+        }
+        
+        table th {
+            background-color: #1a1612 !important;
+            color: #ff9933 !important;
+            border-bottom: 2px solid #ea580c !important;
+            font-weight: 700;
+        }
+        
+        table td {
+            border-color: #27272e !important;
+            color: #e5e7eb;
+        }
+        
+        tr:hover td {
+            background-color: rgba(255, 119, 0, 0.05);
+        }
+        
+        /* टोस्ट ॲनिमेशन */
+        .toast {
+            animation: slideIn 0.3s ease, fadeOut 0.3s ease 2.7s;
+        }
+        
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+        
+        @keyframes fadeOut {
+            from {
+                opacity: 1;
+            }
+            to {
+                opacity: 0;
+            }
+        }
+        
+        /* मोडल बॅकड्रॉप */
+        .modal-backdrop {
+            background-color: rgba(0, 0, 0, 0.75);
+            backdrop-filter: blur(6px);
+        }
+        
+        /* सानुकूल स्क्रोलबार (Custom Saffron Scrollbar) */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: #0f0f12;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: #ea580c;
+            border-radius: 4px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: #ff7700;
+        }
+        
+        /* प्रिंट स्टाईल्स */
+        @media print {
+            .no-print {
+                display: none !important;
+            }
+            .print-area {
+                background: white !important;
+                color: black !important;
+                padding: 10px;
+                max-height: 100vh;
+                overflow: hidden;
+            }
+            body * {
+                visibility: hidden;
+            }
+            .bill-print-container, .bill-print-container * {
+                visibility: visible;
+            }
+            .bill-print-container {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+                background: white !important;
+                color: black !important;
+                page-break-inside: avoid;
+                page-break-after: avoid;
+                page-break-before: avoid;
+            }
+        }
+        
+        /* बिल कंटेनर */
+        .bill-container {
+            border: var(--invoice-show-border) ? var(--invoice-border) : none;
+            border-radius: var(--invoice-border-radius);
+            padding: 15px;
+            background: #ffffff !important;
+            color: #1f2937 !important;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+            max-width: 800px;
+            margin: 0 auto;
+            font-size: var(--invoice-font-size);
+            page-break-inside: avoid;
+            break-inside: avoid;
+        }
+        
+        .bill-container table td {
+            color: #1f2937 !important;
+        }
+        
+        /* सिंगल पेज बिल */
+        .single-page-bill {
+            max-height: 90vh;
+            overflow-y: auto;
+            padding: 10px;
+        }
+        
+        /* क्यूआर कोड */
+        .qr-preview {
+            width: 80px;
+            height: 80px;
+            object-fit: contain;
+            border: 1px solid #ff7700;
+            border-radius: 8px;
+            cursor: pointer;
+            background: #ffffff;
+            padding: 2px;
+        }
+        
+        .qr-large {
+            width: 120px;
+            height: 120px;
+            object-fit: contain;
+        }
+        
+        /* लोडिंग स्पिनर */
+        .spinner {
+            border: 3px solid #27272e;
+            border-top: 3px solid #ff7700;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* ऑटो-फिल हायलाईट */
+        .auto-fill-highlight {
+            background-color: rgba(255, 119, 0, 0.15) !important;
+            transition: background-color 0.3s;
+        }
+        
+        /* प्रिंट लेआउट स्टाईल्स (प्रिंटसाठी पांढरी पार्श्वभूमी व भगवे हायलाइट्स) */
+        .print-layout {
+            max-width: 800px;
+            margin: 0 auto;
+            background: #ffffff !important;
+            color: #111827 !important;
+            padding: 20px;
+            border-radius: 16px;
+            page-break-inside: avoid;
+        }
+        
+        .print-header {
+            text-align: center;
+            margin-bottom: 15px;
+            border-bottom: 2px dashed var(--invoice-primary);
+            padding-bottom: 10px;
+        }
+        
+        .print-header h1 {
+            color: var(--invoice-primary);
+            font-size: 24px;
+            font-weight: 800;
+            margin-bottom: 5px;
+            font-family: 'Khand', 'Noto Sans Devanagari', sans-serif;
+        }
+        
+        .print-details {
+            background: var(--invoice-header-bg);
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            color: #111827 !important;
+        }
+        
+        .print-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+            page-break-inside: avoid;
+        }
+        
+        .print-table th {
+            background: var(--invoice-primary) !important;
+            color: white !important;
+            padding: 8px;
+            font-weight: 700;
+            font-size: 13px;
+        }
+        
+        .print-table td {
+            padding: 6px 8px;
+            border: 1px solid #e2e8f0 !important;
+            font-size: 12px;
+            color: #1f2937 !important;
+        }
+        
+        .print-table tr:nth-child(even) {
+            background: #fffaf0;
+        }
+        
+        .print-total {
+            text-align: right;
+            font-size: 16px;
+            font-weight: bold;
+            color: var(--invoice-primary);
+            margin-top: 15px;
+            padding-top: 10px;
+            border-top: 2px dashed var(--invoice-primary);
+        }
+        
+        .print-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 15px;
+            padding-top: 10px;
+            border-top: 1px solid #e2e8f0;
+            font-size: 10px;
+            color: #64748b;
+        }
+        
+        .qr-section {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .qr-text {
+            font-size: 9px;
+            line-height: 1.2;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .action-btn {
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+            color: white;
+            font-size: 13px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 14px rgba(0,0,0,0.3);
+        }
+        
+        .btn-print { background: linear-gradient(135deg, #ff8c00 0%, #ea580c 100%); }
+        .btn-pdf { background: #dc2626; }
+        .btn-whatsapp { background: #16a34a; }
+        .btn-copy { background: #4b5563; }
+        .btn-new { background: #059669; }
+        
+        /* कलर पिकर स्टाईल्स */
+        .color-option {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: all 0.3s;
+        }
+        
+        .color-option:hover {
+            transform: scale(1.1);
+        }
+        
+        .color-option.selected {
+            border-color: #ffffff;
+            transform: scale(1.15);
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+        }
+        
+        /* टेम्पलेट प्रिव्ह्यू */
+        .template-preview {
+            border: 2px solid var(--border-primary);
+            background: var(--bg-primary);
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .template-preview:hover {
+            border-color: #ff7700;
+            transform: translateY(-2px);
+        }
+        
+        .template-preview.selected {
+            border-color: #ff7700;
+            background: rgba(255, 119, 0, 0.12);
+        }
+
+        /* भगवा बटन युटिलिटी */
+        .btn-saffron-action {
+            background: linear-gradient(135deg, #ff8c00 0%, #ea580c 100%) !important;
+            color: #ffffff !important;
+            font-weight: 700;
+            box-shadow: 0 4px 14px rgba(234, 88, 12, 0.35);
+            transition: all 0.25s ease;
+        }
+        .btn-saffron-action:hover {
+            background: linear-gradient(135deg, #ffa726 0%, #f57c00 100%) !important;
+            box-shadow: 0 6px 20px rgba(234, 88, 12, 0.5);
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body class="min-h-screen antialiased">
+    
+    <!-- Main Container -->
+    <div class="container mx-auto px-4 py-4 max-w-7xl">
+        
+        <!-- ==================== HEADER WITH ANIMATED BADGE ==================== -->
+        <div class="bg-gradient-to-r from-zinc-950 via-[#1a110a] to-zinc-950 border border-orange-500/40 rounded-2xl p-5 md:p-6 mb-6 text-white shadow-2xl no-print flex flex-col md:flex-row justify-between items-center relative overflow-hidden" style="box-shadow: 0 10px 30px rgba(0,0,0,0.8), 0 0 20px rgba(255,119,0,0.2);">
+            <div class="flex items-center gap-4 z-10">
+                <div class="bg-gradient-to-br from-amber-500 to-orange-600 p-3.5 rounded-2xl shadow-lg border border-orange-300/40 text-black flex items-center justify-center">
+                    <i class="fas fa-store-alt text-3xl md:text-4xl text-black"></i>
+                </div>
+                <div>
+                    <div class="flex items-center gap-3">
+                        <h1 class="text-2xl md:text-3xl font-extrabold tracking-tight text-white flex items-center gap-2">
+                            <span class="text-orange-500">सीएससी</span> बिलिंग सॉफ्टवेअर
+                        </h1>
+                        <span class="hidden sm:inline-block bg-orange-500/20 text-orange-400 text-xs px-2.5 py-1 rounded-full border border-orange-500/40 font-bold">मराठी आवृत्ती</span>
+                    </div>
+                    <p class="text-gray-300 text-sm md:text-base mt-0.5">
+                        <span class="font-bold text-orange-400">सुयोम्स व्हीएलई मित्र</span> - सीएससी व्हीएलई साठी परिपूर्ण डिजिटल बिलिंग प्रणाली
+                    </p>
+                </div>
+            </div>
+
+        </div>
+        
+        <!-- ==================== STATS DASHBOARD ==================== -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 md:gap-4 mb-6 no-print">
+            <div class="card p-4 flex items-center border border-zinc-800 hover:border-orange-500/40 transition">
+                <div class="w-11 h-11 md:w-12 md:h-12 bg-orange-500/15 border border-orange-500/30 rounded-xl flex items-center justify-center">
+                    <i class="fas fa-rupee-sign text-xl md:text-2xl text-orange-400"></i>
+                </div>
+                <div class="ml-3">
+                    <p class="text-xs md:text-sm text-gray-400 font-medium">आजचे उत्पन्न</p>
+                    <p class="text-lg md:text-2xl font-bold text-orange-400" id="todayIncome">रु. ०</p>
+                </div>
+            </div>
+            
+            <div class="card p-4 flex items-center border border-zinc-800 hover:border-orange-500/40 transition">
+                <div class="w-11 h-11 md:w-12 md:h-12 bg-green-500/15 border border-green-500/30 rounded-xl flex items-center justify-center">
+                    <i class="fas fa-file-invoice text-xl md:text-2xl text-green-400"></i>
+                </div>
+                <div class="ml-3">
+                    <p class="text-xs md:text-sm text-gray-400 font-medium">आजची बिले</p>
+                    <p class="text-lg md:text-2xl font-bold text-white" id="todayBills">0</p>
+                </div>
+            </div>
+            
+            <div class="card p-4 flex items-center border border-zinc-800 hover:border-orange-500/40 transition">
+                <div class="w-11 h-11 md:w-12 md:h-12 bg-amber-500/15 border border-amber-500/30 rounded-xl flex items-center justify-center">
+                    <i class="fas fa-users text-xl md:text-2xl text-amber-400"></i>
+                </div>
+                <div class="ml-3">
+                    <p class="text-xs md:text-sm text-gray-400 font-medium">एकूण ग्राहक</p>
+                    <p class="text-lg md:text-2xl font-bold text-white" id="totalCustomers">0</p>
+                </div>
+            </div>
+            
+            <div class="card p-4 flex items-center border border-zinc-800 hover:border-orange-500/40 transition">
+                <div class="w-11 h-11 md:w-12 md:h-12 bg-orange-500/15 border border-orange-500/30 rounded-xl flex items-center justify-center">
+                    <i class="fas fa-cubes text-xl md:text-2xl text-orange-400"></i>
+                </div>
+                <div class="ml-3">
+                    <p class="text-xs md:text-sm text-gray-400 font-medium">उपलब्ध सेवा</p>
+                    <p class="text-lg md:text-2xl font-bold text-white" id="totalServices">0</p>
+                </div>
+            </div>
+            
+            <div class="card p-4 flex items-center border border-zinc-800 hover:border-orange-500/40 transition">
+                <div class="w-11 h-11 md:w-12 md:h-12 bg-red-500/15 border border-red-500/30 rounded-xl flex items-center justify-center">
+                    <i class="fas fa-calendar-alt text-xl md:text-2xl text-red-400"></i>
+                </div>
+                <div class="ml-3">
+                    <p class="text-xs md:text-sm text-gray-400 font-medium">मासिक उत्पन्न</p>
+                    <p class="text-lg md:text-2xl font-bold text-orange-400" id="monthlyIncome">रु. ०</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- ==================== TABS NAVIGATION ==================== -->
+        <div class="card p-2 mb-6 no-print overflow-x-auto border border-zinc-800">
+            <div class="flex flex-nowrap md:flex-wrap gap-1.5 min-w-max md:min-w-0">
+                <button class="tab-btn active px-3.5 md:px-5 py-2.5 rounded-lg text-sm md:text-base transition flex items-center gap-2" data-tab="dashboard">
+                    <i class="fas fa-home"></i>डॅशबोर्ड
+                </button>
+                <button class="tab-btn px-3.5 md:px-5 py-2.5 rounded-lg text-sm md:text-base transition flex items-center gap-2" data-tab="profile">
+                    <i class="fas fa-store"></i>केंद्र प्रोफाईल
+                </button>
+                <button class="tab-btn px-3.5 md:px-5 py-2.5 rounded-lg text-sm md:text-base transition flex items-center gap-2" data-tab="services">
+                    <i class="fas fa-cogs"></i>सेवा व्यवस्थापन
+                </button>
+                <button class="tab-btn px-3.5 md:px-5 py-2.5 rounded-lg text-sm md:text-base transition flex items-center gap-2" data-tab="customers">
+                    <i class="fas fa-users"></i>ग्राहक यादी
+                </button>
+                <button class="tab-btn px-3.5 md:px-5 py-2.5 rounded-lg text-sm md:text-base transition flex items-center gap-2" data-tab="billing">
+                    <i class="fas fa-file-invoice"></i>नवीन बिलिंग
+                </button>
+                <button class="tab-btn px-3.5 md:px-5 py-2.5 rounded-lg text-sm md:text-base transition flex items-center gap-2" data-tab="history">
+                    <i class="fas fa-history"></i>बिल इतिहास
+                </button>
+                <button class="tab-btn px-3.5 md:px-5 py-2.5 rounded-lg text-sm md:text-base transition flex items-center gap-2" data-tab="reports">
+                    <i class="fas fa-chart-bar"></i>अहवाल
+                </button>
+                <button class="tab-btn px-3.5 md:px-5 py-2.5 rounded-lg text-sm md:text-base transition flex items-center gap-2" data-tab="settings">
+                    <i class="fas fa-palette"></i>पावती सेटिंग्ज
+                </button>
+                <button class="tab-btn px-3.5 md:px-5 py-2.5 rounded-lg text-sm md:text-base transition flex items-center gap-2" data-tab="data">
+                    <i class="fas fa-database"></i>डेटा बॅकअप
+                </button>
+            </div>
+        </div>
+        
+        <!-- ==================== TAB CONTENTS ==================== -->
+        
+        <!-- Dashboard Tab -->
+        <div id="dashboard-tab" class="tab-content">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <!-- Quick Actions -->
+                <div class="lg:col-span-2">
+                    <div class="card p-6">
+                        <h2 class="text-xl font-bold mb-4 flex items-center">
+                            <i class="fas fa-bolt text-orange-500 mr-2"></i>झटपट कृती (Quick Actions)
+                        </h2>
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+                            <button onclick="newBill()" class="p-4 border-2 border-orange-500/40 rounded-xl text-center hover:bg-orange-500/10 bg-zinc-900/60 transition group">
+                                <i class="fas fa-plus-circle text-3xl text-orange-500 mb-2 group-hover:scale-110 transition"></i>
+                                <p class="text-sm font-bold text-white">नवीन बिल</p>
+                            </button>
+                            <button onclick="switchTab('customers')" class="p-4 border-2 border-green-500/40 rounded-xl text-center hover:bg-green-500/10 bg-zinc-900/60 transition group">
+                                <i class="fas fa-user-plus text-3xl text-green-400 mb-2 group-hover:scale-110 transition"></i>
+                                <p class="text-sm font-bold text-white">ग्राहक जोडा</p>
+                            </button>
+                            <button onclick="switchTab('services')" class="p-4 border-2 border-amber-500/40 rounded-xl text-center hover:bg-amber-500/10 bg-zinc-900/60 transition group">
+                                <i class="fas fa-cog text-3xl text-amber-400 mb-2 group-hover:scale-110 transition"></i>
+                                <p class="text-sm font-bold text-white">सेवा व्यवस्थापन</p>
+                            </button>
+                            <button onclick="switchTab('settings')" class="p-4 border-2 border-orange-500/40 rounded-xl text-center hover:bg-orange-500/10 bg-zinc-900/60 transition group">
+                                <i class="fas fa-palette text-3xl text-orange-400 mb-2 group-hover:scale-110 transition"></i>
+                                <p class="text-sm font-bold text-white">पावती सेटिंग्ज</p>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Recent Activity -->
+                    <div class="card p-6 mt-6">
+                        <h2 class="text-xl font-bold mb-4 flex items-center">
+                            <i class="fas fa-clock text-orange-500 mr-2"></i>अलीकडील बिले (Recent Bills)
+                        </h2>
+                        <div id="recentBillsList" class="space-y-3">
+                            <p class="text-gray-500 text-center py-8">अद्याप कोणतेही बिल तयार केलेले नाही</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Right Sidebar -->
+                <div class="lg:col-span-1 space-y-6">
+                    <!-- Top Selling Services -->
+                    <div class="card p-6">
+                        <h2 class="text-lg font-bold mb-4 flex items-center">
+                            <i class="fas fa-trophy text-amber-400 mr-2"></i>सर्वाधिक मागणी असलेल्या सेवा
+                        </h2>
+                        <div id="topServicesList" class="space-y-3">
+                            <p class="text-gray-500 text-sm">Loading...</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Quick Stats -->
+                    <div class="bg-gradient-to-br from-zinc-900 via-[#1c120a] to-zinc-900 border border-orange-500/40 text-white p-6 rounded-2xl shadow-xl">
+                        <h3 class="font-bold text-orange-400 text-lg mb-3 flex items-center"><i class="fas fa-wallet mr-2"></i>आजचा हिशोब</h3>
+                        <div class="space-y-2">
+                            <div class="flex justify-between">
+                                <span class="text-gray-300">रोख भरणा (Cash):</span>
+                                <span class="font-bold" id="todayCash">Rs 0</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-300">यूपीआय (UPI):</span>
+                                <span class="font-bold" id="todayUPI">Rs 0</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-300">कार्ड भरणा (Card):</span>
+                                <span class="font-bold" id="todayCard">Rs 0</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Profile Tab -->
+        <div id="profile-tab" class="tab-content hidden">
+            <div class="card p-6">
+                <h2 class="text-2xl font-bold mb-6 flex items-center">
+                    <i class="fas fa-store text-orange-500 mr-3"></i>सीएससी केंद्र प्रोफाईल (CSC Center Profile)
+                </h2>
+                
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    <!-- Logo Upload -->
+                    <div class="lg:col-span-1">
+                        <div class="border-2 border-dashed border-blue-300 rounded-xl p-6 text-center">
+                            <div class="flex justify-center mb-4">
+                                <img id="logoPreview" class="w-32 h-32 object-cover rounded-lg border hidden" alt="Logo">
+                                <div id="logoPlaceholder" class="w-32 h-32 bg-gray-100 rounded-lg flex items-center justify-center text-gray-400">
+                                    <i class="fas fa-upload text-4xl"></i>
+                                </div>
+                            </div>
+                            <button onclick="document.getElementById('logoInput').click()" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition text-sm">
+                                <i class="fas fa-cloud-upload-alt mr-2"></i>Upload Logo
+                            </button>
+                            <input type="file" id="logoInput" accept="image/*" class="hidden" onchange="handleLogoUpload(event)">
+                            <p class="text-xs text-gray-500 mt-2">Max 2MB, Square image</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Profile Form -->
+                    <div class="lg:col-span-2">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium mb-2">Center Name <span class="text-red-500">*</span></label>
+                                <input type="text" id="centerName" class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium mb-2">VLE Name <span class="text-red-500">*</span></label>
+                                <input type="text" id="vleName" class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium mb-2">CSC ID <span class="text-red-500">*</span></label>
+                                <input type="text" id="cscId" class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium mb-2">Mobile <span class="text-red-500">*</span></label>
+                                <input type="tel" id="centerMobile" class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500" maxlength="10">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium mb-2">Email</label>
+                                <input type="email" id="centerEmail" class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500">
+                            </div>
+                            <div class="md:col-span-2">
+                                <label class="block text-sm font-medium mb-2">Address <span class="text-red-500">*</span></label>
+                                <textarea id="centerAddress" rows="3" class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500"></textarea>
+                            </div>
+                        </div>
+                        
+                        <div class="mt-6 flex gap-3">
+                            <button onclick="saveCenterProfile()" class="gradient-primary text-white px-8 py-3 rounded-lg hover:shadow-lg transition font-semibold">
+                                <i class="fas fa-save mr-2"></i>प्रोफाईल जतन करा
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- QR Code Upload Section -->
+                <div class="mt-8 border-t pt-6">
+                    <h3 class="text-xl font-bold mb-4 flex items-center">
+                        <i class="fas fa-qrcode text-blue-600 mr-2"></i>QR Code for Payments
+                    </h3>
+                    <p class="text-sm text-gray-600 mb-4">Upload your UPI QR code. This will appear on every bill automatically.</p>
+                    
+                    <div class="flex flex-col md:flex-row items-center gap-8">
+                        <div class="border-2 border-dashed border-blue-300 rounded-xl p-6 text-center">
+                            <div class="flex justify-center mb-4">
+                                <img id="qrPreview" class="qr-large rounded-lg border hidden" alt="QR Code">
+                                <div id="qrPlaceholder" class="w-32 h-32 bg-gray-100 rounded-lg flex items-center justify-center text-gray-400">
+                                    <i class="fas fa-qrcode text-4xl"></i>
+                                </div>
+                            </div>
+                            <button onclick="document.getElementById('qrInput').click()" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition text-sm">
+                                <i class="fas fa-cloud-upload-alt mr-2"></i>Upload QR Code
+                            </button>
+                            <input type="file" id="qrInput" accept="image/*" class="hidden" onchange="handleQRUpload(event)">
+                            <p class="text-xs text-gray-500 mt-2">Upload your UPI QR code (PNG/JPG)</p>
+                        </div>
+                        
+                        <div class="flex-1 bg-blue-50 p-4 rounded-lg">
+                            <h4 class="font-semibold mb-2">Benefits of QR Code:</h4>
+                            <ul class="text-sm space-y-1 text-gray-600">
+                                <li><i class="fas fa-check text-green-600 mr-2"></i>Customers can pay instantly</li>
+                                <li><i class="fas fa-check text-green-600 mr-2"></i>No need to share UPI ID</li>
+                                <li><i class="fas fa-check text-green-600 mr-2"></i>Auto appears on every bill</li>
+                                <li><i class="fas fa-check text-green-600 mr-2"></i>Supports all UPI apps</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Services Tab -->
+        <div id="services-tab" class="tab-content hidden">
+            <div class="card p-6">
+                <div class="flex flex-col md:flex-row justify-between items-center mb-6">
+                    <h2 class="text-2xl font-bold flex items-center">
+                        <i class="fas fa-cogs text-orange-500 mr-3"></i>सेवा व्यवस्थापन (Service Management)
+                    </h2>
+                    <button onclick="openServiceModal()" class="gradient-success text-white px-6 py-2 rounded-lg hover:shadow-lg transition flex items-center mt-3 md:mt-0">
+                        <i class="fas fa-plus mr-2"></i>नवीन सेवा जोडा
+                    </button>
+                </div>
+                
+                <!-- Category Filter -->
+                <div class="mb-4 flex gap-2 overflow-x-auto pb-2">
+                    <button onclick="filterServicesByCategory('all')" class="category-filter active px-4 py-2 rounded-lg text-sm font-bold transition bg-orange-600 text-white shadow-md border border-orange-500">सर्व सेवा</button>
+                    <button onclick="filterServicesByCategory('Government')" class="category-filter px-4 py-2 border border-zinc-700 bg-zinc-800 text-gray-200 rounded-lg text-sm font-bold hover:border-orange-500 hover:text-orange-400 hover:bg-zinc-700 transition">शासकीय सेवा</button>
+                    <button onclick="filterServicesByCategory('Banking')" class="category-filter px-4 py-2 border border-zinc-700 bg-zinc-800 text-gray-200 rounded-lg text-sm font-bold hover:border-orange-500 hover:text-orange-400 hover:bg-zinc-700 transition">बँकिंग व डीबीटी</button>
+                    <button onclick="filterServicesByCategory('Insurance')" class="category-filter px-4 py-2 border border-zinc-700 bg-zinc-800 text-gray-200 rounded-lg text-sm font-bold hover:border-orange-500 hover:text-orange-400 hover:bg-zinc-700 transition">विमा सेवा</button>
+                    <button onclick="filterServicesByCategory('Recharge')" class="category-filter px-4 py-2 border border-zinc-700 bg-zinc-800 text-gray-200 rounded-lg text-sm font-bold hover:border-orange-500 hover:text-orange-400 hover:bg-zinc-700 transition">बिल व रिचार्ज</button>
+                </div>
+                
+                <!-- Search -->
+                <div class="mb-6">
+                    <input type="text" id="serviceSearch" placeholder="सेवा शोधा (उदा. पॅन कार्ड, आधार, दाखला)..." class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500">
+                </div>
+                
+                <!-- Services Grid -->
+                <div id="servicesList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+            </div>
+        </div>
+        
+        <!-- Customers Tab -->
+        <div id="customers-tab" class="tab-content hidden">
+            <div class="card p-6">
+                <h2 class="text-2xl font-bold mb-6 flex items-center">
+                    <i class="fas fa-users text-orange-500 mr-3"></i>ग्राहक डेटाबेस (Customer Database)
+                </h2>
+                
+                <!-- Search -->
+                <div class="mb-6">
+                    <input type="text" id="customerSearch" placeholder="Search by name or mobile..." class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500">
+                </div>
+                
+                <!-- Customers List -->
+                <div id="customersList" class="space-y-3"></div>
+            </div>
+        </div>
+        
+        <!-- Billing Tab -->
+        <div id="billing-tab" class="tab-content hidden">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <!-- Left Column - Bill Entry -->
+                <div class="space-y-6">
+                    <!-- Customer Selection -->
+                    <div class="card p-6">
+                        <h3 class="text-lg font-bold text-orange-400 mb-4"><i class="fas fa-user-edit mr-2"></i>ग्राहक तपशील</h3>
+                        
+                        <!-- Mobile Number Search -->
+                        <div class="mb-4">
+                            <label class="block text-sm font-medium mb-2">Mobile Number</label>
+                            <input type="tel" id="billMobile" class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500" placeholder="Enter mobile number" maxlength="10" onchange="searchCustomerByMobile()">
+                        </div>
+                        
+                        <!-- Customer Info -->
+                        <div id="customerInfo" class="hidden p-4 bg-green-50 rounded-lg mb-4">
+                            <p class="font-semibold" id="selectedCustomerName"></p>
+                            <p class="text-sm text-gray-600" id="selectedCustomerMobile"></p>
+                        </div>
+                        
+                        <!-- New Customer Form -->
+                        <div id="newCustomerForm">
+                            <div class="mb-3">
+                                <input type="text" id="newCustomerName" placeholder="Customer Name" class="w-full p-3 border rounded-lg">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Service Selection -->
+                    <div class="card p-6">
+                        <h3 class="text-lg font-bold text-orange-400 mb-4"><i class="fas fa-cart-plus mr-2"></i>सेवा जोडा</h3>
+                        
+                        <div class="space-y-4">
+                            <select id="billServiceSelect" class="w-full p-3 border rounded-lg">
+                                <option value="">Select Service</option>
+                            </select>
+                            
+                            <div class="grid grid-cols-2 gap-3">
+                                <input type="number" id="billQuantity" placeholder="Qty" value="1" min="1" class="p-3 border rounded-lg">
+                                <input type="number" id="billCustomPrice" placeholder="Custom Price" class="p-3 border rounded-lg">
+                            </div>
+                            
+                            <button onclick="addServiceToBill()" class="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition">
+                                <i class="fas fa-plus mr-2"></i>Add to Bill
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Bill Options -->
+                    <div class="card p-6">
+                        <h3 class="text-lg font-bold mb-4">Bill Options</h3>
+                        
+                        <div class="space-y-4">
+                            <!-- Discount -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-300 mb-2">सवलत (% Discount)</label>
+                                <input type="number" id="billDiscount" value="0" min="0" max="100" class="w-full p-3 border rounded-lg" onchange="updateBillTotals()">
+                            </div>
+                            
+                            <!-- GST -->
+                            <div>
+                                <label class="block text-sm font-medium mb-2">GST (%)</label>
+                                <select id="billGst" class="w-full p-3 border rounded-lg" onchange="updateBillTotals()">
+                                    <option value="0">No GST (0%)</option>
+                                    <option value="5">GST 5%</option>
+                                    <option value="12">GST 12%</option>
+                                    <option value="18">GST 18%</option>
+                                    <option value="28">GST 28%</option>
+                                </select>
+                            </div>
+                            
+                            <!-- Payment Mode -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-300 mb-2">भरणा पद्धत (Payment Mode)</label>
+                                <select id="billPaymentMode" class="w-full p-3 border rounded-lg" onchange="updateBillTotals()">
+                                    <option value="Cash">रोख (Cash)</option>
+                                    <option value="UPI">यूपीआय / ऑनलाइन (UPI)</option>
+                                    <option value="Card">कार्ड (Debit/Credit Card)</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Generate Button -->
+                    <button onclick="generateBill()" class="w-full gradient-success text-white py-4 rounded-xl text-lg font-bold hover:shadow-lg transition">
+                        <i class="fas fa-file-invoice mr-2"></i>Generate Bill
+                    </button>
+                    
+                    <!-- New Bill Button -->
+                    <button onclick="resetBill()" class="w-full bg-gray-600 text-white py-3 rounded-lg hover:bg-gray-700 transition">
+                        <i class="fas fa-plus-circle mr-2"></i>Reset Form
+                    </button>
+                </div>
+                
+                <!-- Right Column - Bill Preview -->
+                <div class="lg:sticky lg:top-4">
+                    <div class="card p-6">
+                        <div class="flex justify-between items-center mb-4">
+                            <h3 class="text-xl font-bold text-orange-400 flex items-center"><i class="fas fa-print mr-2"></i>पावती प्रिंट व डाऊनलोड</h3>
+                            <div class="flex gap-2" id="previewActionButtons">
+                                <button onclick="printBillFromPreview()" class="p-2 bg-gray-200 rounded-lg hover:bg-gray-300" title="Print">
+                                    <i class="fas fa-print"></i>
+                                </button>
+                                <button onclick="downloadPDFFromPreview()" class="p-2 bg-gray-200 rounded-lg hover:bg-gray-300" title="PDF">
+                                    <i class="fas fa-download"></i>
+                                </button>
+                                <button onclick="copyBillFromPreview()" class="p-2 bg-gray-200 rounded-lg hover:bg-gray-300" title="Copy">
+                                    <i class="fas fa-copy"></i>
+                                </button>
+                                <button onclick="shareWhatsAppFromPreview()" class="p-2 bg-green-600 text-white rounded-lg hover:bg-green-700" title="WhatsApp">
+                                    <i class="fab fa-whatsapp"></i>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- Invoice Preview with Dynamic Template -->
+                        <div id="billPreview" class="bill-container">
+                            <!-- Content will be dynamically updated -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- History Tab -->
+        <div id="history-tab" class="tab-content hidden">
+            <div class="card p-6">
+                <h2 class="text-2xl font-bold text-orange-400 mb-6 flex items-center"><i class="fas fa-history mr-3"></i>बिल इतिहास (Bill History)</h2>
+                
+                <!-- Search -->
+                <div class="mb-6">
+                    <input type="text" id="historySearch" placeholder="बिल शोधा (ग्राहक नाव, बिल क्र. किंवा मोबाईल)..." class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500">
+                </div>
+                
+                <!-- Bills List -->
+                <div id="billsHistoryList" class="space-y-4"></div>
+            </div>
+        </div>
+        
+        <!-- Reports Tab -->
+        <div id="reports-tab" class="tab-content hidden">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <!-- Date Range -->
+                <div class="lg:col-span-3">
+                    <div class="card p-6">
+                        <div class="flex flex-col md:flex-row gap-4 items-center">
+                            <input type="date" id="reportStartDate" class="p-3 border rounded-lg">
+                            <span>to</span>
+                            <input type="date" id="reportEndDate" class="p-3 border rounded-lg">
+                            <button onclick="generateReport()" class="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700">
+                                Generate Report
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Daily Report -->
+                <div class="card p-6">
+                    <h3 class="font-bold text-orange-400 mb-4"><i class="fas fa-chart-line mr-2"></i>दैनिक उत्पन्न (Daily Income)</h3>
+                    <canvas id="dailyChart" class="w-full h-48"></canvas>
+                </div>
+                
+                <!-- Service Report -->
+                <div class="card p-6">
+                    <h3 class="font-bold mb-4">Top Services</h3>
+                    <div id="serviceReportList" class="space-y-2"></div>
+                </div>
+                
+                <!-- Payment Modes -->
+                <div class="card p-6">
+                    <h3 class="font-bold text-orange-400 mb-4"><i class="fas fa-money-check mr-2"></i>पेमेंट पद्धती निहाय</h3>
+                    <div id="paymentModeReport" class="space-y-2"></div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Settings Tab -->
+        <div id="settings-tab" class="tab-content hidden">
+            <div class="card p-6">
+                <h2 class="text-2xl font-bold mb-6 flex items-center">
+                    <i class="fas fa-palette text-orange-500 mr-3"></i>पावती / इनव्हॉइस सेटिंग्ज
+                </h2>
+                
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <!-- Left Column - Template Settings -->
+                    <div>
+                        <h3 class="text-lg font-bold text-orange-400 mb-4">प्राथमिक थीम रंग</h3>
+                        
+                        <!-- Primary Color -->
+                        <div class="mb-6">
+                            <label class="block text-sm font-medium text-gray-300 mb-2">मुख्य रंग निवडा</label>
+                            <div class="flex gap-3 flex-wrap">
+                                <div class="color-option selected" style="background: #ea580c;" onclick="setInvoiceColor('#ea580c', 'primary')" data-color="#ea580c" title="भगवा (Saffron)"></div>
+                                <div class="color-option" style="background: #d97706;" onclick="setInvoiceColor('#d97706', 'primary')" data-color="#d97706" title="सोनेरी केसरी (Amber)"></div>
+                                <div class="color-option" style="background: #dc2626;" onclick="setInvoiceColor('#dc2626', 'primary')" data-color="#dc2626" title="गडद लाल (Red)"></div>
+                                <div class="color-option" style="background: #059669;" onclick="setInvoiceColor('#059669', 'primary')" data-color="#059669" title="हिरवा (Green)"></div>
+                                <div class="color-option" style="background: #2563eb;" onclick="setInvoiceColor('#2563eb', 'primary')" data-color="#2563eb" title="निळा (Blue)"></div>
+                                <div class="color-option" style="background: #18181b;" onclick="setInvoiceColor('#18181b', 'primary')" data-color="#18181b" title="काळा (Charcoal Black)"></div>
+                            </div>
+                        </div>
+                        
+                        <!-- Border Settings -->
+                        <div class="mb-6">
+                            <h3 class="text-lg font-bold text-orange-400 mb-4">बॉर्डर सेटिंग्ज</h3>
+                            <div class="space-y-3">
+                                <label class="flex items-center">
+                                    <input type="checkbox" id="showBorder" class="mr-2" checked onchange="toggleInvoiceBorder()">
+                                    बॉर्डर दाखवा
+                                </label>
+                                
+                                <div>
+                                    <label class="block text-sm font-medium mb-2">Border Width</label>
+                                    <select id="borderWidth" class="w-full p-2 border rounded-lg" onchange="updateInvoiceBorder()">
+                                        <option value="1px">Thin (1px)</option>
+                                        <option value="2px" selected>Medium (2px)</option>
+                                        <option value="3px">Thick (3px)</option>
+                                        <option value="4px">Extra Thick (4px)</option>
+                                    </select>
+                                </div>
+                                
+                                <div>
+                                    <label class="block text-sm font-medium mb-2">Border Radius</label>
+                                    <select id="borderRadius" class="w-full p-2 border rounded-lg" onchange="updateInvoiceBorder()">
+                                        <option value="4px">Small (4px)</option>
+                                        <option value="8px">Medium (8px)</option>
+                                        <option value="12px" selected>Large (12px)</option>
+                                        <option value="16px">Extra Large (16px)</option>
+                                        <option value="0">None</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Header Background -->
+                        <div class="mb-6">
+                            <h3 class="text-lg font-bold mb-4">Header Background</h3>
+                            <select id="headerBg" class="w-full p-2 border rounded-lg" onchange="updateInvoiceStyle()">
+                                <option value="#f8fafc">Light Gray</option>
+                                <option value="#eff6ff">Light Blue</option>
+                                <option value="#ecfdf5">Light Green</option>
+                                <option value="#fef2f2">Light Red</option>
+                                <option value="#faf5ff">Light Purple</option>
+                                <option value="#ffffff">White</option>
+                            </select>
+                        </div>
+                        
+                        <!-- Font Size -->
+                        <div class="mb-6">
+                            <h3 class="text-lg font-bold mb-4">Font Size</h3>
+                            <select id="fontSize" class="w-full p-2 border rounded-lg" onchange="updateInvoiceFontSize()">
+                                <option value="12px">Small</option>
+                                <option value="14px" selected>Medium</option>
+                                <option value="16px">Large</option>
+                                <option value="18px">Extra Large</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <!-- Right Column - Template Previews -->
+                    <div>
+                        <h3 class="text-lg font-bold mb-4">Template Designs</h3>
+                        
+                        <!-- Template 1 -->
+                        <div class="template-preview selected" onclick="selectTemplate(1)">
+                            <div class="flex items-center gap-3">
+                                <div class="w-12 h-12 bg-blue-600 rounded-lg"></div>
+                                <div>
+                                    <h4 class="font-bold text-orange-400">भगवा व्यावसायिक टेम्पलेट (Saffron Pro)</h4>
+                                    <p class="text-sm text-gray-400">भगवा रंगसंगती, सुंदर बॉर्डरसह</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Template 2 -->
+                        <div class="template-preview" onclick="selectTemplate(2)">
+                            <div class="flex items-center gap-3">
+                                <div class="w-12 h-12 bg-green-600 rounded-lg"></div>
+                                <div>
+                                    <h4 class="font-bold text-green-400">क्लासिक मॉडर्न टेम्पलेट</h4>
+                                    <p class="text-sm text-gray-400">हिरवी थीम, विना बॉर्डर</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Template 3 -->
+                        <div class="template-preview" onclick="selectTemplate(3)">
+                            <div class="flex items-center gap-3">
+                                <div class="w-12 h-12 bg-purple-600 rounded-lg"></div>
+                                <div>
+                                    <h4 class="font-bold text-amber-400">रॉयल भगवा टेम्पलेट</h4>
+                                    <p class="text-sm text-gray-400">गोलाकार कोपरे, प्रीमियम भगवा</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Template 4 -->
+                        <div class="template-preview" onclick="selectTemplate(4)">
+                            <div class="flex items-center gap-3">
+                                <div class="w-12 h-12 bg-orange-600 rounded-lg"></div>
+                                <div>
+                                    <h4 class="font-bold text-orange-500">ठळक भगवा बॉर्डर टेम्पलेट</h4>
+                                    <p class="text-sm text-gray-400">ठळक भगवी बॉर्डर, पावती लूक</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Save Settings Button -->
+                        <button onclick="saveInvoiceSettings()" class="w-full gradient-primary text-white py-3 rounded-lg mt-6">
+                            <i class="fas fa-save mr-2"></i>सेटिंग्ज जतन करा
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Live Preview -->
+                <div class="mt-8">
+                    <h3 class="text-lg font-bold mb-4">Live Preview</h3>
+                    <div id="settingsPreview" class="bill-container">
+                        <div class="print-header">
+                            <h1 style="color: var(--invoice-primary);">CSC Center</h1>
+                            <p>Sample Invoice Preview</p>
+                        </div>
+                        <div class="print-details">
+                            <p><strong>Bill No:</strong> CSC-0001</p>
+                            <p><strong>Customer:</strong> Sample Customer</p>
+                        </div>
+                        <table class="print-table">
+                            <tr><td colspan="4" class="text-center">Preview with your settings</td></tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Data Management Tab -->
+        <div id="data-tab" class="tab-content hidden">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Backup -->
+                <div class="card p-6">
+                    <h2 class="text-xl font-bold text-orange-400 mb-4"><i class="fas fa-download mr-2"></i>डेटा बॅकअप</h2>
+                    <p class="text-gray-400 mb-4">केंद्राचा सर्व डेटा (प्रोफाईल, सेवा, ग्राहक व बिले) JSON फाईलमध्ये सुरक्षित डाऊनलोड करा.</p>
+                    <button onclick="backupData()" class="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 w-full">
+                        <i class="fas fa-download mr-2"></i>डेटा बॅकअप डाऊनलोड करा
+                    </button>
+                </div>
+                
+                <!-- Restore -->
+                <div class="card p-6">
+                    <h2 class="text-xl font-bold text-orange-400 mb-4"><i class="fas fa-upload mr-2"></i>डेटा रिस्टोअर करा</h2>
+                    <p class="text-gray-600 mb-4">Upload previously backed up JSON file</p>
+                    <input type="file" id="restoreFile" accept=".json" class="mb-4">
+                    <button onclick="restoreData()" class="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 w-full">
+                        <i class="fas fa-upload mr-2"></i>Restore Data
+                    </button>
+                </div>
+                
+                <!-- Clear Data -->
+                <div class="card p-6 md:col-span-2">
+                    <h2 class="text-xl font-bold mb-4 text-red-600">Danger Zone</h2>
+                    <p class="text-gray-600 mb-4">Clear all data from local storage</p>
+                    <button onclick="clearAllData()" class="bg-red-600 text-white px-6 py-3 rounded-lg hover:bg-red-700">
+                        <i class="fas fa-trash mr-2"></i>Clear All Data
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- ==================== MODALS ==================== -->
+    
+    <!-- Service Modal -->
+    <div id="serviceModal" class="fixed inset-0 modal-backdrop flex items-center justify-center hidden z-50 p-4">
+        <div class="bg-white rounded-xl max-w-md w-full p-6">
+            <h3 id="serviceModalTitle" class="text-2xl font-bold mb-4">Add Service</h3>
+            
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium mb-2">Service Name</label>
+                    <input type="text" id="modalServiceName" class="w-full p-3 border rounded-lg">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-2">Category</label>
+                    <select id="modalServiceCategory" class="w-full p-3 border rounded-lg">
+                        <option value="Government">Government</option>
+                        <option value="Banking">Banking</option>
+                        <option value="Insurance">Insurance</option>
+                        <option value="Recharge">Recharge</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-2">दर (रु.)</label>
+                    <input type="number" id="modalServicePrice" class="w-full p-3 border rounded-lg">
+                </div>
+            </div>
+            
+            <div class="flex justify-end gap-3 mt-6">
+                <button onclick="closeServiceModal()" class="px-6 py-2 border rounded-lg">Cancel</button>
+                <button onclick="saveService()" class="bg-blue-600 text-white px-6 py-2 rounded-lg">Save</button>
+            </div>
+            <input type="hidden" id="editingServiceId">
+        </div>
+    </div>
+    
+    <!-- Print Layout Modal -->
+    <div id="printLayoutModal" class="fixed inset-0 modal-backdrop flex items-center justify-center hidden z-50 p-4 overflow-y-auto">
+        <div class="bg-white rounded-xl max-w-4xl w-full p-6 relative">
+            <div class="flex justify-between items-center mb-4 no-print">
+                <h2 class="text-2xl font-bold" style="color: var(--invoice-primary);">Bill Preview</h2>
+                <button onclick="closePrintModal()" class="text-gray-500 hover:text-gray-700">
+                    <i class="fas fa-times text-2xl"></i>
+                </button>
+            </div>
+            
+            <!-- Action Buttons -->
+            <div class="action-buttons no-print mb-6">
+                <button onclick="printFromModal()" class="action-btn btn-print font-bold">
+                    <i class="fas fa-print mr-2"></i>Print Bill
+                </button>
+                <button onclick="downloadPDFFromModal()" class="action-btn btn-pdf">
+                    <i class="fas fa-file-pdf mr-2"></i>Download PDF
+                </button>
+                <button onclick="shareWhatsAppFromModal()" class="action-btn btn-whatsapp">
+                    <i class="fab fa-whatsapp mr-2"></i>WhatsApp
+                </button>
+                <button onclick="copyBillFromModal()" class="action-btn btn-copy">
+                    <i class="fas fa-copy mr-2"></i>Copy
+                </button>
+                <button onclick="newBillFromModal()" class="action-btn btn-new">
+                    <i class="fas fa-plus mr-2"></i>New Bill
+                </button>
+            </div>
+            
+            <!-- Bill Container with Dynamic Template -->
+            <div id="printBillContainer" class="bill-container single-page-bill">
+                <!-- Content will be injected via JavaScript -->
+            </div>
+        </div>
+    </div>
+    
+    <!-- Toast Container -->
+    <div id="toastContainer" class="fixed bottom-5 right-5 z-50 space-y-2"></div>
+    
+    <!-- ==================== JAVASCRIPT ==================== -->
+    <script>
+        // ==================== STATE MANAGEMENT ====================
+        
+        let appState = {
+            centerProfile: {
+                logo: null,
+                qrCode: null,
+                centerName: '',
+                vleName: '',
+                cscId: '',
+                mobile: '',
+                email: '',
+                address: ''
+            },
+            services: [],
+            customers: [],
+            bills: [],
+            categories: ['शासकीय सेवा', 'बँकिंग सेवा', 'विमा सेवा', 'बिल भरणा व रिचार्ज', 'इतर सेवा'],
+            lastBillNumber: 0,
+            darkMode: true, // काळी व भगवा थीम डिफॉल्ट (Black & Saffron Default)
+            invoiceSettings: {
+                primaryColor: '#ea580c', // भगवा (Saffron Accent)
+                showBorder: true,
+                borderWidth: '2px',
+                borderRadius: '12px',
+                headerBg: '#fff7ed',
+                fontSize: '14px',
+                templateId: 1
+            }
+        };
+        
+        let currentBill = {
+            items: [],
+            customerName: '',
+            customerMobile: '',
+            discount: 0,
+            gst: 0,
+            paymentMode: 'Cash',
+            subtotal: 0,
+            total: 0
+        };
+        
+        let lastGeneratedBill = null;
+        
+        // ==================== INITIALIZATION ====================
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            loadFromLocalStorage();
+            initializeDefaultData();
+            setupEventListeners();
+            updateDashboard();
+            renderServices();
+            renderCustomers();
+            renderBillsHistory();
+            updateBillPreview();
+            updateStats();
+            applyTheme();
+            applyInvoiceSettings();
+            populateSettingsForm();
+        });
+        
+        function loadFromLocalStorage() {
+            try {
+                // Load center profile
+                const savedProfile = localStorage.getItem('smartCscCenterProfile');
+                if (savedProfile) {
+                    appState.centerProfile = JSON.parse(savedProfile);
+                    populateCenterProfile();
+                    populateQRCode();
+                }
+                
+                // Load services
+                const savedServices = localStorage.getItem('smartCscServices');
+                if (savedServices) {
+                    appState.services = JSON.parse(savedServices);
+                }
+                
+                // Load customers
+                const savedCustomers = localStorage.getItem('smartCscCustomers');
+                if (savedCustomers) {
+                    appState.customers = JSON.parse(savedCustomers);
+                }
+                
+                // Load bills
+                const savedBills = localStorage.getItem('smartCscBills');
+                if (savedBills) {
+                    appState.bills = JSON.parse(savedBills);
+                    // Get last bill number
+                    if (appState.bills.length > 0) {
+                        const lastBill = appState.bills[appState.bills.length - 1];
+                        const billNum = parseInt(lastBill.billNumber.split('-')[1]);
+                        appState.lastBillNumber = billNum || 0;
+                    }
+                }
+                
+                // Load invoice settings
+                const savedSettings = localStorage.getItem('smartCscInvoiceSettings');
+                if (savedSettings) {
+                    appState.invoiceSettings = JSON.parse(savedSettings);
+                }
+                
+                // Load dark mode preference
+                const savedDarkMode = localStorage.getItem('smartCscDarkMode');
+                if (savedDarkMode) {
+                    appState.darkMode = savedDarkMode === 'true';
+                }
+            } catch (error) {
+                console.error('Error loading data:', error);
+                showToast('डेटा लोड करताना त्रुटी आली!', 'error');
+            }
+        }
+        
+        function saveToLocalStorage() {
+            try {
+                localStorage.setItem('smartCscCenterProfile', JSON.stringify(appState.centerProfile));
+                localStorage.setItem('smartCscServices', JSON.stringify(appState.services));
+                localStorage.setItem('smartCscCustomers', JSON.stringify(appState.customers));
+                localStorage.setItem('smartCscBills', JSON.stringify(appState.bills));
+                localStorage.setItem('smartCscDarkMode', appState.darkMode);
+                localStorage.setItem('smartCscInvoiceSettings', JSON.stringify(appState.invoiceSettings));
+            } catch (error) {
+                console.error('Error saving data:', error);
+                showToast('डेटा जतन करताना त्रुटी आली!', 'error');
+            }
+        }
+        
+        function initializeDefaultData() {
+            if (appState.services.length === 0) {
+                const defaultServices = [
+                    { id: '1', name: 'आधार कार्ड डाऊनलोड व पीव्हीसी प्रिंट (Aadhaar Print)', category: 'शासकीय सेवा', price: 50 },
+                    { id: '2', name: 'नवीन पॅन कार्ड अर्ज (PAN Card New)', category: 'शासकीय सेवा', price: 200 },
+                    { id: '3', name: 'पॅन कार्ड दुरुस्ती / अपडेट (PAN Correction)', category: 'शासकीय सेवा', price: 150 },
+                    { id: '4', name: 'उत्पन्नाचा दाखला अर्ज (Income Certificate)', category: 'शासकीय सेवा', price: 150 },
+                    { id: '5', name: 'रहिवासी दाखला / डोमिसाईल (Domicile Certificate)', category: 'शासकीय सेवा', price: 150 },
+                    { id: '6', name: '७/१२ व ८-अ डिजिटल स्वाक्षरी उतारा (7/12 Utara)', category: 'शासकीय सेवा', price: 30 },
+                    { id: '7', name: 'जात प्रमाणपत्र अर्ज (Caste Certificate)', category: 'शासकीय सेवा', price: 250 },
+                    { id: '8', name: 'आयुष्मान भारत कार्ड (Ayushman Bharat Card)', category: 'शासकीय सेवा', price: 50 },
+                    { id: '9', name: 'ई-श्रम कार्ड नोंदणी / प्रिंट (e-Shram Card)', category: 'शासकीय सेवा', price: 50 },
+                    { id: '10', name: 'नवीन रेशन कार्ड / नाव वाढवणे (Ration Card Service)', category: 'शासकीय सेवा', price: 100 },
+                    { id: '11', name: 'महावितरण वीज बिल भरणा (Electricity Bill)', category: 'बिल भरणा व रिचार्ज', price: 20 },
+                    { id: '12', name: 'बँक पैसे काढणे / एईपीएस (AEPS Cash Withdrawal)', category: 'बँकिंग सेवा', price: 20 },
+                    { id: '13', name: 'पीएम किसान ई-केवायसी (PM Kisan e-KYC)', category: 'शासकीय सेवा', price: 50 },
+                    { id: '14', name: 'ड्रायव्हिंग लायसन्स लर्निंग / पक्के (Driving License)', category: 'शासकीय सेवा', price: 300 },
+                    { id: '15', name: 'पासपोर्ट ऑनलाइन अर्ज (Passport Online)', category: 'शासकीय सेवा', price: 350 },
+                    { id: '16', name: 'विमा हप्ता भरणा (Insurance Premium)', category: 'विमा सेवा', price: 50 }
+                ];
+                
+                defaultServices.forEach(service => {
+                    appState.services.push({
+                        id: Date.now() + Math.random().toString(),
+                        ...service
+                    });
+                });
+            }
+            
+            saveToLocalStorage();
+        }
+        
+        function setupEventListeners() {
+            // Tab switching
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    switchTab(this.dataset.tab);
+                });
+            });
+            
+            // Service search
+            document.getElementById('serviceSearch')?.addEventListener('input', function() {
+                renderServices(this.value);
+            });
+            
+            // Customer search
+            document.getElementById('customerSearch')?.addEventListener('input', function() {
+                renderCustomers(this.value);
+            });
+            
+            // History search
+            document.getElementById('historySearch')?.addEventListener('input', function() {
+                renderBillsHistory(this.value);
+            });
+            
+            // Bill service select
+            document.getElementById('billServiceSelect')?.addEventListener('change', function() {
+                const selected = this.options[this.selectedIndex];
+                if (selected && selected.value) {
+                    const price = selected.dataset.price;
+                    document.getElementById('billCustomPrice').value = price;
+                }
+            });
+        }
+        
+        // ==================== QR CODE FUNCTIONS ====================
+        
+        function handleQRUpload(event) {
+            const file = event.target.files[0];
+            if (file) {
+                if (file.size > 2 * 1024 * 1024) {
+                    showToast('क्यूआर कोड आकार २MB पेक्षा कमी असावा!', 'error');
+                    return;
+                }
+                
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const qrPreview = document.getElementById('qrPreview');
+                    const qrPlaceholder = document.getElementById('qrPlaceholder');
+                    
+                    qrPreview.src = e.target.result;
+                    qrPreview.classList.remove('hidden');
+                    qrPlaceholder.classList.add('hidden');
+                    
+                    appState.centerProfile.qrCode = e.target.result;
+                    saveToLocalStorage();
+                    updateBillPreview();
+                    showToast('क्यूआर कोड यशस्वीरित्या अपलोड झाला! तो सर्व बिलांवर दिसेल.', 'success');
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+        
+        function populateQRCode() {
+            const qrCode = appState.centerProfile.qrCode;
+            if (qrCode) {
+                const qrPreview = document.getElementById('qrPreview');
+                const qrPlaceholder = document.getElementById('qrPlaceholder');
+                
+                qrPreview.src = qrCode;
+                qrPreview.classList.remove('hidden');
+                qrPlaceholder.classList.add('hidden');
+            }
+        }
+        
+        // ==================== THEME FUNCTIONS ====================
+        
+        function toggleDarkMode() {
+            appState.darkMode = !appState.darkMode;
+            applyTheme();
+            saveToLocalStorage();
+            showToast(`Dark mode ${appState.darkMode ? 'enabled' : 'disabled'}`, 'success');
+        }
+        
+        function applyTheme() {
+            if (appState.darkMode) {
+                document.body.classList.add('dark-mode');
+                document.querySelectorAll('.card').forEach(card => {
+                    card.classList.add('dark-mode');
+                });
+            } else {
+                document.body.classList.remove('dark-mode');
+                document.querySelectorAll('.card').forEach(card => {
+                    card.classList.remove('dark-mode');
+                });
+            }
+        }
+        
+        // ==================== TAB FUNCTIONS ====================
+        
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.add('hidden');
+            });
+            
+            document.getElementById(tabName + '-tab').classList.remove('hidden');
+            
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('tab-active', 'bg-blue-50');
+            });
+            
+            const activeBtn = Array.from(document.querySelectorAll('.tab-btn')).find(btn => 
+                btn.dataset.tab === tabName
+            );
+            if (activeBtn) {
+                activeBtn.classList.add('tab-active', 'bg-blue-50');
+            }
+            
+            // Refresh data when switching tabs
+            if (tabName === 'dashboard') updateStats();
+            if (tabName === 'services') renderServices();
+            if (tabName === 'customers') renderCustomers();
+            if (tabName === 'history') renderBillsHistory();
+            if (tabName === 'billing') {
+                populateServiceSelect();
+                updateBillPreview();
+            }
+            if (tabName === 'reports') generateReport();
+            if (tabName === 'settings') populateSettingsForm();
+        }
+        
+        // ==================== CENTER PROFILE FUNCTIONS ====================
+        
+        function handleLogoUpload(event) {
+            const file = event.target.files[0];
+            if (file) {
+                if (file.size > 2 * 1024 * 1024) {
+                    showToast('लोगो आकार २MB पेक्षा कमी असावा!', 'error');
+                    return;
+                }
+                
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const logoPreview = document.getElementById('logoPreview');
+                    const logoPlaceholder = document.getElementById('logoPlaceholder');
+                    
+                    logoPreview.src = e.target.result;
+                    logoPreview.classList.remove('hidden');
+                    logoPlaceholder.classList.add('hidden');
+                    
+                    appState.centerProfile.logo = e.target.result;
+                    saveToLocalStorage();
+                    updateBillPreview();
+                    showToast('लोगो यशस्वीरित्या अपलोड झाला!', 'success');
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+        
+        function populateCenterProfile() {
+            const profile = appState.centerProfile;
+            
+            document.getElementById('centerName').value = profile.centerName || '';
+            document.getElementById('vleName').value = profile.vleName || '';
+            document.getElementById('cscId').value = profile.cscId || '';
+            document.getElementById('centerMobile').value = profile.mobile || '';
+            document.getElementById('centerEmail').value = profile.email || '';
+            document.getElementById('centerAddress').value = profile.address || '';
+            
+            if (profile.logo) {
+                const logoPreview = document.getElementById('logoPreview');
+                const logoPlaceholder = document.getElementById('logoPlaceholder');
+                logoPreview.src = profile.logo;
+                logoPreview.classList.remove('hidden');
+                logoPlaceholder.classList.add('hidden');
+            }
+        }
+        
+        function saveCenterProfile() {
+            const centerName = document.getElementById('centerName').value;
+            const vleName = document.getElementById('vleName').value;
+            const cscId = document.getElementById('cscId').value;
+            const mobile = document.getElementById('centerMobile').value;
+            const address = document.getElementById('centerAddress').value;
+            
+            if (!centerName || !vleName || !cscId || !mobile || !address) {
+                showToast('कृपया सर्व आवश्यक माहिती भरा!', 'error');
+                return;
+            }
+            
+            if (mobile.length !== 10) {
+                showToast('कृपया वैध १० अंकी मोबाईल नंबर टाका!', 'error');
+                return;
+            }
+            
+            appState.centerProfile = {
+                ...appState.centerProfile,
+                centerName,
+                vleName,
+                cscId,
+                mobile,
+                email: document.getElementById('centerEmail').value,
+                address
+            };
+            
+            saveToLocalStorage();
+            updateBillPreview();
+            showToast('केंद्र प्रोफाईल यशस्वीरित्या जतन केली!', 'success');
+        }
+        
+        // ==================== SERVICE FUNCTIONS ====================
+        
+        function openServiceModal(editId = null) {
+            if (editId) {
+                const service = appState.services.find(s => s.id === editId);
+                if (service) {
+                    document.getElementById('serviceModalTitle').textContent = 'Edit Service';
+                    document.getElementById('modalServiceName').value = service.name;
+                    document.getElementById('modalServiceCategory').value = service.category;
+                    document.getElementById('modalServicePrice').value = service.price;
+                    document.getElementById('editingServiceId').value = service.id;
+                }
+            } else {
+                document.getElementById('serviceModalTitle').textContent = 'Add Service';
+                document.getElementById('modalServiceName').value = '';
+                document.getElementById('modalServiceCategory').value = 'Government';
+                document.getElementById('modalServicePrice').value = '';
+                document.getElementById('editingServiceId').value = '';
+            }
+            document.getElementById('serviceModal').classList.remove('hidden');
+        }
+        
+        function closeServiceModal() {
+            document.getElementById('serviceModal').classList.add('hidden');
+        }
+        
+        function saveService() {
+            const name = document.getElementById('modalServiceName').value;
+            const category = document.getElementById('modalServiceCategory').value;
+            const price = document.getElementById('modalServicePrice').value;
+            const editId = document.getElementById('editingServiceId').value;
+            
+            if (!name || !price) {
+                showToast('कृपया सर्व माहिती भरा!', 'error');
+                return;
+            }
+            
+            if (editId) {
+                // Update existing service
+                const index = appState.services.findIndex(s => s.id === editId);
+                if (index !== -1) {
+                    appState.services[index] = {
+                        ...appState.services[index],
+                        name,
+                        category,
+                        price: parseFloat(price)
+                    };
+                    showToast('सेवा यशस्वीरित्या अद्ययावत केली!', 'success');
+                }
+            } else {
+                // Add new service
+                const newService = {
+                    id: Date.now().toString() + Math.random(),
+                    name,
+                    category,
+                    price: parseFloat(price)
+                };
+                appState.services.push(newService);
+                showToast('नवीन सेवा यशस्वीरित्या जोडली!', 'success');
+            }
+            
+            saveToLocalStorage();
+            renderServices();
+            populateServiceSelect();
+            closeServiceModal();
+        }
+        
+        function deleteService(id) {
+            if (confirm('Are you sure you want to delete this service?')) {
+                appState.services = appState.services.filter(s => s.id !== id);
+                saveToLocalStorage();
+                renderServices();
+                populateServiceSelect();
+                showToast('सेवा यशस्वीरित्या हटवली!', 'success');
+            }
+        }
+        
+        let currentCategory = 'all';
+        
+        function filterServicesByCategory(category) {
+            currentCategory = category;
+            document.querySelectorAll('.category-filter').forEach(btn => {
+                btn.classList.remove('bg-orange-600', 'text-white', 'border-orange-500', 'active');
+                btn.classList.add('border-zinc-700', 'bg-zinc-800', 'text-gray-200');
+            });
+            if (window.event && window.event.target) {
+                const target = window.event.target.closest('button');
+                if (target) {
+                    target.classList.remove('border-zinc-700', 'bg-zinc-800', 'text-gray-200');
+                    target.classList.add('bg-orange-600', 'text-white', 'border-orange-500', 'active');
+                }
+            }
+            const searchVal = document.getElementById('serviceSearch') ? document.getElementById('serviceSearch').value : '';
+            renderServices(searchVal);
+        }
+        
+        function renderServices(searchTerm = '') {
+            const servicesList = document.getElementById('servicesList');
+            
+            let filteredServices = appState.services;
+            
+            // Filter by category with Marathi mapping
+            if (currentCategory && currentCategory.toLowerCase() !== 'all' && currentCategory !== 'सर्व सेवा') {
+                filteredServices = filteredServices.filter(s => {
+                    const cat = (s.category || '').toLowerCase();
+                    const cur = currentCategory.toLowerCase();
+                    if (cur.includes('gov') || cur.includes('शासकीय')) return cat.includes('gov') || cat.includes('शासकीय');
+                    if (cur.includes('bank') || cur.includes('बँकिंग')) return cat.includes('bank') || cat.includes('बँकिंग');
+                    if (cur.includes('insur') || cur.includes('विमा')) return cat.includes('insur') || cat.includes('विमा');
+                    if (cur.includes('rech') || cur.includes('बिल') || cur.includes('रिचार्ज')) return cat.includes('rech') || cat.includes('बिल') || cat.includes('रिचार्ज');
+                    return cat === cur || cat.includes('other') || cat.includes('इतर');
+                });
+            }
+            
+            // Filter by search
+            if (searchTerm) {
+                filteredServices = filteredServices.filter(s => 
+                    s.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                    (s.category && s.category.toLowerCase().includes(searchTerm.toLowerCase()))
+                );
+            }
+            
+            if (filteredServices.length === 0) {
+                servicesList.innerHTML = '<p class="text-gray-400 text-center col-span-3 py-8 text-base"><i class="fas fa-search mr-2"></i>कोणतीही सेवा आढळली नाही</p>';
+                return;
+            }
+            
+            servicesList.innerHTML = filteredServices.map(service => `
+                <div class="border border-zinc-800 bg-zinc-900/60 rounded-xl p-4 hover:border-orange-500/40 transition shadow-sm">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <h4 class="font-bold text-white text-base">${service.name}</h4>
+                            <span class="inline-block bg-orange-500/10 text-orange-400 border border-orange-500/20 text-xs px-2.5 py-0.5 rounded-full mt-1.5 font-medium">${service.category}</span>
+                            <p class="text-orange-400 font-extrabold text-lg mt-2">रु. ${service.price}</p>
+                        </div>
+                        <div class="flex gap-1.5">
+                            <button onclick="openServiceModal('${service.id}')" class="text-orange-400 hover:text-orange-300 p-2 rounded-lg hover:bg-orange-500/10 transition" title="संपादित करा">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button onclick="deleteService('${service.id}')" class="text-red-400 hover:text-red-300 p-2 rounded-lg hover:bg-red-500/10 transition" title="हटवा">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        function populateServiceSelect() {
+            const select = document.getElementById('billServiceSelect');
+            select.innerHTML = '<option value="">Select Service</option>' + 
+                appState.services.map(s => `<option value="${s.id}" data-price="${s.price}">${s.name} - रु. ${s.price}</option>`).join('');
+        }
+        
+        // ==================== CUSTOMER FUNCTIONS ====================
+        
+        function searchCustomerByMobile() {
+            const mobile = document.getElementById('billMobile').value;
+            if (mobile.length === 10) {
+                const customer = appState.customers.find(c => c.mobile === mobile);
+                if (customer) {
+                    document.getElementById('newCustomerName').value = customer.name;
+                    document.getElementById('customerInfo').classList.remove('hidden');
+                    document.getElementById('selectedCustomerName').textContent = customer.name;
+                    document.getElementById('selectedCustomerMobile').textContent = customer.mobile;
+                    
+                    currentBill.customerName = customer.name;
+                    currentBill.customerMobile = customer.mobile;
+                    
+                    document.getElementById('newCustomerForm').classList.add('hidden');
+                    showToast('ग्राहकाची माहिती भरली गेली!', 'success');
+                } else {
+                    document.getElementById('customerInfo').classList.add('hidden');
+                    document.getElementById('newCustomerForm').classList.remove('hidden');
+                    currentBill.customerName = '';
+                    currentBill.customerMobile = mobile;
+                }
+            }
+        }
+        
+        function saveCustomer(name, mobile) {
+            if (!name || !mobile) return;
+            
+            const existing = appState.customers.find(c => c.mobile === mobile);
+            if (!existing) {
+                appState.customers.push({
+                    id: Date.now().toString(),
+                    name,
+                    mobile,
+                    createdAt: new Date().toISOString()
+                });
+                saveToLocalStorage();
+                renderCustomers();
+            }
+        }
+        
+        function renderCustomers(searchTerm = '') {
+            const customersList = document.getElementById('customersList');
+            
+            let filteredCustomers = appState.customers;
+            if (searchTerm) {
+                filteredCustomers = appState.customers.filter(c => 
+                    c.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                    c.mobile.includes(searchTerm)
+                );
+            }
+            
+            if (filteredCustomers.length === 0) {
+                customersList.innerHTML = '<p class="text-gray-400 text-center py-8 text-base"><i class="fas fa-users-slash mr-2"></i>कोणताही ग्राहक आढळला नाही</p>';
+                return;
+            }
+            
+            customersList.innerHTML = filteredCustomers.map(customer => `
+                <div class="border border-zinc-800 bg-zinc-900/60 rounded-xl p-4 flex justify-between items-center hover:border-orange-500/40 transition">
+                    <div>
+                        <p class="font-bold text-white text-base">${customer.name}</p>
+                        <p class="text-sm text-orange-400 font-mono mt-0.5"><i class="fas fa-phone mr-1 text-xs"></i>${customer.mobile}</p>
+                    </div>
+                    <button onclick="useCustomer('${customer.mobile}')" class="btn-saffron-action px-4 py-2 rounded-lg text-sm font-bold shadow flex items-center gap-1.5">
+                        <i class="fas fa-file-invoice"></i>बिल बनवा
+                    </button>
+                </div>
+            `).join('');
+        }
+        
+        function useCustomer(mobile) {
+            switchTab('billing');
+            document.getElementById('billMobile').value = mobile;
+            searchCustomerByMobile();
+        }
+        
+        // ==================== NEW BILL FUNCTION ====================
+        
+        function newBill() {
+            // Reset current bill completely
+            currentBill = {
+                items: [],
+                customerName: '',
+                customerMobile: '',
+                discount: 0,
+                gst: 0,
+                paymentMode: 'Cash',
+                subtotal: 0,
+                total: 0
+            };
+            
+            // Clear all form fields
+            document.getElementById('billMobile').value = '';
+            document.getElementById('newCustomerName').value = '';
+            document.getElementById('billDiscount').value = 0;
+            document.getElementById('billGst').value = 0;
+            document.getElementById('billPaymentMode').value = 'Cash';
+            document.getElementById('billQuantity').value = 1;
+            document.getElementById('billCustomPrice').value = '';
+            document.getElementById('customerInfo').classList.add('hidden');
+            document.getElementById('newCustomerForm').classList.remove('hidden');
+            
+            // Reset bill number preview
+            document.getElementById('previewBillNo').textContent = 'Bill No: CSC-0001';
+            
+            // Update preview
+            updateBillPreview();
+            
+            // Switch to billing tab
+            switchTab('billing');
+            
+            showToast('नवीन बिल सुरू झाले!', 'success');
+        }
+        
+        // ==================== BILLING FUNCTIONS ====================
+        
+        function addServiceToBill() {
+            const select = document.getElementById('billServiceSelect');
+            const quantity = parseInt(document.getElementById('billQuantity').value) || 1;
+            const customPrice = parseFloat(document.getElementById('billCustomPrice').value);
+            
+            if (!select.value) {
+                showToast('कृपया सेवा निवडा!', 'error');
+                return;
+            }
+            
+            const selectedOption = select.options[select.selectedIndex];
+            const serviceId = select.value;
+            const service = appState.services.find(s => s.id === serviceId);
+            
+            if (service) {
+                const price = customPrice || service.price;
+                const total = price * quantity;
+                
+                currentBill.items.push({
+                    id: Date.now().toString() + Math.random(),
+                    name: service.name,
+                    price: price,
+                    quantity: quantity,
+                    total: total
+                });
+                
+                showToast('सेवा बिलामध्ये जोडली गेली!', 'success');
+                updateBillTotals();
+                
+                // Reset fields
+                document.getElementById('billQuantity').value = 1;
+                document.getElementById('billCustomPrice').value = '';
+            }
+        }
+        
+        function removeBillItem(itemId) {
+            currentBill.items = currentBill.items.filter(item => item.id !== itemId);
+            updateBillTotals();
+        }
+        
+        function updateBillTotals() {
+            // Calculate subtotal
+            const subtotal = currentBill.items.reduce((sum, item) => sum + item.total, 0);
+            currentBill.subtotal = subtotal;
+            
+            // Get discount and GST
+            const discountPercent = parseFloat(document.getElementById('billDiscount').value) || 0;
+            const gstPercent = parseFloat(document.getElementById('billGst').value) || 0;
+            const paymentMode = document.getElementById('billPaymentMode').value;
+            
+            currentBill.discount = discountPercent;
+            currentBill.gst = gstPercent;
+            currentBill.paymentMode = paymentMode;
+            
+            // Calculate totals
+            const discountAmount = (subtotal * discountPercent) / 100;
+            const afterDiscount = subtotal - discountAmount;
+            const gstAmount = (afterDiscount * gstPercent) / 100;
+            const grandTotal = afterDiscount + gstAmount;
+            
+            currentBill.total = grandTotal;
+            
+            // Update preview
+            updateBillPreview();
+        }
+        
+        function updateBillPreview() {
+            const profile = appState.centerProfile;
+            const settings = appState.invoiceSettings;
+            
+            // Apply settings to preview
+            document.documentElement.style.setProperty('--invoice-primary', settings.primaryColor);
+            document.documentElement.style.setProperty('--invoice-border', settings.showBorder ? `${settings.borderWidth} solid ${settings.primaryColor}` : 'none');
+            document.documentElement.style.setProperty('--invoice-border-radius', settings.borderRadius);
+            document.documentElement.style.setProperty('--invoice-header-bg', settings.headerBg);
+            document.documentElement.style.setProperty('--invoice-font-size', settings.fontSize);
+            
+            // Generate bill HTML
+            const billHTML = generateBillPreviewHTML(profile, currentBill);
+            document.getElementById('billPreview').innerHTML = billHTML;
+        }
+        
+        function generateBillPreviewHTML(profile, bill) {
+            const settings = appState.invoiceSettings;
+            
+            // Generate items rows
+            let itemsRows = '';
+            if (bill.items.length === 0) {
+                itemsRows = '<tr><td colspan="5" class="text-center p-4 text-gray-500">कोणतीही सेवा बिलामध्ये जोडलेली नाही</td></tr>';
+            } else {
+                itemsRows = bill.items.map(item => `
+                    <tr class="border-b" style="border-color: #f1f5f9;">
+                        <td class="p-2 text-gray-800 font-medium">${item.name}</td>
+                        <td class="p-2 text-right text-gray-800">${item.quantity}</td>
+                        <td class="p-2 text-right text-gray-800">रु. ${item.price}</td>
+                        <td class="p-2 text-right font-bold text-gray-900">रु. ${item.total}</td>
+                        <td class="p-2 text-right no-print">
+                            <button onclick="removeBillItem('${item.id}')" class="text-red-500 hover:text-red-700 p-1" title="काढून टाका">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `).join('');
+            }
+            
+            // Calculate amounts
+            const subtotal = bill.subtotal || 0;
+            const discountAmount = (subtotal * (bill.discount || 0)) / 100;
+            const afterDiscount = subtotal - discountAmount;
+            const gstAmount = (afterDiscount * (bill.gst || 0)) / 100;
+            const grandTotal = bill.total || 0;
+            
+            // Get today's date in Marathi format
+            const today = new Date().toLocaleDateString('mr-IN', { year: 'numeric', month: 'short', day: 'numeric' });
+            
+            return `
+                <div style="border: ${settings.showBorder ? settings.borderWidth + ' solid ' + settings.primaryColor : 'none'}; border-radius: ${settings.borderRadius}; padding: 16px; background: #ffffff; color: #1e293b;">
+                    <!-- Header -->
+                    <div class="print-header" style="border-bottom-color: ${settings.primaryColor}; text-align: center; padding-bottom: 12px; margin-bottom: 12px;">
+                        ${profile.logo ? `<img src="${profile.logo}" style="width: 60px; height: 60px; margin: 0 auto 8px; border-radius: 8px; object-fit: contain;">` : ''}
+                        <h1 style="color: ${settings.primaryColor}; font-size: 22px; font-weight: 800; margin: 0 0 4px 0;">${profile.centerName || 'सीएससी केंद्र (CSC Center)'}</h1>
+                        <p style="color: #475569; font-size: 12px; margin: 2px 0;">${profile.address || ''}</p>
+                        <p style="color: #475569; font-size: 12px; margin: 2px 0;">सीएससी आयडी: <strong>${profile.cscId || '-'}</strong> | व्हीएलई: <strong>${profile.vleName || '-'}</strong></p>
+                        <p style="color: #475569; font-size: 12px; margin: 2px 0;">मोबाईल: <strong>${profile.mobile || '-'}</strong></p>
+                    </div>
+                    
+                    <!-- Bill Details -->
+                    <div class="print-details" style="background: ${settings.headerBg}; padding: 10px 14px; border-radius: 8px; margin-bottom: 14px; font-size: 12px; color: #1e293b;">
+                        <div style="display: flex; justify-content: space-between;">
+                            <div>
+                                <p style="margin: 2px 0;"><strong>बिल क्र.:</strong> <span id="previewBillNo" style="color: ${settings.primaryColor}; font-weight: bold;">CSC-${String(appState.lastBillNumber + 1).padStart(4, '0')}</span></p>
+                                <p style="margin: 2px 0;"><strong>दिनांक:</strong> ${today}</p>
+                            </div>
+                            <div style="text-align: right;">
+                                <p style="margin: 2px 0;"><strong>ग्राहकाचे नाव:</strong> <span id="previewCustomerName" style="font-weight: bold;">${bill.customerName || '-'}</span></p>
+                                <p style="margin: 2px 0;"><strong>मोबाईल:</strong> <span id="previewCustomerMobile">${bill.customerMobile || '-'}</span></p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Services Table -->
+                    <table class="print-table" style="width: 100%; border-collapse: collapse; margin: 12px 0;">
+                        <thead>
+                            <tr style="background: ${settings.primaryColor}; color: white;">
+                                <th style="padding: 8px; text-align: left; font-size: 12px;">सेवा तपशील</th>
+                                <th style="padding: 8px; text-align: right; font-size: 12px;">नग</th>
+                                <th style="padding: 8px; text-align: right; font-size: 12px;">दर</th>
+                                <th style="padding: 8px; text-align: right; font-size: 12px;">एकूण</th>
+                                <th class="no-print" style="padding: 8px; text-align: right; font-size: 12px;">कृती</th>
+                            </tr>
+                        </thead>
+                        <tbody id="previewServicesList">
+                            ${itemsRows}
+                        </tbody>
+                    </table>
+                    
+                    <!-- Totals -->
+                    <div class="print-total" style="border-top: 2px dashed ${settings.primaryColor}; padding-top: 10px; margin-top: 12px; font-size: 13px; text-align: right;">
+                        <p style="margin: 2px 0; color: #475569;">उपएकूण: रु. ${subtotal.toFixed(2)}</p>
+                        ${bill.discount > 0 ? `<p style="margin: 2px 0; color: #16a34a;">सवलत (${bill.discount}%): -रु. ${discountAmount.toFixed(2)}</p>` : ''}
+                        ${bill.gst > 0 ? `<p style="margin: 2px 0; color: #475569;">जीएसटी (${bill.gst}%): +रु. ${gstAmount.toFixed(2)}</p>` : ''}
+                        <p style="font-size: 18px; font-weight: 800; color: ${settings.primaryColor}; margin: 6px 0;">एकूण देय रक्कम: रु. ${grandTotal.toFixed(2)}</p>
+                        <p style="font-size: 12px; color: #64748b; margin: 2px 0;">भरणा पद्धत: <strong>${bill.paymentMode}</strong></p>
+                    </div>
+                    
+                    <!-- Footer with QR Code -->
+                    <div class="print-footer" style="display: flex; justify-content: space-between; align-items: center; margin-top: 14px; padding-top: 10px; border-top: 1px solid #e2e8f0; font-size: 10px; color: #64748b;">
+                        <div class="qr-section" style="display: flex; align-items: center; gap: 8px;">
+                            ${profile.qrCode ? `
+                                <img src="${profile.qrCode}" style="width: 65px; height: 65px; border: 1px solid #e2e8f0; border-radius: 6px;" alt="स्कॅन करून पैसे भरा">
+                                <div class="qr-text" style="font-size: 10px; line-height: 1.3;">
+                                    <p style="margin: 0; font-weight: bold; color: ${settings.primaryColor};">स्कॅन करून पैसे भरा</p>
+                                    <p style="margin: 0;">UPI / QR Code</p>
+                                </div>
+                            ` : ''}
+                        </div>
+                        <div style="text-align: right;">
+                            <p style="margin: 1px 0;">हे संगणकीकृत अधिकृत बिल आहे.</p>
+                            <p style="margin: 1px 0;" id="previewCscDetails">सीएससी आयडी: ${profile.cscId || '-'} | व्हीएलई: ${profile.vleName || '-'}</p>
+                            <p style="margin: 1px 0; font-weight: 600; color: ${settings.primaryColor};">सुयोम्स व्हीएलई मित्र</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+        
+        // ==================== GENERATE BILL WITH PRINT LAYOUT ====================
+        
+        function generateBill() {
+            // Validate customer
+            const customerName = document.getElementById('newCustomerName').value || currentBill.customerName;
+            const customerMobile = document.getElementById('billMobile').value;
+            
+            if (!customerName) {
+                showToast('कृपया ग्राहकाचे नाव टाका!', 'error');
+                return;
+            }
+            
+            if (currentBill.items.length === 0) {
+                showToast('कृपया बिलामध्ये किमान एक सेवा जोडा!', 'error');
+                return;
+            }
+            
+            // Save customer
+            if (customerMobile && customerMobile.length === 10) {
+                saveCustomer(customerName, customerMobile);
+            }
+            
+            // Generate bill number
+            appState.lastBillNumber++;
+            const billNumber = 'CSC-' + String(appState.lastBillNumber).padStart(4, '0');
+            
+            // Create bill object
+            const newBill = {
+                id: Date.now().toString(),
+                billNumber: billNumber,
+                date: new Date().toISOString(),
+                customerName: customerName,
+                customerMobile: customerMobile || '',
+                items: [...currentBill.items],
+                discount: currentBill.discount || 0,
+                gst: currentBill.gst || 0,
+                subtotal: currentBill.subtotal,
+                total: currentBill.total,
+                paymentMode: currentBill.paymentMode || 'Cash',
+                centerProfile: {...appState.centerProfile},
+                createdAt: new Date().toISOString()
+            };
+            
+            // Save to history
+            appState.bills.push(newBill);
+            saveToLocalStorage();
+            
+            // Store last generated bill
+            lastGeneratedBill = newBill;
+            
+            showToast(`Bill generated: ${billNumber}`, 'success');
+            
+            // Open print layout with the bill
+            openPrintLayout(newBill);
+            
+            // Reset bill after generation
+            resetBill();
+            
+            // Update UI
+            renderBillsHistory();
+            updateStats();
+        }
+        
+        function resetBill() {
+            currentBill = {
+                items: [],
+                customerName: '',
+                customerMobile: '',
+                discount: 0,
+                gst: 0,
+                paymentMode: 'Cash',
+                subtotal: 0,
+                total: 0
+            };
+            
+            document.getElementById('billMobile').value = '';
+            document.getElementById('newCustomerName').value = '';
+            document.getElementById('billDiscount').value = 0;
+            document.getElementById('billGst').value = 0;
+            document.getElementById('billPaymentMode').value = 'Cash';
+            document.getElementById('billQuantity').value = 1;
+            document.getElementById('billCustomPrice').value = '';
+            document.getElementById('customerInfo').classList.add('hidden');
+            document.getElementById('newCustomerForm').classList.remove('hidden');
+            
+            updateBillPreview();
+        }
+        
+        // ==================== PRINT LAYOUT FUNCTIONS ====================
+        
+        function openPrintLayout(bill) {
+            const container = document.getElementById('printBillContainer');
+            
+            // Generate bill HTML with dynamic template
+            const billHTML = generatePrintBillHTML(bill);
+            container.innerHTML = billHTML;
+            
+            // Show modal
+            document.getElementById('printLayoutModal').classList.remove('hidden');
+        }
+        
+        function closePrintModal() {
+            document.getElementById('printLayoutModal').classList.add('hidden');
+        }
+        
+        function generatePrintBillHTML(bill) {
+            const profile = bill.centerProfile;
+            const settings = appState.invoiceSettings;
+            
+            // Generate items rows
+            const itemsRows = bill.items.map(item => `
+                <tr>
+                    <td style="padding: 6px 8px; border: 1px solid #e2e8f0; font-size: 12px; color: #1e293b;">${item.name}</td>
+                    <td style="padding: 6px 8px; border: 1px solid #e2e8f0; text-align: right; font-size: 12px; color: #1e293b;">${item.quantity}</td>
+                    <td style="padding: 6px 8px; border: 1px solid #e2e8f0; text-align: right; font-size: 12px; color: #1e293b;">रु. ${item.price}</td>
+                    <td style="padding: 6px 8px; border: 1px solid #e2e8f0; text-align: right; font-weight: bold; font-size: 12px; color: #0f172a;">रु. ${item.total}</td>
+                </tr>
+            `).join('');
+            
+            // Calculate amounts
+            const discountAmount = (bill.subtotal * (bill.discount || 0)) / 100;
+            const afterDiscount = bill.subtotal - discountAmount;
+            const gstAmount = (afterDiscount * (bill.gst || 0)) / 100;
+            
+            return `
+                <div style="border: ${settings.showBorder ? settings.borderWidth + ' solid ' + settings.primaryColor : 'none'}; border-radius: ${settings.borderRadius}; padding: 16px; background: white; font-family: 'Khand', 'Noto Sans Devanagari', sans-serif;">
+                    <!-- Header -->
+                    <div class="print-header" style="border-bottom: 2px dashed ${settings.primaryColor}; text-align: center; margin-bottom: 12px; padding-bottom: 12px;">
+                        ${profile.logo ? `<img src="${profile.logo}" style="width: 60px; height: 60px; margin: 0 auto 8px; border-radius: 8px; object-fit: contain;">` : ''}
+                        <h1 style="color: ${settings.primaryColor}; font-size: 24px; font-weight: 800; margin: 0 0 4px 0;">${profile.centerName || 'सीएससी केंद्र (CSC Center)'}</h1>
+                        <p style="color: #475569; font-size: 12px; margin: 2px 0;">${profile.address || ''}</p>
+                        <p style="color: #475569; font-size: 12px; margin: 2px 0;">सीएससी आयडी: <strong>${profile.cscId || '-'}</strong> | व्हीएलई: <strong>${profile.vleName || '-'}</strong></p>
+                        <p style="color: #475569; font-size: 12px; margin: 2px 0;">मोबाईल: <strong>${profile.mobile || '-'}</strong></p>
+                    </div>
+                    
+                    <!-- Bill Details -->
+                    <div class="print-details" style="background: ${settings.headerBg}; padding: 10px 14px; border-radius: 8px; margin-bottom: 14px; font-size: 12px;">
+                        <div style="display: flex; justify-content: space-between;">
+                            <div>
+                                <p style="margin: 2px 0;"><strong>बिल क्र.:</strong> <span style="color: ${settings.primaryColor}; font-weight: bold;">${bill.billNumber}</span></p>
+                                <p style="margin: 2px 0;"><strong>दिनांक:</strong> ${new Date(bill.date).toLocaleDateString('mr-IN', { year: 'numeric', month: 'short', day: 'numeric' })}</p>
+                            </div>
+                            <div style="text-align: right;">
+                                <p style="margin: 2px 0;"><strong>ग्राहकाचे नाव:</strong> <strong>${bill.customerName}</strong></p>
+                                <p style="margin: 2px 0;"><strong>मोबाईल:</strong> ${bill.customerMobile || '-'}</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Services Table -->
+                    <table class="print-table" style="width: 100%; border-collapse: collapse; margin: 12px 0; page-break-inside: avoid;">
+                        <thead>
+                            <tr style="background: ${settings.primaryColor}; color: white;">
+                                <th style="padding: 8px; text-align: left; font-size: 12px;">सेवा तपशील</th>
+                                <th style="padding: 8px; text-align: right; font-size: 12px;">नग</th>
+                                <th style="padding: 8px; text-align: right; font-size: 12px;">दर</th>
+                                <th style="padding: 8px; text-align: right; font-size: 12px;">एकूण</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${itemsRows}
+                        </tbody>
+                    </table>
+                    
+                    <!-- Totals -->
+                    <div class="print-total" style="border-top: 2px dashed ${settings.primaryColor}; margin-top: 14px; padding-top: 10px; text-align: right; font-size: 13px;">
+                        <p style="margin: 2px 0; color: #475569;">उपएकूण: रु. ${bill.subtotal.toFixed(2)}</p>
+                        ${bill.discount > 0 ? `<p style="margin: 2px 0; color: #16a34a;">सवलत (${bill.discount}%): -रु. ${discountAmount.toFixed(2)}</p>` : ''}
+                        ${bill.gst > 0 ? `<p style="margin: 2px 0; color: #475569;">जीएसटी (${bill.gst}%): +रु. ${gstAmount.toFixed(2)}</p>` : ''}
+                        <p style="font-size: 18px; font-weight: 800; color: ${settings.primaryColor}; margin: 6px 0;">एकूण देय रक्कम: रु. ${bill.total.toFixed(2)}</p>
+                        <p style="font-size: 12px; color: #64748b; margin: 2px 0;">भरणा पद्धत: <strong>${bill.paymentMode}</strong></p>
+                    </div>
+                    
+                    <!-- Footer with QR Code -->
+                    <div class="print-footer" style="display: flex; justify-content: space-between; align-items: center; margin-top: 14px; padding-top: 10px; border-top: 1px solid #e2e8f0; font-size: 10px; color: #64748b;">
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            ${profile.qrCode ? `
+                                <img src="${profile.qrCode}" style="width: 65px; height: 65px; border: 1px solid #e2e8f0; border-radius: 6px;" alt="स्कॅन करून पैसे भरा">
+                                <div style="font-size: 9px; line-height: 1.3;">
+                                    <p style="margin: 0; font-weight: bold; color: ${settings.primaryColor};">स्कॅन करून पैसे भरा</p>
+                                    <p style="margin: 0;">UPI / QR Code</p>
+                                </div>
+                            ` : ''}
+                        </div>
+                        <div style="text-align: right;">
+                            <p style="margin: 1px 0;">हे संगणकीकृत अधिकृत बिल आहे.</p>
+                            <p style="margin: 1px 0;">सीएससी आयडी: ${profile.cscId || '-'} | व्हीएलई: ${profile.vleName || '-'}</p>
+                            <p style="margin: 1px 0; font-weight: 600; color: ${settings.primaryColor};">सुयोम्स व्हीएलई मित्र द्वारे संचलित</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+        
+        // ==================== PRINT LAYOUT ACTIONS ====================
+        
+        function printFromModal() {
+            const printContent = document.getElementById('printBillContainer').innerHTML;
+            const settings = appState.invoiceSettings;
+            
+            const printWindow = window.open('', '_blank');
+            printWindow.document.write(`
+                <html>
+                <head>
+                    <title>Bill - ${lastGeneratedBill?.billNumber || 'CSC Bill'}</title>
+                    <style>
+                        body { font-family: 'Khand', 'Noto Sans Devanagari', Arial, sans-serif; padding: 10px; background: white; margin: 0; }
+                        .print-header { text-align: center; margin-bottom: 15px; border-bottom: 2px dashed ${settings.primaryColor}; padding-bottom: 10px; }
+                        .print-header h1 { color: ${settings.primaryColor}; font-size: 24px; margin-bottom: 5px; }
+                        .print-details { background: ${settings.headerBg}; padding: 10px; border-radius: 8px; margin-bottom: 15px; }
+                        .print-table { width: 100%; border-collapse: collapse; margin: 15px 0; page-break-inside: avoid; }
+                        .print-table th { background: ${settings.primaryColor}; color: white; padding: 8px; }
+                        .print-table td { padding: 6px 8px; border: 1px solid #e2e8f0; }
+                        .print-table tr:nth-child(even) { background: #f8fafc; }
+                        .print-total { text-align: right; font-size: 16px; font-weight: bold; color: ${settings.primaryColor}; margin-top: 15px; padding-top: 10px; border-top: 2px dashed ${settings.primaryColor}; }
+                        .print-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 15px; padding-top: 10px; border-top: 1px solid #e2e8f0; font-size: 10px; color: #64748b; }
+                        .qr-section { display: flex; align-items: center; gap: 10px; }
+                        .bill-container { border: ${settings.showBorder ? settings.borderWidth + ' solid ' + settings.primaryColor : 'none'}; border-radius: ${settings.borderRadius}; padding: 15px; background: white; max-width: 800px; margin: 0 auto; page-break-inside: avoid; }
+                        @media print {
+                            body { padding: 0; }
+                            .bill-container { box-shadow: none; }
+                        }
+                    </style>
+                </head>
+                <body>
+                    <div class="bill-container">
+                        ${printContent}
+                    </div>
+                </body>
+                </html>
+            `);
+            printWindow.document.close();
+            printWindow.focus();
+            setTimeout(function() {
+                try {
+                    printWindow.print();
+                    printWindow.close();
+                } catch(e) {}
+            }, 600);
+        }
+        
+        function downloadPDFFromModal() {
+            const element = document.getElementById('printBillContainer');
+            const billNumber = lastGeneratedBill?.billNumber || 'CSC-Bill';
+            
+            const opt = {
+                margin: [0.3, 0.3, 0.3, 0.3],
+                filename: `bill_${billNumber}.pdf`,
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 1.5, letterRendering: true },
+                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+            };
+            
+            html2pdf().from(element).set(opt).save();
+            showToast('PDF downloaded successfully!', 'success');
+        }
+        
+        function shareWhatsAppFromModal() {
+            const billNumber = lastGeneratedBill?.billNumber || 'CSC-Bill';
+            const customerName = lastGeneratedBill?.customerName || 'Customer';
+            const total = lastGeneratedBill?.total || 0;
+            
+            const text = `*SUYOMS VLE MITRA - Bill*\n\nBill No: ${billNumber}\nCustomer: ${customerName}\nTotal: रु. ${total}\nPayment: ${lastGeneratedBill?.paymentMode || 'Cash'}\n\nScan QR code on bill to pay\n\nVisit: https://suyoms.com`;
+            
+            window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
+        }
+        
+        function copyBillFromModal() {
+            const billContent = document.getElementById('printBillContainer').innerText;
+            navigator.clipboard.writeText(billContent).then(() => {
+                showToast('Bill copied to clipboard', 'success');
+            });
+        }
+        
+        function newBillFromModal() {
+            closePrintModal();
+            newBill();
+        }
+        
+        // ==================== PREVIEW BUTTON FUNCTIONS ====================
+        
+        function printBillFromPreview() {
+            if (currentBill.items.length === 0) {
+                showToast('बिलामध्ये कोणतीही सेवा नाही!', 'error');
+                return;
+            }
+            
+            // Create a temporary bill object
+            const tempBill = {
+                billNumber: 'CSC-' + String(appState.lastBillNumber + 1).padStart(4, '0'),
+                date: new Date().toISOString(),
+                customerName: document.getElementById('newCustomerName').value || currentBill.customerName || 'Customer',
+                customerMobile: document.getElementById('billMobile').value || '',
+                items: currentBill.items,
+                discount: currentBill.discount || 0,
+                gst: currentBill.gst || 0,
+                subtotal: currentBill.subtotal,
+                total: currentBill.total,
+                paymentMode: currentBill.paymentMode || 'Cash',
+                centerProfile: appState.centerProfile
+            };
+            
+            lastGeneratedBill = tempBill;
+            openPrintLayout(tempBill);
+        }
+        
+        function downloadPDFFromPreview() {
+            printBillFromPreview();
+            setTimeout(() => {
+                downloadPDFFromModal();
+            }, 500);
+        }
+        
+        function copyBillFromPreview() {
+            if (currentBill.items.length === 0) {
+                showToast('बिलामध्ये कोणतीही सेवा नाही!', 'error');
+                return;
+            }
+            
+            const billContent = document.getElementById('billPreview').innerText;
+            navigator.clipboard.writeText(billContent).then(() => {
+                showToast('Bill copied to clipboard', 'success');
+            });
+        }
+        
+        function shareWhatsAppFromPreview() {
+            if (currentBill.items.length === 0) {
+                showToast('बिलामध्ये कोणतीही सेवा नाही!', 'error');
+                return;
+            }
+            
+            const customerName = document.getElementById('newCustomerName').value || currentBill.customerName || 'Customer';
+            const total = currentBill.total || 0;
+            
+            const text = `*SUUYOMS VLE MITRA - Bill*\n\nCustomer: ${customerName}\nTotal: रु. ${total}\nPayment: ${currentBill.paymentMode}\n\nScan QR code on bill to pay\n\nVisit: https://suyoms.com`;
+            
+            window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
+        }
+        
+        // ==================== BILL HISTORY FUNCTIONS ====================
+        
+        function renderBillsHistory(searchTerm = '') {
+            const historyDiv = document.getElementById('billsHistoryList');
+            
+            if (appState.bills.length === 0) {
+                historyDiv.innerHTML = '<p class="text-gray-400 text-center py-8 text-base"><i class="fas fa-receipt mr-2"></i>अद्याप कोणतेही बिल तयार केलेले नाही</p>';
+                return;
+            }
+            
+            let filteredBills = appState.bills;
+            if (searchTerm) {
+                filteredBills = appState.bills.filter(bill => 
+                    bill.billNumber.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                    bill.customerName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                    (bill.customerMobile && bill.customerMobile.includes(searchTerm))
+                );
+            }
+            
+            // Sort by date (newest first)
+            filteredBills.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+            
+            historyDiv.innerHTML = filteredBills.map(bill => `
+                <div class="border border-zinc-800 bg-zinc-900/60 rounded-xl p-4 hover:border-orange-500/40 transition">
+                    <div class="flex flex-col md:flex-row justify-between items-start md:items-center">
+                        <div class="flex-1">
+                            <div class="flex items-center gap-3 mb-2">
+                                <span class="bg-orange-500/15 border border-orange-500/30 text-orange-400 px-3 py-1 rounded-full text-xs font-bold">
+                                    ${bill.billNumber}
+                                </span>
+                                <span class="text-gray-400 text-xs">
+                                    <i class="far fa-calendar-alt mr-1"></i>${new Date(bill.date).toLocaleDateString('mr-IN', { year: 'numeric', month: 'short', day: 'numeric' })}
+                                </span>
+                            </div>
+                            <h4 class="font-bold text-white text-base">${bill.customerName}</h4>
+                            <p class="text-xs text-gray-400 mt-0.5">
+                                ${bill.items.length} सेवा | भरणा: <span class="text-orange-300 font-semibold">${bill.paymentMode}</span> | मो.: ${bill.customerMobile || '-'}
+                            </p>
+                        </div>
+                        <div class="mt-3 md:mt-0 flex items-center gap-3">
+                            <p class="text-xl font-extrabold text-orange-400">रु. ${bill.total}</p>
+                            <button onclick="viewBill('${bill.id}')" class="text-orange-400 hover:text-orange-300 p-2 rounded-lg hover:bg-orange-500/10" title="पावती पहा">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                            <button onclick="printBillFromHistory('${bill.id}')" class="text-green-400 hover:text-green-300 p-2 rounded-lg hover:bg-green-500/10" title="प्रिंट करा">
+                                <i class="fas fa-print"></i>
+                            </button>
+                            <button onclick="deleteBill('${bill.id}')" class="text-red-400 hover:text-red-300 p-2 rounded-lg hover:bg-red-500/10" title="हटवा">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        function viewBill(billId) {
+            const bill = appState.bills.find(b => b.id === billId);
+            if (bill) {
+                // Load bill into current bill
+                currentBill = {
+                    items: [...bill.items],
+                    customerName: bill.customerName,
+                    customerMobile: bill.customerMobile,
+                    discount: bill.discount || 0,
+                    gst: bill.gst || 0,
+                    paymentMode: bill.paymentMode || 'Cash',
+                    subtotal: bill.subtotal,
+                    total: bill.total
+                };
+                
+                document.getElementById('billMobile').value = bill.customerMobile || '';
+                document.getElementById('newCustomerName').value = bill.customerName;
+                document.getElementById('billDiscount').value = bill.discount || 0;
+                document.getElementById('billGst').value = bill.gst || 0;
+                document.getElementById('billPaymentMode').value = bill.paymentMode || 'Cash';
+                
+                if (bill.customerMobile) {
+                    document.getElementById('customerInfo').classList.remove('hidden');
+                    document.getElementById('selectedCustomerName').textContent = bill.customerName;
+                    document.getElementById('selectedCustomerMobile').textContent = bill.customerMobile;
+                    document.getElementById('newCustomerForm').classList.add('hidden');
+                }
+                
+                updateBillPreview();
+                switchTab('billing');
+            }
+        }
+        
+        function printBillFromHistory(billId) {
+            const bill = appState.bills.find(b => b.id === billId);
+            if (bill) {
+                lastGeneratedBill = bill;
+                openPrintLayout(bill);
+            }
+        }
+        
+        function deleteBill(billId) {
+            if (confirm('तुम्हाला खात्री आहे का हे बिल हटवायचे आहे?')) {
+                appState.bills = appState.bills.filter(b => b.id !== billId);
+                saveToLocalStorage();
+                renderBillsHistory();
+                updateStats();
+                showToast('बिल यशस्वीरित्या हटवले!', 'success');
+            }
+        }
+        
+        // ==================== STATS FUNCTIONS ====================
+        
+        function updateStats() {
+            const today = new Date().toISOString().split('T')[0];
+            
+            // Today's bills
+            const todayBills = appState.bills.filter(bill => bill.date.split('T')[0] === today);
+            const todayIncome = todayBills.reduce((sum, bill) => sum + bill.total, 0);
+            
+            // Monthly income
+            const currentMonth = new Date().getMonth();
+            const currentYear = new Date().getFullYear();
+            const monthlyBills = appState.bills.filter(bill => {
+                const billDate = new Date(bill.date);
+                return billDate.getMonth() === currentMonth && billDate.getFullYear() === currentYear;
+            });
+            const monthlyIncome = monthlyBills.reduce((sum, bill) => sum + bill.total, 0);
+            
+            // Payment mode breakdown
+            const cashTotal = todayBills.filter(b => b.paymentMode === 'Cash').reduce((sum, b) => sum + b.total, 0);
+            const upiTotal = todayBills.filter(b => b.paymentMode === 'UPI').reduce((sum, b) => sum + b.total, 0);
+            const cardTotal = todayBills.filter(b => b.paymentMode === 'Card').reduce((sum, b) => sum + b.total, 0);
+            
+            // Update UI with Rupee Symbol
+            document.getElementById('todayIncome').textContent = `रु. ${todayIncome.toLocaleString('en-IN')}`;
+            document.getElementById('todayBills').textContent = todayBills.length;
+            document.getElementById('totalCustomers').textContent = appState.customers.length;
+            document.getElementById('totalServices').textContent = appState.services.length;
+            document.getElementById('monthlyIncome').textContent = `रु. ${monthlyIncome.toLocaleString('en-IN')}`;
+            
+            document.getElementById('todayCash').textContent = `रु. ${cashTotal.toLocaleString('en-IN')}`;
+            document.getElementById('todayUPI').textContent = `रु. ${upiTotal.toLocaleString('en-IN')}`;
+            document.getElementById('todayCard').textContent = `रु. ${cardTotal.toLocaleString('en-IN')}`;
+            
+            // Recent bills
+            const recentBills = appState.bills.slice(-5).reverse();
+            const recentDiv = document.getElementById('recentBillsList');
+            
+            if (recentBills.length === 0) {
+                recentDiv.innerHTML = '<p class="text-gray-400 text-center py-8 text-sm"><i class="fas fa-receipt mr-2"></i>अद्याप कोणतेही बिल तयार केलेले नाही</p>';
+            } else {
+                recentDiv.innerHTML = recentBills.map(bill => `
+                    <div class="flex justify-between items-center border-b border-zinc-800 pb-2.5">
+                        <div>
+                            <span class="font-bold text-white text-sm">${bill.billNumber}</span>
+                            <p class="text-xs text-gray-400">${bill.customerName}</p>
+                        </div>
+                        <span class="font-extrabold text-orange-400">रु. ${bill.total}</span>
+                    </div>
+                `).join('');
+            }
+            
+            // Top services
+            const serviceCount = {};
+            appState.bills.forEach(bill => {
+                bill.items.forEach(item => {
+                    serviceCount[item.name] = (serviceCount[item.name] || 0) + item.quantity;
+                });
+            });
+            
+            const topServices = Object.entries(serviceCount)
+                .sort((a, b) => b[1] - a[1])
+                .slice(0, 5);
+            
+            const topDiv = document.getElementById('topServicesList');
+            if (topServices.length === 0) {
+                topDiv.innerHTML = '<p class="text-gray-400 text-sm py-3"><i class="fas fa-info-circle mr-1 text-orange-400"></i>अद्याप कोणतीही सेवा नोंदवलेली नाही</p>';
+            } else {
+                topDiv.innerHTML = topServices.map(([name, count]) => `
+                    <div class="flex justify-between items-center border-b border-zinc-800 pb-2">
+                        <span class="text-gray-200 text-sm">${name}</span>
+                        <span class="text-xs bg-orange-500/15 text-orange-400 border border-orange-500/30 px-2 py-0.5 rounded-full font-bold">${count} नग</span>
+                    </div>
+                `).join('');
+            }
+        }
+        
+        function updateDashboard() {
+            updateStats();
+            
+            // Top services in Marathi
+            const serviceCounts = {};
+            appState.bills.forEach(bill => {
+                bill.items.forEach(item => {
+                    if (!serviceCounts[item.name]) {
+                        serviceCounts[item.name] = { count: 0, revenue: 0 };
+                    }
+                    serviceCounts[item.name].count += item.quantity;
+                    serviceCounts[item.name].revenue += item.total;
+                });
+            });
+            
+            const topServicesList = document.getElementById('topServicesList');
+            if (topServicesList) {
+                const topEntries = Object.entries(serviceCounts)
+                    .sort((a, b) => b[1].count - a[1].count)
+                    .slice(0, 5);
+                    
+                if (topEntries.length === 0) {
+                    topServicesList.innerHTML = '<p class="text-gray-400 text-sm py-4 text-center">अद्याप कोणतीही सेवा नोंदवलेली नाही</p>';
+                } else {
+                    topServicesList.innerHTML = topEntries.map(([name, data]) => `
+                        <div class="flex justify-between items-center border-b border-zinc-800 pb-2">
+                            <span class="text-gray-200 text-sm font-medium truncate max-w-[180px]">${name}</span>
+                            <div class="text-right">
+                                <span class="text-xs bg-orange-500/15 text-orange-400 border border-orange-500/30 px-2 py-0.5 rounded-full font-bold mr-1.5">${data.count} नग</span>
+                                <span class="text-orange-400 font-bold text-sm">रु. ${data.revenue}</span>
+                            </div>
+                        </div>
+                    `).join('');
+                }
+            }
+            
+            // Recent bills in Marathi
+            const recentBillsList = document.getElementById('recentBillsList');
+            if (recentBillsList) {
+                const recent = [...appState.bills]
+                    .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+                    .slice(0, 5);
+                    
+                if (recent.length === 0) {
+                    recentBillsList.innerHTML = '<p class="text-gray-400 text-center py-6 text-sm">अद्याप कोणतेही बिल तयार केलेले नाही</p>';
+                } else {
+                    recentBillsList.innerHTML = recent.map(bill => `
+                        <div class="flex justify-between items-center border-b border-zinc-800 pb-2.5">
+                            <div>
+                                <p class="font-bold text-white text-sm">${bill.customerName}</p>
+                                <p class="text-xs text-gray-400">${bill.billNumber} • ${new Date(bill.date).toLocaleDateString('mr-IN')}</p>
+                            </div>
+                            <div class="text-right">
+                                <span class="text-orange-400 font-extrabold text-sm">रु. ${bill.total}</span>
+                                <p class="text-[11px] text-gray-400">${bill.paymentMode}</p>
+                            </div>
+                        </div>
+                    `).join('');
+                }
+            }
+        }
+        
+        // ==================== REPORT FUNCTIONS ====================
+        
+        function generateReport() {
+            const startDate = document.getElementById('reportStartDate').value;
+            const endDate = document.getElementById('reportEndDate').value;
+            
+            if (!startDate || !endDate) {
+                showToast('कृपया तारीख निवडा!', 'error');
+                return;
+            }
+            
+            const filteredBills = appState.bills.filter(bill => {
+                const billDate = bill.date.split('T')[0];
+                return billDate >= startDate && billDate <= endDate;
+            });
+            
+            // Calculate service wise report
+            const serviceReport = {};
+            filteredBills.forEach(bill => {
+                bill.items.forEach(item => {
+                    if (!serviceReport[item.name]) {
+                        serviceReport[item.name] = {
+                            quantity: 0,
+                            revenue: 0
+                        };
+                    }
+                    serviceReport[item.name].quantity += item.quantity;
+                    serviceReport[item.name].revenue += item.total;
+                });
+            });
+            
+            // Display service report
+            const serviceList = document.getElementById('serviceReportList');
+            serviceList.innerHTML = Object.entries(serviceReport)
+                .sort((a, b) => b[1].revenue - a[1].revenue)
+                .map(([name, data]) => `
+                    <div class="flex justify-between items-center border-b pb-2">
+                        <span>${name}</span>
+                        <div>
+                            <span class="font-semibold">${data.quantity}</span>
+                            <span class="text-blue-600 ml-2">रु. ${data.revenue}</span>
+                        </div>
+                    </div>
+                `).join('');
+            
+            // Payment mode report
+            const paymentModes = {
+                Cash: 0,
+                UPI: 0,
+                Card: 0
+            };
+            
+            filteredBills.forEach(bill => {
+                if (paymentModes[bill.paymentMode] !== undefined) {
+                    paymentModes[bill.paymentMode] += bill.total;
+                }
+            });
+            
+            const paymentDiv = document.getElementById('paymentModeReport');
+            paymentDiv.innerHTML = Object.entries(paymentModes).map(([mode, amount]) => `
+                <div class="flex justify-between items-center">
+                    <span>${mode}</span>
+                    <span class="font-semibold">रु. ${amount}</span>
+                </div>
+            `).join('');
+        }
+        
+        // ==================== INVOICE SETTINGS FUNCTIONS ====================
+        
+        function setInvoiceColor(color, type) {
+            document.querySelectorAll('.color-option').forEach(opt => opt.classList.remove('selected'));
+            event.target.classList.add('selected');
+            
+            appState.invoiceSettings.primaryColor = color;
+            applyInvoiceSettings();
+            updateBillPreview();
+        }
+        
+        function toggleInvoiceBorder() {
+            const checkbox = document.getElementById('showBorder');
+            appState.invoiceSettings.showBorder = checkbox.checked;
+            applyInvoiceSettings();
+            updateBillPreview();
+        }
+        
+        function updateInvoiceBorder() {
+            const width = document.getElementById('borderWidth').value;
+            const radius = document.getElementById('borderRadius').value;
+            
+            appState.invoiceSettings.borderWidth = width;
+            appState.invoiceSettings.borderRadius = radius;
+            applyInvoiceSettings();
+            updateBillPreview();
+        }
+        
+        function updateInvoiceStyle() {
+            const headerBg = document.getElementById('headerBg').value;
+            appState.invoiceSettings.headerBg = headerBg;
+            applyInvoiceSettings();
+            updateBillPreview();
+        }
+        
+        function updateInvoiceFontSize() {
+            const fontSize = document.getElementById('fontSize').value;
+            appState.invoiceSettings.fontSize = fontSize;
+            applyInvoiceSettings();
+            updateBillPreview();
+        }
+        
+        function selectTemplate(templateId) {
+            document.querySelectorAll('.template-preview').forEach(t => t.classList.remove('selected'));
+            event.target.closest('.template-preview').classList.add('selected');
+            
+            switch(templateId) {
+                case 1:
+                    appState.invoiceSettings = {
+                        ...appState.invoiceSettings,
+                        primaryColor: '#2563eb',
+                        showBorder: true,
+                        borderWidth: '2px',
+                        borderRadius: '12px',
+                        headerBg: '#f8fafc',
+                        fontSize: '14px'
+                    };
+                    break;
+                case 2:
+                    appState.invoiceSettings = {
+                        ...appState.invoiceSettings,
+                        primaryColor: '#059669',
+                        showBorder: false,
+                        borderWidth: '2px',
+                        borderRadius: '8px',
+                        headerBg: '#ecfdf5',
+                        fontSize: '14px'
+                    };
+                    break;
+                case 3:
+                    appState.invoiceSettings = {
+                        ...appState.invoiceSettings,
+                        primaryColor: '#7c3aed',
+                        showBorder: true,
+                        borderWidth: '2px',
+                        borderRadius: '16px',
+                        headerBg: '#faf5ff',
+                        fontSize: '14px'
+                    };
+                    break;
+                case 4:
+                    appState.invoiceSettings = {
+                        ...appState.invoiceSettings,
+                        primaryColor: '#ea580c',
+                        showBorder: true,
+                        borderWidth: '3px',
+                        borderRadius: '4px',
+                        headerBg: '#fff7ed',
+                        fontSize: '14px'
+                    };
+                    break;
+            }
+            
+            populateSettingsForm();
+            applyInvoiceSettings();
+            updateBillPreview();
+        }
+        
+        function applyInvoiceSettings() {
+            const settings = appState.invoiceSettings;
+            
+            document.documentElement.style.setProperty('--invoice-primary', settings.primaryColor);
+            document.documentElement.style.setProperty('--invoice-border', settings.showBorder ? `${settings.borderWidth} solid ${settings.primaryColor}` : 'none');
+            document.documentElement.style.setProperty('--invoice-border-radius', settings.borderRadius);
+            document.documentElement.style.setProperty('--invoice-header-bg', settings.headerBg);
+            document.documentElement.style.setProperty('--invoice-font-size', settings.fontSize);
+        }
+        
+        function populateSettingsForm() {
+            const settings = appState.invoiceSettings;
+            
+            document.getElementById('showBorder').checked = settings.showBorder;
+            document.getElementById('borderWidth').value = settings.borderWidth;
+            document.getElementById('borderRadius').value = settings.borderRadius;
+            document.getElementById('headerBg').value = settings.headerBg;
+            document.getElementById('fontSize').value = settings.fontSize;
+            
+            // Update color selection
+            document.querySelectorAll('.color-option').forEach(opt => {
+                if (opt.style.backgroundColor === settings.primaryColor) {
+                    opt.classList.add('selected');
+                } else {
+                    opt.classList.remove('selected');
+                }
+            });
+            
+            // Update settings preview
+            const preview = document.getElementById('settingsPreview');
+            preview.style.border = settings.showBorder ? `${settings.borderWidth} solid ${settings.primaryColor}` : 'none';
+            preview.style.borderRadius = settings.borderRadius;
+            
+            const previewHeader = preview.querySelector('.print-header h1');
+            if (previewHeader) {
+                previewHeader.style.color = settings.primaryColor;
+                previewHeader.style.borderBottomColor = settings.primaryColor;
+            }
+            
+            const previewDetails = preview.querySelector('.print-details');
+            if (previewDetails) {
+                previewDetails.style.background = settings.headerBg;
+            }
+        }
+        
+        function saveInvoiceSettings() {
+            saveToLocalStorage();
+            updateBillPreview();
+            showToast('Invoice settings saved successfully!', 'success');
+        }
+        
+        // ==================== DATA MANAGEMENT FUNCTIONS ====================
+        
+        function backupData() {
+            const data = {
+                centerProfile: appState.centerProfile,
+                services: appState.services,
+                customers: appState.customers,
+                bills: appState.bills,
+                lastBillNumber: appState.lastBillNumber,
+                invoiceSettings: appState.invoiceSettings,
+                exportDate: new Date().toISOString()
+            };
+            
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `smart_csc_backup_${new Date().toISOString().split('T')[0]}.json`;
+            a.click();
+            
+            showToast('Backup downloaded', 'success');
+        }
+        
+        function restoreData() {
+            const file = document.getElementById('restoreFile').files[0];
+            if (!file) {
+                showToast('Please select a file', 'error');
+                return;
+            }
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const data = JSON.parse(e.target.result);
+                    
+                    if (data.centerProfile) appState.centerProfile = data.centerProfile;
+                    if (data.services) appState.services = data.services;
+                    if (data.customers) appState.customers = data.customers;
+                    if (data.bills) appState.bills = data.bills;
+                    if (data.lastBillNumber) appState.lastBillNumber = data.lastBillNumber;
+                    if (data.invoiceSettings) appState.invoiceSettings = data.invoiceSettings;
+                    
+                    saveToLocalStorage();
+                    
+                    // Refresh UI
+                    populateCenterProfile();
+                    populateQRCode();
+                    renderServices();
+                    renderCustomers();
+                    renderBillsHistory();
+                    updateStats();
+                    applyInvoiceSettings();
+                    
+                    showToast('Data restored successfully', 'success');
+                } catch (error) {
+                    showToast('Invalid backup file', 'error');
+                }
+            };
+            reader.readAsText(file);
+        }
+        
+        function clearAllData() {
+            if (confirm('⚠️ WARNING: This will delete ALL data permanently!\n\nAre you sure?')) {
+                localStorage.clear();
+                location.reload();
+            }
+        }
+        
+        // ==================== TOAST FUNCTION ====================
+        
+        function showToast(message, type = 'info') {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            
+            const colors = {
+                success: 'bg-green-500',
+                error: 'bg-red-500',
+                info: 'bg-blue-500',
+                warning: 'bg-yellow-500'
+            };
+            
+            toast.className = `toast ${colors[type]} text-white px-6 py-3 rounded-lg shadow-lg flex items-center`;
+            toast.innerHTML = `
+                <i class="fas ${type === 'success' ? 'fa-check-circle' : type === 'error' ? 'fa-exclamation-circle' : 'fa-info-circle'} mr-3"></i>
+                ${message}
+            `;
+            
+            container.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.remove();
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
