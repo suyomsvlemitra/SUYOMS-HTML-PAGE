@@ -1,0 +1,1089 @@
+<!DOCTYPE html>
+<html lang="mr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>नमुना नं. ८ - ग्रामपंचायत घराचा उतारा (योग्य जागा सोडलेला)</title>
+  <!-- Google Fonts for Form & Kokila Web Font for Official Preview -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;500;600;700;800&family=Kokila:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-black: #0f0f11;
+      --panel-black: #18181b;
+      --card-black: #222226;
+      --border-dark: #33333a;
+      --saffron: #ff6b00;
+      --saffron-light: #ff8c38;
+      --saffron-glow: rgba(255, 107, 0, 0.25);
+      --text-light: #f4f4f6;
+      --text-muted: #a1a1aa;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Noto Sans Devanagari', sans-serif;
+      background-color: var(--bg-black);
+      color: var(--text-light);
+      height: 100vh;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Main Split Container */
+    .workspace {
+      display: flex;
+      flex: 1;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    /* Left Side: Form Panel */
+    .form-panel {
+      width: 38%;
+      min-width: 375px;
+      background-color: var(--panel-black);
+      border-right: 2px solid var(--saffron);
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+    }
+
+    .form-header {
+      background: linear-gradient(135deg, #111113 0%, #241409 100%);
+      padding: 14px 18px;
+      border-bottom: 2px solid var(--saffron);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .form-header h1 {
+      font-size: 17px;
+      font-weight: 800;
+      color: var(--saffron);
+      letter-spacing: 0.3px;
+    }
+
+    .form-header span {
+      font-size: 11px;
+      background: var(--saffron);
+      color: #000;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 4px;
+    }
+
+    .form-scroll {
+      padding: 15px 18px;
+      overflow-y: auto;
+      flex: 1;
+    }
+
+    .form-scroll::-webkit-scrollbar {
+      width: 6px;
+    }
+    .form-scroll::-webkit-scrollbar-thumb {
+      background: var(--saffron);
+      border-radius: 3px;
+    }
+
+    .person-card {
+      background-color: #1d1d21;
+      border: 1px solid #3c3c44;
+      border-left: 4px solid var(--saffron);
+      border-radius: 6px;
+      padding: 12px;
+      margin-bottom: 14px;
+      position: relative;
+    }
+
+    .person-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+      padding-bottom: 6px;
+      border-bottom: 1px dashed #3f3f46;
+    }
+
+    .person-badge {
+      font-size: 13px;
+      font-weight: 800;
+      color: var(--saffron);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn-remove-person {
+      background-color: #3b1414;
+      color: #fca5a5;
+      border: 1px solid #7f1d1d;
+      padding: 3px 8px;
+      font-size: 11px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .btn-remove-person:hover {
+      background-color: #7f1d1d;
+      color: #fff;
+    }
+
+    .btn-add-person {
+      width: 100%;
+      background: linear-gradient(135deg, #2b180b 0%, #3d210d 100%);
+      color: var(--saffron-light);
+      border: 1.5px dashed var(--saffron);
+      padding: 10px;
+      font-size: 13.5px;
+      font-weight: 800;
+      border-radius: 6px;
+      margin-bottom: 14px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+    .btn-add-person:hover {
+      background: var(--saffron);
+      color: #000;
+    }
+
+    .section-box {
+      background-color: var(--card-black);
+      border: 1px solid var(--border-dark);
+      border-left: 3px solid var(--saffron);
+      border-radius: 6px;
+      padding: 12px;
+      margin-bottom: 14px;
+    }
+
+    .section-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--saffron-light);
+      margin-bottom: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .sub-label {
+      font-size: 11.5px;
+      font-weight: 700;
+      color: var(--saffron-light);
+      margin: 10px 0 6px 0;
+      padding-top: 6px;
+      border-top: 1px solid #2e2e34;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 8px;
+    }
+
+    .field {
+      margin-bottom: 8px;
+    }
+
+    .field:last-child {
+      margin-bottom: 0;
+    }
+
+    label {
+      display: block;
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-bottom: 3px;
+      font-weight: 500;
+    }
+
+    input[type="text"],
+    input[type="number"],
+    textarea {
+      width: 100%;
+      background-color: #121215;
+      border: 1px solid #3f3f46;
+      color: #fff;
+      padding: 6px 9px;
+      border-radius: 4px;
+      font-family: 'Noto Sans Devanagari', sans-serif;
+      font-size: 12.5px;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    input:focus,
+    textarea:focus {
+      outline: none;
+      border-color: var(--saffron);
+      box-shadow: 0 0 0 2px var(--saffron-glow);
+    }
+
+    input[readonly] {
+      background-color: #1c1917;
+      color: var(--saffron-light);
+      font-weight: 700;
+      border-color: #573318;
+    }
+
+    .action-bar {
+      padding: 12px 18px;
+      background-color: #111113;
+      border-top: 1px solid var(--border-dark);
+      display: grid;
+      grid-template-columns: 1fr 1fr 1.4fr;
+      gap: 8px;
+    }
+
+    button {
+      font-family: 'Noto Sans Devanagari', sans-serif;
+      border: none;
+      padding: 9px 10px;
+      border-radius: 5px;
+      font-size: 12.5px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-reset {
+      background-color: #27272a;
+      color: #e4e4e7;
+      border: 1px solid #3f3f46;
+    }
+    .btn-reset:hover {
+      background-color: #3f3f46;
+    }
+
+    .btn-sample {
+      background-color: #29180c;
+      color: var(--saffron-light);
+      border: 1px solid var(--saffron);
+    }
+    .btn-sample:hover {
+      background-color: #3d220e;
+    }
+
+    .btn-print {
+      background: linear-gradient(135deg, #ff6b00 0%, #e05200 100%);
+      color: #fff;
+      box-shadow: 0 2px 10px rgba(255, 107, 0, 0.35);
+    }
+    .btn-print:hover {
+      filter: brightness(1.08);
+    }
+
+    /* Right Side: Preview Panel */
+    .preview-panel {
+      flex: 1;
+      background-color: #26262b;
+      background-image: radial-gradient(#383840 1px, transparent 1px);
+      background-size: 18px 18px;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .preview-toolbar {
+      background-color: #141417;
+      padding: 10px 18px;
+      border-bottom: 1px solid var(--border-dark);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .preview-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--saffron-light);
+      font-weight: 600;
+    }
+
+    .count-pill {
+      background: #2b180b;
+      border: 1px solid var(--saffron);
+      color: var(--saffron-light);
+      padding: 2px 8px;
+      border-radius: 12px;
+      font-size: 11px;
+    }
+
+    .zoom-controls {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .zoom-btn {
+      padding: 3px 9px;
+      background: #27272a;
+      color: #fff;
+      border: 1px solid #3f3f46;
+      font-size: 12px;
+    }
+
+    .preview-scroll {
+      flex: 1;
+      overflow: auto;
+      padding: 24px;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+    }
+
+    /* Legal Landscape Sheet (14in x 8.5in -> 1344px x 816px at 96dpi) */
+    .legal-page {
+      width: 1344px;
+      min-width: 1344px;
+      min-height: 816px;
+      background-color: #ffffff;
+      color: #000000;
+      padding: 28px 34px;
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.65);
+      transform-origin: top center;
+      transition: transform 0.15s ease;
+      /* शासकीय आणि कोकिळा फॉन्टचा वापर (Govt / Kokila Font) */
+      font-family: 'Kokila', 'Noto Sans Devanagari', 'Mangal', 'Shivaji05', sans-serif;
+    }
+
+    /* पूर्ण बाहेरील बॉक्स जशाचा तसा कायम ठेवला आहे आणि उंची फिक्स केली आहे */
+    .doc-border {
+      border: 2px solid #000;
+      padding: 16px 18px 24px 18px;
+      min-height: 760px;
+      height: 760px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .doc-top-section {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .doc-header {
+      text-align: center;
+      margin-bottom: 12px;
+    }
+
+    .doc-header h2 {
+      font-size: 24px;
+      font-weight: 700;
+      color: #000;
+      margin-bottom: 2px;
+    }
+
+    .doc-header p {
+      font-size: 17px;
+      font-weight: 700;
+      color: #000;
+    }
+
+    /* Namuna 8 Table Styling */
+    table.namuna-table {
+      width: 100%;
+      border-collapse: collapse;
+      table-layout: fixed;
+      font-size: 13.5px;
+      color: #000;
+    }
+
+    table.namuna-table th,
+    table.namuna-table td {
+      border: 1.3px solid #000;
+      padding: 6px 4px;
+      text-align: center;
+      vertical-align: middle;
+      word-wrap: break-word;
+      line-height: 1.35;
+    }
+
+    table.namuna-table th {
+      background-color: #f8f8f8;
+      font-weight: 700;
+      font-size: 13px;
+    }
+
+    .col-num-row th {
+      font-size: 12px;
+      padding: 2px;
+      background-color: #efefef;
+      font-weight: 700;
+    }
+
+    .data-row td {
+      min-height: 52px;
+      height: 54px;
+      font-size: 14.5px;
+      font-weight: 700;
+      vertical-align: middle;
+      padding: 7px 4px;
+    }
+
+    .disclaimer-row td {
+      text-align: left !important;
+      padding: 8px 10px !important;
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    /* तळाशी जाण्यासाठी लवचिक व सुंदर रचना */
+    .doc-footer-area {
+      margin-top: auto;
+      padding-top: 15px;
+    }
+
+    .doc-footer-flow {
+      padding: 0 12px;
+      font-size: 16px;
+      font-weight: 700;
+      line-height: 1.85;
+      color: #000;
+    }
+
+    .footer-gp-line {
+      display: block;
+    }
+
+    .footer-copy-line {
+      display: block;
+    }
+
+    /* अधिकारी पदनाम ३-४ ओळी खाली व उजव्या बाजूला */
+    .footer-officer-wrap {
+      display: flex;
+      justify-content: flex-end;
+      padding-right: 18px;
+      margin-top: 15px;
+    }
+
+    .footer-officer-box {
+      text-align: center;
+      min-width: 210px;
+    }
+
+    /* Print Media Query */
+    @media print {
+      @page {
+        size: legal landscape;
+        margin: 6mm;
+      }
+
+      body {
+        background: #fff !important;
+        height: auto !important;
+        overflow: visible !important;
+      }
+
+      .form-panel,
+      .preview-toolbar {
+        display: none !important;
+      }
+
+      .workspace,
+      .preview-panel,
+      .preview-scroll {
+        display: block !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        overflow: visible !important;
+        background: #fff !important;
+        width: 100% !important;
+        height: auto !important;
+      }
+
+      .legal-page {
+        width: 100% !important;
+        min-width: 100% !important;
+        min-height: auto !important;
+        box-shadow: none !important;
+        padding: 0 !important;
+        transform: scale(1) !important;
+      }
+
+      .doc-border {
+        min-height: 194mm !important;
+        height: 194mm !important;
+      }
+
+      table.namuna-table th {
+        background-color: #f2f2f2 !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+    }
+
+    @media (max-width: 900px) {
+      body {
+        height: auto;
+        overflow: auto;
+      }
+      .workspace {
+        flex-direction: column;
+        height: auto;
+      }
+      .form-panel {
+        width: 100%;
+        min-width: 100%;
+        border-right: none;
+        border-bottom: 2px solid var(--saffron);
+      }
+      .preview-panel {
+        min-height: 550px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="workspace">
+  <!-- LEFT SIDE: INPUT FORM -->
+  <div class="form-panel">
+    <div class="form-header">
+      <h1>नमुना नं. ८ (घराचा उतारा)</h1>
+      <span>LEGAL LANDSCAPE</span>
+    </div>
+
+    <div class="form-scroll" id="form_scroll">
+      <!-- Section 1: Gram Panchayat & Year -->
+      <div class="section-box">
+        <div class="section-title">१. ग्रामपंचायत व कालावधी माहिती</div>
+        <div class="grid-2">
+          <div class="field">
+            <label>आकारणी वर्ष (साल)</label>
+            <input type="text" id="in_year" value="२०१६-१७ ते २०१९-२०" oninput="updatePreview()" />
+          </div>
+          <div class="field">
+            <label>उतारा दिल्याचा दिनांक</label>
+            <input type="text" id="in_date" value="०४ जानेवारी २०२६" oninput="updatePreview()" />
+          </div>
+        </div>
+        <div class="field">
+          <label>ग्रामपंचायत, तालुका व जिल्हा</label>
+          <input type="text" id="in_gp" value="ग्रामपंचायत मांडळ ता.जि.धुळे" oninput="updatePreview()" />
+        </div>
+      </div>
+
+      <!-- Dynamic Persons / Entries Container -->
+      <div id="persons_container"></div>
+
+      <!-- Add Person Button -->
+      <button type="button" class="btn-add-person" onclick="addPerson()">
+        ➕ दुसरा व्यक्ती / मालमत्ता जोडा (Add Row)
+      </button>
+
+      <!-- Section 5: Note & Signatory -->
+      <div class="section-box">
+        <div class="section-title">अस्वीकरण टीप व सही अधिकारी</div>
+        <div class="field">
+          <label>अस्वीकरण टीप (Disclaimer)</label>
+          <textarea id="in_note" rows="2" oninput="updatePreview()">सदरचा उतारा हा मालकी हक्काचा नसून करआकारणीचा आहे. सदरच्या उताऱ्यावरून खरेदी विक्री व्यवहार झालेस ग्रामपंचायत जबाबदार राहणार नाही.</textarea>
+        </div>
+        <div class="field">
+          <label>अधिकारी पदनाम</label>
+          <input type="text" id="in_officer" value="ग्रामपंचायत अधिकारी" oninput="updatePreview()" />
+        </div>
+      </div>
+    </div>
+
+    <div class="action-bar">
+      <button type="button" class="btn-reset" onclick="clearForm()">रिकामे करा</button>
+      <button type="button" class="btn-sample" onclick="loadSample()">नमुना भरा</button>
+      <button type="button" class="btn-print" onclick="window.print()">🖨️ प्रिंट / PDF (Legal)</button>
+    </div>
+  </div>
+
+  <!-- RIGHT SIDE: LIVE PREVIEW -->
+  <div class="preview-panel">
+    <div class="preview-toolbar">
+      <div class="preview-badge">
+        <span>📄 लाईव्ह प्रिव्ह्यू (कोकिळा/शासकीय फॉन्ट)</span>
+        <span class="count-pill" id="person_count_badge">एकूण नोंदी: १</span>
+      </div>
+      <div class="zoom-controls">
+        <span>झूम:</span>
+        <button type="button" class="zoom-btn" onclick="changeZoom(-0.08)">-</button>
+        <span id="zoom_label" style="color:#fff; font-weight:700; min-width:42px; text-align:center;">65%</span>
+        <button type="button" class="zoom-btn" onclick="changeZoom(0.08)">+</button>
+        <button type="button" class="zoom-btn" onclick="fitPreview()">Fit</button>
+      </div>
+    </div>
+
+    <div class="preview-scroll" id="preview_scroll">
+      <div class="legal-page" id="legal_page">
+        <div class="doc-border">
+          <div class="doc-top-section">
+            <!-- Header -->
+            <div class="doc-header">
+              <h2>नमुना नं. ८</h2>
+              <p>करासपात्र असलेल्या इमारती व जमिनी यांची सन <span id="out_year">२०१६-१७ ते २०१९-२०</span> सालाबद्दल आकारणी यादी (घराचा उतारा)</p>
+            </div>
+
+            <!-- Main Table -->
+            <table class="namuna-table">
+              <colgroup>
+                <col style="width: 3.5%;">  <!-- अ.क्र -->
+                <col style="width: 7%;">    <!-- रस्त्याचे नाव -->
+                <col style="width: 5.5%;">  <!-- मालमत्ता क्र -->
+                <col style="width: 8%;">    <!-- वर्णन -->
+                <col style="width: 11%;">   <!-- मालकाचे नाव -->
+                <col style="width: 7.5%;">  <!-- भोगवटादार -->
+                <col style="width: 7%;">    <!-- एकूण किंमत -->
+                <!-- आकारणी केलेला कर (6 cols) -->
+                <col style="width: 4.5%;">
+                <col style="width: 4.2%;">
+                <col style="width: 4.2%;">
+                <col style="width: 4.5%;">
+                <col style="width: 4.5%;">
+                <col style="width: 5.1%;">
+                <!-- अपिलाचे निकाल (6 cols) -->
+                <col style="width: 4.2%;">
+                <col style="width: 4%;">
+                <col style="width: 4%;">
+                <col style="width: 4.2%;">
+                <col style="width: 4.2%;">
+                <col style="width: 4.7%;">
+                <!-- शेरे -->
+                <col style="width: 6.2%;">
+              </colgroup>
+              <thead>
+                <tr>
+                  <th rowspan="2">अ.<br>क्र.</th>
+                  <th rowspan="2">रस्त्याचे नाव</th>
+                  <th rowspan="2">मालमत्ता<br>क्रमांक</th>
+                  <th rowspan="2">मालमत्तेचे वर्णन<br>लांबी × रुंदी<br>क्षेत्रफळ चौ.फूट</th>
+                  <th rowspan="2">मालकाचे नाव</th>
+                  <th rowspan="2">भोगवटा<br>करणाऱ्याचे नाव</th>
+                  <th rowspan="2">जमिनीच्या किंवा इमारतीच्या संपूर्ण क्षेत्रफळावर प्र.चौ.फूट आधारे एकूण किंमत</th>
+                  <th colspan="6">आकारणी केलेल्या कराची रक्कम</th>
+                  <th colspan="6">अपिलाचे निकाल आणि त्यानंतर केलेले बदल</th>
+                  <th rowspan="2">मागाहून वाढ झाल्याबाबतीत आदेशाचा उल्लेख धरून शेरे</th>
+                </tr>
+                <tr>
+                  <th>घरपट्टी</th>
+                  <th>सॅनिटरी पट्टी</th>
+                  <th>दिवाबत्ती</th>
+                  <th>जनरल पाणी पट्टी</th>
+                  <th>स्पेशल पाणी पट्टी</th>
+                  <th>एकूण रक्कम रुपये पैसे</th>
+                  <th>घरपट्टी</th>
+                  <th>सॅनिटरी पट्टी</th>
+                  <th>दिवाबत्ती</th>
+                  <th>जनरल पाणी पट्टी</th>
+                  <th>स्पेशल पाणी पट्टी</th>
+                  <th>एकूण रक्कम रुपये पैसे</th>
+                </tr>
+                <tr class="col-num-row">
+                  <th>१</th>
+                  <th>२</th>
+                  <th>३</th>
+                  <th>४</th>
+                  <th>५</th>
+                  <th>६</th>
+                  <th>७</th>
+                  <th>८</th>
+                  <th>९</th>
+                  <th>१०</th>
+                  <th>११</th>
+                  <th>१२</th>
+                  <th>१३</th>
+                  <th>१४</th>
+                  <th>१५</th>
+                  <th>१६</th>
+                  <th>१७</th>
+                  <th>१८</th>
+                  <th>१९</th>
+                  <th>२०</th>
+                </tr>
+              </thead>
+              <tbody id="preview_tbody">
+                <!-- Dynamic rows injected here -->
+              </tbody>
+              <tfoot>
+                <tr class="disclaimer-row">
+                  <td colspan="20" id="out_note">सदरचा उतारा हा मालकी हक्काचा नसून करआकारणीचा आहे. सदरच्या उताऱ्यावरून खरेदी विक्री व्यवहार झालेस ग्रामपंचायत जबाबदार राहणार नाही.</td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+
+          <!-- बॉक्सच्या अगदी तळाशी जाणारा भाग -->
+          <div class="doc-footer-area">
+            <div class="doc-footer-flow">
+              <div class="footer-gp-line" id="out_gp">ग्रामपंचायत मांडळ ता.जि.धुळे</div>
+              <div class="footer-copy-line">येणे प्रमाणे नमुना नंबर ८ वरून खरी नक्कल दिली असे. &nbsp;&nbsp;&nbsp; दिनांक :- <span id="out_date">०४ जानेवारी २०२६</span></div>
+            </div>
+
+            <div class="footer-officer-wrap">
+              <div class="footer-officer-box" id="out_officer">ग्रामपंचायत अधिकारी</div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  let currentZoom = 0.65;
+  let persons = [];
+
+  function toMarathiDigits(str) {
+    if (str === null || str === undefined || str === '') return '';
+    const map = ['०', '१', '२', '३', '४', '५', '६', '७', '८', '९'];
+    return String(str).replace(/[0-9]/g, d => map[d]);
+  }
+
+  function formatNumDisplay(val) {
+    if (val === '' || val === null || val === undefined) return '';
+    const num = parseFloat(val);
+    if (isNaN(num) || num === 0) return '-';
+    return toMarathiDigits(num);
+  }
+
+  function getDefaultSamplePerson() {
+    return {
+      sr: '१५५',
+      street: 'नवे गाव',
+      prop_no: '१४८',
+      owner: 'जनाबाई भाऊसाहेब पाटील',
+      occupier: 'स्वतः',
+      desc: '६२×१४=८६८',
+      area: '८६८ चौ.',
+      value: '-',
+      tax_house: '2171',
+      tax_sanitary: '50',
+      tax_light: '50',
+      tax_gen_water: '0',
+      tax_sp_water: '460',
+      app_house: '',
+      app_sanitary: '',
+      app_light: '',
+      app_gen_water: '',
+      app_sp_water: '',
+      remarks: ''
+    };
+  }
+
+  function getEmptyPerson() {
+    const first = persons[0] || {};
+    return {
+      sr: '',
+      street: first.street || '',
+      prop_no: '',
+      owner: '',
+      occupier: 'स्वतः',
+      desc: '',
+      area: '',
+      value: '-',
+      tax_house: '',
+      tax_sanitary: '',
+      tax_light: '',
+      tax_gen_water: '',
+      tax_sp_water: '',
+      app_house: '',
+      app_sanitary: '',
+      app_light: '',
+      app_gen_water: '',
+      app_sp_water: '',
+      remarks: ''
+    };
+  }
+
+  function calcTotal(p, prefix) {
+    const h = parseFloat(p[prefix + 'house']) || 0;
+    const s = parseFloat(p[prefix + 'sanitary']) || 0;
+    const l = parseFloat(p[prefix + 'light']) || 0;
+    const gw = parseFloat(p[prefix + 'gen_water']) || 0;
+    const sw = parseFloat(p[prefix + 'sp_water']) || 0;
+    const sum = h + s + l + gw + sw;
+    return sum > 0 ? sum : '';
+  }
+
+  function escapeHtml(text) {
+    if (!text) return '';
+    return String(text)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;");
+  }
+
+  function renderForm() {
+    const container = document.getElementById('persons_container');
+    container.innerHTML = '';
+
+    persons.forEach((p, idx) => {
+      const taxTotal = calcTotal(p, 'tax_');
+      const appTotal = calcTotal(p, 'app_');
+      const card = document.createElement('div');
+      card.className = 'person-card';
+
+      card.innerHTML = `
+        <div class="person-card-header">
+          <div class="person-badge">👤 व्यक्ती / नोंद क्र. ${toMarathiDigits(idx + 1)}</div>
+          ${persons.length > 1 ? `<button type="button" class="btn-remove-person" onclick="removePerson(${idx})">🗑️ काढून टाका</button>` : ''}
+        </div>
+
+        <div class="grid-3">
+          <div class="field">
+            <label>अ. क्र.</label>
+            <input type="text" value="${escapeHtml(p.sr)}" oninput="updatePersonField(${idx}, 'sr', this.value)" />
+          </div>
+          <div class="field">
+            <label>रस्त्याचे नाव / गल्ली</label>
+            <input type="text" value="${escapeHtml(p.street)}" oninput="updatePersonField(${idx}, 'street', this.value)" />
+          </div>
+          <div class="field">
+            <label>मालमत्ता क्रमांक</label>
+            <input type="text" value="${escapeHtml(p.prop_no)}" oninput="updatePersonField(${idx}, 'prop_no', this.value)" />
+          </div>
+        </div>
+
+        <div class="grid-2">
+          <div class="field">
+            <label>मालकाचे नाव</label>
+            <input type="text" value="${escapeHtml(p.owner)}" oninput="updatePersonField(${idx}, 'owner', this.value)" />
+          </div>
+          <div class="field">
+            <label>भोगवटा करणाऱ्याचे नाव</label>
+            <input type="text" value="${escapeHtml(p.occupier)}" oninput="updatePersonField(${idx}, 'occupier', this.value)" />
+          </div>
+        </div>
+
+        <div class="grid-3">
+          <div class="field">
+            <label>मालमत्ता वर्णन (लांबी×रुंदी)</label>
+            <input type="text" value="${escapeHtml(p.desc)}" oninput="updatePersonField(${idx}, 'desc', this.value)" />
+          </div>
+          <div class="field">
+            <label>एकूण क्षेत्रफळ (चौ.फूट)</label>
+            <input type="text" value="${escapeHtml(p.area)}" oninput="updatePersonField(${idx}, 'area', this.value)" />
+          </div>
+          <div class="field">
+            <label>एकूण किंमत / रेडीरेकनर</label>
+            <input type="text" value="${escapeHtml(p.value)}" oninput="updatePersonField(${idx}, 'value', this.value)" />
+          </div>
+        </div>
+
+        <div class="sub-label">आकारणी केलेल्या कराची रक्कम (स्वयंचलित बेरीज)</div>
+        <div class="grid-3">
+          <div class="field">
+            <label>घरपट्टी (रुपये)</label>
+            <input type="number" value="${escapeHtml(p.tax_house)}" oninput="updatePersonField(${idx}, 'tax_house', this.value, true)" />
+          </div>
+          <div class="field">
+            <label>सॅनिटरी पट्टी</label>
+            <input type="number" value="${escapeHtml(p.tax_sanitary)}" oninput="updatePersonField(${idx}, 'tax_sanitary', this.value, true)" />
+          </div>
+          <div class="field">
+            <label>दिवाबत्ती कर</label>
+            <input type="number" value="${escapeHtml(p.tax_light)}" oninput="updatePersonField(${idx}, 'tax_light', this.value, true)" />
+          </div>
+        </div>
+        <div class="grid-3">
+          <div class="field">
+            <label>जनरल पाणी पट्टी</label>
+            <input type="number" value="${escapeHtml(p.tax_gen_water)}" oninput="updatePersonField(${idx}, 'tax_gen_water', this.value, true)" />
+          </div>
+          <div class="field">
+            <label>स्पेशल पाणी पट्टी</label>
+            <input type="number" value="${escapeHtml(p.tax_sp_water)}" oninput="updatePersonField(${idx}, 'tax_sp_water', this.value, true)" />
+          </div>
+          <div class="field">
+            <label>एकूण रक्कम रुपये</label>
+            <input type="text" id="tax_total_${idx}" value="${taxTotal}" readonly />
+          </div>
+        </div>
+
+        <div class="sub-label">अपिलाचे निकाल व बदल (ऐच्छिक)</div>
+        <div class="grid-3">
+          <div class="field">
+            <label>घरपट्टी (बदल)</label>
+            <input type="number" placeholder="-" value="${escapeHtml(p.app_house)}" oninput="updatePersonField(${idx}, 'app_house', this.value, true)" />
+          </div>
+          <div class="field">
+            <label>सॅनिटरी पट्टी</label>
+            <input type="number" placeholder="-" value="${escapeHtml(p.app_sanitary)}" oninput="updatePersonField(${idx}, 'app_sanitary', this.value, true)" />
+          </div>
+          <div class="field">
+            <label>दिवाबत्ती</label>
+            <input type="number" placeholder="-" value="${escapeHtml(p.app_light)}" oninput="updatePersonField(${idx}, 'app_light', this.value, true)" />
+          </div>
+        </div>
+        <div class="grid-3">
+          <div class="field">
+            <label>जनरल पाणी पट्टी</label>
+            <input type="number" placeholder="-" value="${escapeHtml(p.app_gen_water)}" oninput="updatePersonField(${idx}, 'app_gen_water', this.value, true)" />
+          </div>
+          <div class="field">
+            <label>स्पेशल पाणी पट्टी</label>
+            <input type="number" placeholder="-" value="${escapeHtml(p.app_sp_water)}" oninput="updatePersonField(${idx}, 'app_sp_water', this.value, true)" />
+          </div>
+          <div class="field">
+            <label>एकूण रक्कम (अपिल)</label>
+            <input type="text" id="app_total_${idx}" placeholder="-" value="${appTotal}" readonly />
+          </div>
+        </div>
+        <div class="field">
+          <label>शेरे (आदेशाचा उल्लेख)</label>
+          <input type="text" placeholder="शेरे असल्यास येथे लिहा..." value="${escapeHtml(p.remarks)}" oninput="updatePersonField(${idx}, 'remarks', this.value)" />
+        </div>
+      `;
+
+      container.appendChild(card);
+    });
+
+    document.getElementById('person_count_badge').textContent = `एकूण नोंदी: ${toMarathiDigits(persons.length)}`;
+  }
+
+  function updatePersonField(idx, key, val, recalc = false) {
+    persons[idx][key] = val;
+    if (recalc) {
+      const taxTotalEl = document.getElementById(`tax_total_${idx}`);
+      const appTotalEl = document.getElementById(`app_total_${idx}`);
+      if (taxTotalEl) taxTotalEl.value = calcTotal(persons[idx], 'tax_');
+      if (appTotalEl) appTotalEl.value = calcTotal(persons[idx], 'app_');
+    }
+    updatePreview();
+  }
+
+  function addPerson() {
+    persons.push(getEmptyPerson());
+    renderForm();
+    updatePreview();
+    const scrollBox = document.getElementById('form_scroll');
+    setTimeout(() => {
+      scrollBox.scrollTo({ top: scrollBox.scrollHeight, behavior: 'smooth' });
+    }, 50);
+  }
+
+  function removePerson(idx) {
+    if (persons.length <= 1) return;
+    persons.splice(idx, 1);
+    renderForm();
+    updatePreview();
+  }
+
+  function updatePreview() {
+    document.getElementById('out_year').textContent = document.getElementById('in_year').value;
+    document.getElementById('out_date').textContent = document.getElementById('in_date').value;
+    document.getElementById('out_gp').textContent = document.getElementById('in_gp').value;
+    document.getElementById('out_note').textContent = document.getElementById('in_note').value;
+    document.getElementById('out_officer').textContent = document.getElementById('in_officer').value;
+
+    const tbody = document.getElementById('preview_tbody');
+    tbody.innerHTML = '';
+
+    persons.forEach(p => {
+      const area = toMarathiDigits((p.area || '').trim());
+      const val = toMarathiDigits((p.value || '').trim());
+      const areaValHtml = (area ? area : '') + (area && val && val !== '-' ? '<br>' + val : '');
+
+      const tTotal = calcTotal(p, 'tax_');
+      const aTotal = calcTotal(p, 'app_');
+
+      const tr = document.createElement('tr');
+      tr.className = 'data-row';
+      tr.innerHTML = `
+        <td>${escapeHtml(toMarathiDigits(p.sr))}</td>
+        <td>${escapeHtml(p.street)}</td>
+        <td>${escapeHtml(toMarathiDigits(p.prop_no))}</td>
+        <td>${escapeHtml(toMarathiDigits(p.desc))}</td>
+        <td>${escapeHtml(p.owner)}</td>
+        <td>${escapeHtml(p.occupier)}</td>
+        <td>${areaValHtml}</td>
+        <td>${formatNumDisplay(p.tax_house)}</td>
+        <td>${formatNumDisplay(p.tax_sanitary)}</td>
+        <td>${formatNumDisplay(p.tax_light)}</td>
+        <td>${formatNumDisplay(p.tax_gen_water)}</td>
+        <td>${formatNumDisplay(p.tax_sp_water)}</td>
+        <td style="font-weight:800;">${tTotal ? toMarathiDigits(tTotal) : '-'}</td>
+        <td>${p.app_house !== '' ? formatNumDisplay(p.app_house) : ''}</td>
+        <td>${p.app_sanitary !== '' ? formatNumDisplay(p.app_sanitary) : ''}</td>
+        <td>${p.app_light !== '' ? formatNumDisplay(p.app_light) : ''}</td>
+        <td>${p.app_gen_water !== '' ? formatNumDisplay(p.app_gen_water) : ''}</td>
+        <td>${p.app_sp_water !== '' ? formatNumDisplay(p.app_sp_water) : ''}</td>
+        <td style="font-weight:800;">${aTotal ? toMarathiDigits(aTotal) : ''}</td>
+        <td>${escapeHtml(p.remarks)}</td>
+      `;
+      tbody.appendChild(tr);
+    });
+  }
+
+  function clearForm() {
+    persons = [getEmptyPerson()];
+    persons[0].sr = '';
+    persons[0].prop_no = '';
+    persons[0].owner = '';
+    persons[0].desc = '';
+    persons[0].area = '';
+    persons[0].tax_house = '';
+    persons[0].tax_sanitary = '';
+    persons[0].tax_light = '';
+    persons[0].tax_gen_water = '';
+    persons[0].tax_sp_water = '';
+    renderForm();
+    updatePreview();
+  }
+
+  function loadSample() {
+    document.getElementById('in_year').value = '२०१६-१७ ते २०१९-२०';
+    document.getElementById('in_date').value = '०४ जानेवारी २०२६';
+    document.getElementById('in_gp').value = 'ग्रामपंचायत मांडळ ता.जि.धुळे';
+    persons = [getDefaultSamplePerson()];
+    renderForm();
+    updatePreview();
+  }
+
+  function applyZoom() {
+    const page = document.getElementById('legal_page');
+    page.style.transform = `scale(${currentZoom})`;
+    document.getElementById('zoom_label').textContent = Math.round(currentZoom * 100) + '%';
+  }
+
+  function changeZoom(delta) {
+    currentZoom = Math.min(1.2, Math.max(0.35, currentZoom + delta));
+    applyZoom();
+  }
+
+  function fitPreview() {
+    const container = document.getElementById('preview_scroll');
+    const availableWidth = container.clientWidth - 48;
+    currentZoom = Math.min(1, Math.max(0.4, availableWidth / 1344));
+    applyZoom();
+  }
+
+  window.addEventListener('resize', fitPreview);
+  window.addEventListener('DOMContentLoaded', () => {
+    persons = [getDefaultSamplePerson()];
+    renderForm();
+    updatePreview();
+    fitPreview();
+  });
+</script>
+</body>
+</html>
