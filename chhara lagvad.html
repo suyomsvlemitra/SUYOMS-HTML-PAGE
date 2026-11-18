@@ -1,0 +1,1497 @@
+<!DOCTYPE html>
+<html lang="mr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>चारा लागवड संपूर्ण प्रस्ताव जनरेटर (12 पाने - डेमो फिल्ड्ससह)</title>
+  <!-- Google Khand Font for UI & Form -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Khand:wght@400;500;600;700&family=Tiro+Devanagari+Marathi&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --bg-black: #0c0c0c;
+      --panel-dark: #161616;
+      --card-dark: #1f1f1f;
+      --border-dark: #333333;
+      --saffron: #ff6600;
+      --saffron-hover: #e65c00;
+      --saffron-light: #ff944d;
+      --text-white: #f5f5f5;
+      --text-muted: #b3b3b3;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Khand', sans-serif;
+      background-color: var(--bg-black);
+      color: var(--text-white);
+      height: 100vh;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Top Bar */
+    .top-bar {
+      background: linear-gradient(90deg, #000000 0%, #1a0d00 50%, #000000 100%);
+      border-bottom: 2px solid var(--saffron);
+      padding: 10px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-shrink: 0;
+    }
+
+    .top-title {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .badge {
+      background: var(--saffron);
+      color: #000;
+      font-weight: 700;
+      padding: 2px 10px;
+      border-radius: 4px;
+      font-size: 15px;
+      letter-spacing: 0.5px;
+    }
+
+    .top-title h1 {
+      font-size: 22px;
+      font-weight: 700;
+      color: #fff;
+      letter-spacing: 0.5px;
+    }
+
+    .top-title h1 span {
+      color: var(--saffron);
+    }
+
+    .action-btns {
+      display: flex;
+      gap: 10px;
+    }
+
+    .btn {
+      font-family: 'Khand', sans-serif;
+      font-size: 16px;
+      font-weight: 600;
+      padding: 7px 16px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn-saffron {
+      background: var(--saffron);
+      color: #000;
+    }
+
+    .btn-saffron:hover {
+      background: var(--saffron-hover);
+      color: #fff;
+    }
+
+    .btn-outline {
+      background: transparent;
+      border: 1px solid var(--saffron);
+      color: var(--saffron);
+    }
+
+    .btn-outline:hover {
+      background: var(--saffron);
+      color: #000;
+    }
+
+    .btn-small {
+      padding: 2px 8px;
+      font-size: 13px;
+      background: #333;
+      color: #ff944d;
+      border: 1px solid var(--saffron);
+      cursor: pointer;
+      border-radius: 3px;
+    }
+    .btn-small:hover {
+      background: var(--saffron);
+      color: #000;
+    }
+
+    /* Main Split Layout */
+    .main-container {
+      display: flex;
+      flex: 1;
+      overflow: hidden;
+    }
+
+    /* Left Form Panel */
+    .form-panel {
+      width: 44%;
+      min-width: 390px;
+      background-color: var(--panel-dark);
+      border-right: 2px solid var(--saffron);
+      overflow-y: auto;
+      padding: 16px;
+    }
+
+    .form-panel::-webkit-scrollbar,
+    .preview-panel::-webkit-scrollbar {
+      width: 8px;
+    }
+    .form-panel::-webkit-scrollbar-thumb,
+    .preview-panel::-webkit-scrollbar-thumb {
+      background: var(--saffron);
+      border-radius: 4px;
+    }
+    .form-panel::-webkit-scrollbar-track,
+    .preview-panel::-webkit-scrollbar-track {
+      background: #111;
+    }
+
+    .section-box {
+      background: var(--card-dark);
+      border: 1px solid var(--border-dark);
+      border-left: 4px solid var(--saffron);
+      border-radius: 6px;
+      padding: 14px;
+      margin-bottom: 16px;
+    }
+
+    .section-header {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--saffron);
+      margin-bottom: 12px;
+      padding-bottom: 5px;
+      border-bottom: 1px dashed #3d3d3d;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 10px;
+    }
+
+    .form-group {
+      margin-bottom: 10px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 15px;
+      font-weight: 500;
+      color: var(--text-muted);
+      margin-bottom: 3px;
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      width: 100%;
+      background: #0f0f0f;
+      border: 1px solid #3a3a3a;
+      color: #fff;
+      font-family: 'Khand', sans-serif;
+      font-size: 16px;
+      padding: 6px 10px;
+      border-radius: 4px;
+      outline: none;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      border-color: var(--saffron);
+      box-shadow: 0 0 0 1px var(--saffron);
+    }
+
+    /* Right Preview Panel */
+    .preview-panel {
+      width: 56%;
+      background-color: #262626;
+      overflow-y: auto;
+      padding: 25px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 25px;
+    }
+
+    /* A4 Sheet Styling - Government Kokila Font */
+    .a4-page {
+      width: 210mm;
+      min-height: 297mm;
+      background: #ffffff;
+      color: #000000;
+      padding: 14mm 16mm;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.7);
+      font-family: 'Kokila', 'Tiro Devanagari Marathi', 'Mangal', serif;
+      font-size: 16pt;
+      line-height: 1.38;
+      position: relative;
+      page-break-after: always;
+    }
+
+    .a4-page * {
+      font-family: 'Kokila', 'Tiro Devanagari Marathi', 'Mangal', serif;
+    }
+
+    .doc-header {
+      display: flex;
+      align-items: center;
+      border-bottom: 2px solid #000;
+      padding-bottom: 6px;
+      margin-bottom: 10px;
+      gap: 12px;
+    }
+
+    .doc-logo {
+      width: 68px;
+      height: 68px;
+      border: 1.5px solid #000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      background: #fff;
+      flex-shrink: 0;
+    }
+
+    .doc-logo img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    .doc-title-box {
+      flex: 1;
+      text-align: center;
+    }
+
+    .doc-title-box h2 {
+      font-size: 19pt;
+      font-weight: bold;
+      margin: 0;
+      line-height: 1.2;
+    }
+
+    .doc-title-box p {
+      font-size: 13.5pt;
+      margin: 2px 0 0 0;
+    }
+
+    .fill-val {
+      font-weight: bold;
+      border-bottom: 1px dotted #000;
+      padding: 0 4px;
+      display: inline-block;
+      min-width: 40px;
+    }
+
+    .doc-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 8px 0;
+      font-size: 14.5pt;
+    }
+
+    .doc-table th,
+    .doc-table td {
+      border: 1px solid #000;
+      padding: 4px 6px;
+      vertical-align: middle;
+    }
+
+    .doc-table th {
+      background-color: #f2f2f2;
+      font-weight: bold;
+      text-align: center;
+    }
+
+    .center { text-align: center; }
+    .right { text-align: right; }
+    .bold { font-weight: bold; }
+    .indent { text-indent: 35px; text-align: justify; }
+
+    .box-grid {
+      display: inline-flex;
+      border: 1px solid #000;
+      vertical-align: middle;
+    }
+    .box-cell {
+      width: 22px;
+      height: 24px;
+      border-right: 1px solid #000;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 14pt;
+    }
+    .box-cell:last-child {
+      border-right: none;
+    }
+
+    .photo-box {
+      width: 115px;
+      height: 135px;
+      border: 1.5px solid #000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      font-size: 13pt;
+      overflow: hidden;
+      background: #fafafa;
+    }
+
+    .photo-box img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .site-photo-box {
+      width: 100%;
+      height: 175px;
+      border: 1.5px dashed #000;
+      margin: 8px 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      overflow: hidden;
+      background: #fafafa;
+    }
+
+    .site-photo-box img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+    }
+
+    .sign-row {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 28px;
+      font-weight: bold;
+    }
+
+    .page-tag {
+      position: absolute;
+      top: 5mm;
+      right: 10mm;
+      font-size: 10pt;
+      color: #666;
+    }
+
+    /* Print Media Query */
+    @media print {
+      body {
+        background: #fff;
+        height: auto;
+        overflow: visible;
+      }
+      .top-bar, .form-panel, .page-tag {
+        display: none !important;
+      }
+      .main-container {
+        display: block;
+      }
+      .preview-panel {
+        width: 100%;
+        padding: 0;
+        background: #fff;
+        gap: 0;
+        overflow: visible;
+      }
+      .a4-page {
+        box-shadow: none;
+        margin: 0;
+        width: 210mm;
+        min-height: 297mm;
+        page-break-after: always;
+      }
+      .a4-page:last-child {
+        page-break-after: auto;
+      }
+    }
+
+    @media (max-width: 1100px) {
+      body { height: auto; overflow: auto; }
+      .main-container { flex-direction: column; }
+      .form-panel, .preview-panel { width: 100%; }
+      .a4-page { transform: scale(0.85); transform-origin: top center; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Header -->
+  <header class="top-bar">
+    <div class="top-title">
+      <span class="badge">VB-G RAM G 2025</span>
+      <h1>चारा लागवड १२ पाने प्रस्ताव जनरेटर (डेमो फिल्ड्ससह)</h1>
+    </div>
+    <div class="action-btns">
+      <button class="btn btn-outline" onclick="fillSampleData()">डेटा भरा</button>
+      <button class="btn btn-outline" onclick="resetForm()">रिसेट करा</button>
+      <button class="btn btn-saffron" onclick="window.print()">🖨️ प्रिंट / PDF सेव्ह करा</button>
+    </div>
+  </header>
+
+  <!-- Main Workspace -->
+  <div class="main-container">
+
+    <!-- LEFT SIDE: FORM PANEL -->
+    <div class="form-panel">
+
+      <!-- 1. डेमो प्रशासकीय व ग्रामपंचायत माहिती -->
+      <div class="section-box">
+        <div class="section-header">१. ग्रामपंचायत व डेमो माहिती</div>
+        <div class="grid-2">
+          <div class="form-group">
+            <label>ग्रामपंचायत (डेमो)</label>
+            <input type="text" id="gpName" value="डेमो" oninput="sync()">
+          </div>
+          <div class="form-group">
+            <label>महसूल गावाचे नाव (डेमो)</label>
+            <input type="text" id="villageName" value="डेमो" oninput="sync()">
+          </div>
+          <div class="form-group">
+            <label>तालुका (डेमो)</label>
+            <input type="text" id="taluka" value="डेमो" oninput="sync()">
+          </div>
+          <div class="form-group">
+            <label>जिल्हा (डेमो)</label>
+            <input type="text" id="district" value="डेमो" oninput="sync()">
+          </div>
+          <div class="form-group">
+            <label>जावक क्रमांक (डेमो)</label>
+            <input type="text" id="outwardNo" value="डेमो" oninput="sync()">
+          </div>
+          <div class="form-group">
+            <label>जावक वर्ष (डेमो)</label>
+            <input type="text" id="outYear" value="डेमो" oninput="sync()">
+          </div>
+          <div class="form-group">
+            <label>जावक दिनांक (डेमो)</label>
+            <input type="text" id="appDate" value="डेमो" oninput="sync()">
+          </div>
+          <div class="form-group">
+            <label>मा. गट विकास अधिकारी (डेमो)</label>
+            <input type="text" id="bdoOffice" value="डेमो" oninput="sync()">
+          </div>
+          <div class="form-group">
+            <label>पशुसंवर्धन कार्यालय (डेमो)</label>
+            <input type="text" id="vetOffice" value="डेमो" oninput="sync()">
+          </div>
+        </div>
+        <div class="grid-3">
+          <div class="form-group">
+            <label>ग्रामसभा ठराव क्र. (डेमो)</label>
+            <input type="text" id="tharavNo" value="डेमो" oninput="sync()">
+          </div>
+          <div class="form-group">
+            <label>ठराव दिनांक (डेमो)</label>
+            <input type="text" id="tharavDate" value="डेमो" oninput="sync()">
+          </div>
+          <div class="form-group">
+            <label>ठराव पृष्ठ क्र. (डेमो)</label>
+            <input type="text" id="tharavPage" value="डेमो" oninput="sync()">
+          </div>
+        </div>
+        <div class="grid-3">
+          <div class="form-group">
+            <label>लेबर बजेट वर्ष (डेमो)</label>
+            <input type="text" id="budgetYear1" value="डेमो" oninput="sync()">
+          </div>
+          <div class="form-group">
+            <label>लेबर बजेट वर्ष २ (डेमो)</label>
+            <input type="text" id="budgetYear2" value="डेमो" oninput="sync()">
+          </div>
+          <div class="form-group">
+            <label>युक्तधारा प्राधान्य क्र. (डेमो)</label>
+            <input type="text" id="priorityNo" value="डेमो" oninput="sync()">
+          </div>
+          <div class="form-group">
+            <label>एकूण प्रस्ताव पान (ते)</label>
+            <input type="text" id="totalPages" value="डेमो ते डेमो" oninput="sync()">
+          </div>
+        </div>
+      </div>
+
+      <!-- 2. लाभार्थी वैयक्तिक डेमो माहिती -->
+      <div class="section-box">
+        <div class="section-header">२. लाभार्थी वैयक्तिक माहिती (डेमो)</div>
+        <div class="grid-2">
+          <div class="form-group">
+            <label>अर्जदाराचे पूर्ण नाव (डेमो)</label>
+            <input type="text" id="benName" value="डेमो" oninput="sync()">
+          </div>
+          <div class="form-group">
+            <label>वडिलांचे / पतीचे नाव (डेमो)</label>
+            <input type="text" id="fatherName" value="डेमो" oninput="sync()">
+          </div>
+          <div class="form-group">
+            <label>नाते (मुलगा / मुलगी / पत्नी) (डेमो)</label>
+            <input type="text" id="relation" value="डेमो" oninput="sync()">
+          </div>
+          <div class="form-group">
+            <label>वय (वर्षे) (डेमो)</label>
+            <input type="text" id="age" value="डेमो" oninput="sync()">
+          </div>
+          <div class="form-group">
+            <label>व्यवसाय (डेमो)</label>
+            <input type="text" id="occupation" value="डेमो" oninput="sync()">
+          </div>
+          <div class="form-group">
+            <label>मोबाईल क्रमांक (डेमो)</label>
+            <input type="text" id="mobile" value="डेमो" oninput="sync()">
+          </div>
+          <div class="form-group">
+            <label>जॉब कार्ड क्रमांक (डेमो)</label>
+            <input type="text" id="jobCard" maxlength="12" value="डेमो" oninput="sync()">
+          </div>
+          <div class="form-group">
+            <label>आधार कार्ड क्रमांक (डेमो)</label>
+            <input type="text" id="aadhaar" maxlength="12" value="डेमो" oninput="sync()">
+          </div>
+        </div>
+        <div class="grid-2">
+          <div class="form-group">
+            <label>अर्जदाराचा पासपोर्ट फोटो अपलोड</label>
+            <input type="file" accept="image/*" onchange="loadImage(event, 'previewUserPhoto')">
+          </div>
+          <div class="form-group">
+            <label>मोकळ्या जागेचा अक्षांश-रेखांश फोटो</label>
+            <input type="file" accept="image/*" onchange="loadImage(event, 'previewSitePhoto')">
+          </div>
+        </div>
+      </div>
+
+      <!-- 3. पात्रता व छाननी सूची शेरा व स्वतंत्र होय/नाही ऑप्शन -->
+      <div class="section-box">
+        <div class="section-header">३. पात्रता, छाननी व स्वतंत्र होय/नाही पर्याय</div>
+        <div class="grid-2">
+          <div class="form-group">
+            <label>मुख्य निवड प्रवर्ग (डेमो)</label>
+            <input type="text" id="selectedCategory" value="डेमो" oninput="sync()">
+          </div>
+          <div class="form-group">
+            <label>प्रस्ताव स्थिती (पात्र / अपात्र / डेमो)</label>
+            <input type="text" id="proposalStatus" value="डेमो" oninput="sync()">
+          </div>
+        </div>
+        <div class="form-group">
+          <label>अपात्र असेल तर शेरा (डेमो)</label>
+          <input type="text" id="rejectRemark" value="डेमो" oninput="sync()">
+        </div>
+
+        <!-- Checklist Separate Ho/Nahi Options -->
+        <div style="margin-top: 10px; border-top: 1px dashed #333; padding-top: 8px;">
+          <label style="color:var(--saffron); font-weight:bold; margin-bottom:6px; display:block;">तपासणी सूची (पान ३) स्वतंत्र होय/नाही पर्याय:</label>
+          <div class="grid-2">
+            <div class="form-group"><label>१. नमुना अर्ज</label><select class="chk-ind" id="c1" onchange="sync()"><option value="होय">होय</option><option value="नाही">नाही</option><option value="डेमो">डेमो</option></select></div>
+            <div class="form-group"><label>२. परिशिष्ट-B</label><select class="chk-ind" id="c2" onchange="sync()"><option value="होय">होय</option><option value="नाही">नाही</option><option value="डेमो">डेमो</option></select></div>
+            <div class="form-group"><label>३. संमतीपत्र</label><select class="chk-ind" id="c3" onchange="sync()"><option value="होय">होय</option><option value="नाही">नाही</option><option value="डेमो">डेमो</option></select></div>
+            <div class="form-group"><label>४. लेबर बजेट यादी</label><select class="chk-ind" id="c4" onchange="sync()"><option value="होय">होय</option><option value="नाही">नाही</option><option value="डेमो">डेमो</option></select></div>
+            <div class="form-group"><label>५. रहिवासी दाखला</label><select class="chk-ind" id="c5" onchange="sync()"><option value="होय">होय</option><option value="नाही">नाही</option><option value="डेमो">डेमो</option></select></div>
+            <div class="form-group"><label>६. ७/१२, ८अ उतारा</label><select class="chk-ind" id="c6" onchange="sync()"><option value="होय">होय</option><option value="नाही">नाही</option><option value="डेमो">डेमो</option></select></div>
+            <div class="form-group"><label>७. जॉबकार्ड प्रत</label><select class="chk-ind" id="c7" onchange="sync()"><option value="होय">होय</option><option value="नाही">नाही</option><option value="डेमो">डेमो</option></select></div>
+            <div class="form-group"><label>८. बँक पासबुक</label><select class="chk-ind" id="c8" onchange="sync()"><option value="होय">होय</option><option value="नाही">नाही</option><option value="डेमो">डेमो</option></select></div>
+            <div class="form-group"><label>९. आधार कार्ड</label><select class="chk-ind" id="c9" onchange="sync()"><option value="होय">होय</option><option value="नाही">नाही</option><option value="डेमो">डेमो</option></select></div>
+            <div class="form-group"><label>१०. स्थळपाहणी अहवाल</label><select class="chk-ind" id="c10" onchange="sync()"><option value="होय">होय</option><option value="नाही">नाही</option><option value="डेमो">डेमो</option></select></div>
+          </div>
+
+          <label style="color:var(--saffron); font-weight:bold; margin:10px 0 6px 0; display:block;">छाननी पत्र (पान १२) स्वतंत्र होय/नाही पर्याय:</label>
+          <div class="grid-2">
+            <div class="form-group"><label>१. ग्रामसभा ठराव</label><select class="chk-ind" id="s1" onchange="sync()"><option value="होय/नाही">होय/नाही</option><option value="होय">होय</option><option value="नाही">नाही</option><option value="डेमो">डेमो</option></select></div>
+            <div class="form-group"><label>२. कृती आराखडा</label><select class="chk-ind" id="s2" onchange="sync()"><option value="होय/नाही">होय/नाही</option><option value="होय">होय</option><option value="नाही">नाही</option><option value="डेमो">डेमो</option></select></div>
+            <div class="form-group"><label>३. जॉब कार्ड</label><select class="chk-ind" id="s3" onchange="sync()"><option value="होय/नाही">होय/नाही</option><option value="होय">होय</option><option value="नाही">नाही</option><option value="डेमो">डेमो</option></select></div>
+            <div class="form-group"><label>४. ७/१२ उतारा</label><select class="chk-ind" id="s4" onchange="sync()"><option value="होय/नाही">होय/नाही</option><option value="होय">होय</option><option value="नाही">नाही</option><option value="डेमो">डेमो</option></select></div>
+            <div class="form-group"><label>५. ८/अ उतारा</label><select class="chk-ind" id="s5" onchange="sync()"><option value="होय/नाही">होय/नाही</option><option value="होय">होय</option><option value="नाही">नाही</option><option value="डेमो">डेमो</option></select></div>
+            <div class="form-group"><label>६. सिंचनाची सोय</label><select class="chk-ind" id="s6" onchange="sync()"><option value="होय/नाही">होय/नाही</option><option value="होय">होय</option><option value="नाही">नाही</option><option value="डेमो">डेमो</option></select></div>
+            <div class="form-group"><label>७. जातीचा दाखला</label><select class="chk-ind" id="s7" onchange="sync()"><option value="होय/नाही">होय/नाही</option><option value="होय">होय</option><option value="नाही">नाही</option><option value="डेमो">डेमो</option></select></div>
+            <div class="form-group"><label>८. दारिद्र्य रेषा कार्ड</label><select class="chk-ind" id="s8" onchange="sync()"><option value="होय/नाही">होय/नाही</option><option value="होय">होय</option><option value="नाही">नाही</option><option value="डेमो">डेमो</option></select></div>
+            <div class="form-group"><label>९. कृषी अधिकारी दाखला</label><select class="chk-ind" id="s9" onchange="sync()"><option value="होय/नाही">होय/नाही</option><option value="होय">होय</option><option value="नाही">नाही</option><option value="डेमो">डेमो</option></select></div>
+            <div class="form-group"><label>१०. आधार कार्ड</label><select class="chk-ind" id="s10" onchange="sync()"><option value="होय/नाही">होय/नाही</option><option value="होय">होय</option><option value="नाही">नाही</option><option value="डेमो">डेमो</option></select></div>
+            <div class="form-group"><label>११. बँक पासबुक</label><select class="chk-ind" id="s11" onchange="sync()"><option value="होय/नाही">होय/नाही</option><option value="होय">होय</option><option value="नाही">नाही</option><option value="डेमो">डेमो</option></select></div>
+            <div class="form-group"><label>१२. अल्पभूधारक</label><select class="chk-ind" id="s12" onchange="sync()"><option value="होय/नाही">होय/नाही</option><option value="होय">होय</option><option value="नाही">नाही</option><option value="डेमो">डेमो</option></select></div>
+            <div class="form-group"><label>१३. अतिरिक्त १३</label><select class="chk-ind" id="s13" onchange="sync()"><option value="होय/नाही">होय/नाही</option><option value="होय">होय</option><option value="नाही">नाही</option><option value="डेमो">डेमो</option></select></div>
+            <div class="form-group"><label>१४. अतिरिक्त १४</label><select class="chk-ind" id="s14" onchange="sync()"><option value="होय/नाही">होय/नाही</option><option value="होय">होय</option><option value="नाही">नाही</option><option value="डेमो">डेमो</option></select></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 4. जमीन, चारा लागवड व सिंचन डेमो तपशील -->
+      <div class="section-box">
+        <div class="section-header">४. जमीन व चारा लागवड तपशील (डेमो)</div>
+        <div class="grid-3">
+          <div class="form-group">
+            <label>८-अ खाते क्रमांक (डेमो)</label>
+            <input type="text" id="khataNo" value="डेमो" oninput="sync()">
+          </div>
+          <div class="form-group">
+            <label>एकूण ८-अ क्षेत्र (डेमो)</label>
+            <input type="text" id="total8aArea" value="डेमो" oninput="sync()">
+          </div>
+          <div class="form-group">
+            <label>एकूण धारण क्षेत्र (डेमो)</label>
+            <input type="text" id="totalAcre" value="डेमो" oninput="sync()">
+          </div>
+        </div>
+        <div class="grid-3">
+          <div class="form-group">
+            <label>लागवड गट क्रमांक (डेमो)</label>
+            <input type="text" id="gatNo" value="डेमो" oninput="sync()">
+          </div>
+          <div class="form-group">
+            <label>लागवड क्षेत्र हेक्टर (डेमो)</label>
+            <input type="text" id="cropHe" value="डेमो" oninput="sync()">
+          </div>
+          <div class="form-group">
+            <label>लागवड क्षेत्र आर (डेमो)</label>
+            <input type="text" id="cropR" value="डेमो" oninput="sync()">
+          </div>
+        </div>
+        <div class="grid-2">
+          <div class="form-group">
+            <label>चारा प्रजातीचे नाव (डेमो)</label>
+            <input type="text" id="speciesName" value="डेमो" oninput="sync()">
+          </div>
+          <div class="form-group">
+            <label>लागवड रोपांची संख्या (डेमो)</label>
+            <input type="text" id="plantCount" value="डेमो" oninput="sync()">
+          </div>
+          <div class="form-group">
+            <label>जमिनीचा प्रकार (डेमो)</label>
+            <input type="text" id="soilType" value="डेमो" oninput="sync()">
+          </div>
+          <div class="form-group">
+            <label>लागवड प्रकार (डेमो)</label>
+            <input type="text" id="plantType" value="डेमो" oninput="sync()">
+          </div>
+          <div class="form-group">
+            <label>ओलिताचे साधन (डेमो)</label>
+            <input type="text" id="irrigation" value="डेमो" oninput="sync()">
+          </div>
+          <div class="form-group">
+            <label>एकूण पशुधन संख्या (डेमो)</label>
+            <input type="text" id="cattleCount" value="डेमो" oninput="sync()">
+          </div>
+        </div>
+      </div>
+
+      <!-- 5. परिशिष्ट B डायनॅमिक टेबल (मागील कामे - डेमो) -->
+      <div class="section-box">
+        <div class="section-header">
+          <span>५. मागील कामांची माहिती (परिशिष्ट B टेबल)</span>
+          <button class="btn-small" onclick="addWorkRow()">+ नवीन ओळ जोडा</button>
+        </div>
+        <div id="formRowsFormContainer"></div>
+      </div>
+
+      <!-- 6. साक्षीदार डेमो -->
+      <div class="section-box">
+        <div class="section-header">६. साक्षीदार तपशील (डेमो)</div>
+        <div class="grid-2">
+          <div class="form-group">
+            <label>साक्षीदार क्र. १ (डेमो)</label>
+            <input type="text" id="witness1" value="डेमो" oninput="sync()">
+          </div>
+          <div class="form-group">
+            <label>साक्षीदार क्र. २ (डेमो)</label>
+            <input type="text" id="witness2" value="डेमो" oninput="sync()">
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- RIGHT SIDE: LIVE A4 PREVIEW PANEL (12 PAGES) -->
+    <div class="preview-panel">
+
+      <!-- ==================== PAGE 1 ==================== -->
+      <div class="a4-page">
+        <span class="page-tag">पान १ / १२</span>
+        <div class="doc-header">
+          <div class="doc-logo">
+            <img src="https://raw.githubusercontent.com/suyomsvlemitra/AI-Images/71e815c0bb2213c3b3cf26a87dc51e5faa1baf27/VB%20-%20G%20RAM%20G.jpg" alt="Logo">
+          </div>
+          <div class="doc-title-box">
+            <h2>विकसित भारत - जी राम जी कायदा 2025 अंतर्गत<br>वैयक्तिक क्षेत्रावर चारा लागवड अर्जाचा नमुना</h2>
+            <p>(वाचा- शासन निर्णय क्र. मग्रारो -२०२४ /प्र.क्र.53 /मग्रारो-१, दि.०७/०६/२०२४)</p>
+          </div>
+        </div>
+
+        <div style="display:flex; justify-content:space-between; margin: 10px 0;">
+          <div>ग्रामपंचायत <span class="fill-val" data-bind="gpName" style="min-width:130px;"></span></div>
+          <div style="text-align:right;">
+            जा.क्र. <span class="fill-val" data-bind="outwardNo" style="min-width:50px;"></span> / २० <span class="fill-val" data-bind="outYear" style="min-width:40px;"></span><br>
+            दिनांक. <span class="fill-val" data-bind="appDate" style="min-width:90px;"></span>
+          </div>
+        </div>
+
+        <div style="margin: 10px 0;">
+          प्रति,<br>
+          <strong>मा.गट विकास अधिकारी <span data-bind="bdoOffice"></span></strong>
+        </div>
+
+        <div style="margin: 8px 0; padding-left: 25px;">
+          <strong>विषय -</strong> महात्मा गांधी राष्ट्रीय ग्रामीण रोजगार हमी योजना – महाराष्ट्र अंतर्गत लाभार्थीच्या वैयक्तिक क्षेत्रावर चारा लागवड कामास तांत्रिक व प्रशासकीय मंजुरीसाठी प्रस्ताव सादर करणेबाबत.
+        </div>
+
+        <div style="margin: 8px 0; padding-left: 25px; font-size: 13.5pt;">
+          <strong>संदर्भ -</strong><br>
+          १) शासन निर्णय क्र. मग्रारो -२०२४ /प्र.क्र.53 /मग्रारो-१, दि.०७/०६/२०२४<br>
+          २) आपले पत्र क्र. आयुक्त/चारा लागवड/२८९४/२०२६., दि. २२/१०/२०२६.<br>
+          ३) महाराष्ट्र पशू व मत्स्य विज्ञान विद्यापीठ, नागपूर (माफसू) यांचे पत्र क्र. MAFSU/DEE/SW/Corr/७०२/२०२६, दि. २१/१०/२०२६
+        </div>
+
+        <p style="margin-top: 8px;">महोदय,</p>
+        <p class="indent" style="font-size: 14pt;">
+          वरील विषयास अनुसरून सादर करण्यात येते की, विकसित भारत - जी राम जी कायदा 2025 अंतर्गत संदर्भीय शासन निर्णय अन्वये वैयक्तीक लाभार्थ्यांच्या शेत जमिनीवर चारा लागवड कार्यक्रम राबविणेबाबत मंजुरी दिलेली आहे. त्या अनुषंगाने यौजने अंतर्गत खालील प्रमाणे वैयक्तिक क्षेत्रावर चारा लागवड करू इच्छित आहेत.
+        </p>
+
+        <table class="doc-table" style="margin: 10px 0; font-size: 14pt;">
+          <thead>
+            <tr>
+              <th style="width:8%;">अ.क्र</th>
+              <th style="width:28%;">लाभार्थीचे नाव</th>
+              <th style="width:26%;">कामाचे नाव/चारा लागवड</th>
+              <th style="width:24%;">लाभार्थीची निवडपात्रता प्रवर्गा १ ते ११ प्रमाणे</th>
+              <th style="width:14%;">युक्तधारा लेबरबजेट प्राधान्य क्र.</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style="height: 48px; text-align:center;">
+              <td data-bind="selectedCategory">डेमो</td>
+              <td class="bold" data-bind="benName"></td>
+              <td>वैयक्तिक क्षेत्रावर चारा लागवड (<span data-bind="speciesName"></span>)</td>
+              <td data-bind="selectedCategory"></td>
+              <td class="bold" data-bind="priorityNo"></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <p class="indent" style="font-size: 14pt;">
+          सदर प्रस्ताव ग्रामसभा ठराव क्र. <span class="fill-val" data-bind="tharavNo"></span> दि. <span class="fill-val" data-bind="tharavDate"></span> रोजी मंजुरी घेण्यात येऊन लाभार्थीची वरील प्रमाणे प्राधान्य क्र. नुसार निवड करण्यात आलेली आहे. सदरचे काम सन <span class="fill-val" data-bind="budgetYear1"></span> - <span class="fill-val" data-bind="budgetYear2"></span> च्या लेबर बजेट / पुरवणी लेबर बजेट मध्ये समाविष्ट करण्यात आले आहे. तरी वरील लाभार्थी प्राधान्य क्र. नुसार प्रस्ताव मंजुर करण्यात येऊन त्यास तांत्रिक व प्रशासकीय मंजुरी मिळावी हि विनंती.
+        </p>
+
+        <div style="margin-top: 10px; font-size: 14pt;">
+          सोबत – वरील प्रमाणे प्रस्ताव पान क्र .आहेत <span class="fill-val" data-bind="totalPages"></span><br>
+          लाभार्थी प्राप्त अर्ज व सर्व कागदपत्रासह पुर्ण प्रस्ताव
+        </div>
+
+        <div style="text-align: right; margin-top: 25px; padding-right: 20px;">
+          आपले विश्वासू,<br><br>
+          <strong>ग्रामपंचायत अधिकारी</strong>
+        </div>
+      </div>
+
+      <!-- ==================== PAGE 2 ==================== -->
+      <div class="a4-page" style="font-size: 14.5pt; line-height: 1.3;">
+        <span class="page-tag">पान २ / १२</span>
+        <div class="doc-header">
+          <div class="doc-logo">
+            <img src="https://raw.githubusercontent.com/suyomsvlemitra/AI-Images/71e815c0bb2213c3b3cf26a87dc51e5faa1baf27/VB%20-%20G%20RAM%20G.jpg" alt="Logo">
+          </div>
+          <div class="doc-title-box">
+            <h2 style="font-size: 17pt;">विकसित भारत - जी राम जी कायदा 2025 अंतर्गत<br>वैयक्तिक क्षेत्रावर चारा लागवड अर्जाचा नमुना</h2>
+            <p style="font-size: 12.5pt;">(वाचा- शासन निर्णय क्र. मग्रारो -२०२४ /प्र.क्र.53 /मग्रारो-१, दि.०७/०६/२०२४)</p>
+          </div>
+        </div>
+
+        <div style="display:flex; justify-content:space-between;">
+          <div>
+            प्रति,<br>
+            सरपंच/ग्रामविकास अधिकारी/ग्रामसेवक<br>
+            ग्रामपंचायत <span class="fill-val" data-bind="gpName"></span><br>
+            ता. <span class="fill-val" data-bind="taluka"></span> जि. <span class="fill-val" data-bind="district"></span>
+          </div>
+          <div style="width: 52%;">
+            अर्जदाराचे नाव – श्री. श्रीमती. <span class="fill-val" data-bind="benName"></span><br>
+            पत्ता रा. <span class="fill-val" data-bind="villageName"></span> ता. <span class="fill-val" data-bind="taluka"></span>, जि. <span class="fill-val" data-bind="district"></span><br>
+            मो.न. <span class="fill-val" data-bind="mobile"></span>
+          </div>
+        </div>
+
+        <p class="indent" style="font-size: 13.5pt; margin-top: 4px;">
+          विकसित भारत - जी राम जी कायदा 2025 अंतर्गत योजनेचा मूळ उद्देश हा ग्रामीण भागातील व्यक्तीना अकुशल कामाची मागणी केल्यावर कामे उपलब्ध करून देणे व त्याद्वारे कायम स्वरूपी मत्ता निर्माण करणे हा आहे. तसेच शासन निर्णय क्र. मग्रारो -२०२४ /प्र.क्र.53 /मग्रारो-१, दि.०७/०६/२०२४ व आपले पत्र क्र. आयुक्त/चारा लागवड/२८९४/२०२६., दि. २२/१०/२०२६. अन्वये वैयक्तीक लाभार्थ्यांच्या शेताच्या शेत जमिनीवर चारा लागवड कार्यक्रम राबविणेबाबत मंजुरी दिलेली आहे. त्या अनुषंगाने मी माझ्या स्वतःच्या मालकीच्या जमीनीत या योजने अंतर्गत चारा लागवड करू इच्छित आहे. मी धारण केलेल्या जमीनीसंबधित माहिती खालीलप्रमाणे आहे.
+        </p>
+
+        <div style="font-size: 13.5pt;">
+          1) शेतक-याचे नाव - श्री./श्रीमती <span class="fill-val" data-bind="benName" style="min-width:230px;"></span><br>
+          2) गाव <span class="fill-val" data-bind="villageName"></span>, तालुका - साक्री, जि. धुळे.<br>
+          3) लाभार्थी नावे क्षेत्राची माहिती :- अ) महसुली गावाचे नाव <span class="fill-val" data-bind="villageName"></span>, ब) ८ अ नं. <span class="fill-val" data-bind="khataNo"></span>, एकुण ८ अ क्षेत्र - <span class="fill-val" data-bind="total8aArea"></span><br>
+          4) रोजगार हमी व्यतिरिक्त इतर शासकीय योजने अंतर्गत पूर्वी फळबाग/फुलपिके/वृक्ष केली असल्यास:
+        </div>
+
+        <table class="doc-table" style="margin: 2px 0; font-size: 13pt;">
+          <tr>
+            <th style="width:12%;">अ.क्र</th>
+            <th style="width:30%;">गट क्रमांक .</th>
+            <th style="width:28%;">लागवड क्षेत्र (हे)</th>
+            <th style="width:30%;">लावलेल्या झाडांची संख्या</th>
+          </tr>
+          <tr class="center"><td>डेमो</td><td>डेमो</td><td>डेमो</td><td>डेमो</td></tr>
+        </table>
+
+        <div style="font-size: 13.5pt;">
+          5) जमिनीचा प्रकार – <span class="bold" data-bind="soilType"></span> (हलकी / मध्यम / भारी / कातळ / पडीक)<br>
+          6) उपलब्ध असलेले ओलिताचे साधन( विहीर,लिफ्ट,कॅनॉल, नदी) - <span class="fill-val" data-bind="irrigation"></span><br>
+          7) माझ्या शेतावर खालील प्रमाणे (फळबाग/फुलपिके/वृक्षलागवड) करू इच्छित आहे.<br>
+          &nbsp;&nbsp;&nbsp;अ) लागवड प्रकार - <span class="bold" data-bind="plantType"></span> &nbsp;|&nbsp;
+          ब) प्रजातीचे नाव :- <span class="fill-val" data-bind="speciesName"></span> &nbsp;|&nbsp;
+          क) लागवड रोपांची संख्या : <span class="fill-val" data-bind="plantCount"></span><br>
+          &nbsp;&nbsp;&nbsp;ड) लागवड भूमापन गट न.:- <span class="fill-val" data-bind="gatNo"></span> &nbsp;|&nbsp;
+          इ) लागवड क्षेत्र : <span class="fill-val" data-bind="cropHe"></span> हे. <span class="fill-val" data-bind="cropR"></span> आर<br>
+          8) विकसित भारत - जी राम जी कायदा 2025 अंतर्गत फळबाग/फुलपिके/वृक्ष लागवड कार्यक्रमाखाली लागवडीसाठी वापरावयाच्या प्रजाती<br>
+          &nbsp;&nbsp;&nbsp;एकुण क्षेत्र (हे) <span class="fill-val" data-bind="cropHe"></span> &nbsp;|&nbsp;
+          १. प्रजातीचा तपशील <span class="fill-val" data-bind="speciesName"></span> क्षेत्र <span class="fill-val" data-bind="cropHe"></span> हे , रोपांची संख्या - <span class="fill-val" data-bind="plantCount"></span>
+        </div>
+
+        <div style="font-size: 12.5pt; margin-top:2px;">
+          <strong>लाभार्थीची पात्रता व कागदपत्रे</strong><br>
+          १) लाभार्थीची पात्रता खालील प्रवर्गातील आहे का? <span class="bold" data-bind="selectedCategory"></span> (ज्या प्रवर्गा पात्रता आहे त्या प्रवर्गाचे संबंधित कागदपत्रे सोबत जोडावीत.)<br>
+          2) कुटुंबाचे नरेगा ओळखपत्र जॉबकार्ड असणे आवश्यक आहे. (Online जॉबकार्ड प्रत जोडावी)<br>
+          3) ७/१२, ८ अ उत्तारा (तीन महिने आतील) साक्षांकित सत्य प्रत जोडावा.<br>
+          4) रहिवासी स्वयंघोषणापत्र &nbsp; 5) आधार कार्ड झेरॉक्स &nbsp; 6) बँक पासबुक झेरॉक्स<br>
+          7) ग्रामपंचायत वार्षिक कृती आराखडा / लेबर बजेट प्राधान्य क्र. शिफारस पत्र. &nbsp; 8) संमतीपत्र (प्रपत्र-ब) जोडणे.
+        </div>
+
+        <p class="indent" style="font-size: 12.5pt; margin-top: 2px;">
+          मी श्री./श्रीमती <span class="fill-val" data-bind="benName"></span> घोषित करतो/करते की, मी योजने अंतर्गत नोंदणीकृत मजूर असून मी कुटुंबासह प्रस्तावित कामावर देय दराने अकुशल काम करण्यास तयार आहे. रोपे लागवड केल्यानंतर त्यांची सुयोग्य जोपासना व संरक्षण करेल, तेव्हा मला सदर योजनेत सहभाग करून घ्यावे. माहिती खोटी निघाल्यास वसुलीस माझी पुर्ण संमती आहे.
+        </p>
+
+        <div style="display:flex; justify-content:space-between; margin-top: 4px; font-size: 13pt;">
+          <div>अर्जा सोबत – वरील प्रमाणे १ ते ८ चे संबधीत सर्व कागदपत्र जोडली आहेत.</div>
+          <div style="text-align:center;">
+            <strong>अर्जदाराची सही/अंगठा</strong><br>
+            नाव - <span class="fill-val" data-bind="benName"></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ==================== PAGE 3 (Checklist with Individual Ho/Nahi Options) ==================== -->
+      <div class="a4-page" style="font-size: 14pt; line-height: 1.3;">
+        <span class="page-tag">पान ३ / १२</span>
+        <div class="doc-header" style="border-bottom: 2px solid #000; padding-bottom: 4px; margin-bottom: 8px;">
+          <div class="doc-title-box" style="text-align:center; width:100%;">
+            <h2 style="font-size: 18pt; margin:0;">तपासणी सुची (ग्रामपंचायत करिता)</h2>
+            <p style="font-size: 13pt; margin:0;">विकसित भारत - जी राम जी कायदा 2025 अंतर्गत वैयक्तिक क्षेत्रावर चारा लागवड लाभाचे प्रस्ताव खालील तपासणी सूची</p>
+          </div>
+        </div>
+
+        <div style="line-height:1.4;">
+          ➢ ग्रामपंचायत <span class="fill-val" data-bind="gpName" style="min-width:120px;"></span> महसूल गावाचे नाव :- <span class="fill-val" data-bind="villageName" style="min-width:120px;"></span><br>
+          ➢ कामाचा प्रकार <span class="fill-val" data-bind="speciesName" style="min-width:150px;"></span><br>
+          ➢ लाभार्थीचे नाव :- <span class="fill-val" data-bind="benName" style="min-width:150px;"></span>, गट क्र. <span class="fill-val" data-bind="gatNo"></span>, लागवड क्षेत्र - <span class="fill-val" data-bind="cropHe"></span> आर<br>
+          ➢ जॉब कार्ड नं. : <span class="box-grid" id="jcGridPage3"></span><br>
+          ➢ योजनेंतर्गत लाभार्थी निवड प्रवर्ग 1 ते 11 नुसार <span class="fill-val" data-bind="selectedCategory" style="min-width:200px;"></span>
+        </div>
+
+        <table class="doc-table" style="font-size: 12.5pt; margin-top: 4px;">
+          <thead>
+            <tr>
+              <th style="width:7%;">अ. क्र</th>
+              <th style="width:75%;">आवश्यक कागदपत्रे पूर्तता केल्याचा तपशील</th>
+              <th style="width:18%;">कागदपत्रे आहे/नाही</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td class="center">1</td><td>वैयक्तिक लाभाचा योजना नमुना अर्ज परिपूर्ण भरलेला आहे काय ?</td><td class="center bold" id="lbl_c1">होय</td></tr>
+            <tr><td class="center">2</td><td>लाभार्थी प्रवर्ग नुसार निवडी बाबत व यापूर्वी लाभ घेतले बाबत चे परिशिष्ट-B जोडला आहे काय ?</td><td class="center bold" id="lbl_c2">होय</td></tr>
+            <tr><td class="center">3</td><td>चारा लागवड योजना राबविण्यास लाभार्थी समंतीपत्र (प्रपत्र – ब) जोडली आहे काय?</td><td class="center bold" id="lbl_c3">होय</td></tr>
+            <tr><td class="center">4</td><td>सदरचे काम ग्रामपंचायत युक्तधारा लेबर बजेट मध्ये नाव समाविष्ट असलेबाबत प्राधान्य क्र. यादी जोडले आहे काय?</td><td class="center bold" id="lbl_c4">होय</td></tr>
+            <tr><td class="center">5</td><td>लाभार्थी सदर गावाचा रहिवाशी असल्याबाबत रहिवासी दाखला स्वयंघोषणापत्र जोडली आहे काय?</td><td class="center bold" id="lbl_c5">होय</td></tr>
+            <tr><td class="center">6</td><td>लाभार्थीच्या नावे जमीन/जागा असणे आवश्यक आहे. सोबत ७/१२, ८अ साक्षांकित सत्य प्रत जोडली आहे काय?</td><td class="center bold" id="lbl_c6">होय</td></tr>
+            <tr><td class="center">7</td><td>कुटुंबाचे नरेगा ओळखपत्र Online जॉबकार्ड किंवा जॉबकार्ड झेरॉक्स प्रत जोडली आहे काय?</td><td class="center bold" id="lbl_c7">होय</td></tr>
+            <tr><td class="center">8</td><td>लाभार्थीचे बँक खाते पासबुक झेरॉक्स प्रत जोडली आहे काय ?</td><td class="center bold" id="lbl_c8">होय</td></tr>
+            <tr><td class="center">9</td><td>लाभार्थी आधार कार्ड झेरॉक्स प्रत जोडली आहे काय ?</td><td class="center bold" id="lbl_c9">होय</td></tr>
+            <tr><td class="center">10</td><td>निवडलेल्या कामाचा/जागेचा अक्षांश-रेखांश फोटोसह ग्रामपंचायत अधिकारी / TA / कृषी अधिकारी संयुक्त स्थळपाहणी अहवाल जोडली आहे काय?</td><td class="center bold" id="lbl_c10">होय</td></tr>
+          </tbody>
+        </table>
+
+        <p style="font-size: 12.5pt; margin-top: 3px;">
+          वरील लाभार्थीचा प्राप्त प्रस्तावाची तपासणी सूचीनुसार सर्व कागदपत्रे तपासले असून नियमांचे अवलोकन केलेले आहे. सदरचा प्रस्ताव नियमानुसार बरोबर आहे.<br>
+          अर्जदार यांचा प्रस्ताव : <strong>(<span data-bind="proposalStatus" style="color:var(--saffron);">पात्र</span>)</strong><br>
+          अपात्र असेल तर शेरा : <span class="fill-val" data-bind="rejectRemark" style="min-width:300px;"></span>
+        </p>
+
+        <div style="text-align:right; margin-top: 10px; padding-right: 20px;">
+          <strong>ग्रामपंचायत अधिकारी</strong>
+        </div>
+      </div>
+
+      <!-- ==================== PAGE 4 (Dynamic Table for Work Rows) ==================== -->
+      <div class="a4-page" style="font-size: 14pt;">
+        <span class="page-tag">पान ४ / १२</span>
+        <div class="doc-header">
+          <div class="doc-logo">
+            <img src="https://raw.githubusercontent.com/suyomsvlemitra/AI-Images/71e815c0bb2213c3b3cf26a87dc51e5faa1baf27/VB%20-%20G%20RAM%20G.jpg" alt="Logo">
+          </div>
+          <div class="doc-title-box">
+            <h2 style="font-size: 18pt; margin:0;">परिशिष्ट B</h2>
+            <div class="bold" style="font-size: 12.5pt;">विकसित भारत - जी राम जी कायदा 2025 अंतर्गत वैयक्तिक लाभार्थी कामांसाठी</div>
+          </div>
+        </div>
+        <div class="center" style="font-size: 11.5pt; margin-bottom: 6px;">
+          (कामाचा वर्ककोड तयार करण्यापूर्वी VB-GRAM-G मध्ये अपलोड करायचा आहे) | (केंद्रशासनाचे पत्र क्र. J-11017/2/2023-RE-VII दि. 08/08/2025)
+        </div>
+
+        <div style="margin-bottom: 6px; font-size: 13pt;">
+          ग्रामपंचायत <span class="fill-val" data-bind="gpName" style="min-width:110px;"></span>, ता-. <span class="fill-val" data-bind="taluka" style="min-width:80px;"></span>, जिल्हा.- <span class="fill-val" data-bind="district" style="min-width:80px;"></span>, राज्य-महाराष्ट्र
+        </div>
+
+        <div class="bold" style="font-size: 13pt;">ग्रामसभेच्या ठरावाचा तपशील :-</div>
+        <div style="padding-left: 15px; font-size: 13pt; line-height: 1.4;">
+          1. ठराव क्रमांक - <span class="fill-val" data-bind="tharavNo" style="min-width:90px;"></span> &nbsp;&nbsp;|&nbsp;&nbsp;
+          2. पृष्ठ क्र - <span class="fill-val" data-bind="tharavPage" style="min-width:60px;"></span> &nbsp;&nbsp;|&nbsp;&nbsp;
+          3. ग्रामसभेच्या ठरावाची तारीख - <span class="fill-val" data-bind="tharavDate" style="min-width:90px;"></span>
+        </div>
+
+        <div class="bold" style="font-size: 13pt; margin-top: 4px;">प्रस्तावित कामाचा तपशील :-</div>
+        <div style="padding-left: 15px; font-size: 13pt; line-height: 1.4;">
+          4. लाभार्थीचा प्रकार : <span class="fill-val" data-bind="selectedCategory" style="min-width:180px;"></span><br>
+          5. लाभार्थीचे नाव :- <span class="fill-val" data-bind="benName" style="min-width:200px;"></span><br>
+          6. जॉब कार्ड क्रमांक :- <span class="box-grid" id="jcGridPage4"></span><br>
+          7. एकूण जमीन धारण 8अ नुसार : <span class="fill-val" data-bind="totalAcre" style="min-width:60px;"></span> एकर &nbsp;|&nbsp;
+          8. 8अ खाते क्र. : <span class="fill-val" data-bind="khataNo" style="min-width:60px;"></span><br>
+          9. कुटुंबाला विकसित भारत - जी राम जी कायदा 2025 अंतर्गत व मनरेगा अंतर्गत यापूर्वी कोणतीही वैयक्तिक मालमत्ता मिळाली आहे का?
+        </div>
+
+        <!-- Dynamic Work Table Preview -->
+        <table class="doc-table" id="workTablePreview" style="margin: 6px 0; font-size: 12.5pt;">
+          <thead>
+            <tr>
+              <th style="width:8%;">अ.क्र</th>
+              <th style="width:28%;">कामाचे नाव</th>
+              <th style="width:18%;">कामाचा संकेतांक</th>
+              <th style="width:14%;">कामाची किंमत</th>
+              <th style="width:14%;">कामाचे मंजूर वर्ष</th>
+              <th style="width:18%;">कामाची सद्यस्थिती</th>
+            </tr>
+          </thead>
+          <tbody id="workTablePreviewBody">
+            <!-- Dynamically populated -->
+          </tbody>
+        </table>
+
+        <div class="center bold" style="text-decoration: underline; margin-top: 6px; font-size: 14.5pt;">प्रमाणपत्र</div>
+        <p class="indent" style="font-size: 12.5pt;">
+          प्रमाणित करणेत येते की, ग्रामसभेने मंजूर केलेले आणि वर नमूद केलेल्या तपशीलांसह त्यांच्या ठरावात नोंदवलेले वर नमूद केलेले वैयक्तिक लाभार्थी काम ग्रामपंचायतीने व्यवहार्यतेसाठी प्रत्यक्ष पडताळले आहे हे प्रमाणित करीत आहे. कायद्याच्या अनुसूची १ च्या परिच्छेद ५ नुसार लाभार्थी पात्र असल्याचे प्रमाणित केले जात आहे. त्यानुसार मंजुरीसाठी शिफारस करण्यात येत आहे.
+        </p>
+
+        <div style="text-align:right; margin-top: 15px; padding-right: 20px; font-size: 13pt;">
+          <strong>ग्रामपंचायत अधिकारी</strong>
+        </div>
+      </div>
+
+      <!-- ==================== PAGE 5 ==================== -->
+      <div class="a4-page" style="font-size: 14.5pt; line-height: 1.4;">
+        <span class="page-tag">पान ५ / १२</span>
+        <div class="center" style="border-bottom: 2px solid #000; padding-bottom: 8px; margin-bottom: 12px;">
+          <h2 style="font-size: 19pt; margin:0;">संमतीपत्र (प्रपत्र - ब)</h2>
+        </div>
+
+        <p class="indent" style="font-size: 13.5pt;">
+          विकसित भारत - जी राम जी कायदा 2025 अंतर्गत वैयक्तीक लाभार्थ्यांच्या शेत जमीनी चारा लागवड योजना अंतर्गत अर्ज केली आहे. त्यास मंजुरी मिळाल्यास त्याकरिता माझ्या/आमच्या मालकीच्या/जमीनीवर हि योजना राबविण्यास संमती देत आहे/आहोत
+        </p>
+
+        <div style="margin-top: 6px; line-height: 1.4; font-size: 13pt;">
+          <p>१) सदरची योजना राबविण्याकरिता मी स्वतः/माझे कुटुंबातील कार्यक्षम व्यक्ती विकसित भारत - जी राम जी कायदा 2025 अंतर्गत योजनेतील प्रमाणित मजुर म्हणून घोषित करीत आहे/आहोत. या योजने करीता होणारी सर्व कामे प्रामुख्याने पुर्ण करण्याची जबाबदारी माझी किंवा जॉब कार्ड धारक मजुरांकडून करून घेण्याची जबाबदारी माझी/आमची राहील.</p>
+          <p>२) झाडांची लागवड केल्यानंतर हप्ता रक्कम मिळण्यासाठी पात्रता निकष मला अवगत करून देण्यात आलेले असून ते मला मान्य राहतील.</p>
+          <p>३) सदर योजनेचे नियम व अटी मला बंधनकारक आहे व त्यानुसार मी रोपांची लागवड/संगोपन /संरक्षण करीन.</p>
+          <p>४) सदर योजने अंतर्गत एकुण क्षेत्राप्रमाणे व नमुन्याप्रमाणे शासनाने प्रतिवर्षी मंजूर केलेल्या मयदिच्या प्रमाणकापेक्षा जास्त खर्च झाल्यास तो खर्च मी/आम्ही स्वतः करील.</p>
+          <p>५) विकसित भारत - जी राम जी कायदा 2025 अंतर्गत निगडीत चारा लागवड योजनेची माहिती मला / आम्हाला मान्य असल्याचे काबुल करून त्याप्रमाणे करारपत्रावर सह्या केल्या आहेत.</p>
+          <p>६) या योजनेतर्गत शासन वेळोवेळी जे बदल करेल अथवा अटी घालेल त्या अटी/बदल मला/आम्हाला मान्य राहतील.</p>
+          <p>७) मी/आम्ही स्वतः संयुक्त खातेदार असून मी/इतरांनी या योजनेचा भूमापन क्रमांक <span class="fill-val" data-bind="gatNo"></span> मध्ये <span class="fill-val" data-bind="cropHe"></span> हे.आर क्षेत्रावर लाभ घेतला आहे/नाही.</p>
+          <p>८) विकसित भारत - जी राम जी कायदा 2025 अंतर्गत वृक्ष लागवड योजने मध्ये समाविष्ट करून घेण्यासाठी मी/आम्ही दिलेला तपशील ७/१२ चे उता-याप्रमाणे बरोबर आहे.</p>
+          <p>९) मी/आम्ही संयुक्त खातेदार असून माझ्या/आमच्या हिश्याच्या भूमापन क्र. <span class="fill-val" data-bind="gatNo"></span> मध्ये <span class="fill-val" data-bind="cropHe"></span> हेक्टर क्षेत्रावर फळबाग/वृक्षलागवड करण्यास परवानगी दिल्यास वरील सर्व अटी मला /आम्हाला मान्य राहतील.</p>
+        </div>
+
+        <div style="display:flex; justify-content:space-between; margin-top: 20px; font-size: 13.5pt;">
+          <div>
+            ठिकाण :- <span class="fill-val" data-bind="villageName"></span><br>
+            दिनांक - <span class="fill-val" data-bind="appDate"></span><br><br>
+            <strong>साक्षीदार :</strong><br>
+            १) <span class="fill-val" data-bind="witness1" style="min-width:150px;"></span><br>
+            २) <span class="fill-val" data-bind="witness2" style="min-width:150px;"></span>
+          </div>
+          <div style="text-align:center; padding-top: 15px;">
+            <strong>सही/अंगठा</strong><br><br>
+            (लाभार्थी नाव - <span class="fill-val" data-bind="benName"></span>)
+          </div>
+        </div>
+      </div>
+
+      <!-- ==================== PAGE 6 ==================== -->
+      <div class="a4-page" style="font-size: 14.5pt; line-height: 1.4;">
+        <span class="page-tag">पान ६ / १२</span>
+        <div class="center" style="border-bottom: 2px solid #000; padding-bottom: 6px; margin-bottom: 10px;">
+          <h2 style="font-size: 19pt; margin:2px 0;">विकसित भारत - जी राम जी कायदा 2025 अंतर्गत प्रास्ताविक कामाच्या जागेचा स्थळपाहणी अहवाल</h2>
+        </div>
+
+        <p class="indent" style="font-size: 13.5pt;">
+          आम्ही खालील प्रमाणे स्थळपाहणी अहवाल सादर करणेत येतो की, ग्रामपंचायत <span class="fill-val" data-bind="gpName"></span> ता. <span class="fill-val" data-bind="taluka"></span> जि. <span class="fill-val" data-bind="district"></span> येथील कामाचा प्रकार - <span class="fill-val" data-bind="speciesName"></span> कामाचे नाव/लाभार्थीचे नाव - <span class="fill-val" data-bind="benName"></span> रा. <span class="fill-val" data-bind="villageName"></span> यांचा विकसित भारत - जी राम जी कायदा 2025 अंतर्गत सन <span class="fill-val" data-bind="budgetYear1"></span> - <span class="fill-val" data-bind="budgetYear2"></span> मधील कामासाठी लागवड गट क्र./मिळकत क्र. <span class="fill-val" data-bind="gatNo"></span> मध्ये लागवड क्षेत्र <span class="fill-val" data-bind="cropHe"></span> हे.आर चारा लागवड प्रजातीचे नाव - <span class="fill-val" data-bind="speciesName"></span>, करण्यास लाभार्थी इच्छुक असलेल्या जागेची स्थळपहाणी दिनांक <span class="fill-val" data-bind="appDate"></span> केली असता, खालील प्रमाणे आढळून आले आहे.
+        </p>
+
+        <div style="margin: 6px 0 6px 15px; line-height: 1.4; font-size: 13.5pt;">
+          १) उपरोक्त दिलेला तपशिल मी महसूल अभिलेखावरून तपासला व बरोबर आहे / नाही<br>
+          २) सदर प्रस्तवित क्षेत्र शेतक-यांनी मागणी केलेल्या वृक्ष प्रजातीच्या लागवडीसाठी योग्य / अयोग्य आहे.<br>
+          ३) सदर लाभार्थी कडे विहीर अथवा ओलीतासाठी सोय उपलब्ध आहे. तपशील - <span class="fill-val" data-bind="irrigation"></span><br>
+          ४) सदरच्या लाभार्थ्यास शासनाने निर्धारित केलेल्या एकुण क्षेत्र मर्यादेपेक्षा जास्त लागवड प्रस्तावित झालेली नाही याची खात्री करण्यात आलेली आहे.<br>
+          तरी त्यांना सदरचा <span class="fill-val" data-bind="speciesName"></span> चा लाभ देण्यास हरकत आहे / नाही.
+        </div>
+
+        <div class="center bold" style="font-size: 13.5pt;">कामाच्या मोकळ्या जागेचा (अक्षांस / रेखांश असलेला फोटो)</div>
+        <div class="site-photo-box" id="previewSitePhoto">
+          <span>[ येथे मोकळ्या जागेचा GPS फोटो दिसेल ]</span>
+        </div>
+
+        <div style="font-size: 13.5pt;">शेरा <span class="fill-val" data-bind="rejectRemark" style="min-width:280px;"></span></div>
+        <div style="display:flex; justify-content:space-between; margin-top: 6px; font-size: 13.5pt;">
+          <div>ठिकाण <span class="fill-val" data-bind="villageName"></span></div>
+          <div>दिनांक - <span class="fill-val" data-bind="appDate"></span></div>
+        </div>
+
+        <div class="sign-row" style="margin-top: 20px; text-align:center; font-size: 13pt;">
+          <div>लाभार्थी नाव - <span data-bind="benName"></span><br>स्वाक्षरी -</div>
+          <div>तात्रिक सहाय्यक (नरेगा)<br>सही/शिक्का</div>
+          <div>ग्रामपंचायत अधिकारी<br>सही/शिक्का</div>
+        </div>
+      </div>
+
+      <!-- ==================== PAGE 7 ==================== -->
+      <div class="a4-page" style="font-size: 14.5pt; line-height: 1.35;">
+        <span class="page-tag">पान ७ / १२</span>
+        <div class="center" style="font-size: 12pt; border-bottom: 1.5px solid #000; padding-bottom: 4px;">
+          संदर्भ – महाराष्ट्र शासन ग्रामविकास अविभाग शासन निर्णय क्रमांकः आरटीअएस-२०१८/प्र.क्र.१४५/आस्था.५ दिनांक. १३ फेब्रुवारी २०१९
+        </div>
+        <h2 class="center" style="font-size: 19pt; margin: 8px 0; text-decoration: underline;">रहिवासी स्वयंघोषणापत्र</h2>
+
+        <div style="display:flex; justify-content:space-between; gap:15px;">
+          <div style="flex:1; font-size: 13.5pt;">
+            <p class="indent">
+              मी श्री. <span class="fill-val" data-bind="benName" style="min-width:150px;"></span>, श्री. <span class="fill-val" data-bind="fatherName" style="min-width:140px;"></span> यांचा मुलगा / मुलगी / पत्नी वय- <span class="fill-val" data-bind="age"></span> -वर्ष, व्यवसाय <span class="fill-val" data-bind="occupation"></span>, राहाणार <span class="fill-val" data-bind="villageName"></span> याद्वारे घोषित करतो / करते की, मी रा. <span class="fill-val" data-bind="villageName"></span> ता. साक्री, जि.धुळे येथील कायम/तात्पुरते रहिवासी आहे.
+            </p>
+            <div style="margin: 8px 0;">
+              <strong>आधार कार्ड क्रमांक.-</strong> <span class="box-grid" id="aadhaarGridPage7"></span>
+            </div>
+          </div>
+          <div class="photo-box" id="previewUserPhoto">
+            <span>अर्जदाराचा<br>फोटो</span>
+          </div>
+        </div>
+
+        <p class="indent" style="font-size: 13.5pt;">
+          तसेच मी याद्वारे घोषित करतो / करते की, सर्व माहिती माझ्या व्यक्तिगत माहिती व समजुतीनुसार खरी आहे. सदर, माहिती खोटी आढळून आल्यास भारतीय दंड संहिता अन्वये आणि / किवा संबंधीत कायद्यानुसार माझ्यावर खटला भरला जाईल व त्यानुसार मी शिक्षेस पात्र राहीन. तसेच सदर स्वयं घोषणापत्राद्वारे मला मिळालेले सर्व लाभ सर्वकषरीत्या काढून घेण्यात येतील, याची मला पूर्ण जाणीव आहे.
+        </p>
+
+        <div style="display:flex; justify-content:space-between; margin-top: 15px; font-size: 13.5pt;">
+          <div>
+            ठिकाण :- <span class="fill-val" data-bind="villageName"></span><br>
+            दिनांक :- <span class="fill-val" data-bind="appDate"></span>
+          </div>
+          <div>
+            अर्जदाराची सही :- _______________________<br>
+            अर्जदाराचे नाव :- <span class="fill-val" data-bind="benName"></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ==================== PAGE 8 ==================== -->
+      <div class="a4-page" style="font-size: 15pt; line-height: 1.4;">
+        <span class="page-tag">पान ८ / १२</span>
+        <h2 class="center" style="font-size: 20pt; margin: 15px 0; text-decoration: underline;">शेतामध्ये पानी उपलब्ध असल्याचे संयुक्त प्रमाणपत्र</h2>
+        <p class="indent" style="margin-top: 25px;">
+          प्रमाणित करण्यात येते की, मौजे <span class="fill-val" data-bind="villageName"></span> येथील श्री./श्रीमती. <span class="fill-val" data-bind="benName"></span> यांच्या गट क्रमांक <span class="fill-val" data-bind="gatNo"></span> मधील शेतात विहीर / बोरवेल /शेततळे /कालवा या माध्यमातून चारा पिकासाठी पुरेसे पानी उपलब्ध आहे. सदर शेतामध्ये चार लागवड करणे तांत्रिक दृष्ट्या व्यवहार्य व योग्य आहे .
+        </p>
+
+        <div class="sign-row" style="margin-top: 130px; padding: 0 30px; text-align:center;">
+          <div>ग्रामपंचायत अधिकारी (ग्रामसेवक)</div>
+          <div>सहाय्यक महसूल अधिकारी (तलाठी)</div>
+        </div>
+      </div>
+
+      <!-- ==================== PAGE 9 ==================== -->
+      <div class="a4-page" style="font-size: 14.5pt; line-height: 1.4;">
+        <span class="page-tag">पान ९ / १२</span>
+        <div class="center" style="border-bottom: 2px solid #000; padding-bottom: 8px; margin-bottom: 15px;">
+          <h2 style="font-size: 20pt; margin:0;">ना हरकत प्रमाणपत्र / शिफारस प्रमाणपत्र</h2>
+          <div class="bold" style="margin-top:4px;">कार्यालय : <span data-bind="vetOffice">डेमो</span></div>
+        </div>
+
+        <div style="margin: 12px 0; padding-left: 15px;">
+          <strong>विषय :</strong> पशुधनासाठी चारा लागवड करण्यास मंजुरी देण्याबाबत प्रमाणपत्र.
+        </div>
+
+        <p class="indent">
+          याद्वारे प्रमाणित करण्यात येते की, श्री./श्रीमती <span class="fill-val" data-bind="benName"></span>, रा. <span class="fill-val" data-bind="villageName"></span>, ता. <span class="fill-val" data-bind="taluka"></span>, जि. <span class="fill-val" data-bind="district"></span> यांच्याकडे एकूण <span class="fill-val" data-bind="cattleCount"></span> पशुधन असून पशुधनाच्या चाऱ्याची गरज भागविण्यासाठी त्यांनी स्वतःच्या शेतामध्ये चारा लागवड करण्याचा प्रस्ताव सादर केलेला आहे.
+        </p>
+
+        <p class="indent">
+          सदर शेतकऱ्याने गट क्रमांक / सर्व्हे क्रमांक <span class="fill-val" data-bind="gatNo"></span> मधील <span class="fill-val" data-bind="cropHe"></span> क्षेत्रावर (एकर / हेक्टर) हिरवा चारा पिकाची लागवड करण्याचे नियोजन केले आहे.
+        </p>
+
+        <p class="indent">
+          सदर चारा लागवड पशुधनासाठी उपयुक्त असून जनावरांना वर्षभर हिरवा चारा उपलब्ध होण्यास मदत होणार आहे. त्यामुळे पशुधनाचे आरोग्य व दुग्धोत्पादन वाढीस चालना मिळण्यास मदत होईल.
+        </p>
+
+        <p class="indent">
+          तरी सदर शेतकऱ्यास पशुधनासाठी चारा लागवड करण्यास मंजुरी देण्याबाबत शिफारस करण्यात येत आहे. सदर प्रमाणपत्र आवश्यक त्या पुढील कार्यवाहीसाठी देण्यात येत आहे.
+        </p>
+
+        <div style="display:flex; justify-content:space-between; margin-top: 40px; padding: 0 15px;">
+          <div>
+            दिनांक : <span class="fill-val" data-bind="appDate"></span><br>
+            ठिकाण : <span class="fill-val" data-bind="taluka"></span>
+          </div>
+          <div style="text-align:center;">
+            <strong>पशुधन विकास अधिकारी</strong><br>
+            पशुसंवर्धन विभाग कार्यालयाचा स्वाक्षरी शिक्का
+          </div>
+        </div>
+      </div>
+
+      <!-- ==================== PAGE 10 ==================== -->
+      <div class="a4-page" style="font-size: 13.5pt; line-height: 1.3;">
+        <span class="page-tag">पान १० / १२</span>
+        <div style="border-bottom: 1.5px solid #000; padding-bottom: 6px; margin-bottom: 8px;">
+          विषय - श्री./श्रीमती . <span class="fill-val" data-bind="benName" style="min-width:160px;"></span> यांच्या वैयक्तिक लाभाच्या <span class="fill-val" data-bind="speciesName" style="min-width:140px;"></span> रा. <span class="fill-val" data-bind="villageName" style="min-width:100px;"></span> प्रशासकीय मंजुरीबाबत ...... कामास तांत्रिक व
+        </div>
+
+        <div class="bold">कार्यालयीन टिपणी :-</div>
+        <div>सविनय सादर,</div>
+        <p class="indent">
+          2/- विकसित भारत - जी राम जी कायदा 2025 अंतर्गत शासन निर्णय क्र. मग्रारो -२०२४ /प्र.क्र.५३ /मग्रारो-१, दि.०७/०६/२०२४ व आपले पत्र क्र. व आयुक्त/चारा लागवड/२८९४/२०२६., दि. २२/१०/२०२६. अन्वये ग्रामपंचायती मार्फत शेतकऱ्यांच्या वैयक्तिक शेत जमिनी वरती चारा लगावड घेनेस मंजूरी प्रदान केली असून त्यानुसार मौजे <span class="fill-val" data-bind="villageName"></span> ता. साक्री, जि. धुळे, यांचा <span class="fill-val" data-bind="speciesName"></span> चा प्रस्ताव या कार्यालयास प्राप्त झाला असून सदरच्या प्रस्तावांची छाननी केली असता सदर लाभार्थी विकसित भारत - जी राम जी अंतर्गत चारा लागवड या कामाचा लाभ घेण्यास पात्र आहेत, करिता, श्री./श्रीमती <span class="fill-val" data-bind="benName"></span> रा. <span class="fill-val" data-bind="villageName"></span> ता. साक्री जि.धुळे यांच्या स्वमालकीच्या क्षेत्रामध्ये <span class="fill-val" data-bind="speciesName"></span> या पिकाच्या <span class="fill-val" data-bind="plantCount"></span> इतके झाडांच्या प्रस्तावास तांत्रिक व प्रशासकीय मान्यता प्रदान करण्याच्या मंजुरिस्तव सविनय सादर .
+        </p>
+
+        <div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px 10px; margin: 20px 0; text-align:center; font-weight:bold; font-size:12.5pt;">
+          <div>कनि. सहायक -</div>
+          <div>तांत्रिक अधिकारी (कृषी) –</div>
+          <div>सहा. कार्यक्रम अधिकारी –</div>
+          <div>विस्तार अधिकारी (कृषी) –</div>
+          <div>विशेष तांत्रिक अधिकारी (कृषी)-</div>
+          <div>मा. गटविकास अधिकारी -</div>
+        </div>
+      </div>
+
+      <!-- ==================== PAGE 11 ==================== -->
+      <div class="a4-page" style="font-size: 13.5pt; line-height: 1.3;">
+        <span class="page-tag">पान ११ / १२</span>
+        <div class="center" style="border-bottom: 2px solid #000; padding-bottom: 6px; margin-bottom: 10px;">
+          <h2 style="font-size: 19pt; margin:0;">तांत्रिक व प्रशासकीय मंजुरी अहवाल</h2>
+        </div>
+        <p class="indent">
+          सदर लाभासाठी तांत्रिक मंजुरी व प्रशासकीय मान्यतेच्या अनुषंगाने तांत्रिक अधिकारी व विस्तार अधिकारी यांच्या स्तरावर छाननी करण्यात आली आहे. नियमानुसार सर्व कागदपत्रे पूर्ण असल्याने सदर प्रस्तावास मान्यता देण्यात येत आहे.
+        </p>
+        <div style="margin-top: 25px;">
+          <strong>अभिप्राय :</strong><br>
+          लाभार्थीचा प्रस्ताव सर्व कागदपत्रांसह पूर्ण असून नियमाप्रमाणे पात्र आहे.
+        </div>
+        <div style="display:flex; justify-content:space-between; margin-top: 140px; text-align:center; font-weight:bold;">
+          <div>तांत्रिक अधिकारी (कृषी)</div>
+          <div>मा. गटविकास अधिकारी</div>
+        </div>
+      </div>
+
+      <!-- ==================== PAGE 12 ==================== -->
+      <div class="a4-page" style="font-size: 13pt; line-height: 1.3;">
+        <span class="page-tag">पान १२ / १२</span>
+        <h3 class="center" style="font-size: 17pt; margin: 2px 0; text-decoration: underline;">छाननी पत्र</h3>
+        <p style="font-size: 12pt;">
+          श्री. / श्रीमती - <span class="fill-val" data-bind="benName" style="min-width:160px;"></span> रा. <span class="fill-val" data-bind="villageName" style="min-width:100px;"></span> ता. साक्री जि. धुळे या लाभार्थी सोबत दिलेल्या वैयक्तिक / सामूहिक कामाच्या अर्जाची छाननी केली असता खालील कागदपत्रे पूर्ण/अपूर्ण आढळून आलेली आहे. तसेच सदर लाभार्थीची निवड शासनाने ठरवून दिलेल्या व ग्रामपंचायतीने प्रवर्ग <span class="fill-val" data-bind="selectedCategory"></span> नुसार निवडिस पात्र / अपात्र असल्याने सदर लाभासाठी शिफारस आहे/ नाही .
+        </p>
+
+        <table class="doc-table" style="font-size: 11.5pt; margin: 4px 0;">
+          <tr>
+            <td style="width:38%;">1. ग्रामसभा ठराव</td><td style="width:12%;" class="center bold" id="lbl_s1">होय/नाही</td>
+            <td style="width:38%;">8. दारिद्रय रेषेखालील कार्ड / दखला</td><td style="width:12%;" class="center bold" id="lbl_s8">होय/नाही</td>
+          </tr>
+          <tr>
+            <td>2. कृती आराखडा /पुरवणी आराखडा</td><td class="center bold" id="lbl_s2">होय/नाही</td>
+            <td>9. लाभ घेतला नसल्याचा कृषी अधिकारी</td><td class="center bold" id="lbl_s9">होय/नाही</td>
+          </tr>
+          <tr>
+            <td>3. कुटुंब ओळखपत्र (जॉब कार्ड) ऑनलाइन</td><td class="center bold" id="lbl_s3">होय/नाही</td>
+            <td>10. आधार कार्ड</td><td class="center bold" id="lbl_s10">होय/नाही</td>
+          </tr>
+          <tr>
+            <td>4. ७/१२ चा उतारा</td><td class="center bold" id="lbl_s4">होय/नाही</td>
+            <td>11. बँक पासबुक झेरॉक्स</td><td class="center bold" id="lbl_s11">होय/नाही</td>
+          </tr>
+          <tr>
+            <td>5. खाते उतारा (नं.८/अ)</td><td class="center bold" id="lbl_s5">होय/नाही</td>
+            <td>12. शेतकरी अल्पभूधारक आहे का</td><td class="center bold" id="lbl_s12">होय/नाही</td>
+          </tr>
+          <tr>
+            <td>6. सिंचनाची सोय</td><td class="center bold" id="lbl_s6">होय/नाही</td>
+            <td>13. डेमो अतिरिक्त १३</td><td class="center bold" id="lbl_s13">होय/नाही</td>
+          </tr>
+          <tr>
+            <td>7. जातीचा दाखला</td><td class="center bold" id="lbl_s7">होय/नाही</td>
+            <td>14. डेमो अतिरिक्त १४</td><td class="center bold" id="lbl_s14">होय/नाही</td>
+          </tr>
+        </table>
+
+        <div style="font-size: 12pt; margin-top: 3px;">
+          शेरा - <span class="fill-val" data-bind="rejectRemark" style="min-width:300px;"></span>
+        </div>
+
+        <div class="sign-row" style="margin-top: 15px; padding: 0 20px; text-align:center; font-size: 13pt;">
+          <div>तांत्रिक सहाय्यक (प. स.)<br>शिक्का स्वाक्षरी</div>
+          <div>विस्तार अधिकारी (कृषी)<br>शिक्का स्वाक्षरी</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    // Dynamic Work Table Data (Page 4 & Form)
+    let workRowsData = [
+      { name: "डेमो", code: "डेमो", cost: "डेमो", year: "डेमो", status: "डेमो" }
+    ];
+
+    function renderWorkRows() {
+      // Form Container
+      let formHtml = '';
+      workRowsData.forEach((row, index) => {
+        formHtml += `
+          <div style="display:grid; grid-template-columns: 1fr 1fr 1fr 1fr 1fr 40px; gap:6px; margin-bottom:6px; align-items:center;" id="form_row_${index}">
+            <input type="text" placeholder="कामाचे नाव" value="${row.name}" oninput="updateWorkRow(${index}, 'name', this.value)">
+            <input type="text" placeholder="संकेतांक" value="${row.code}" oninput="updateWorkRow(${index}, 'code', this.value)">
+            <input type="text" placeholder="किंमत" value="${row.cost}" oninput="updateWorkRow(${index}, 'cost', this.value)">
+            <input type="text" placeholder="मंजूर वर्ष" value="${row.year}" oninput="updateWorkRow(${index}, 'year', this.value)">
+            <input type="text" placeholder="सद्यस्थिती" value="${row.status}" oninput="updateWorkRow(${index}, 'status', this.value)">
+            <button type="button" class="btn-small" style="background:#cc0000; color:#fff;" onclick="removeWorkRow(${index})">X</button>
+          </div>
+        `;
+      });
+      document.getElementById('formRowsFormContainer').innerHTML = formHtml;
+
+      // Preview Table Body (Page 4)
+      let previewHtml = '';
+      workRowsData.forEach((row, index) => {
+        previewHtml += `
+          <tr class="center">
+            <td>${index + 1}</td>
+            <td>${row.name}</td>
+            <td>${row.code}</td>
+            <td>${row.cost}</td>
+            <td>${row.year}</td>
+            <td>${row.status}</td>
+          </tr>
+        `;
+      });
+      previewHtml += `
+        <tr class="center bold">
+          <td colspan="3" class="right">एकूण</td>
+          <td>डेमो</td><td>डेमो</td><td>डेमो</td>
+        </tr>
+      `;
+      document.getElementById('workTablePreviewBody').innerHTML = previewHtml;
+    }
+
+    function addWorkRow() {
+      workRowsData.push({ name: "डेमो", code: "डेमो", cost: "डेमो", year: "डेमो", status: "डेमो" });
+      renderWorkRows();
+    }
+
+    function removeWorkRow(index) {
+      if (workRowsData.length > 1) {
+        workRowsData.splice(index, 1);
+        renderWorkRows();
+      } else {
+        alert("किमान एक ओळ असणे आवश्यक आहे.");
+      }
+    }
+
+    function updateWorkRow(index, field, value) {
+      workRowsData[index][field] = value;
+      renderWorkRows();
+    }
+
+    // Render Job Card Box Grids (MH + 12 boxes)
+    function renderJobCardBoxes(containerId, val) {
+      const container = document.getElementById(containerId);
+      if (!container) return;
+      const clean = (val || '').replace(/[^a-zA-Z0-9]/g, '').toUpperCase();
+      let html = `<span class="box-cell">M</span><span class="box-cell">H</span>`;
+      for (let i = 0; i < 12; i++) {
+        html += `<span class="box-cell">${clean[i] || ''}</span>`;
+      }
+      container.innerHTML = html;
+    }
+
+    // Render Aadhaar 12 Box Grid
+    function renderAadhaarBoxes(containerId, val) {
+      const container = document.getElementById(containerId);
+      if (!container) return;
+      const clean = (val || '').replace(/\D/g, '');
+      let html = '';
+      for (let i = 0; i < 12; i++) {
+        html += `<span class="box-cell">${clean[i] || ''}</span>`;
+      }
+      container.innerHTML = html;
+    }
+
+    // Main Sync Function
+    function sync() {
+      const fields = [
+        'gpName', 'villageName', 'taluka', 'district', 'outwardNo', 'outYear', 'appDate',
+        'bdoOffice', 'vetOffice', 'tharavNo', 'tharavDate', 'tharavPage',
+        'budgetYear1', 'budgetYear2', 'priorityNo', 'totalPages', 'benName', 'fatherName',
+        'relation', 'age', 'occupation', 'mobile', 'selectedCategory',
+        'khataNo', 'total8aArea', 'totalAcre', 'gatNo', 'cropHe', 'cropR',
+        'speciesName', 'plantCount', 'soilType', 'plantType', 'irrigation',
+        'cattleCount', 'witness1', 'witness2', 'proposalStatus', 'rejectRemark'
+      ];
+
+      fields.forEach(id => {
+        const el = document.getElementById(id);
+        const val = el ? el.value.trim() : '';
+        document.querySelectorAll(`[data-bind="${id}"]`).forEach(target => {
+          if (val !== '') {
+            target.textContent = val;
+          } else {
+            target.textContent = '';
+          }
+        });
+      });
+
+      // Grids
+      const jcVal = document.getElementById('jobCard').value;
+      renderJobCardBoxes('jcGridPage3', jcVal);
+      renderJobCardBoxes('jcGridPage4', jcVal);
+
+      const aadhaarVal = document.getElementById('aadhaar').value;
+      renderAadhaarBoxes('aadhaarGridPage7', aadhaarVal);
+
+      // Sync Individual Checklists (Ho/Nahi)
+      for (let i = 1; i <= 10; i++) {
+        const sel = document.getElementById(`c${i}`);
+        const lbl = document.getElementById(`lbl_c${i}`);
+        if (sel && lbl) lbl.textContent = sel.value;
+      }
+      for (let i = 1; i <= 14; i++) {
+        const sel = document.getElementById(`s${i}`);
+        const lbl = document.getElementById(`lbl_s${i}`);
+        if (sel && lbl) lbl.textContent = sel.value;
+      }
+    }
+
+    // Image Loader
+    function loadImage(event, targetId) {
+      const file = event.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const box = document.getElementById(targetId);
+        if (box) {
+          box.innerHTML = `<img src="${e.target.result}" alt="Uploaded Photo">`;
+        }
+      };
+      reader.readAsDataURL(file);
+    }
+
+    // Fill Sample Data
+    function fillSampleData() {
+      const sample = {
+        gpName: 'पिंपळनेर डेमो',
+        villageName: 'पिंपळनेर',
+        taluka: 'साक्री',
+        district: 'धुळे',
+        outwardNo: '१४२',
+        outYear: '२०२६',
+        appDate: '१८/११/२०२६',
+        bdoOffice: 'पंचायत समिती, साक्री',
+        vetOffice: 'पशुवैद्यकीय दवाखाना',
+        tharavNo: '१२/४',
+        tharavDate: '०२/१०/२०२६',
+        tharavPage: '२८',
+        budgetYear1: '२०२६',
+        budgetYear2: '२०२७',
+        priorityNo: '०३',
+        totalPages: '०१ ते १२',
+        benName: 'रमेश भाऊराव पाटील',
+        fatherName: 'भाऊराव तुकाराम पाटील',
+        relation: 'मुलगा',
+        age: '४२',
+        occupation: 'शेती',
+        mobile: '9823012345',
+        jobCard: '020040150412',
+        aadhaar: '458912367890',
+        khataNo: '४१२',
+        total8aArea: '१.४० हे.',
+        totalAcre: '३.५०',
+        gatNo: '२१५/२',
+        cropHe: '०',
+        cropR: '४०',
+        speciesName: 'सुपर नेपियर चारा गवत',
+        plantCount: '४०००',
+        soilType: 'मध्यम',
+        plantType: 'सलग',
+        irrigation: 'विहीर',
+        cattleCount: '०६',
+        witness1: 'सुरेश विठ्ठल निकम',
+        witness2: 'प्रकाश रामदास सोनवणे',
+        proposalStatus: 'पात्र',
+        rejectRemark: 'सर्व कागदपत्रे पूर्ण आहेत.'
+      };
+
+      Object.keys(sample).forEach(key => {
+        const el = document.getElementById(key);
+        if (el) el.value = sample[key];
+      });
+
+      workRowsData = [
+        { name: "फळबाग लागवड", code: "WK101", cost: "25000", year: "2025", status: "पूर्ण" }
+      ];
+      renderWorkRows();
+      sync();
+    }
+
+    // Reset Form
+    function resetForm() {
+      document.querySelectorAll('.form-panel input[type="text"]').forEach(inp => inp.value = 'डेमो');
+      document.getElementById('previewUserPhoto').innerHTML = '<span>अर्जदाराचा<br>फोटो</span>';
+      document.getElementById('previewSitePhoto').innerHTML = '<span>[ येथे मोकळ्या जागेचा GPS फोटो दिसेल ]</span>';
+      workRowsData = [{ name: "डेमो", code: "डेमो", cost: "डेमो", year: "डेमो", status: "डेमो" }];
+      renderWorkRows();
+      sync();
+    }
+
+    // Initialize on load
+    window.onload = function() {
+      renderWorkRows();
+      sync();
+    };
+  </script>
+</body>
+</html>
