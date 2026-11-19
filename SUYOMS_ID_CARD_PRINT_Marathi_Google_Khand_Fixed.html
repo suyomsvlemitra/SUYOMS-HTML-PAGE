@@ -1729,28 +1729,6 @@
 <style id="suyoms-marathi-khand-font">
   html, body, body *:not(i):not([class*="fa-"]) { font-family: 'Khand', sans-serif !important; }
 </style>
-
-
-    <script>
-  // राईट क्लिक डिसेबल करणे
-  document.addEventListener('contextmenu', function(e) {
-    e.preventDefault();
-    alert('या वेबसाईटवर राईट क्लिक करण्याची परवानगी नाही!'); // हवं असल्यास हा मेसेज काढू शकता
-  });
-
-  // डेव्हलपर टूल्स आणि शॉर्टकट कीज ब्लॉक करणे (F12, Ctrl+U, Ctrl+Shift+I, इत्यादी)
-  document.addEventListener('keydown', function(e) {
-    if (e.key === 'F12' || 
-        (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J' || e.key === 'C')) || 
-        (e.ctrlKey && e.key === 'U')) {
-      e.preventDefault();
-      return false;
-    }
-  });
-</script>
-
-
-    
 </head>
 
 <body>
@@ -1876,9 +1854,35 @@
             </button>
         </div>
 
-       
+        <!-- Quick Tips & Guide Box -->
+        <div class="quick-tips-container" style="background: rgba(99, 102, 241, 0.05); border: 1px solid rgba(99, 102, 241, 0.15); border-radius: 12px; padding: 14px; margin-top: 15px; margin-bottom: 15px; box-shadow: var(--shadow-sm);">
+            <div style="font-size: 11px; font-weight: 800; color: var(--primary); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; display: flex; align-items: center; gap: 6px;">
+                <i class="fas fa-lightbulb"></i> Quick Tips & Guide
+            </div>
+            <ul style="margin: 0; padding-left: 18px; font-size: 11px; color: var(--text-sub); line-height: 1.5; display: flex; flex-direction: column; gap: 6px;">
+                <li><strong>AI Auto-Crop:</strong> Check "एआय स्वयंचलित क्रॉप व सुधारणा" before uploading to automatically locate and sharpen your document card.</li>
+                <li><strong>Multiple Images:</strong> Drag and drop or select multiple files at once. They will queue up for sequential cropping.</li>
+                <li><strong>Tap 4 Corners Mode:</strong> Click points on the 4 corners of your ID in the editor to quickly warp and crop perspective errors.</li>
+                <li><strong>Manual Adjustment:</strong> Drag the handles of the cropped card on the virtual A4 page to position or scale as needed.</li>
+                <li><strong>Print Queue:</strong> Click "QUEUE PAGE" to save current layout, then immediately start composing another page to print together.</li>
+            </ul>
+        </div>
 
-     
+        <!-- Legal & Zero-Data-Retention Disclaimer Notice -->
+        <div class="ikph-service-disclaimer no-print" data-no-print="true" style="margin: 15px 0 10px 0; padding: 14px 16px; background: rgba(15, 23, 42, 0.03); border: 1px solid rgba(148, 163, 184, 0.25); border-radius: 12px; font-size: 11px; line-height: 1.55; color: #64748b; box-sizing: border-box; text-align: left;">
+            <div style="display: flex; align-items: flex-start; gap: 10px;">
+                <i class="fa-solid fa-shield-halved" style="color: #6366f1; font-size: 16px; margin-top: 2px; flex-shrink: 0;"></i>
+                <div>
+                    <strong style="font-size: 11.5px; display: block; margin-bottom: 4px; font-weight: 700; color: #0f172a;">
+                        Important Disclaimer &amp; Zero-Data-Retention Notice:
+                    </strong>
+                    <span>
+                        Disclaimer: ikprint is an independent document formatting and print-layout utility designed to assist users in preparing valid PDFs for PVC card printing. We are NOT affiliated with, sponsored by, authorized, or endorsed by UIDAI, the Income Tax Department, NSDL/Protean, UTIITSL, Election Commission of India (ECI), or any government authority. All document cropping, resizing, and processing is performed locally inside your device's browser. We do NOT store, save, or collect any personal documents, PDFs, photos, or identity numbers. In the event any temporary server processing is required, data is processed in transient memory and deleted immediately upon task completion. All official government cards and downloads must be obtained directly from authorized government portals (<a href="https://uidai.gov.in" target="_blank" rel="noopener noreferrer" style="color: #38bdf8; text-decoration: underline;">uidai.gov.in</a>, <a href="https://www.incometax.gov.in" target="_blank" rel="noopener noreferrer" style="color: #38bdf8; text-decoration: underline;">incometax.gov.in</a>, <a href="https://voters.eci.gov.in" target="_blank" rel="noopener noreferrer" style="color: #38bdf8; text-decoration: underline;">voters.eci.gov.in</a>). Users and operators are solely responsible for ensuring lawful ownership and consent before processing any document.
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <div class="workspace">
         <div id="statusMsg"><i class="fas fa-info-circle" style="color:var(--primary); margin-right:5px;"></i> Upload an
