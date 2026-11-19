@@ -1,0 +1,4676 @@
+<!DOCTYPE html>
+<html lang="mr">
+
+<head>
+    <link rel="canonical" href="https://www.ikprint.in/idcard.html">
+    <link rel="alternate" media="only screen and (max-width: 768px)" href="https://www.ikprint.in/mobile_id_print.html">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script>
+        if (!/bot|googlebot|crawler|spider|robot|crawling/i.test(navigator.userAgent)) {
+            if (window.innerWidth <= 768 || /Mobi|Android|iPhone/i.test(navigator.userAgent)) {
+                window.location.replace('mobile_id_print.html');
+            }
+        }
+    </script>
+    <!-- Primary Meta Tags -->
+    <title>स्मार्ट ओळखपत्र प्रिंटिंग साधन | सुयोम्स व्हीएलई मित्र</title>
+    <meta name="title" content="स्मार्ट ओळखपत्र प्रिंटिंग साधन | सुयोम्स व्हीएलई मित्र">
+    <meta name="description" content="आधार, पॅन, मतदार ओळखपत्र आणि इतर ओळखपत्रे योग्य आकारात तयार करून प्रिंट करा.">
+    <meta name="keywords" content="ID card print tool, print aadhar card standard size, smart card maker, print PVC card online, document printer, ikprint">
+    <meta name="robots" content="index, follow">
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Khand:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/heic2any/dist/heic2any.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
+
+    <style>
+        :root {
+            /* Modern Palette */
+            --primary: #6366f1;
+            /* Indigo */
+            --primary-grad: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+            --secondary: #8b5cf6;
+            --bg-color: #f3f4f6;
+            --surface: rgba(255, 255, 255, 0.85);
+            --border: rgba(229, 231, 235, 0.8);
+            --text-main: #1f2937;
+            --text-sub: #334155;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --glass-border: 1px solid rgba(255, 255, 255, 0.5);
+            --anim-speed: 0.3s;
+        }
+
+        * {
+            box-sizing: border-box;
+            outline: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: 'Khand', sans-serif;
+            background: #eef2f6;
+            background-image:
+                radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.15) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(139, 92, 246, 0.15) 0px, transparent 50%);
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            overflow: hidden;
+            color: var(--text-main);
+        }
+
+        /* --- LOADING OVERLAY --- */
+        #loadingOverlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #ffffff;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.5s ease;
+        }
+
+        .loader-spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid #e5e7eb;
+            border-top: 5px solid var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 20px;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* --- SIDEBAR --- */
+        .sidebar {
+            width: 380px;
+            background: var(--surface);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-right: var(--glass-border);
+            display: flex;
+            flex-direction: column;
+            padding: 24px;
+            overflow-y: auto;
+            z-index: 20;
+            box-shadow: var(--shadow-md);
+        }
+
+        .section-title {
+            font-size: 0.75rem;
+            font-weight: 800;
+            color: var(--text-sub);
+            text-transform: uppercase;
+            margin: 24px 0 12px 0;
+            letter-spacing: 0.05em;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .section-title::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: linear-gradient(to right, #e5e7eb, transparent);
+        }
+
+        /* --- BUTTONS & CONTROLS --- */
+        .type-grid {
+            display: flex;
+            gap: 12px;
+        }
+
+        .type-btn {
+            flex: 1;
+            border: 1px solid #e5e7eb;
+            background: #fff;
+            padding: 16px;
+            border-radius: 12px;
+            text-align: center;
+            cursor: pointer;
+            transition: all var(--anim-speed) ease;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .type-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+            border-color: var(--primary);
+        }
+
+        .type-btn.active {
+            border: 2px solid var(--primary);
+            background: #eef2ff;
+            color: var(--primary);
+        }
+
+        .type-btn i {
+            font-size: 20px;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .type-btn span {
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .custom-checkbox {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.6);
+            border-radius: 8px;
+            transition: 0.2s;
+        }
+
+        .custom-checkbox:hover {
+            background: #fff;
+            box-shadow: var(--shadow-sm);
+        }
+
+        input[type="checkbox"] {
+            accent-color: var(--primary);
+            width: 16px;
+            height: 16px;
+        }
+
+        .scan-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .scan-box {
+            border: 2px dashed #cbd5e1;
+            border-radius: 16px;
+            height: 110px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            background: #f9fafb;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .scan-box:hover {
+            border-color: var(--primary);
+            background: #fff;
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .scan-box.drag-over {
+            border-color: var(--primary);
+            background: #eef2ff;
+            border-style: solid;
+            transform: scale(1.02);
+            box-shadow: var(--shadow-md);
+        }
+
+        .scan-box.filled {
+            border-style: solid;
+            border-color: #10b981;
+            background: #ecfdf5;
+        }
+
+        .scan-box i {
+            font-size: 24px;
+            color: var(--text-sub);
+            margin-bottom: 8px;
+            transition: 0.3s;
+        }
+
+        .scan-box:hover i {
+            color: var(--primary);
+            transform: scale(1.1);
+        }
+
+        .scan-box.filled i {
+            display: none;
+        }
+
+        .scan-box img {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            display: none;
+            background: white;
+        }
+
+        .scan-box.filled img {
+            display: block;
+        }
+
+        .scan-box span {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--text-sub);
+        }
+
+        .saved-pages-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .saved-page-item {
+            background: #fff;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            border-left: 4px solid var(--primary);
+            padding: 12px 15px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 500;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: var(--shadow-sm);
+            transition: 0.2s;
+        }
+
+        .saved-page-item:hover {
+            transform: translateX(3px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .btn {
+            padding: 12px;
+            border: none;
+            background: #fff;
+            color: var(--text-main);
+            border-radius: 10px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .btn:hover {
+            background: #f9fafb;
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .btn-add {
+            background: linear-gradient(to right, #e0f2fe, #dbeafe);
+            color: #0369a1;
+            border: 1px solid #bae6fd;
+            width: 100%;
+        }
+
+        .btn-add:hover {
+            background: linear-gradient(to right, #bae6fd, #e0f2fe);
+        }
+
+        .btn-primary {
+            width: 100%;
+            background: var(--primary-grad);
+            color: white;
+            border: none;
+            padding: 16px;
+            border-radius: 12px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+            margin-top: auto;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-primary:hover {
+            box-shadow: 0 8px 20px rgba(99, 102, 241, 0.4);
+            transform: translateY(-2px);
+        }
+
+        .btn-red {
+            background: #fee2e2;
+            color: #ef4444;
+            border: 1px solid #fecaca;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .btn-red:hover {
+            background: #fecaca;
+            color: #dc2626;
+        }
+
+        /* --- WORKSPACE --- */
+        .workspace {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            padding: 20px;
+            position: relative;
+            background-image: radial-gradient(#cbd5e1 1px, transparent 1px);
+            background-size: 24px 24px;
+            overflow: auto;
+        }
+
+        #statusMsg {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(4px);
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-weight: 500;
+            color: var(--text-sub);
+            box-shadow: var(--shadow-sm);
+            margin-bottom: 20px;
+        }
+
+        .ai-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 10px;
+            font-weight: 700;
+            margin-left: 8px;
+            box-shadow: 0 2px 5px rgba(16, 185, 129, 0.3);
+        }
+
+        .a4-viewport {
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            display: none;
+            justify-content: center;
+            align-items: flex-start;
+            padding-top: 20px;
+        }
+
+        .a4-page {
+            width: 210mm;
+            height: 297mm;
+            background: white;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(0, 0, 0, 0.05);
+            position: relative;
+            transform-origin: center top;
+            transform: scale(0.65);
+            margin-bottom: 50px;
+            flex-shrink: 0;
+            border-radius: 2px;
+            --a4-scale: 0.65;
+        }
+
+        .movable-item {
+            position: absolute;
+            cursor: grab;
+            user-select: none;
+            border: 2px dashed var(--primary);
+            z-index: 10;
+            border-radius: 8px;
+            overflow: visible;
+        }
+
+        .movable-item:active {
+            cursor: grabbing;
+        }
+
+        .movable-item:hover {
+            border-style: solid;
+            background: rgba(99, 102, 241, 0.05);
+        }
+
+        .movable-item img {
+            width: 100%;
+            height: 100%;
+            display: block;
+            pointer-events: none;
+            border-radius: 6px;
+        }
+
+        /* --- Item Menu --- */
+        .item-menu-container {
+            position: absolute;
+            top: calc(5px / var(--a4-scale, 0.65));
+            right: calc(5px / var(--a4-scale, 0.65));
+            z-index: 30;
+        }
+        .item-menu-btn {
+            width: calc(32px / var(--a4-scale, 0.65));
+            height: calc(32px / var(--a4-scale, 0.65));
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            border: calc(1.5px / var(--a4-scale, 0.65)) solid var(--primary);
+            color: var(--primary);
+            box-shadow: 0 calc(2px / var(--a4-scale, 0.65)) calc(5px / var(--a4-scale, 0.65)) rgba(0,0,0,0.2);
+            transition: all 0.2s ease;
+        }
+        .item-menu-btn i {
+            font-size: calc(16px / var(--a4-scale, 0.65));
+        }
+        .item-menu-btn:hover {
+            transform: scale(1.1);
+            background: #f9fafb;
+        }
+        .item-menu-dropdown {
+            display: none;
+            position: absolute;
+            right: 0;
+            top: calc(36px / var(--a4-scale, 0.65));
+            background: white;
+            border-radius: calc(8px / var(--a4-scale, 0.65));
+            box-shadow: 0 calc(4px / var(--a4-scale, 0.65)) calc(15px / var(--a4-scale, 0.65)) rgba(0,0,0,0.15);
+            width: calc(180px / var(--a4-scale, 0.65));
+            padding: calc(5px / var(--a4-scale, 0.65));
+            z-index: 100;
+        }
+        .item-menu-dropdown.show {
+            display: block;
+        }
+        .item-menu-header {
+            font-size: calc(10px / var(--a4-scale, 0.65));
+            font-weight: 800;
+            color: #9ca3af;
+            padding: calc(5px / var(--a4-scale, 0.65));
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .item-menu-dropdown-item {
+            padding: calc(8px / var(--a4-scale, 0.65)) calc(10px / var(--a4-scale, 0.65));
+            font-size: calc(12px / var(--a4-scale, 0.65));
+            cursor: pointer;
+            color: var(--text-main);
+            border-radius: calc(4px / var(--a4-scale, 0.65));
+            display: flex;
+            align-items: center;
+            gap: calc(8px / var(--a4-scale, 0.65));
+            font-weight: 600;
+        }
+        .item-menu-dropdown-item i {
+            font-size: calc(13px / var(--a4-scale, 0.65));
+            width: calc(16px / var(--a4-scale, 0.65));
+            text-align: center;
+        }
+        .item-menu-dropdown-item:hover {
+            background: #f3f4f6;
+            color: var(--primary);
+        }
+        .item-menu-dropdown-item:hover i {
+            color: var(--primary);
+        }
+        .item-menu-divider {
+            height: calc(1px / var(--a4-scale, 0.65));
+            background: #e5e7eb;
+            margin: calc(5px / var(--a4-scale, 0.65)) 0;
+        }
+
+        /* Corner-only resize handles with diagonal expansion arrows */
+        .resize-handle {
+            --handle-size: calc(24px / var(--a4-scale, 0.65));
+            --handle-border: calc(2px / var(--a4-scale, 0.65));
+            --handle-offset: calc(-12px / var(--a4-scale, 0.65));
+            --handle-font: calc(11px / var(--a4-scale, 0.65));
+
+            position: absolute;
+            width: var(--handle-size);
+            height: var(--handle-size);
+            background: var(--primary);
+            border: var(--handle-border) solid white;
+            border-radius: 50%;
+            z-index: 25;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25);
+            transition: transform 0.15s ease, background-color 0.15s ease;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+
+        .resize-handle:hover {
+            transform: scale(1.15);
+            background: #4338ca;
+        }
+
+        .resize-handle i {
+            font-size: var(--handle-font);
+            display: block;
+            pointer-events: none;
+        }
+
+        .rh-nw {
+            top: var(--handle-offset);
+            left: var(--handle-offset);
+            cursor: nw-resize;
+        }
+
+        .rh-ne {
+            top: var(--handle-offset);
+            right: var(--handle-offset);
+            cursor: ne-resize;
+        }
+
+        .rh-sw {
+            bottom: var(--handle-offset);
+            left: var(--handle-offset);
+            cursor: sw-resize;
+        }
+
+        .rh-se {
+            bottom: var(--handle-offset);
+            right: var(--handle-offset);
+            cursor: se-resize;
+        }
+
+        .canvas-container {
+            background: #fff;
+            border-radius: 12px;
+            padding: 15px;
+            max-width: 100%;
+            max-height: 80vh;
+            overflow: hidden;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            z-index: 5;
+            display: none;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
+            position: relative;
+        }
+
+        canvas {
+            display: block;
+            max-width: 100%;
+            max-height: 70vh;
+            border-radius: 4px;
+        }
+
+        /* Magnifying Glass Zoom Lens */
+        .zoom-lens {
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            border: 4px solid var(--primary);
+            border-radius: 50%;
+            background: white;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3), 0 0 0 8px rgba(255, 255, 255, 0.9);
+            pointer-events: none;
+            display: none;
+            z-index: 1000;
+            overflow: hidden;
+        }
+
+        .zoom-lens::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 2px;
+            height: 100%;
+            background: rgba(99, 102, 241, 0.3);
+            transform: translate(-50%, -50%);
+        }
+
+        .zoom-lens::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 100%;
+            height: 2px;
+            background: rgba(99, 102, 241, 0.3);
+            transform: translate(-50%, -50%);
+        }
+
+        .zoom-lens canvas {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            border-radius: 0;
+        }
+
+        .zoom-indicator {
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 10px;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        .workspace-controls {
+            margin-top: 20px;
+            display: flex;
+            gap: 12px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 12px 24px;
+            border-radius: 100px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1), 0 0 0 1px rgba(255, 255, 255, 0.5);
+            z-index: 100;
+        }
+
+        .btn-crop {
+            background: var(--primary-grad);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 30px;
+        }
+
+        .btn-crop:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);
+        }
+
+        /* --- FILTER POPUP (ORIGINAL SIZE WITH MODERN SLIDERS) --- */
+        .filter-popup {
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 16px;
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            width: 300px;
+            /* Original size */
+            box-shadow: var(--shadow-lg);
+            display: none;
+            z-index: 200;
+            padding: 20px;
+            /* Original size */
+        }
+
+        .filter-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            /* Original size */
+            font-weight: 700;
+            font-size: 13px;
+            /* Original size */
+            color: var(--text-main);
+        }
+
+        .filter-presets {
+            display: flex;
+            gap: 8px;
+            /* Original size */
+            margin-bottom: 15px;
+            /* Original size */
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            flex: 1 0 30%;
+            border: 1px solid #e5e7eb;
+            /* Original border */
+            background: #f9fafb;
+            font-size: 10px;
+            /* Original size */
+            padding: 8px 4px;
+            /* Original size */
+            border-radius: 8px;
+            /* Original radius */
+            cursor: pointer;
+            font-weight: 600;
+            color: var(--text-sub);
+            transition: 0.2s;
+            white-space: nowrap;
+        }
+
+        .filter-btn:hover {
+            background: #f3f4f6;
+        }
+
+        .filter-btn.active {
+            background: #eef2ff;
+            color: var(--primary);
+            border-color: var(--primary);
+        }
+
+        .slider-row {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            /* Original gap */
+            margin-bottom: 15px;
+            /* Original size */
+            font-size: 12px;
+            /* Original size */
+            font-weight: 600;
+            color: var(--text-sub);
+        }
+
+        /* Modern Slider Styling */
+        input[type=range] {
+            flex: 1;
+            height: 4px;
+            /* Original size */
+            background: #e5e7eb;
+            border-radius: 2px;
+            /* Original radius */
+            outline: none;
+            -webkit-appearance: none;
+            appearance: none;
+            position: relative;
+        }
+
+        /* Webkit (Chrome, Safari, Edge) */
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 16px;
+            /* Moderate size */
+            height: 16px;
+            /* Moderate size */
+            background: var(--primary);
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 2px 6px rgba(99, 102, 241, 0.3);
+            transition: all 0.2s ease;
+            position: relative;
+            margin-top: -6px;
+            /* Center the thumb: (16px - 4px) / 2 */
+        }
+
+        input[type=range]::-webkit-slider-thumb:hover {
+            transform: scale(1.15);
+            box-shadow: 0 3px 10px rgba(99, 102, 241, 0.5);
+        }
+
+        /* Firefox */
+        input[type=range]::-moz-range-thumb {
+            width: 16px;
+            height: 16px;
+            background: var(--primary);
+            border-radius: 50%;
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 2px 6px rgba(99, 102, 241, 0.3);
+            transition: all 0.2s ease;
+        }
+
+        input[type=range]::-moz-range-thumb:hover {
+            transform: scale(1.15);
+            box-shadow: 0 3px 10px rgba(99, 102, 241, 0.5);
+        }
+
+        /* Track styling */
+        input[type=range]::-webkit-slider-runnable-track {
+            height: 4px;
+            background: #e5e7eb;
+            border-radius: 2px;
+        }
+
+        input[type=range]::-moz-range-track {
+            height: 4px;
+            background: #e5e7eb;
+            border-radius: 2px;
+        }
+
+        input[type=range]::-moz-range-progress {
+            height: 4px;
+            background: var(--primary);
+            border-radius: 2px;
+        }
+
+        #printArea {
+            display: none;
+        }
+
+        @media print {
+            @page {
+                margin: 0 !important;
+                size: A4 portrait;
+            }
+
+            body,
+            html {
+                margin: 0 !important;
+                padding: 0 !important;
+                background: white !important;
+                width: 210mm !important;
+                height: auto !important;
+                min-height: 0 !important;
+                display: block !important;
+                overflow: visible !important;
+            }
+
+            #loadingOverlay,
+            .sidebar,
+            .workspace,
+            .workspace-controls,
+            .adsterra-native-banner,
+            .adsterra-native-container,
+            [id^="container-"],
+            [class*="adsterra"],
+            [id*="infolinks"],
+            [class*="infolinks"],
+            .ikph-ad-container,
+            .adsbygoogle,
+            .ikph-admin-test-pill,
+            [class*="ikph-admin"],
+            [class*="admin-test"],
+            [data-no-print="true"],
+            .no-print,
+            iframe {
+                display: none !important;
+                visibility: hidden !important;
+                height: 0 !important;
+                width: 0 !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                position: absolute !important;
+                top: -9999px !important;
+            }
+
+            #printArea {
+                display: block !important;
+                width: 100%;
+                height: auto;
+                margin: 0;
+                padding: 0;
+            }
+
+            .print-page-container {
+                position: relative;
+                width: 210mm;
+                height: 296mm;
+                overflow: hidden;
+                margin: 0 auto;
+                page-break-inside: avoid;
+                break-inside: avoid;
+            }
+
+            .print-page-container:not(:last-child) {
+                page-break-after: always;
+                break-after: page;
+            }
+
+            .print-card {
+                position: relative;
+                display: block;
+                width: 90.3mm;
+                height: 56.7mm;
+                margin: 15mm auto 5mm auto;
+                border-radius: 8px;
+                overflow: hidden;
+            }
+
+            .print-a4-item {
+                position: absolute;
+                border-radius: 8px;
+                overflow: hidden;
+            }
+        }
+
+        /* 📱 ADMIN-ONLY Phone Camera QR Sync Button & Modal Styles */
+        #adminPhoneCamSection {
+            display: none !important;
+        }
+
+        .admin-phone-cam-card {
+            position: relative;
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.12) 0%, rgba(139, 92, 246, 0.18) 100%);
+            border: 1.5px solid rgba(99, 102, 241, 0.45);
+            border-radius: 14px;
+            padding: 12px 14px;
+            cursor: pointer;
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 0 4px 14px rgba(99, 102, 241, 0.12);
+            width: 100%;
+            box-sizing: border-box;
+            text-align: left;
+            overflow: hidden;
+        }
+
+        .admin-phone-cam-card:hover {
+            transform: translateY(-2px);
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.2) 0%, rgba(139, 92, 246, 0.26) 100%);
+            border-color: #6366f1;
+            box-shadow: 0 8px 22px rgba(99, 102, 241, 0.22);
+        }
+
+        .admin-badge-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+
+        .admin-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            background: linear-gradient(135deg, #ef4444 0%, #b91c1c 100%);
+            color: #ffffff;
+            font-size: 9.5px;
+            font-weight: 800;
+            letter-spacing: 0.6px;
+            text-transform: uppercase;
+            padding: 3px 8px;
+            border-radius: 6px;
+            box-shadow: 0 2px 6px rgba(239, 68, 68, 0.35);
+        }
+
+        .admin-pulse-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #10b981;
+            box-shadow: 0 0 0 rgba(16, 185, 129, 0.6);
+            animation: adminDotPulse 1.8s infinite;
+        }
+
+        @keyframes adminDotPulse {
+            0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+            70% { box-shadow: 0 0 0 8px rgba(16, 185, 129, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+        }
+
+        .admin-phone-cam-content {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .admin-phone-cam-icon {
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            flex-shrink: 0;
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+            position: relative;
+        }
+
+        .admin-phone-cam-icon .phone-sub-icon {
+            position: absolute;
+            font-size: 10px;
+            bottom: 4px;
+            right: 4px;
+            background: #10b981;
+            color: #ffffff;
+            padding: 2px 3px;
+            border-radius: 3px;
+            border: 1px solid #ffffff;
+        }
+
+        .admin-phone-cam-text {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            flex-grow: 1;
+        }
+
+        .admin-phone-cam-text strong {
+            font-size: 13.5px;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
+        .admin-phone-cam-text span {
+            font-size: 11px;
+            color: var(--text-sub);
+            line-height: 1.3;
+        }
+
+        .admin-arrow {
+            font-size: 13px;
+            color: var(--primary);
+            transition: transform 0.2s ease;
+        }
+
+        .admin-phone-cam-card:hover .admin-arrow {
+            transform: translateX(3px);
+        }
+
+        /* Modal Overlay & Container for idcard.html */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            z-index: 99999;
+            justify-content: center;
+            align-items: center;
+            overflow-y: auto;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .phone-cam-modal-container {
+            background: #ffffff;
+            border-radius: 20px;
+            width: 100%;
+            max-width: 720px;
+            max-height: 92vh;
+            overflow-y: auto;
+            margin: auto;
+            padding: 28px;
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.35);
+            position: relative;
+            border: 1px solid rgba(229, 231, 235, 0.8);
+            box-sizing: border-box;
+            font-family: inherit;
+        }
+
+        .modal-close-btn {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: #f3f4f6;
+            color: #4b5563;
+            border: 1px solid #e5e7eb;
+            font-size: 18px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+            z-index: 10;
+        }
+
+        .modal-close-btn:hover {
+            background: #ef4444;
+            color: #ffffff;
+            border-color: #ef4444;
+            transform: rotate(90deg) scale(1.08);
+        }
+
+        .phone-modal-header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 22px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid #e5e7eb;
+            text-align: left;
+        }
+
+        .phone-modal-icon-badge {
+            width: 52px;
+            height: 52px;
+            border-radius: 16px;
+            background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            flex-shrink: 0;
+            box-shadow: 0 6px 18px rgba(99, 102, 241, 0.35);
+        }
+
+        .phone-modal-body {
+            display: grid;
+            grid-template-columns: 240px 1fr;
+            gap: 24px;
+            align-items: start;
+        }
+
+        @media (max-width: 640px) {
+            .phone-modal-body {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .phone-qr-column {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .phone-qr-card {
+            position: relative;
+            padding: 12px;
+            background: #ffffff;
+            border-radius: 16px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+            border: 2px solid rgba(99, 102, 241, 0.25);
+            display: inline-block;
+        }
+
+        .phone-qr-canvas-wrap {
+            width: 200px;
+            height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .phone-qr-canvas-wrap img,
+        .phone-qr-canvas-wrap canvas {
+            display: block;
+            border-radius: 8px;
+            max-width: 100%;
+            height: auto;
+        }
+
+        .phone-status-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12.5px;
+            font-weight: 600;
+            padding: 8px 16px;
+            border-radius: 30px;
+            background: rgba(234, 179, 8, 0.15);
+            color: #b45309;
+            border: 1px solid rgba(234, 179, 8, 0.3);
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .phone-status-pill.connected {
+            background: rgba(16, 185, 129, 0.15);
+            color: #059669;
+            border-color: rgba(16, 185, 129, 0.3);
+        }
+
+        .phone-status-pill.success {
+            background: rgba(99, 102, 241, 0.15);
+            color: #4f46e5;
+            border-color: rgba(99, 102, 241, 0.3);
+        }
+
+        .phone-status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: currentColor;
+        }
+
+        .phone-status-dot.pulsing {
+            animation: phonePulse 1.6s infinite ease-in-out;
+        }
+
+        .phone-link-share {
+            display: flex;
+            width: 100%;
+            gap: 6px;
+        }
+
+        .phone-link-share input {
+            flex: 1;
+            padding: 8px 10px;
+            font-size: 11.5px;
+            border-radius: 8px;
+            border: 1px solid #d1d5db;
+            background: #f9fafb;
+            color: #374151;
+            font-family: inherit;
+            outline: none;
+        }
+
+        .btn-copy-link {
+            padding: 8px 12px;
+            font-size: 12px;
+            font-weight: 600;
+            border-radius: 8px;
+            background: var(--primary);
+            color: #ffffff;
+            border: none;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: 0.2s;
+        }
+
+        .btn-copy-link:hover {
+            filter: brightness(1.1);
+        }
+
+        .phone-steps-column {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            text-align: left;
+        }
+
+        .phone-step-card {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 12px 14px;
+            border-radius: 12px;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+        }
+
+        .phone-step-number {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: var(--primary);
+            color: #ffffff;
+            font-weight: 700;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .phone-step-info h4 {
+            margin: 0 0 3px 0;
+            font-size: 13.5px;
+            font-weight: 700;
+            color: #1f2937;
+        }
+
+        .phone-step-info p {
+            margin: 0;
+            font-size: 12px;
+            color: #64748b;
+            line-height: 1.4;
+        }
+
+        .phone-perks-box {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            margin-top: 4px;
+            padding: 10px 14px;
+            border-radius: 10px;
+            background: rgba(16, 185, 129, 0.08);
+            border: 1px solid rgba(16, 185, 129, 0.25);
+            font-size: 12px;
+            font-weight: 600;
+            color: #059669;
+        }
+
+        .phone-perks-box .perk-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+    </style>
+    <script src="ads-manager.js?v=53.0.0" defer></script>
+
+<style id="ikph-global-print-fix">
+@media print {
+    .adsterra-native-banner,
+    .adsterra-native-container,
+    [id^="container-"],
+    [class*="adsterra"],
+    [id*="infolinks"],
+    [class*="infolinks"],
+    iframe[src*="effectivecpmnetwork"],
+    iframe[src*="infolinks"],
+    iframe[id*="infolinks"],
+    div[id^="infolinks"],
+    .ikph-ad-container, .adsbygoogle, .ikph-admin-test-pill, [class*="ikph-admin"], [class*="admin-test"], [data-no-print="true"], .no-print {
+        display: none !important;
+        visibility: hidden !important;
+        height: 0 !important;
+        min-height: 0 !important;
+        max-height: 0 !important;
+        width: 0 !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        border: none !important;
+        opacity: 0 !important;
+        position: absolute !important;
+        top: -99999px !important;
+        left: -99999px !important;
+        pointer-events: none !important;
+    }
+}
+</style>
+
+
+<style id="suyoms-black-saffron-theme">
+/* SUYOMS BLACK + SAFFRON VISUAL THEME — styling only; original tool logic/layout retained */
+:root {
+  --primary: #f28c00;
+  --primary-grad: linear-gradient(135deg, #ffb12b 0%, #e87500 52%, #c95700 100%);
+  --secondary: #ffad28;
+  --bg-color: #111111;
+  --surface: rgba(27, 27, 27, 0.96);
+  --border: rgba(242, 140, 0, 0.28);
+  --text-main: #f7f3ed;
+  --text-sub: #c9bba8;
+  --shadow-sm: 0 2px 8px rgba(0,0,0,.28);
+  --shadow-md: 0 8px 22px rgba(0,0,0,.38);
+  --shadow-lg: 0 16px 40px rgba(0,0,0,.48);
+  --glass-border: 1px solid rgba(242,140,0,.25);
+}
+@media screen {
+  html, body {
+    background: #101010 !important;
+    color: #f7f3ed !important;
+  }
+  body {
+    background-image:
+      radial-gradient(ellipse at 8% 0%, rgba(242,140,0,.16), transparent 42%),
+      radial-gradient(ellipse at 100% 100%, rgba(255,170,35,.09), transparent 40%) !important;
+  }
+  #loadingOverlay {
+    background: #101010 !important;
+    color: #f7f3ed !important;
+  }
+  #loadingOverlay div { color: #f7f3ed !important; }
+  .loader-spinner {
+    border-color: #3b2a18 !important;
+    border-top-color: #ff9d16 !important;
+  }
+  .sidebar {
+    background: linear-gradient(180deg, #1c1b19 0%, #111 100%) !important;
+    border-right: 1px solid rgba(242,140,0,.32) !important;
+    color: #f7f3ed !important;
+    box-shadow: 8px 0 28px rgba(0,0,0,.35) !important;
+  }
+  .sidebar h2, .sidebar strong, .sidebar label,
+  .section-title, .custom-checkbox span {
+    color: #f7f3ed !important;
+  }
+  .section-title { color: #ffad28 !important; }
+  .section-title::after {
+    background: linear-gradient(to right, #b9690a, transparent) !important;
+  }
+  .type-btn, .btn, .filter-btn, .scan-box,
+  .custom-checkbox, .saved-page-item {
+    background: #26231f !important;
+    color: #f5eee4 !important;
+    border-color: rgba(242,140,0,.34) !important;
+  }
+  .type-btn:hover, .btn:hover, .filter-btn:hover,
+  .scan-box:hover, .custom-checkbox:hover {
+    background: #342719 !important;
+    border-color: #ff9d16 !important;
+    color: #ffbd59 !important;
+  }
+  .type-btn.active, .filter-btn.active {
+    background: linear-gradient(135deg, #4a2a08, #2c1d0d) !important;
+    color: #ffb12b !important;
+    border: 2px solid #f28c00 !important;
+    box-shadow: 0 5px 18px rgba(242,140,0,.18) !important;
+  }
+  .type-btn i, .scan-box i { color: #ffad28 !important; }
+  .scan-box { border: 2px dashed #a96313 !important; }
+  .scan-box.filled {
+    background: #20251e !important;
+    border-color: #d98a1c !important;
+  }
+  .scan-box span, .saved-page-item { color: #e9dfd2 !important; }
+  .saved-page-item {
+    border-left: 4px solid #f28c00 !important;
+  }
+  .btn-primary, .btn-crop {
+    background: linear-gradient(135deg, #ffb12b 0%, #ed8500 55%, #c85a00 100%) !important;
+    color: #17110a !important;
+    border: 1px solid #ffbd59 !important;
+    box-shadow: 0 7px 20px rgba(242,140,0,.25) !important;
+    font-weight: 800 !important;
+  }
+  .btn-primary:hover, .btn-crop:hover {
+    filter: brightness(1.12) !important;
+    box-shadow: 0 10px 26px rgba(242,140,0,.35) !important;
+  }
+  .btn-add {
+    background: linear-gradient(135deg, #3b2a17, #292018) !important;
+    color: #ffc15c !important;
+    border-color: #a96313 !important;
+  }
+  .btn-red {
+    background: #3a1713 !important;
+    color: #ff9a83 !important;
+    border-color: #9e3827 !important;
+  }
+  .workspace {
+    background-color: #151515 !important;
+    background-image: radial-gradient(rgba(242,140,0,.18) 1px, transparent 1px) !important;
+  }
+  #statusMsg, .workspace-controls {
+    background: rgba(31,29,26,.94) !important;
+    color: #f4e8d8 !important;
+    border: 1px solid rgba(242,140,0,.3) !important;
+    box-shadow: 0 10px 28px rgba(0,0,0,.35) !important;
+  }
+  .a4-page, .canvas-container { background: #fff !important; }
+  .movable-item { border-color: #f28c00 !important; }
+  .movable-item:hover { background: rgba(242,140,0,.08) !important; }
+  .item-menu-btn {
+    border-color: #e98500 !important;
+    color: #d97706 !important;
+  }
+  .item-menu-dropdown {
+    background: #211d18 !important;
+    border: 1px solid #9b5b13 !important;
+  }
+  .item-menu-header { color: #ffb12b !important; }
+  .item-menu-dropdown-item { color: #f5eee4 !important; }
+  .item-menu-dropdown-item:hover {
+    background: #3a2917 !important;
+    color: #ffb12b !important;
+  }
+  .item-menu-divider { background: #654018 !important; }
+  .resize-handle {
+    background: #ed8500 !important;
+    border-color: #fff0d6 !important;
+  }
+  .resize-handle:hover { background: #ffb12b !important; }
+  .zoom-lens { border-color: #f28c00 !important; }
+  .zoom-lens::before, .zoom-lens::after {
+    background: rgba(242,140,0,.45) !important;
+  }
+  .filter-popup, .phone-cam-modal-container {
+    background: #211f1c !important;
+    color: #f5eee4 !important;
+    border: 1px solid rgba(242,140,0,.35) !important;
+  }
+  .filter-header, .phone-step-info h4 {
+    color: #ffb12b !important;
+  }
+  .filter-btn.active {
+    background: #4a2a08 !important;
+    color: #ffbd59 !important;
+  }
+  input[type=range]::-webkit-slider-thumb,
+  input[type=range]::-moz-range-thumb,
+  input[type=range]::-moz-range-progress {
+    background: #f28c00 !important;
+  }
+  input[type=range]::-webkit-slider-runnable-track,
+  input[type=range]::-moz-range-track { background: #5b5145 !important; }
+  .phone-step-card {
+    background: #2a2621 !important;
+    border-color: #5d421f !important;
+  }
+  .phone-step-info p, .admin-phone-cam-text span { color: #d2c4b2 !important; }
+  .admin-phone-cam-card {
+    background: linear-gradient(135deg, #3b2a17, #211a13) !important;
+    border-color: #b56a13 !important;
+  }
+  .admin-phone-cam-icon, .phone-modal-icon-badge,
+  .phone-step-number {
+    background: linear-gradient(135deg, #ffb12b, #d96a00) !important;
+    color: #1b1208 !important;
+  }
+  .admin-phone-cam-text strong { color: #fff0dc !important; }
+  .admin-arrow { color: #ffb12b !important; }
+  .modal-overlay { background: rgba(0,0,0,.88) !important; }
+  .phone-modal-header { border-bottom-color: #5d421f !important; }
+  .phone-qr-card { border-color: #c77a19 !important; }
+  .phone-link-share input {
+    background: #171614 !important;
+    color: #f7f3ed !important;
+    border-color: #76501f !important;
+  }
+  .btn-copy-link {
+    background: #e98500 !important;
+    color: #17110a !important;
+  }
+  .phone-status-pill.success {
+    background: rgba(242,140,0,.16) !important;
+    color: #ffbd59 !important;
+    border-color: rgba(242,140,0,.45) !important;
+  }
+  .phone-perks-box {
+    background: rgba(242,140,0,.1) !important;
+    border-color: rgba(242,140,0,.35) !important;
+    color: #ffc15c !important;
+  }
+  a, .sidebar [style*="color:#10b981"],
+  .sidebar [style*="color: #10b981"] { color: #ffad28 !important; }
+  button:focus-visible, input:focus-visible, .type-btn:focus-visible {
+    outline: 2px solid #ffad28 !important;
+    outline-offset: 2px !important;
+  }
+  ::selection { background: #f28c00 !important; color: #17110a !important; }
+}
+/* Keep the original document/card print output unchanged. */
+</style>
+
+<style id="suyoms-a4-preview-crop-refinement">
+
+    /* --- SUYOMS: A4 preview + comfortable crop workspace refinements --- */
+    @media screen {
+      /* Keep the document preview in true A4 portrait proportions. */
+      .a4-viewport {
+        width: 100%;
+        min-height: 0;
+        overflow: auto;
+        padding: 10px 12px 18px;
+        align-items: flex-start;
+      }
+      .a4-page {
+        width: 210mm;
+        height: 297mm;
+        aspect-ratio: 210 / 297;
+        flex: 0 0 auto;
+      }
+
+      /* Give the uploaded document a larger, less cramped crop area. */
+      .canvas-container {
+        max-width: min(100%, calc(100vw - 420px));
+        max-height: 88vh;
+        padding: 8px;
+        border-radius: 9px;
+      }
+      #srcCanvas {
+        max-width: 100%;
+        max-height: 82vh;
+        width: auto;
+        height: auto;
+        object-fit: contain;
+      }
+
+      /* Slimmer magnifier so it does not dominate the crop workspace. */
+      .zoom-lens {
+        width: 150px;
+        height: 150px;
+        border-width: 2px;
+        box-shadow: 0 4px 14px rgba(0,0,0,.22), 0 0 0 3px rgba(255,255,255,.82);
+      }
+      .zoom-indicator {
+        bottom: 6px;
+        padding: 2px 7px;
+        font-size: 9px;
+      }
+
+      /* Compact bottom zoom / crop toolbar without changing its controls. */
+      .workspace-controls {
+        margin-top: 8px;
+        gap: 6px;
+        padding: 6px 9px;
+        max-width: calc(100% - 16px);
+        border-radius: 24px;
+        box-shadow: 0 3px 12px rgba(0,0,0,.12);
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+      .workspace-controls > .btn {
+        min-height: 30px;
+        padding: 6px 9px;
+        font-size: 11px;
+        border-radius: 18px;
+      }
+      .workspace-controls .btn-crop {
+        padding: 7px 13px;
+        font-size: 11px;
+      }
+      .workspace-controls #crop-style-drag,
+      .workspace-controls #crop-style-click {
+        padding: 5px 8px !important;
+        font-size: 10px !important;
+      }
+      .workspace-controls > div {
+        margin: 0 2px !important;
+        gap: 2px !important;
+      }
+      .workspace-controls .btn-red {
+        padding: 6px 10px !important;
+        font-size: 11px;
+      }
+    }
+
+    @media screen and (max-width: 1100px) {
+      .canvas-container {
+        max-width: calc(100vw - 400px);
+      }
+    }
+
+    </style>
+
+<style id="suyoms-crop-workspace-final-fix">
+@media screen {
+  /* Keep the A4 sheet in true A4 proportions and make it comfortably visible. */
+  .a4-viewport {
+    width: 100%; height: 100%; min-height: 0;
+    overflow: auto; padding: 14px 12px 28px;
+    align-items: flex-start; justify-content: center;
+  }
+  .a4-page {
+    width: 210mm; height: 297mm; aspect-ratio: 210 / 297;
+    transform: scale(.72); transform-origin: center top;
+    margin-bottom: -70px; flex: 0 0 auto;
+  }
+
+  /* Larger crop workspace: show the entire uploaded image, including its bottom edge. */
+  .workspace {
+    min-width: 0; min-height: 0;
+    padding: 12px 14px 22px;
+    overflow: auto; justify-content: flex-start;
+    gap: 8px;
+  }
+  #editorContainer.canvas-container {
+    box-sizing: border-box;
+    width: min(900px, calc(100% - 24px));
+    max-width: min(900px, calc(100vw - 410px));
+    max-height: none; height: auto;
+    padding: 8px; overflow: visible;
+    flex: 0 0 auto; margin: 0 auto;
+  }
+  #srcCanvas {
+    display: block; width: auto; height: auto;
+    max-width: 100%; max-height: calc(100vh - 210px);
+    object-fit: contain; margin: 0 auto;
+  }
+  .workspace-controls {
+    position: relative; flex: 0 0 auto;
+    margin: 4px auto 10px; gap: 5px; padding: 5px 8px;
+    max-width: calc(100% - 20px); flex-wrap: wrap;
+    justify-content: center; border-radius: 18px;
+  }
+  .workspace-controls > .btn {
+    min-height: 30px; padding: 5px 9px; font-size: 11px;
+  }
+  .workspace-controls .btn-crop { padding: 6px 12px; font-size: 11px; }
+  .zoom-lens { width: 170px; height: 170px; border-width: 2px; }
+}
+@media screen and (max-width: 900px) {
+  #editorContainer.canvas-container {
+    width: calc(100% - 12px); max-width: calc(100vw - 24px);
+  }
+  #srcCanvas { max-height: calc(100vh - 245px); }
+  .workspace-controls { max-width: calc(100% - 8px); }
+  .a4-page { transform: scale(.52); margin-bottom: -140px; }
+}
+</style>
+
+
+<style id="suyoms-marathi-khand-font">
+  html, body, body *:not(i):not([class*="fa-"]) { font-family: 'Khand', sans-serif !important; }
+</style>
+</head>
+
+<body>
+
+    <div id="loadingOverlay">
+        <div class="loader-spinner"></div>
+        <div style="font-size:16px; font-weight:700; color:#374151;">लोड होत आहे...</div>
+        <div style="font-size:12px; color:#6b7280; margin-top:5px;">प्रतिमा प्रक्रिया प्रणाली सुरू होत आहे</div>
+    </div>
+
+    <div class="sidebar">
+        <div
+            style="margin-bottom: 20px; display: flex; align-items: center; gap: 10px; justify-content: space-between; width: 100%;">
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <div
+                    style="width: 35px; height: 35px; background: var(--primary-grad); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white;">
+                    <i class="fas fa-layer-group"></i>
+                </div>
+                <div style="display:flex; flex-direction:column;">
+                    <h2
+                        style="font-size: 17px; font-weight: 800; margin: 0; color: var(--text-main); letter-spacing: 0.5px;">
+                        दस्तऐवज प्रिंटिंग साधन</h2>
+                    <div
+                        style="font-size:10px; font-weight:700; color:#10b981; display:flex; align-items:center; gap:4px; margin-top: 2px; text-transform: uppercase; letter-spacing: 0.5px;">
+                        <i class="fas fa-user"></i> निर्मिती
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section-title">१. दस्तऐवजाचा प्रकार</div>
+        <div class="type-grid">
+            <div class="type-btn active" onclick="setMode('idcard')">
+                <i class="far fa-id-card"></i><span>ओळखपत्र</span>
+            </div>
+            <div class="type-btn" onclick="setMode('a4')">
+                <i class="far fa-file"></i><span>ए४ पान</span>
+            </div>
+        </div>
+
+        <div style="margin-top:15px; margin-bottom: 10px;">
+            <label class="custom-checkbox">
+                <input type="checkbox" id="bwCheck" onchange="toggleBW()">
+                <span style="font-weight:600; font-size:13px; color: var(--text-main);">काळा-पांढरा मोड</span>
+            </label>
+            <label class="custom-checkbox" style="margin-top:5px;">
+                <input type="checkbox" id="aiCheck">
+                <span style="font-weight:600; font-size:13px; color: var(--text-main);">एआय स्वयंचलित क्रॉप व सुधारणा</span>
+            </label>
+        </div>
+
+        <div class="section-title" style="display:flex; justify-content:space-between; align-items:center; width:100%;">
+            <span>२. दस्तऐवज अपलोड करा</span>
+            <span onclick="resetWorkspace()" style="color:#ef4444; font-size:11px; font-weight:700; cursor:pointer; text-transform:uppercase; letter-spacing:0.5px;">पुसून टाका</span>
+        </div>
+
+        <!-- Blue Tip Alert Box -->
+        <div style="background:#f0f9ff; border: 1px solid #bae6fd; border-radius:12px; padding:12px 14px; margin-bottom:16px; color:#0369a1; font-size:12px; line-height:1.4; display:flex; gap:8px; align-items:flex-start; box-shadow: var(--shadow-sm);">
+            <i class="fas fa-info-circle" style="font-size: 14px; color: #38bdf8; margin-top: 2px;"></i>
+            <div>
+                <strong>टीप:</strong> तुम्ही पुढील व मागील बाजू एकत्र निवडू शकता किंवा ओढून आणू शकता. दोन्ही बाजू एकामागून एक क्रॉप होतील.
+            </div>
+        </div>
+
+        <input type="file" id="fileInput" accept="image/*,application/pdf,.heic,.heif" style="display:none" multiple>
+
+        <div class="scan-grid" id="scanGrid">
+            <div class="scan-box" id="box-front" onclick="triggerUpload('front')">
+                <i class="fas fa-camera"></i>
+                <span id="lblFront">पुढील बाजू</span>
+                <img id="prev-front">
+            </div>
+            <div class="scan-box" id="box-back" onclick="triggerUpload('back')">
+                <i class="fas fa-sync-alt"></i>
+                <span>मागील बाजू</span>
+                <img id="prev-back">
+            </div>
+        </div>
+        <div style="text-align:center; font-size:11px; color:var(--text-sub); margin-top:8px;">(प्रतिमा अपलोड करण्यासाठी येथे क्लिक करा)
+        </div>
+
+        <!-- ADMIN ONLY: Phone Camera QR Scan Card (Strictly only shown in A4 Mode for Admin) -->
+        <div id="adminPhoneCamSection" style="display: none !important; margin-top: 12px; margin-bottom: 6px;">
+            <div class="admin-phone-cam-card" onclick="openPhoneCameraModal()" title="Admin Feature: Scan & Send Documents directly from phone camera to A4">
+                <div class="admin-badge-row">
+                    <span class="admin-tag"><i class="fas fa-user-shield"></i> ADMIN • A4 MODE</span>
+                    <span class="admin-pulse-dot"></span>
+                </div>
+                <div class="admin-phone-cam-content">
+                    <div class="admin-phone-cam-icon">
+                        <i class="fas fa-qrcode"></i>
+                        <i class="fas fa-camera phone-sub-icon"></i>
+                    </div>
+                    <div class="admin-phone-cam-text">
+                        <strong>Phone Camera QR Scan</strong>
+                        <span>Direct Single & Bulk intake into A4</span>
+                    </div>
+                    <i class="fas fa-chevron-right admin-arrow"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="section-title" style="display:flex; justify-content:space-between; align-items:center; width:100%;">
+            <span>3. Print Queue</span>
+            <button onclick="saveCurrentPage()"
+                style="background:var(--primary-grad); border:none; color:white; padding:4px 10px; border-radius:20px; font-size:10px; font-weight:700; cursor:pointer; display:flex; align-items:center; gap:4px; box-shadow:0 2px 5px rgba(99,102,241,0.2); transition:0.2s;"
+                title="Save & Start New Page">
+                <i class="fas fa-plus"></i> QUEUE PAGE
+            </button>
+        </div>
+        <div id="savedPagesList" class="saved-pages-list"></div>
+
+        <button class="btn btn-add" onclick="saveCurrentPage()">
+            <i class="fas fa-plus-circle"></i> SAVE & START NEW PAGE
+        </button>
+
+        <div class="footer-actions" style="margin-top:auto; padding-top:20px; border-top:1px solid rgba(0,0,0,0.05);">
+            <button class="btn-primary" onclick="doPrint()">
+                <i class="fas fa-print"></i> PRINT ALL PAGES
+            </button>
+            <button class="btn btn-red" onclick="location.reload()">
+                <i class="fas fa-trash-alt"></i> Reset Everything
+            </button>
+        </div>
+
+        <!-- Quick Tips & Guide Box -->
+        <div class="quick-tips-container" style="background: rgba(99, 102, 241, 0.05); border: 1px solid rgba(99, 102, 241, 0.15); border-radius: 12px; padding: 14px; margin-top: 15px; margin-bottom: 15px; box-shadow: var(--shadow-sm);">
+            <div style="font-size: 11px; font-weight: 800; color: var(--primary); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; display: flex; align-items: center; gap: 6px;">
+                <i class="fas fa-lightbulb"></i> Quick Tips & Guide
+            </div>
+            <ul style="margin: 0; padding-left: 18px; font-size: 11px; color: var(--text-sub); line-height: 1.5; display: flex; flex-direction: column; gap: 6px;">
+                <li><strong>AI Auto-Crop:</strong> Check "एआय स्वयंचलित क्रॉप व सुधारणा" before uploading to automatically locate and sharpen your document card.</li>
+                <li><strong>Multiple Images:</strong> Drag and drop or select multiple files at once. They will queue up for sequential cropping.</li>
+                <li><strong>Tap 4 Corners Mode:</strong> Click points on the 4 corners of your ID in the editor to quickly warp and crop perspective errors.</li>
+                <li><strong>Manual Adjustment:</strong> Drag the handles of the cropped card on the virtual A4 page to position or scale as needed.</li>
+                <li><strong>Print Queue:</strong> Click "QUEUE PAGE" to save current layout, then immediately start composing another page to print together.</li>
+            </ul>
+        </div>
+
+        <!-- Legal & Zero-Data-Retention Disclaimer Notice -->
+        <div class="ikph-service-disclaimer no-print" data-no-print="true" style="margin: 15px 0 10px 0; padding: 14px 16px; background: rgba(15, 23, 42, 0.03); border: 1px solid rgba(148, 163, 184, 0.25); border-radius: 12px; font-size: 11px; line-height: 1.55; color: #64748b; box-sizing: border-box; text-align: left;">
+            <div style="display: flex; align-items: flex-start; gap: 10px;">
+                <i class="fa-solid fa-shield-halved" style="color: #6366f1; font-size: 16px; margin-top: 2px; flex-shrink: 0;"></i>
+                <div>
+                    <strong style="font-size: 11.5px; display: block; margin-bottom: 4px; font-weight: 700; color: #0f172a;">
+                        Important Disclaimer &amp; Zero-Data-Retention Notice:
+                    </strong>
+                    <span>
+                        Disclaimer: ikprint is an independent document formatting and print-layout utility designed to assist users in preparing valid PDFs for PVC card printing. We are NOT affiliated with, sponsored by, authorized, or endorsed by UIDAI, the Income Tax Department, NSDL/Protean, UTIITSL, Election Commission of India (ECI), or any government authority. All document cropping, resizing, and processing is performed locally inside your device's browser. We do NOT store, save, or collect any personal documents, PDFs, photos, or identity numbers. In the event any temporary server processing is required, data is processed in transient memory and deleted immediately upon task completion. All official government cards and downloads must be obtained directly from authorized government portals (<a href="https://uidai.gov.in" target="_blank" rel="noopener noreferrer" style="color: #38bdf8; text-decoration: underline;">uidai.gov.in</a>, <a href="https://www.incometax.gov.in" target="_blank" rel="noopener noreferrer" style="color: #38bdf8; text-decoration: underline;">incometax.gov.in</a>, <a href="https://voters.eci.gov.in" target="_blank" rel="noopener noreferrer" style="color: #38bdf8; text-decoration: underline;">voters.eci.gov.in</a>). Users and operators are solely responsible for ensuring lawful ownership and consent before processing any document.
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="workspace">
+        <div id="statusMsg"><i class="fas fa-info-circle" style="color:var(--primary); margin-right:5px;"></i> Upload an
+            image to start AI detection.</div>
+
+        <!-- Document Queue Counter (Moved to top outside canvas) -->
+        <div id="queue-badge"
+            style="background: linear-gradient(135deg, #6366f1, #4f46e5); color: white; padding: 6px 18px; border-radius: 20px; font-size: 13px; font-weight: 700; z-index: 10; display: none; box-shadow: 0 4px 14px rgba(99, 102, 241, 0.35); margin-bottom: 14px; letter-spacing: 0.3px; align-items: center; gap: 6px;">
+            <i class="fas fa-layer-group"></i> <span id="queue-badge-text">Image 1/3</span>
+        </div>
+
+        <div class="canvas-container" id="editorContainer">
+            <div id="ai-toast"
+                style="position:absolute; top:10px; left:50%; transform:translateX(-50%); background:rgba(0,0,0,0.7); color:white; padding:5px 15px; border-radius:20px; font-size:12px; pointer-events:none; opacity:0; transition:0.3s; z-index:10;">
+                <i class="fas fa-magic"></i> AI Enhanced
+            </div>
+            <canvas id="srcCanvas"></canvas>
+
+            <!-- Magnifying Glass Zoom Lens -->
+            <div class="zoom-lens" id="zoomLens">
+                <canvas id="zoomCanvas"></canvas>
+                <div class="zoom-indicator">3x Zoom</div>
+            </div>
+        </div>
+
+        <div class="a4-viewport" id="a4Viewport">
+            <div class="a4-page" id="a4Page"></div>
+        </div>
+
+        <div class="workspace-controls" id="editorControls" style="display:none;">
+            <button class="btn" onclick="zoomCanvas(-0.1)" title="Zoom Out"><i class="fas fa-search-minus"></i></button>
+            <button class="btn" onclick="zoomCanvas(0.1)" title="Zoom In"><i class="fas fa-search-plus"></i></button>
+            <button class="btn" onclick="rotate(-90)" title="Rotate Left"><i class="fas fa-undo"></i></button>
+            <button class="btn" onclick="rotate(90)" title="Rotate Right"><i class="fas fa-redo"></i></button>
+
+            <!-- Segmented control for Crop Style -->
+            <div
+                style="display:flex; background:#f3f4f6; border-radius:30px; padding:3px; border:1px solid #e5e7eb; gap:4px; align-items:center; margin:0 8px;">
+                <button id="crop-style-drag" onclick="setCropStyle('drag'); localStorage.setItem('idcard_cropStyle', 'drag')"
+                    style="padding:6px 12px; border-radius:20px; font-size:11px; font-weight:700; border:none; cursor:pointer; background:transparent; color:var(--text-sub); transition:0.2s;">
+                    <i class="fas fa-arrows-alt"></i> Drag Style
+                </button>
+                <button id="crop-style-click" onclick="setCropStyle('click'); localStorage.setItem('idcard_cropStyle', 'click')"
+                    style="padding:6px 12px; border-radius:20px; font-size:11px; font-weight:700; border:none; cursor:pointer; background:#fff; box-shadow:var(--shadow-sm); color:var(--primary); transition:0.2s;">
+                    <i class="fas fa-mouse-pointer"></i> Tap 4 Corners
+                </button>
+            </div>
+
+            <button class="btn" onclick="toggleFilters()"><i class="fas fa-sliders-h"></i> Adjust</button>
+            <button class="btn btn-crop" onclick="processCrop()"><i class="fas fa-check"></i> CROP & USE</button>
+            <button class="btn btn-red" onclick="cancelEditor()" style="margin: 0; padding: 12px 24px; border-radius: 30px; font-weight: 700; display: flex; align-items: center; gap: 6px;" title="Cancel"><i class="fas fa-times"></i> Cancel</button>
+        </div>
+
+        <div class="filter-popup" id="filterPopup">
+            <div class="filter-header">
+                <span>Image Enhancements</span><span style="cursor:pointer; color:#ef4444;"
+                    onclick="toggleFilters()">Close</span>
+            </div>
+
+            <div class="filter-presets">
+                <button class="filter-btn" id="filt-orig" onclick="setFilterMode('original')">Original</button>
+                <button class="filter-btn" id="filt-magic" onclick="setFilterMode('magic')">Magic(Sharp)</button>
+                <button class="filter-btn active" id="filt-magic-bw" onclick="setFilterMode('magic-bw')">Magic Filter
+                    B&W</button>
+                <button class="filter-btn" id="filt-doc" onclick="setFilterMode('doc')">Doc(Clean)</button>
+                <button class="filter-btn" id="filt-gray" onclick="setFilterMode('gray')">Gray</button>
+                <button class="filter-btn" id="filt-bw" onclick="setFilterMode('bw')">Super B&W</button>
+                <button class="filter-btn" id="filt-light" onclick="setFilterMode('light')">Lighten</button>
+            </div>
+
+            <div class="slider-row"><span>Bright</span><input type="range" id="bri" min="0" max="400" value="100"
+                    oninput="updateSliderValue('bri'); draw(true)"><span id="bri-val"
+                    style="min-width:45px; text-align:right; font-weight:700; color:var(--primary);">100%</span></div>
+            <div class="slider-row"><span>Contr</span><input type="range" id="con" min="0" max="200" value="100"
+                    oninput="updateSliderValue('con'); draw(true)"><span id="con-val"
+                    style="min-width:45px; text-align:right; font-weight:700; color:var(--primary);">100%</span></div>
+            <div class="slider-row"><span>Sharp</span><input type="range" id="sharp" min="0" max="500" value="100"
+                    oninput="updateSliderValue('sharp'); draw(true)"><span id="sharp-val"
+                    style="min-width:45px; text-align:right; font-weight:700; color:var(--primary);">100%</span></div>
+            <div class="slider-row"><span>Satur</span><input type="range" id="sat" min="0" max="200" value="100"
+                    oninput="updateSliderValue('sat'); draw(true)"><span id="sat-val"
+                    style="min-width:45px; text-align:right; font-weight:700; color:var(--primary);">100%</span></div>
+            <button class="btn" style="width:100%; margin-top:10px; background:#10b981; color:white; border:none;"
+                onclick="toggleFilters()">Apply & Close</button>
+        </div>
+    </div>
+
+    <!-- ADMIN ONLY: Phone Camera QR Sync Modal for A4 Mode -->
+    <div id="phoneCameraModal" class="modal-overlay" style="display:none;">
+        <div class="phone-cam-modal-container">
+            <button class="modal-close-btn" onclick="closePhoneCameraModal()" title="Close">
+                <i class="fas fa-times"></i>
+            </button>
+
+            <div class="phone-modal-header">
+                <div class="phone-modal-icon-badge">
+                    <i class="fas fa-file-invoice"></i>
+                </div>
+                <div>
+                    <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+                        <h2 style="margin: 0; font-size: 1.35rem; color: #1f2937; text-align: left; font-weight: 700;">
+                            Phone Camera Document Scan (A4 Mode)
+                        </h2>
+                        <span class="admin-tag"><i class="fas fa-user-shield"></i> ADMIN EXCLUSIVE</span>
+                    </div>
+                    <p style="margin: 4px 0 0 0; font-size: 0.88rem; color: #64748b; text-align: left;">
+                        Scan QR code with smartphone • Direct wireless single or multi-page intake into A4
+                    </p>
+                </div>
+            </div>
+
+            <div class="phone-modal-body">
+                <!-- Left: QR Code & Status -->
+                <div class="phone-qr-column">
+                    <div class="phone-qr-card">
+                        <div id="phoneCamQrBox" class="phone-qr-canvas-wrap"></div>
+                    </div>
+                    
+                    <div class="phone-status-pill" id="phoneCamModalStatus">
+                        <span class="phone-status-dot pulsing"></span>
+                        <span id="phoneCamModalStatusText">Waiting for smartphone scan...</span>
+                    </div>
+
+                    <!-- Direct Link / Copy Helper -->
+                    <div class="phone-link-share">
+                        <input type="text" id="phoneCamShareUrl" readonly placeholder="Generating sync link...">
+                        <button class="btn-copy-link" onclick="copyPhoneCamLink()">
+                            <i class="fas fa-copy"></i> Copy
+                        </button>
+                    </div>
+
+                    <!-- Host / IP Notice if testing on Localhost -->
+                    <div id="phoneCamLocalhostNotice" style="display: none; margin-top: 8px; font-size: 0.78rem; color: #b45309; background: #fffbeb; padding: 10px 12px; border-radius: 8px; border: 1px dashed #fde68a; text-align: left; width: 100%; box-sizing: border-box;">
+                        <div style="font-weight: 700; margin-bottom: 4px;"><i class="fas fa-wifi"></i> Local Mobile Testing Tip:</div>
+                        <div style="margin-bottom: 6px; color: #4b5563;">Phones cannot open <code>localhost</code>. Connect phone & PC to same Wi-Fi and tap button:</div>
+                        <button type="button" onclick="useNetworkIp('192.168.1.207:3000')" style="padding: 6px 12px; font-size: 11px; font-weight: 700; border-radius: 6px; background: #10b981; color: white; border: none; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; box-shadow: 0 2px 6px rgba(16,185,129,0.3);">
+                            <i class="fas fa-network-wired"></i> Switch QR to 192.168.1.207:3000
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Right: Instructions / Steps -->
+                <div class="phone-steps-column">
+                    <div class="phone-step-card">
+                        <div class="phone-step-number">1</div>
+                        <div class="phone-step-info">
+                            <h4>Scan QR with Smartphone</h4>
+                            <p>Open Phone Camera or Google Lens and point at the QR code. No app install required.</p>
+                        </div>
+                    </div>
+
+                    <div class="phone-step-card">
+                        <div class="phone-step-number">2</div>
+                        <div class="phone-step-info">
+                            <h4>Capture Document(s)</h4>
+                            <p>Take photo with camera or choose <strong>multiple/bulk files</strong> from your gallery.</p>
+                        </div>
+                    </div>
+
+                    <div class="phone-step-card">
+                        <div class="phone-step-number">3</div>
+                        <div class="phone-step-info">
+                            <h4>Tap "Send to PC"</h4>
+                            <p>Documents transfer directly to PC and open in the Smart Crop Editor one by one onto the A4 page.</p>
+                        </div>
+                    </div>
+
+                    <div class="phone-perks-box">
+                        <div class="perk-item"><i class="fas fa-check-circle"></i> Supports Single and Bulk Multiple Documents</div>
+                        <div class="perk-item"><i class="fas fa-shield-alt"></i> Strictly Hidden & Gated for Admin in A4 Mode</div>
+                        <div class="perk-item"><i class="fas fa-bolt"></i> Real-time Peer-to-Peer & Cloud Relay Sync</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <canvas id="tempCanvas" style="display:none"></canvas>
+    <div id="printArea"></div>
+
+    <script>
+        // Set PDF.js worker source
+        try {
+            const workerBlob = new Blob(
+                [`importScripts('https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.worker.min.js');`],
+                { type: 'application/javascript' }
+            );
+            pdfjsLib.GlobalWorkerOptions.workerSrc = URL.createObjectURL(workerBlob);
+        } catch (e) {
+            pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.worker.min.js';
+        }
+
+        /** GLOBALS */
+        let mode = 'idcard';
+        let activeSide = 'front';
+        
+        // BATCH IMAGE QUEUE VARIABLES
+        let editQueue = [];
+        let currentQueueIndex = -1;
+        let editingPageId = null;
+        let cvReady = false;
+        let img = new Image();
+        let srcCanvas = document.getElementById('srcCanvas');
+        let ctx = srcCanvas.getContext('2d');
+        let points = [];
+        let isDraggingPt = false; let dragIndexPt = -1;
+        let cropStyle = localStorage.getItem('idcard_cropStyle') || 'drag';
+        let clickedPoints = [];
+        let A4_SCALE = 0.65;
+        let currentFilterMode = 'original';
+        let canvasZoom = 1.0; // Zoom level for canvas
+        let enhancingItem = null;
+
+        // Zoom lens variables
+        let zoomLens = null;
+        let zoomLensCanvas = null;
+        let zoomLensCtx = null;
+        let zoomLevel = 3; // 3x magnification
+
+        // CURRENT PAGE DATA
+        let dataFront = null;
+        let dataBack = null;
+        let savedPages = [];
+
+        // CALLBACKS FOR DYNAMIC LOADING
+        function onOpenCvReady() {
+            cvReady = true;
+            document.getElementById('loadingOverlay').style.opacity = '0';
+            setTimeout(() => { document.getElementById('loadingOverlay').style.display = 'none'; }, 500);
+            document.getElementById('statusMsg').innerHTML = "<i class='fas fa-check-circle' style='color:#10b981; margin-right:5px;'></i> AI Engine Ready. Select a box to upload.";
+            updateIDCardPreview();
+            renderPageList();
+        }
+
+        function onOpenCvError() {
+            let overlay = document.getElementById('loadingOverlay');
+            overlay.innerHTML = `
+        <i class="fas fa-exclamation-triangle" style="font-size:40px; color:#ef4444; margin-bottom:20px;"></i>
+        <div style="font-size:16px; font-weight:700; color:#374151;">Failed to Load Engine</div>
+        <div style="font-size:12px; color:#6b7280; margin-top:5px;">Please check your internet connection and reload.</div>
+        <button onclick="location.reload()" style="margin-top:20px; padding:10px 20px; background:#6366f1; color:white; border:none; border-radius:8px; cursor:pointer;">Reload Page</button>
+    `;
+        }
+
+        // ------------------------------------
+        // MAIN LOGIC
+        // ------------------------------------
+
+        function setMode(m) {
+            autoSaveCurrentWorkspace();
+            mode = m;
+            document.querySelectorAll('.type-btn').forEach(b => {
+                if (b.getAttribute('onclick') && b.getAttribute('onclick').includes("'" + m + "'")) {
+                    b.classList.add('active');
+                } else {
+                    b.classList.remove('active');
+                }
+            });
+            document.getElementById('lblFront').innerText = (mode === 'a4') ? 'Front Page' : 'Front Side';
+            document.getElementById('editorContainer').style.display = 'none';
+            document.getElementById('a4Viewport').style.display = 'flex'; // Keep virtual A4 page always visible
+
+            if (mode === 'idcard') {
+                updateIDCardPreview();
+            } else {
+                document.getElementById('a4Page').innerHTML = '';
+            }
+            if (typeof updateAdminPhoneCamVisibility === 'function') {
+                updateAdminPhoneCamVisibility();
+            }
+        }
+
+        // IMAGE OPTIMIZATION FUNCTIONS
+        /**
+         * Compress and optimize image before processing
+         * Reduces file size while maintaining quality
+         */
+        async function compressImage(file, maxSizeMB = 5, maxWidthOrHeight = 4096) {
+            return new Promise((resolve, reject) => {
+                updateImageLoadingProgress(10); // Starting
+
+                const reader = new FileReader();
+
+                reader.onload = (e) => {
+                    updateImageLoadingProgress(25); // File read complete
+
+                    const img = new Image();
+
+                    img.onload = () => {
+                        updateImageLoadingProgress(40); // Image loaded
+
+                        // Calculate new dimensions
+                        let width = img.width;
+                        let height = img.height;
+
+                        // Resize if image is too large
+                        if (width > maxWidthOrHeight || height > maxWidthOrHeight) {
+                            if (width > height) {
+                                height = (height / width) * maxWidthOrHeight;
+                                width = maxWidthOrHeight;
+                            } else {
+                                width = (width / height) * maxWidthOrHeight;
+                                height = maxWidthOrHeight;
+                            }
+                        }
+
+                        updateImageLoadingProgress(55); // Dimensions calculated
+
+                        // Create canvas for compression
+                        const canvas = document.createElement('canvas');
+                        canvas.width = width;
+                        canvas.height = height;
+                        const ctx = canvas.getContext('2d');
+
+                        // Draw image with better quality
+                        ctx.imageSmoothingEnabled = true;
+                        ctx.imageSmoothingQuality = 'high';
+                        ctx.drawImage(img, 0, 0, width, height);
+
+                        updateImageLoadingProgress(70); // Canvas drawn
+
+                        // Convert to blob with compression
+                        canvas.toBlob(
+                            (blob) => {
+                                if (blob) {
+                                    updateImageLoadingProgress(85); // Compression complete
+
+                                    // Check if compressed size is acceptable
+                                    const sizeMB = blob.size / (1024 * 1024);
+
+                                    if (sizeMB > maxSizeMB) {
+                                        // Try with lower quality
+                                        canvas.toBlob(
+                                            (blob2) => {
+                                                updateImageLoadingProgress(95); // Re-compression complete
+                                                if (blob2) {
+                                                    resolve(new File([blob2], file.name, { type: 'image/jpeg' }));
+                                                } else {
+                                                    resolve(file); // Fallback to original
+                                                }
+                                            },
+                                            'image/jpeg',
+                                            0.7 // Lower quality for large files
+                                        );
+                                    } else {
+                                        updateImageLoadingProgress(95); // Ready
+                                        resolve(new File([blob], file.name, { type: 'image/jpeg' }));
+                                    }
+                                } else {
+                                    resolve(file); // Fallback to original
+                                }
+                            },
+                            'image/jpeg',
+                            0.85 // Good quality compression
+                        );
+                    };
+
+                    img.onerror = () => reject(new Error('Failed to load image'));
+                    img.src = e.target.result;
+                };
+
+                reader.onerror = () => reject(new Error('Failed to read file'));
+                reader.readAsDataURL(file);
+            });
+        }
+
+        /**
+         * Show loading indicator with progress bar while image is being processed
+         */
+        function showImageLoadingIndicator() {
+            // Create loading overlay if it doesn't exist
+            let loadingDiv = document.getElementById('image-loading-overlay');
+
+            if (!loadingDiv) {
+                loadingDiv = document.createElement('div');
+                loadingDiv.id = 'image-loading-overlay';
+                loadingDiv.style.cssText = `
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+            backdrop-filter: blur(4px);
+        `;
+
+                loadingDiv.innerHTML = `
+            <div style="background: white; padding: 40px; border-radius: 20px; text-align: center; box-shadow: 0 20px 60px rgba(0,0,0,0.3); min-width: 320px;">
+                <div style="font-size: 16px; font-weight: 700; color: #374151; margin-bottom: 8px;">Processing Image...</div>
+                <div style="font-size: 13px; color: #6b7280; margin-bottom: 20px;">Optimizing for best performance</div>
+                
+                <!-- Progress Bar Container -->
+                <div style="width: 100%; height: 8px; background: #e5e7eb; border-radius: 10px; overflow: hidden; margin-bottom: 12px; position: relative;">
+                    <div id="progress-bar-fill" style="height: 100%; width: 0%; background: linear-gradient(90deg, #6366f1, #8b5cf6); border-radius: 10px; transition: width 0.3s ease; box-shadow: 0 0 10px rgba(99, 102, 241, 0.5);"></div>
+                </div>
+                
+                <!-- Progress Percentage -->
+                <div id="progress-percentage" style="font-size: 24px; font-weight: 700; color: #6366f1; margin-bottom: 8px;">0%</div>
+                
+                <div id="image-size-info" style="font-size: 11px; color: #9ca3af;"></div>
+            </div>
+        `;
+
+                document.body.appendChild(loadingDiv);
+            }
+
+            loadingDiv.style.display = 'flex';
+            // Reset progress
+            updateImageLoadingProgress(0);
+        }
+
+        /**
+         * Hide loading indicator
+         */
+        function hideImageLoadingIndicator() {
+            const loadingDiv = document.getElementById('image-loading-overlay');
+            if (loadingDiv) {
+                loadingDiv.style.display = 'none';
+            }
+        }
+
+        /**
+         * Update loading progress bar (0-100)
+         */
+        function updateImageLoadingProgress(percent) {
+            const progressBar = document.getElementById('progress-bar-fill');
+            const progressText = document.getElementById('progress-percentage');
+
+            if (progressBar) {
+                progressBar.style.width = percent + '%';
+            }
+            if (progressText) {
+                progressText.textContent = Math.round(percent) + '%';
+            }
+        }
+
+        /**
+         * Update loading indicator with file size info
+         */
+        function updateImageLoadingInfo(originalSize, compressedSize) {
+            const infoDiv = document.getElementById('image-size-info');
+            if (infoDiv) {
+                const originalMB = (originalSize / (1024 * 1024)).toFixed(2);
+                const compressedMB = (compressedSize / (1024 * 1024)).toFixed(2);
+                const savings = ((1 - compressedSize / originalSize) * 100).toFixed(0);
+
+                infoDiv.innerHTML = `
+            Original: ${originalMB}MB → Optimized: ${compressedMB}MB 
+            <span style="color: #10b981;">(${savings}% smaller)</span>
+        `;
+            }
+        }
+
+        function triggerUpload(side) { activeSide = side; document.getElementById('fileInput').click(); }
+        
+        function showQueueBadge(current, total) {
+            let badge = document.getElementById('queue-badge');
+            if (badge) {
+                badge.style.display = 'inline-flex';
+                let badgeText = document.getElementById('queue-badge-text');
+                if (badgeText) {
+                    badgeText.textContent = `Image ${current}/${total}`;
+                } else {
+                    badge.innerHTML = `<i class="fas fa-layer-group" style="margin-right:6px;"></i> Image ${current}/${total}`;
+                }
+            }
+        }
+
+        function hideQueueBadge() {
+            let badge = document.getElementById('queue-badge');
+            if (badge) badge.style.display = 'none';
+        }
+
+        function cancelEditor() {
+            document.getElementById('editorContainer').style.display = 'none';
+            document.getElementById('editorControls').style.display = 'none';
+            document.getElementById('filterPopup').style.display = 'none';
+            document.getElementById('a4Viewport').style.display = 'flex';
+            if (zoomLens) zoomLens.style.display = 'none';
+            
+            enhancingItem = null;
+            editQueue = [];
+            currentQueueIndex = -1;
+            hideQueueBadge();
+            
+            if (mode === 'idcard') {
+                updateIDCardPreview();
+            }
+            document.getElementById('statusMsg').innerHTML = "<i class='fas fa-check-circle' style='color:#10b981; margin-right:5px;'></i> Edit cancelled.";
+        }
+
+        async function loadFileForEditing(file) {
+            // Show loading indicator
+            showImageLoadingIndicator();
+
+            try {
+                // Compress and optimize image before loading
+                const optimizedImage = await compressImage(file);
+
+                updateImageLoadingProgress(100); // Compression complete
+
+                let reader = new FileReader();
+                reader.onload = (ev) => {
+                    img.onload = () => {
+                        // Small delay to show 100% before hiding
+                        setTimeout(() => {
+                            hideImageLoadingIndicator();
+                            openEditor();
+                        }, 300);
+                    };
+                    img.onerror = () => {
+                        hideImageLoadingIndicator();
+                        alert('Failed to load image. Please try another file.');
+                        // Move to next in queue if available
+                        currentQueueIndex++;
+                        if (currentQueueIndex < editQueue.length) {
+                            processNextInQueue();
+                        } else {
+                            cancelEditor();
+                        }
+                    };
+                    img.src = ev.target.result;
+                };
+                reader.onerror = () => {
+                    hideImageLoadingIndicator();
+                    alert('Failed to read file. Please try again.');
+                    // Move to next in queue if available
+                    currentQueueIndex++;
+                    if (currentQueueIndex < editQueue.length) {
+                        processNextInQueue();
+                    } else {
+                        cancelEditor();
+                    }
+                };
+                reader.readAsDataURL(optimizedImage);
+            } catch (error) {
+                hideImageLoadingIndicator();
+                console.error('Image processing error:', error);
+                alert('Error processing image. Please try a different file.');
+                // Move to next in queue
+                currentQueueIndex++;
+                if (currentQueueIndex < editQueue.length) {
+                    processNextInQueue();
+                } else {
+                    cancelEditor();
+                }
+            }
+        }
+
+        function processNextInQueue() {
+            if (currentQueueIndex < 0 || currentQueueIndex >= editQueue.length) {
+                editQueue = [];
+                currentQueueIndex = -1;
+                hideQueueBadge();
+                return;
+            }
+            const item = editQueue[currentQueueIndex];
+            activeSide = item.side;
+            showQueueBadge(currentQueueIndex + 1, editQueue.length);
+            
+            let sideLabel = (activeSide === 'front') ? 'Front Side' : 'Back Side';
+            if (mode === 'a4') sideLabel = 'A4 Page';
+            document.getElementById('statusMsg').innerHTML = `<i class='fas fa-sync-alt fa-spin' style='color:var(--primary); margin-right:5px;'></i> Loading Image ${currentQueueIndex + 1}/${editQueue.length} (${sideLabel})...`;
+            
+            loadFileForEditing(item.file);
+        }
+
+        async function processFileToImageFiles(file) {
+            const outputFiles = [];
+            const fileNameLower = file.name.toLowerCase();
+            if (file.type === "application/pdf" || fileNameLower.endsWith('.pdf')) {
+                try {
+                    document.getElementById('statusMsg').innerHTML = `<i class='fas fa-sync-alt fa-spin' style='color:var(--primary); margin-right:5px;'></i> Extracting pages from PDF...`;
+                    const arrayBuffer = await file.arrayBuffer();
+                    const loadingTask = pdfjsLib.getDocument({
+                        data: new Uint8Array(arrayBuffer),
+                        cMapUrl: 'https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/cmaps/',
+                        cMapPacked: true,
+                        standardFontDataUrl: 'https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/standard_fonts/',
+                disableFontFace: true,
+                useSystemFonts: false
+                    });
+                    const pdf = await loadingTask.promise;
+                    const numPages = pdf.numPages;
+                    
+                    for (let pageNum = 1; pageNum <= numPages; pageNum++) {
+                        const page = await pdf.getPage(pageNum);
+                        const scale = 2.0; // Render at high resolution
+                        const viewport = page.getViewport({ scale: scale });
+                        const canvas = document.createElement('canvas');
+                        canvas.width = viewport.width;
+                        canvas.height = viewport.height;
+                        const ctx = canvas.getContext('2d');
+                        await page.render({ canvasContext: ctx, viewport: viewport }).promise;
+                        
+                        const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/jpeg', 0.95));
+                        const pageFile = new File([blob], `${file.name.replace(/\.pdf$/i, '')}_page_${pageNum}.jpg`, { type: 'image/jpeg' });
+                        outputFiles.push(pageFile);
+                    }
+                } catch (err) {
+                    console.error("PDF extraction failed:", err);
+                    alert(`Error reading PDF "${file.name}": ` + err.message);
+                }
+            } else if (fileNameLower.endsWith('.heic') || fileNameLower.endsWith('.heif')) {
+                try {
+                    document.getElementById('statusMsg').innerHTML = `<i class='fas fa-sync-alt fa-spin' style='color:var(--primary); margin-right:5px;'></i> Converting HEIC image...`;
+                    const conversionResult = await heic2any({
+                        blob: file,
+                        toType: "image/jpeg",
+                        quality: 0.85
+                    });
+                    const blobs = Array.isArray(conversionResult) ? conversionResult : [conversionResult];
+                    blobs.forEach((blob, idx) => {
+                        const convertedFile = new File([blob], `${file.name.replace(/\.(heic|heif)$/i, '')}_converted_${idx}.jpg`, { type: 'image/jpeg' });
+                        outputFiles.push(convertedFile);
+                    });
+                } catch (err) {
+                    console.error("HEIC conversion failed:", err);
+                    alert(`Error converting HEIC file "${file.name}": ` + err.message);
+                }
+            } else {
+                outputFiles.push(file);
+            }
+            return outputFiles;
+        }
+
+        async function handleDroppedFiles(files, targetSide) {
+            if (files.length > 0) {
+                const filesArr = Array.from(files);
+                editQueue = [];
+                
+                document.getElementById('statusMsg').innerHTML = `<i class='fas fa-sync-alt fa-spin' style='color:var(--primary); margin-right:5px;'></i> Preparing files...`;
+                
+                let processedImages = [];
+                for (let i = 0; i < filesArr.length; i++) {
+                    const imgFiles = await processFileToImageFiles(filesArr[i]);
+                    processedImages.push(...imgFiles);
+                }
+                
+                if (processedImages.length === 0) {
+                    document.getElementById('statusMsg').innerHTML = `<i class="fas fa-exclamation-triangle" style="color:#ef4444; margin-right:5px;"></i> No valid images could be loaded.`;
+                    return;
+                }
+
+                for (let i = 0; i < processedImages.length; i++) {
+                    let side = targetSide || activeSide;
+                    if (mode === 'idcard') {
+                        let baseSide = targetSide || activeSide;
+                        if (baseSide === 'front') {
+                            side = (i % 2 === 0) ? 'front' : 'back';
+                        } else {
+                            side = (i % 2 === 0) ? 'back' : 'front';
+                        }
+                    }
+                    editQueue.push({
+                        file: processedImages[i],
+                        side: side
+                    });
+                }
+                currentQueueIndex = 0;
+                processNextInQueue();
+            }
+        }
+
+        document.getElementById('fileInput').addEventListener('change', async (e) => {
+            await handleDroppedFiles(e.target.files, activeSide);
+            e.target.value = '';
+        });
+
+        function initDragAndDrop() {
+            const boxes = [
+                { id: 'box-front', side: 'front' },
+                { id: 'box-back', side: 'back' }
+            ];
+
+            boxes.forEach(boxInfo => {
+                const box = document.getElementById(boxInfo.id);
+                if (!box) return;
+
+                ['dragenter', 'dragover'].forEach(eventName => {
+                    box.addEventListener(eventName, (e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        box.classList.add('drag-over');
+                    }, false);
+                });
+
+                ['dragleave', 'drop'].forEach(eventName => {
+                    box.addEventListener(eventName, (e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        box.classList.remove('drag-over');
+                    }, false);
+                });
+
+                box.addEventListener('drop', async (e) => {
+                    const dt = e.dataTransfer;
+                    const files = dt.files;
+                    await handleDroppedFiles(files, boxInfo.side);
+                }, false);
+            });
+        }
+
+        // Initialize drag and drop
+        initDragAndDrop();
+
+        function openEditor() {
+            if (!cvReady) return;
+            document.getElementById('editorContainer').style.display = 'block';
+            document.getElementById('editorControls').style.display = 'flex';
+            document.getElementById('a4Viewport').style.display = 'none';
+
+            let sideLabel = (activeSide === 'front') ? 'Front Side' : 'Back Side';
+            if (mode === 'a4') sideLabel = 'A4 Page';
+            if (editQueue.length > 0 && currentQueueIndex >= 0) {
+                document.getElementById('statusMsg').innerHTML = `<i class='fas fa-crop-alt' style='color:var(--primary); margin-right:5px;'></i> Cropping (${sideLabel}) — Adjust corners & click "Crop & Next"`;
+            } else {
+                document.getElementById('statusMsg').innerHTML = `<i class='fas fa-crop-alt' style='color:var(--primary); margin-right:5px;'></i> Adjust crop corners and click "Crop"`;
+            }
+
+            // Initialize zoom lens
+            zoomLens = document.getElementById('zoomLens');
+            zoomLensCanvas = document.getElementById('zoomCanvas');
+            zoomLensCtx = zoomLensCanvas.getContext('2d');
+
+            console.log('Zoom lens initialized:', {
+                zoomLens: zoomLens,
+                zoomLensCanvas: zoomLensCanvas,
+                zoomLensCtx: zoomLensCtx
+            });
+
+            // Reset zoom
+            canvasZoom = 1.0;
+            document.querySelector('.canvas-container').style.transform = 'scale(1)';
+
+            let max = 1400;
+            let s = Math.min(1, max / Math.max(img.width, img.height));
+            srcCanvas.width = img.width * s; srcCanvas.height = img.height * s;
+            let w = srcCanvas.width, h = srcCanvas.height;
+
+            // DEFAULT FALLBACK POINTS
+            points = [{ x: w * 0.1, y: h * 0.1 }, { x: w * 0.9, y: h * 0.1 }, { x: w * 0.9, y: h * 0.9 }, { x: w * 0.1, y: h * 0.9 }];
+
+            // RESET FILTERS
+            document.getElementById('bri').value = 100;
+            document.getElementById('con').value = 100;
+            document.getElementById('sat').value = 100;
+            document.getElementById('sharp').value = 200; // Default 200% sharpness
+
+            // Update value displays
+            updateSliderValue('bri');
+            updateSliderValue('con');
+            updateSliderValue('sat');
+            updateSliderValue('sharp');
+
+            setFilterMode('magic-bw'); // Reset first
+
+            // AI DETECTION & AUTO-ENHANCE
+            if (document.getElementById('aiCheck').checked) {
+                detectSmartCorners(img, s);
+                // Force Auto-Enhance even if detection was only partial
+                setTimeout(() => setFilterMode('magic-bw'), 200);
+            }
+
+            setCropStyle(localStorage.getItem('idcard_cropStyle') || 'drag');
+
+            // AUTO-OPEN ADJUSTMENT PANEL
+            setTimeout(() => {
+                const filterPopup = document.getElementById('filterPopup');
+                if (filterPopup) {
+                    filterPopup.style.display = 'block';
+                }
+            }, 500); // Small delay to ensure editor is fully loaded
+        }
+
+        /**
+         * REVISED AI DETECTION: WHATSAPP/AADHAAR OPTIMIZED
+         * Uses Bilateral Filter + Canny + Morph Close + Convex Hull
+         * ONLY CROPS REGIONS >= 10% OF IMAGE AREA
+         */
+        function detectSmartCorners(imageObj, scale) {
+            try {
+                let src = cv.imread(imageObj);
+                let dst = new cv.Mat();
+                let gray = new cv.Mat();
+                let blur = new cv.Mat();
+
+                // Calculate total image area for 10% threshold
+                let totalImageArea = src.rows * src.cols;
+                let minAreaThreshold = totalImageArea * 0.10; // 10% of image
+
+                // 1. Convert to Gray
+                cv.cvtColor(src, gray, cv.COLOR_RGBA2GRAY, 0);
+
+                // 2. Bilateral Filter: Smooths surfaces while keeping edges sharp
+                cv.bilateralFilter(gray, blur, 9, 75, 75, cv.BORDER_DEFAULT);
+
+                // 3. Dynamic Threshold Canny: Uses Otsu's thresholding to adapt dynamically to lighting/contrast
+                let otsuMat = new cv.Mat();
+                let otsuThresh = cv.threshold(blur, otsuMat, 0, 255, cv.THRESH_BINARY + cv.THRESH_OTSU);
+                otsuMat.delete();
+
+                let lowerThresh = Math.max(15, otsuThresh * 0.4);
+                let upperThresh = Math.min(255, otsuThresh * 0.9);
+                cv.Canny(blur, dst, lowerThresh, upperThresh, 3, false);
+
+                // 4. Robust Morphological Closing (5x5 kernel) to bridge any gaps in card edges
+                let M = cv.Mat.ones(5, 5, cv.CV_8U);
+                cv.morphologyEx(dst, dst, cv.MORPH_CLOSE, M, new cv.Point(-1, -1), 2);
+
+                // 5. Find Contours
+                let contours = new cv.MatVector();
+                let hierarchy = new cv.Mat();
+                cv.findContours(dst, contours, hierarchy, cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE);
+
+                // 6. Filter contours: ONLY keep those >= 10% of image area
+                let cnts = [];
+                for (let i = 0; i < contours.size(); ++i) {
+                    let cnt = contours.get(i);
+                    let area = cv.contourArea(cnt);
+                    if (area >= minAreaThreshold) {
+                        cnts.push({ idx: i, area: area, cnt: cnt });
+                    } else {
+                        cnt.delete();
+                    }
+                }
+
+                // Sort descending by area
+                cnts.sort((a, b) => b.area - a.area);
+
+                let found = false;
+
+                // Try the top 3 candidates
+                for (let i = 0; i < Math.min(3, cnts.length); i++) {
+                    if (found) break;
+
+                    let c = cnts[i].cnt;
+                    let peri = cv.arcLength(c, true);
+                    let approx = new cv.Mat();
+
+                    // Try Dynamic Approximation Factor Scanner (0.015 to 0.050)
+                    let foundQuad = false;
+                    for (let k = 15; k <= 50; k += 5) {
+                        let eps = (k / 1000) * peri;
+                        cv.approxPolyDP(c, approx, eps, true);
+                        if (approx.rows === 4) {
+                            foundQuad = true;
+                            break;
+                        }
+                    }
+
+                    if (foundQuad) {
+                        let foundPoints = [];
+                        for (let j = 0; j < 4; j++) foundPoints.push({ x: approx.data32S[j * 2] * scale, y: approx.data32S[j * 2 + 1] * scale });
+
+                        let detectedArea = calculatePolygonArea(foundPoints);
+                        let scaledImageArea = (src.rows * scale) * (src.cols * scale);
+
+                        if (detectedArea >= scaledImageArea * 0.10) {
+                            points = sortPoints(foundPoints);
+                            showToast("AI: Aadhaar Detected (10%+)");
+                            found = true;
+                        }
+                    }
+
+                    if (!found) {
+                        // FALLBACK: Convex Hull with Dynamic Approximation scanner
+                        let hull = new cv.Mat();
+                        cv.convexHull(c, hull);
+                        let periHull = cv.arcLength(hull, true);
+                        let approxHull = new cv.Mat();
+
+                        let foundHullQuad = false;
+                        for (let k = 15; k <= 50; k += 5) {
+                            let eps = (k / 1000) * periHull;
+                            cv.approxPolyDP(hull, approxHull, eps, true);
+                            if (approxHull.rows === 4) {
+                                foundHullQuad = true;
+                                break;
+                            }
+                        }
+
+                        if (foundHullQuad) {
+                            let foundPoints = [];
+                            for (let j = 0; j < 4; j++) foundPoints.push({ x: approxHull.data32S[j * 2] * scale, y: approxHull.data32S[j * 2 + 1] * scale });
+
+                            let detectedArea = calculatePolygonArea(foundPoints);
+                            let scaledImageArea = (src.rows * scale) * (src.cols * scale);
+
+                            if (detectedArea >= scaledImageArea * 0.10) {
+                                points = sortPoints(foundPoints);
+                                showToast("AI: Card Edge Found (10%+)");
+                                found = true;
+                            }
+                        }
+                        hull.delete(); approxHull.delete();
+                    }
+                    approx.delete();
+                }
+
+                // 7. Last Resort: Bounding Box of largest if nothing else worked AND it's >= 10%
+                if (!found && cnts.length > 0) {
+                    let rect = cv.boundingRect(cnts[0].cnt);
+                    let rectArea = rect.width * rect.height;
+
+                    if (rectArea >= minAreaThreshold) {
+                        points = sortPoints([
+                            { x: rect.x * scale, y: rect.y * scale },
+                            { x: (rect.x + rect.width) * scale, y: rect.y * scale },
+                            { x: (rect.x + rect.width) * scale, y: (rect.y + rect.height) * scale },
+                            { x: rect.x * scale, y: (rect.y + rect.height) * scale }
+                        ]);
+                        showToast("AI: Auto-Region (10%+)");
+                    } else {
+                        showToast("AI: Region too small (<10%)");
+                    }
+                } else if (!found) {
+                    showToast("AI: No large region found (need 10%+)");
+                }
+
+                // Cleanup
+                cnts.forEach(o => o.cnt.delete());
+                src.delete(); dst.delete(); gray.delete(); blur.delete(); contours.delete(); hierarchy.delete(); M.delete();
+
+            } catch (e) {
+                console.error("AI Detection failed", e);
+            }
+        }
+
+        // Helper function to calculate polygon area using Shoelace formula
+        function calculatePolygonArea(points) {
+            let area = 0;
+            for (let i = 0; i < points.length; i++) {
+                let j = (i + 1) % points.length;
+                area += points[i].x * points[j].y;
+                area -= points[j].x * points[i].y;
+            }
+            return Math.abs(area / 2);
+        }
+
+        function showToast(msg) {
+            let t = document.getElementById('ai-toast');
+            t.innerHTML = `<i class="fas fa-magic"></i> ${msg}`;
+            t.style.opacity = '1';
+            setTimeout(() => t.style.opacity = '0', 3000);
+        }
+
+        // Helper to sort points into TL, TR, BR, BL using mathematically robust Sum and Difference method
+        function sortPoints(pts) {
+            let sum = pts.map(p => p.x + p.y);
+            let diff = pts.map(p => p.y - p.x);
+
+            let tl = pts[sum.indexOf(Math.min(...sum))];
+            let br = pts[sum.indexOf(Math.max(...sum))];
+            let tr = pts[diff.indexOf(Math.min(...diff))];
+            let bl = pts[diff.indexOf(Math.max(...diff))];
+
+            return [tl, tr, br, bl];
+        }
+
+        // Update slider value display and fill animation
+        function updateSliderValue(id) {
+            let slider = document.getElementById(id);
+            let value = slider.value;
+            let min = slider.min || 0;
+            let max = slider.max || 100;
+
+            // Update value display
+            document.getElementById(id + '-val').textContent = value + '%';
+
+            // Calculate percentage for fill
+            let percentage = ((value - min) / (max - min)) * 100;
+
+            // Update fill using linear gradient background
+            slider.style.background = `linear-gradient(to right, var(--primary) 0%, var(--primary) ${percentage}%, #e5e7eb ${percentage}%, #e5e7eb 100%)`;
+        }
+
+        function setFilterMode(m) {
+            currentFilterMode = m;
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById('filt-' + (m === 'original' ? 'orig' : m)).classList.add('active');
+
+            if (m === 'magic') {
+                document.getElementById('con').value = 115; document.getElementById('bri').value = 108; document.getElementById('sat').value = 110; document.getElementById('sharp').value = 200;
+            } else if (m === 'magic-bw') {
+                document.getElementById('con').value = 115; document.getElementById('bri').value = 108; document.getElementById('sat').value = 0; document.getElementById('sharp').value = 200;
+            } else if (m === 'doc') {
+                document.getElementById('con').value = 120; document.getElementById('bri').value = 105; document.getElementById('sat').value = 0; document.getElementById('sharp').value = 120;
+            } else if (m === 'gray') {
+                document.getElementById('sat').value = 0; document.getElementById('bri').value = 100; document.getElementById('con').value = 100; document.getElementById('sharp').value = 100;
+            } else if (m === 'bw') {
+                document.getElementById('sat').value = 0; document.getElementById('con').value = 150; document.getElementById('bri').value = 100; document.getElementById('sharp').value = 110;
+            } else if (m === 'light') {
+                document.getElementById('bri').value = 120; document.getElementById('con').value = 110; document.getElementById('sat').value = 0; document.getElementById('sharp').value = 100;
+            } else {
+                document.getElementById('con').value = 100; document.getElementById('bri').value = 100; document.getElementById('sat').value = 100; document.getElementById('sharp').value = 100;
+            }
+
+            // Update all value displays
+            updateSliderValue('bri');
+            updateSliderValue('con');
+            updateSliderValue('sharp');
+            updateSliderValue('sat');
+
+            draw();
+        }
+
+        // Debounce timer for performance optimization
+        let drawTimer = null;
+
+        let filterCacheCanvas = document.createElement('canvas');
+
+        // Apply sharpness to a specific canvas
+        function applySharpnessToCanvas(canvas, sharpValue) {
+            let c = canvas.getContext('2d');
+            let imageData = c.getImageData(0, 0, canvas.width, canvas.height);
+            let pixels = imageData.data;
+            let width = canvas.width;
+            let height = canvas.height;
+
+            // Convert sharpness value (0-200) to intensity (0-2)
+            let intensity = (sharpValue / 100) - 1; // -1 to +1 range
+
+            if (intensity === 0) return;
+
+            // Create a copy of the original data
+            let original = new Uint8ClampedArray(pixels);
+
+            // Simple sharpening kernel (3x3)
+            let kernel = [
+                0, -1, 0,
+                -1, 5, -1,
+                0, -1, 0
+            ];
+
+            // Apply sharpening with intensity
+            for (let y = 1; y < height - 1; y++) {
+                for (let x = 1; x < width - 1; x++) {
+                    for (let c = 0; c < 3; c++) { // RGB channels only
+                        let sum = 0;
+                        for (let ky = -1; ky <= 1; ky++) {
+                            for (let kx = -1; kx <= 1; kx++) {
+                                let pixelIndex = ((y + ky) * width + (x + kx)) * 4 + c;
+                                let kernelIndex = (ky + 1) * 3 + (kx + 1);
+                                sum += original[pixelIndex] * kernel[kernelIndex];
+                            }
+                        }
+
+                        let currentIndex = (y * width + x) * 4 + c;
+                        let originalValue = original[currentIndex];
+                        let sharpenedValue = sum;
+
+                        // Blend based on intensity
+                        pixels[currentIndex] = originalValue + (sharpenedValue - originalValue) * intensity;
+                    }
+                }
+            }
+
+            c.putImageData(imageData, 0, 0);
+        }
+
+        let isUserDraggingSlider = false;
+        let sliderDebounceTimer = null;
+
+        function updateFilterCache(fastPreview = false) {
+            if (!img.src || srcCanvas.width === 0 || srcCanvas.height === 0) return;
+
+            filterCacheCanvas.width = srcCanvas.width;
+            filterCacheCanvas.height = srcCanvas.height;
+            let fctx = filterCacheCanvas.getContext('2d');
+
+            let bri = document.getElementById('bri').value;
+            let con = document.getElementById('con').value;
+            let sat = document.getElementById('sat').value;
+            let sharp = document.getElementById('sharp').value;
+
+            // Apply brightness, contrast, and saturation
+            fctx.filter = `brightness(${bri}%) contrast(${con}%) saturate(${sat}%)`;
+            fctx.drawImage(img, 0, 0, filterCacheCanvas.width, filterCacheCanvas.height);
+            fctx.filter = 'none';
+
+            // Skip heavy sharpening and OpenCV loops during active dragging for buttery-smooth 60fps adjustments
+            if (fastPreview) {
+                return;
+            }
+
+            // Apply sharpness if not at default (100)
+            if (sharp != 100) {
+                applySharpnessToCanvas(filterCacheCanvas, sharp);
+            }
+
+            // Apply OpenCV filters
+            if (cvReady && currentFilterMode !== 'original') {
+                try {
+                    let dst = cv.imread(filterCacheCanvas);
+
+                    if (currentFilterMode === 'magic' || currentFilterMode === 'magic-bw') {
+                        let blurred = new cv.Mat();
+                        cv.GaussianBlur(dst, blurred, new cv.Size(0, 0), 3);
+                        cv.addWeighted(dst, 1.5, blurred, -0.5, 0, dst);
+                        blurred.delete();
+                        if (currentFilterMode === 'magic-bw') {
+                            cv.cvtColor(dst, dst, cv.COLOR_RGBA2GRAY);
+                            cv.cvtColor(dst, dst, cv.COLOR_GRAY2RGBA);
+                        }
+                    } else if (currentFilterMode === 'doc') {
+                        cv.cvtColor(dst, dst, cv.COLOR_RGBA2GRAY);
+                        cv.adaptiveThreshold(dst, dst, 255, cv.ADAPTIVE_THRESH_GAUSSIAN_C, cv.THRESH_BINARY, 11, 2);
+                        cv.cvtColor(dst, dst, cv.COLOR_GRAY2RGBA);
+                    } else if (currentFilterMode === 'gray') {
+                        cv.cvtColor(dst, dst, cv.COLOR_RGBA2GRAY);
+                        cv.cvtColor(dst, dst, cv.COLOR_GRAY2RGBA);
+                    } else if (currentFilterMode === 'bw') {
+                        cv.cvtColor(dst, dst, cv.COLOR_RGBA2GRAY);
+                        cv.threshold(dst, dst, 128, 255, cv.THRESH_BINARY);
+                        cv.cvtColor(dst, dst, cv.COLOR_GRAY2RGBA);
+                    }
+
+                    cv.imshow(filterCacheCanvas, dst);
+                    dst.delete();
+                } catch (e) {
+                    console.error("OpenCV preview filter failed", e);
+                }
+            }
+        }
+
+        function draw(fastPreview = false) {
+            if (fastPreview) {
+                isUserDraggingSlider = true;
+                clearTimeout(sliderDebounceTimer);
+                sliderDebounceTimer = setTimeout(() => {
+                    isUserDraggingSlider = false;
+                    draw(false);
+                }, 150);
+            }
+
+            if (!isDraggingPt) {
+                updateFilterCache(fastPreview || isUserDraggingSlider);
+            }
+
+            // Draw the cached filtered image onto the preview canvas
+            ctx.drawImage(filterCacheCanvas, 0, 0);
+
+            if (cropStyle !== 'click' && points && points.length === 4) {
+                ctx.fillStyle = 'rgba(0,0,0,0.5)';
+                ctx.beginPath(); ctx.rect(0, 0, srcCanvas.width, srcCanvas.height);
+                ctx.moveTo(points[0].x, points[0].y);
+                for (let i = 1; i < 4; i++) ctx.lineTo(points[i].x, points[i].y);
+                ctx.lineTo(points[0].x, points[0].y);
+                ctx.fill("evenodd");
+
+                ctx.strokeStyle = '#6366f1'; ctx.lineWidth = 2;
+                ctx.beginPath(); ctx.moveTo(points[0].x, points[0].y);
+                for (let i = 1; i < 4; i++) ctx.lineTo(points[i].x, points[i].y);
+                ctx.closePath(); ctx.stroke();
+
+                points.forEach(p => {
+                    ctx.beginPath(); ctx.arc(p.x, p.y, 6, 0, 2 * Math.PI);
+                    ctx.fillStyle = 'white'; ctx.fill(); ctx.stroke();
+                });
+            }
+
+            // Draw clicked points in Tap mode
+            if (cropStyle === 'click' && clickedPoints.length > 0) {
+                clickedPoints.forEach((p, idx) => {
+                    ctx.beginPath(); ctx.arc(p.x, p.y, 8, 0, 2 * Math.PI);
+                    ctx.fillStyle = '#6366f1'; ctx.fill();
+                    ctx.strokeStyle = 'white'; ctx.lineWidth = 2; ctx.stroke();
+
+                    ctx.fillStyle = 'white';
+                    ctx.font = 'bold 10px sans-serif';
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'middle';
+                    ctx.fillText(idx + 1, p.x, p.y);
+                });
+            }
+        }
+
+        function setCropStyle(style) {
+            cropStyle = style;
+            clickedPoints = [];
+
+            let btnDrag = document.getElementById('crop-style-drag');
+            let btnClick = document.getElementById('crop-style-click');
+
+            if (style === 'drag') {
+                if (btnDrag && btnClick) {
+                    btnDrag.style.background = '#fff';
+                    btnDrag.style.boxShadow = 'var(--shadow-sm)';
+                    btnDrag.style.color = 'var(--primary)';
+                    btnClick.style.background = 'transparent';
+                    btnClick.style.boxShadow = 'none';
+                    btnClick.style.color = 'var(--text-sub)';
+                }
+                showToast("Crop Style: Drag Corners Mode");
+            } else {
+                if (btnDrag && btnClick) {
+                    btnClick.style.background = '#fff';
+                    btnClick.style.boxShadow = 'var(--shadow-sm)';
+                    btnClick.style.color = 'var(--primary)';
+                    btnDrag.style.background = 'transparent';
+                    btnDrag.style.boxShadow = 'none';
+                    btnDrag.style.color = 'var(--text-sub)';
+                }
+                showToast("Tap 4 Corners of document!");
+            }
+            draw();
+        }
+
+        // Apply sharpness using unsharp mask technique
+        function applySharpness(sharpValue) {
+            let imageData = ctx.getImageData(0, 0, srcCanvas.width, srcCanvas.height);
+            let pixels = imageData.data;
+            let width = srcCanvas.width;
+            let height = srcCanvas.height;
+
+            // Convert sharpness value (0-200) to intensity (0-2)
+            let intensity = (sharpValue / 100) - 1; // -1 to +1 range
+
+            if (intensity === 0) return;
+
+            // Create a copy of the original data
+            let original = new Uint8ClampedArray(pixels);
+
+            // Simple sharpening kernel (3x3)
+            let kernel = [
+                0, -1, 0,
+                -1, 5, -1,
+                0, -1, 0
+            ];
+
+            // Apply sharpening with intensity
+            for (let y = 1; y < height - 1; y++) {
+                for (let x = 1; x < width - 1; x++) {
+                    for (let c = 0; c < 3; c++) { // RGB channels only
+                        let sum = 0;
+                        for (let ky = -1; ky <= 1; ky++) {
+                            for (let kx = -1; kx <= 1; kx++) {
+                                let pixelIndex = ((y + ky) * width + (x + kx)) * 4 + c;
+                                let kernelIndex = (ky + 1) * 3 + (kx + 1);
+                                sum += original[pixelIndex] * kernel[kernelIndex];
+                            }
+                        }
+
+                        let currentIndex = (y * width + x) * 4 + c;
+                        let originalValue = original[currentIndex];
+                        let sharpenedValue = sum;
+
+                        // Blend based on intensity
+                        pixels[currentIndex] = originalValue + (sharpenedValue - originalValue) * intensity;
+                    }
+                }
+            }
+
+            ctx.putImageData(imageData, 0, 0);
+        }
+
+        function getPos(e) {
+            let r = srcCanvas.getBoundingClientRect();
+            return { x: (e.clientX - r.left) * (srcCanvas.width / r.width), y: (e.clientY - r.top) * (srcCanvas.height / r.height) };
+        }
+
+        // Update zoom lens to show magnified view INCLUDING gray background outside canvas
+        function updateZoomLens(canvasX, canvasY, screenX, screenY) {
+            if (!zoomLens || !zoomLensCanvas || !zoomLensCtx) {
+                console.error('Zoom lens elements not found');
+                return;
+            }
+
+            console.log('updateZoomLens called:', canvasX, canvasY, screenX, screenY);
+
+            // Set zoom canvas size
+            let lensSize = 200;
+            zoomLensCanvas.width = lensSize;
+            zoomLensCanvas.height = lensSize;
+
+            // Calculate zoom area size in CANVAS coordinates
+            let zoomAreaSize = lensSize / zoomLevel;
+            let halfZoom = zoomAreaSize / 2;
+
+            // Define zoom area bounds (can be negative or beyond canvas)
+            let srcLeft = canvasX - halfZoom;
+            let srcTop = canvasY - halfZoom;
+            let srcRight = canvasX + halfZoom;
+            let srcBottom = canvasY + halfZoom;
+
+            // Fill ENTIRE lens with gray workspace background FIRST
+            zoomLensCtx.fillStyle = '#5a5d62';
+            zoomLensCtx.fillRect(0, 0, lensSize, lensSize);
+
+            // Calculate intersection with canvas
+            let canvasLeft = Math.max(0, srcLeft);
+            let canvasTop = Math.max(0, srcTop);
+            let canvasRight = Math.min(srcCanvas.width, srcRight);
+            let canvasBottom = Math.min(srcCanvas.height, srcBottom);
+
+            // Draw canvas content if any is visible
+            if (canvasRight > canvasLeft && canvasBottom > canvasTop) {
+                // Calculate destination position in lens
+                let destLeft = (canvasLeft - srcLeft) * zoomLevel;
+                let destTop = (canvasTop - srcTop) * zoomLevel;
+                let destWidth = (canvasRight - canvasLeft) * zoomLevel;
+                let destHeight = (canvasBottom - canvasTop) * zoomLevel;
+
+                console.log('Drawing canvas portion:', {
+                    src: [canvasLeft, canvasTop, canvasRight - canvasLeft, canvasBottom - canvasTop],
+                    dest: [destLeft, destTop, destWidth, destHeight]
+                });
+
+                try {
+                    zoomLensCtx.drawImage(
+                        srcCanvas,
+                        canvasLeft, canvasTop,
+                        canvasRight - canvasLeft, canvasBottom - canvasTop,
+                        destLeft, destTop,
+                        destWidth, destHeight
+                    );
+                } catch (e) {
+                    console.error('Zoom drawImage error:', e);
+                }
+            } else {
+                console.log('No canvas content visible in zoom area');
+            }
+
+            // Position lens - simplified positioning to ensure visibility
+            let containerRect = document.getElementById('editorContainer').getBoundingClientRect();
+            let canvasRect = srcCanvas.getBoundingClientRect();
+
+            // Position relative to cursor with offset
+            let offsetX = 80;
+            let offsetY = -80;
+            let lensX = screenX - containerRect.left + offsetX;
+            let lensY = screenY - containerRect.top + offsetY;
+
+            // Keep lens within container bounds
+            if (lensX + lensSize > containerRect.width - 20) {
+                lensX = screenX - containerRect.left - lensSize - 20;
+            }
+            if (lensX < 20) {
+                lensX = 20;
+            }
+            if (lensY < 20) {
+                lensY = screenY - containerRect.top + 80;
+            }
+            if (lensY + lensSize > containerRect.height - 20) {
+                lensY = containerRect.height - lensSize - 20;
+            }
+
+            console.log('Positioning lens at:', lensX, lensY);
+
+            zoomLens.style.left = lensX + 'px';
+            zoomLens.style.top = lensY + 'px';
+            zoomLens.style.display = 'block';
+        }
+
+        srcCanvas.addEventListener('mousedown', (e) => {
+            let p = getPos(e);
+
+            if (cropStyle === 'click') {
+                clickedPoints.push(p);
+
+                // Show magnifying lens temporarily
+                updateZoomLens(p.x, p.y, e.clientX, e.clientY);
+                setTimeout(() => { if (zoomLens) zoomLens.style.display = 'none'; }, 300);
+
+                if (clickedPoints.length === 4) {
+                    points = sortPoints(clickedPoints);
+                    clickedPoints = [];
+                    setCropStyle('drag');
+                    showToast("AI: 4 Corners Aligned!");
+                } else {
+                    draw();
+                }
+                return;
+            }
+
+            console.log('Mouse down at:', p);
+            points.forEach((pt, i) => {
+                let distance = Math.hypot(pt.x - p.x, pt.y - p.y);
+                console.log(`Distance to point ${i}:`, distance);
+                if (distance < 20) {
+                    isDraggingPt = true;
+                    dragIndexPt = i;
+                    console.log('Started dragging point:', i);
+                    // Show zoom lens when starting to drag
+                    updateZoomLens(pt.x, pt.y, e.clientX, e.clientY);
+                }
+            });
+        });
+
+        window.addEventListener('mousemove', (e) => {
+            if (isDraggingPt) {
+                let p = getPos(e);
+                // Clamp corner position to canvas bounds
+                p.x = Math.max(0, Math.min(srcCanvas.width, p.x));
+                p.y = Math.max(0, Math.min(srcCanvas.height, p.y));
+                points[dragIndexPt] = p;
+                draw();
+                // Update zoom lens position while dragging
+                updateZoomLens(p.x, p.y, e.clientX, e.clientY);
+            }
+        });
+
+        window.addEventListener('mouseup', () => {
+            isDraggingPt = false;
+            // Hide zoom lens when done dragging
+            if (zoomLens) zoomLens.style.display = 'none';
+        });
+
+        function processCrop() {
+            // If user clicked Crop without selecting 4 corners in Tap mode, crop 100% full image!
+            if (cropStyle === 'click' && clickedPoints.length < 4) {
+                let w = srcCanvas.width;
+                let h = srcCanvas.height;
+                points = [
+                    { x: 0, y: 0 },
+                    { x: w, y: 0 },
+                    { x: w, y: h },
+                    { x: 0, y: h }
+                ];
+            }
+
+            // Close the filter popup and zoom lens if they're open
+            document.getElementById('filterPopup').style.display = 'none';
+            if (zoomLens) zoomLens.style.display = 'none';
+
+            let hd = document.createElement('canvas');
+            let scale = Math.min(1, 2500 / Math.max(img.width, img.height));
+            hd.width = img.width * scale; hd.height = img.height * scale;
+            let hctx = hd.getContext('2d');
+            let bri = document.getElementById('bri').value;
+            let con = document.getElementById('con').value;
+            let sat = document.getElementById('sat').value;
+            let sharp = document.getElementById('sharp').value;
+
+            // Apply filters
+            hctx.filter = `brightness(${bri}%) contrast(${con}%) saturate(${sat}%)`;
+            hctx.drawImage(img, 0, 0, hd.width, hd.height);
+            hctx.filter = 'none';
+
+            // Apply sharpness if needed
+            if (sharp != 100) {
+                let imageData = hctx.getImageData(0, 0, hd.width, hd.height);
+                let pixels = imageData.data;
+                let width = hd.width;
+                let height = hd.height;
+                let intensity = (sharp / 100) - 1;
+                let original = new Uint8ClampedArray(pixels);
+                let w4 = width * 4;
+
+                for (let y = 1; y < height - 1; y++) {
+                    let rowOffset = y * w4;
+                    let prevRowOffset = (y - 1) * w4;
+                    let nextRowOffset = (y + 1) * w4;
+
+                    for (let x = 1; x < width - 1; x++) {
+                        let x4 = x * 4;
+                        for (let c = 0; c < 3; c++) {
+                            let idx = rowOffset + x4 + c;
+                            let center = original[idx] * 5;
+                            let top = original[prevRowOffset + x4 + c];
+                            let bottom = original[nextRowOffset + x4 + c];
+                            let left = original[rowOffset + (x - 1) * 4 + c];
+                            let right = original[rowOffset + (x + 1) * 4 + c];
+                            let sharpened = center - top - bottom - left - right;
+                            pixels[idx] = original[idx] + (sharpened - original[idx]) * intensity;
+                        }
+                    }
+                }
+                hctx.putImageData(imageData, 0, 0);
+            }
+
+            let ratio = hd.width / srcCanvas.width;
+            let hdPts = points.map(p => ({ x: p.x * ratio, y: p.y * ratio }));
+
+            try {
+                let src = cv.imread(hd);
+                let srcTri = cv.matFromArray(4, 1, cv.CV_32FC2, [hdPts[0].x, hdPts[0].y, hdPts[1].x, hdPts[1].y, hdPts[2].x, hdPts[2].y, hdPts[3].x, hdPts[3].y]);
+
+                let w1 = Math.hypot(hdPts[1].x - hdPts[0].x, hdPts[1].y - hdPts[0].y);
+                let w2 = Math.hypot(hdPts[2].x - hdPts[3].x, hdPts[2].y - hdPts[3].y);
+                let h1 = Math.hypot(hdPts[3].x - hdPts[0].x, hdPts[3].y - hdPts[0].y);
+                let h2 = Math.hypot(hdPts[2].x - hdPts[1].x, hdPts[2].y - hdPts[1].y);
+
+                let w = Math.max(w1, w2);
+                let h = Math.max(h1, h2);
+
+                let dstTri = cv.matFromArray(4, 1, cv.CV_32FC2, [0, 0, w, 0, w, h, 0, h]);
+                let M = cv.getPerspectiveTransform(srcTri, dstTri);
+                let dst = new cv.Mat(); cv.warpPerspective(src, dst, M, new cv.Size(w, h));
+
+                if (currentFilterMode === 'magic' || currentFilterMode === 'magic-bw') {
+                    let blurred = new cv.Mat();
+                    cv.GaussianBlur(dst, blurred, new cv.Size(0, 0), 3);
+                    cv.addWeighted(dst, 1.5, blurred, -0.5, 0, dst);
+                    blurred.delete();
+                    if (currentFilterMode === 'magic-bw') {
+                        cv.cvtColor(dst, dst, cv.COLOR_RGBA2GRAY);
+                        cv.cvtColor(dst, dst, cv.COLOR_GRAY2RGBA);
+                    }
+                } else if (currentFilterMode === 'doc') {
+                    cv.cvtColor(dst, dst, cv.COLOR_RGBA2GRAY);
+                    cv.adaptiveThreshold(dst, dst, 255, cv.ADAPTIVE_THRESH_GAUSSIAN_C, cv.THRESH_BINARY, 11, 2);
+                    cv.cvtColor(dst, dst, cv.COLOR_GRAY2RGBA);
+                } else if (currentFilterMode === 'gray') {
+                    cv.cvtColor(dst, dst, cv.COLOR_RGBA2GRAY);
+                    cv.cvtColor(dst, dst, cv.COLOR_GRAY2RGBA);
+                } else if (currentFilterMode === 'bw') {
+                    cv.cvtColor(dst, dst, cv.COLOR_RGBA2GRAY);
+                    cv.threshold(dst, dst, 128, 255, cv.THRESH_BINARY);
+                    cv.cvtColor(dst, dst, cv.COLOR_GRAY2RGBA);
+                }
+
+                cv.imshow('tempCanvas', dst);
+                let result = document.getElementById('tempCanvas').toDataURL('image/png');
+                if (enhancingItem !== null) {
+                    enhancingItem.querySelector('img').src = result;
+                    if (mode === 'idcard') {
+                        let type = enhancingItem.dataset.type || 'front';
+                        if (type === 'front') {
+                            dataFront = result;
+                            document.getElementById('prev-front').src = result;
+                            document.getElementById('box-front').classList.add('filled');
+                        } else {
+                            dataBack = result;
+                            document.getElementById('prev-back').src = result;
+                            document.getElementById('box-back').classList.add('filled');
+                        }
+                    }
+                } else {
+                    if (activeSide === 'front') {
+                        dataFront = result;
+                        document.getElementById('prev-front').src = result;
+                        document.getElementById('box-front').classList.add('filled');
+                    } else {
+                        dataBack = result;
+                        document.getElementById('prev-back').src = result;
+                        document.getElementById('box-back').classList.add('filled');
+                    }
+                }
+
+                src.delete(); dst.delete(); M.delete(); srcTri.delete(); dstTri.delete();
+                
+                if (enhancingItem !== null) {
+                    enhancingItem = null;
+                    autoSaveCurrentWorkspace();
+                } else {
+                    if (mode === 'idcard') {
+                        let existing = document.querySelector(`#a4Page .movable-item[data-type="${activeSide}"]`);
+                        if (existing) {
+                            existing.querySelector('img').src = result;
+                        } else {
+                            addMovableImage(result, w, h, null, activeSide);
+                        }
+                    } else {
+                        addMovableImage(result, w, h);
+                    }
+                }
+                toggleBW();
+
+                // Queue sequential processing
+                currentQueueIndex++;
+                if (editQueue.length > 0 && currentQueueIndex < editQueue.length) {
+                    if (mode === 'idcard') {
+                        const nextItem = editQueue[currentQueueIndex];
+                        if (nextItem.side === 'front' && dataFront) {
+                            saveCurrentPage();
+                        }
+                    }
+                    processNextInQueue();
+                } else {
+                    // Queue finished
+                    editQueue = [];
+                    currentQueueIndex = -1;
+                    hideQueueBadge();
+                    
+                    document.getElementById('editorContainer').style.display = 'none';
+                    document.getElementById('editorControls').style.display = 'none';
+
+                    if (mode === 'a4') {
+                        document.getElementById('a4Viewport').style.display = 'flex';
+                    } else {
+                        updateIDCardPreview();
+                    }
+                    document.getElementById('statusMsg').innerHTML = "<i class='fas fa-check-circle' style='color:#10b981; margin-right:5px;'></i> All images processed successfully.";
+                }
+
+            } catch (e) { console.error(e); alert("Processing Error"); }
+        }
+
+        function rotate(deg) {
+            let c = document.createElement('canvas');
+            if (Math.abs(deg) === 90) { c.width = img.height; c.height = img.width; } else { c.width = img.width; c.height = img.height; }
+            let x = c.getContext('2d'); x.translate(c.width / 2, c.height / 2); x.rotate(deg * Math.PI / 180); x.drawImage(img, -img.width / 2, -img.height / 2);
+            img.src = c.toDataURL();
+        }
+
+        function zoomCanvas(delta) {
+            canvasZoom += delta;
+            // Limit zoom between 0.5x and 4x for precise corner selection.
+            if (canvasZoom < 0.5) canvasZoom = 0.5;
+            if (canvasZoom > 4) canvasZoom = 4;
+
+            // Apply zoom to canvas container
+            let container = document.querySelector('.canvas-container');
+            container.style.transform = `scale(${canvasZoom})`;
+            container.style.transformOrigin = 'center center';
+        }
+
+        function toggleFilters() {
+            let p = document.getElementById('filterPopup');
+            let isOpening = p.style.display !== 'block';
+            p.style.display = isOpening ? 'block' : 'none';
+
+            // Initialize slider fills when opening
+            if (isOpening) {
+                updateSliderValue('bri');
+                updateSliderValue('con');
+                updateSliderValue('sharp');
+                updateSliderValue('sat');
+            }
+        }
+
+        function saveCurrentPage() {
+            let pageData;
+            
+            if (editingPageId !== null) {
+                pageData = savedPages.find(p => p.id === editingPageId);
+                if (!pageData) {
+                    pageData = { id: savedPages.length + 1, mode: mode, items: [] };
+                    savedPages.push(pageData);
+                } else {
+                    pageData.mode = mode;
+                    pageData.items = [];
+                }
+            } else {
+                pageData = { id: savedPages.length + 1, mode: mode, items: [] };
+            }
+            
+            let hasContent = false;
+
+            if (mode === 'idcard') {
+                let movables = document.querySelectorAll('#a4Page .movable-item');
+                if (movables.length === 0) { alert("Page is empty!"); return; }
+                hasContent = true;
+                movables.forEach(div => {
+                    pageData.items.push({
+                        type: div.dataset.type || 'front',
+                        src: div.querySelector('img').src,
+                        style: {
+                            left: div.style.left, top: div.style.top,
+                            width: div.style.width, height: div.style.height
+                        }
+                    });
+                });
+            } else {
+                let movables = document.querySelectorAll('#a4Page .movable-item');
+                if (movables.length === 0) { alert("Page is empty!"); return; }
+                hasContent = true;
+                movables.forEach(div => {
+                    pageData.items.push({
+                        type: 'a4-item',
+                        src: div.querySelector('img').src,
+                        style: {
+                            left: div.style.left, top: div.style.top,
+                            width: div.style.width, height: div.style.height
+                        }
+                    });
+                });
+            }
+
+            if (hasContent) {
+                if (editingPageId === null) {
+                    savedPages.push(pageData);
+                }
+                editingPageId = null;
+                resetWorkspace();
+                renderPageList();
+            }
+        }
+
+        function resetWorkspace() {
+            editingPageId = null;
+            updateSaveButtonsText();
+            
+            dataFront = null; dataBack = null;
+            document.getElementById('prev-front').src = '';
+            document.getElementById('box-front').classList.remove('filled');
+            document.getElementById('prev-back').src = '';
+            document.getElementById('box-back').classList.remove('filled');
+            document.getElementById('a4Page').innerHTML = '';
+            if (mode === 'idcard') {
+                updateIDCardPreview();
+            }
+            document.getElementById('statusMsg').innerHTML = `<i class="fas fa-info-circle" style="color:var(--primary); margin-right:5px;"></i> Upload an image to start AI detection.`;
+        }
+
+        function updateSaveButtonsText() {
+            let btns = document.querySelectorAll('.btn-add, button[onclick="saveCurrentPage()"]');
+            btns.forEach(btn => {
+                if (editingPageId !== null) {
+                    if (btn.classList.contains('btn-add')) {
+                        btn.innerHTML = `<i class="fas fa-check-circle"></i> SAVE CHANGES`;
+                    } else {
+                        btn.innerHTML = `<i class="fas fa-check"></i> SAVE CHANGES`;
+                    }
+                } else {
+                    if (btn.classList.contains('btn-add')) {
+                        btn.innerHTML = `<i class="fas fa-plus-circle"></i> SAVE & START NEW PAGE`;
+                    } else {
+                        btn.innerHTML = `<i class="fas fa-plus"></i> QUEUE PAGE`;
+                    }
+                }
+            });
+        }
+
+        function loadSavedPage(pageId) {
+            autoSaveCurrentWorkspace();
+            let page = savedPages.find(p => p.id === pageId);
+            if (!page) return;
+
+            editingPageId = pageId;
+            mode = page.mode;
+            
+            // Update UI selector buttons
+            document.querySelectorAll('.type-grid .type-btn').forEach(b => {
+                let isIdcardBtn = b.getAttribute('onclick').includes('idcard');
+                if (mode === 'idcard' && isIdcardBtn) {
+                    b.classList.add('active');
+                } else if (mode === 'a4' && !isIdcardBtn) {
+                    b.classList.add('active');
+                } else {
+                    b.classList.remove('active');
+                }
+            });
+            
+            document.getElementById('lblFront').innerText = (mode === 'a4') ? 'Front Page' : 'Front Side';
+            if (typeof updateAdminPhoneCamVisibility === 'function') {
+                updateAdminPhoneCamVisibility();
+            }
+
+            // Clear page and load elements
+            document.getElementById('a4Page').innerHTML = '';
+            document.getElementById('a4Viewport').style.display = 'flex';
+            document.getElementById('editorContainer').style.display = 'none';
+
+            dataFront = null;
+            dataBack = null;
+
+            page.items.forEach(item => {
+                if (mode === 'idcard') {
+                    if (item.type === 'front') {
+                        dataFront = item.src;
+                        document.getElementById('prev-front').src = item.src;
+                        document.getElementById('box-front').classList.add('filled');
+                    } else if (item.type === 'back') {
+                        dataBack = item.src;
+                        document.getElementById('prev-back').src = item.src;
+                        document.getElementById('box-back').classList.add('filled');
+                    }
+                }
+                
+                addMovableImage(item.src, null, null, item.style, item.type);
+            });
+
+            updateSaveButtonsText();
+            document.getElementById('statusMsg').innerHTML = `<i class="fas fa-edit" style="color:#10b981; margin-right:5px;"></i> Editing Saved Page ${pageId}. Drag cards and click "SAVE CHANGES".`;
+        }
+
+        function updateIDCardPreview() {
+            let page = document.getElementById('a4Page');
+            if (mode !== 'idcard') return;
+
+            page.innerHTML = '';
+            document.getElementById('a4Viewport').style.display = 'flex';
+
+            let hasMovable = false;
+            
+            if (dataFront) {
+                // Find if front card style exists
+                let frontStyle = null;
+                if (editingPageId !== null) {
+                    let pageData = savedPages.find(p => p.id === editingPageId);
+                    let frontItem = pageData?.items.find(i => i.type === 'front');
+                    if (frontItem) frontStyle = frontItem.style;
+                }
+                addMovableImage(dataFront, null, null, frontStyle, 'front');
+                hasMovable = true;
+            }
+            if (dataBack) {
+                let backStyle = null;
+                if (editingPageId !== null) {
+                    let pageData = savedPages.find(p => p.id === editingPageId);
+                    let backItem = pageData?.items.find(i => i.type === 'back');
+                    if (backItem) backStyle = backItem.style;
+                }
+                addMovableImage(dataBack, null, null, backStyle, 'back');
+                hasMovable = true;
+            }
+
+            if (!hasMovable) {
+                let container = document.createElement('div');
+                container.style.cssText = `
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    width: 100%;
+                    height: 100%;
+                    padding-top: 57px;
+                    gap: 19px;
+                    box-sizing: border-box;
+                `;
+
+                let frontDiv = document.createElement('div');
+                frontDiv.style.cssText = `
+                    width: 341px;
+                    height: 214px;
+                    border-radius: 8px;
+                    border: 2px dashed #cbd5e1;
+                    background: #f9fafb;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                `;
+                frontDiv.innerHTML = `
+                    <div style="display:flex; flex-direction:column; align-items:center; color:#94a3b8;">
+                        <i class="far fa-id-card" style="font-size:32px; margin-bottom:8px;"></i>
+                        <span style="font-size:12px; font-weight:600;">Front Side Preview</span>
+                    </div>
+                `;
+
+                let backDiv = document.createElement('div');
+                backDiv.style.cssText = frontDiv.style.cssText;
+                backDiv.innerHTML = `
+                    <div style="display:flex; flex-direction:column; align-items:center; color:#94a3b8;">
+                        <i class="fas fa-sync-alt" style="font-size:32px; margin-bottom:8px;"></i>
+                        <span style="font-size:12px; font-weight:600;">Back Side Preview</span>
+                    </div>
+                `;
+
+                container.appendChild(frontDiv);
+                container.appendChild(backDiv);
+                page.appendChild(container);
+            }
+            toggleBW();
+        }
+
+        function renderPageList() {
+            let list = document.getElementById('savedPagesList');
+            if (savedPages.length === 0) {
+                list.innerHTML = `<div style="text-align:center; color:#9aa0a6; font-size:12px; padding:20px; border:2px dashed #e5e7eb; border-radius:12px;">No pages saved yet.</div>`;
+                return;
+            }
+            list.innerHTML = '';
+            savedPages.forEach(page => {
+                let label = page.mode === 'idcard' ? 'ID Card' : 'A4 Document';
+                let count = page.items.length;
+
+                // Front side thumbnail (or first item of the page)
+                let thumbSrc = page.items[0]?.src || '';
+                let thumbHTML = thumbSrc ? `
+            <div style="width:40px; height:40px; border-radius:6px; border:1px solid #e5e7eb; overflow:hidden; background:#f9fafb; flex-shrink:0; display:flex; align-items:center; justify-content:center; box-shadow:var(--shadow-sm);">
+                <img src="${thumbSrc}" style="width:100%; height:100%; object-fit:cover;">
+            </div>
+        ` : `
+            <div style="width:40px; height:40px; border-radius:6px; border:1px dashed #cbd5e1; background:#f9fafb; flex-shrink:0; display:flex; align-items:center; justify-content:center;">
+                <i class="far fa-image" style="color:#94a3b8; font-size:16px;"></i>
+            </div>
+        `;
+
+                list.innerHTML += `
+            <div class="saved-page-item" onclick="loadSavedPage(${page.id})" style="display:flex; align-items:center; gap:12px; padding:8px 12px; cursor:pointer;">
+                ${thumbHTML}
+                <div style="display:flex; flex-direction:column; flex-grow:1; min-width:0;">
+                    <span style="color:var(--text-main); font-weight:600; text-overflow:ellipsis; overflow:hidden; white-space:nowrap;">Page ${page.id}: ${label}</span>
+                    <span style="font-size:11px; color:var(--text-sub);">${count} item(s)</span>
+                </div>
+                <div style="display:flex; align-items:center; gap:4px; flex-shrink:0;">
+                    <i class="fas fa-check-circle" style="color:#10b981;"></i>
+                    <span onclick="event.stopPropagation(); deletePage(${page.id})" style="color:#ef4444; cursor:pointer; font-size:14px; padding:4px 8px; transition:0.2s;" title="Delete Page"><i class="fas fa-trash-alt"></i></span>
+                </div>
+            </div>
+        `;
+            });
+        }
+
+        function deletePage(id) {
+            if (confirm("Are you sure you want to delete Page " + id + "?")) {
+                let deletedCurrent = (id === editingPageId);
+                let wasEditingId = editingPageId;
+                
+                savedPages = savedPages.filter(p => p.id !== id);
+                // Re-index pages
+                savedPages.forEach((p, idx) => {
+                    p.id = idx + 1;
+                });
+                
+                if (deletedCurrent) {
+                    resetWorkspace();
+                } else if (wasEditingId !== null) {
+                    // Update editingPageId based on new indices
+                    if (wasEditingId > id) {
+                        editingPageId = wasEditingId - 1;
+                    }
+                }
+                
+                renderPageList();
+            }
+        }
+
+        function doPrint() {
+            autoSaveCurrentWorkspace();
+
+            let area = document.getElementById('printArea');
+            area.innerHTML = '';
+
+            let pagesToPrint = [...savedPages];
+
+            if (pagesToPrint.length === 0) return alert("Nothing to print!");
+
+            let bw = document.getElementById('bwCheck').checked;
+            let cssFilter = bw ? 'grayscale(100%)' : 'none';
+
+            let allImages = [];
+
+            pagesToPrint.forEach(page => {
+                let pageDiv = document.createElement('div');
+                pageDiv.className = 'print-page-container';
+
+                if (page.mode === 'idcard') {
+                    page.items.forEach(item => {
+                        let img = document.createElement('img');
+                        img.src = item.src;
+                        img.className = 'print-card';
+                        if (item.style) {
+                            img.style.position = 'absolute';
+                            img.style.left = item.style.left;
+                            img.style.top = item.style.top;
+                            img.style.width = item.style.width;
+                            img.style.height = item.style.height;
+                            img.style.margin = '0';
+                        }
+                        img.style.filter = cssFilter;
+                        pageDiv.appendChild(img);
+                        allImages.push(img);
+                    });
+                } else {
+                    page.items.forEach(item => {
+                        let img = document.createElement('img');
+                        img.src = item.src;
+                        img.className = 'print-a4-item';
+                        img.style.left = item.style.left;
+                        img.style.top = item.style.top;
+                        img.style.width = item.style.width;
+                        img.style.height = item.style.height;
+                        img.style.filter = cssFilter;
+                        pageDiv.appendChild(img);
+                        allImages.push(img);
+                    });
+                }
+                area.appendChild(pageDiv);
+            });
+
+            // Wait for all images to load before printing
+            let loadedCount = 0;
+            let totalImages = allImages.length;
+
+            if (totalImages === 0) {
+                window.print();
+                return;
+            }
+
+            allImages.forEach(img => {
+                if (img.complete) {
+                    loadedCount++;
+                    if (loadedCount === totalImages) {
+                        // Small delay to ensure rendering is complete
+                        setTimeout(() => window.print(), 100);
+                    }
+                } else {
+                    img.onload = () => {
+                        loadedCount++;
+                        if (loadedCount === totalImages) {
+                            // Small delay to ensure rendering is complete
+                            setTimeout(() => window.print(), 100);
+                        }
+                    };
+                    img.onerror = () => {
+                        loadedCount++;
+                        if (loadedCount === totalImages) {
+                            setTimeout(() => window.print(), 100);
+                        }
+                    };
+                }
+            });
+        }
+
+        function getCurrentDraft() {
+            let draft = { mode: mode, items: [] };
+            let has = false;
+
+            if (mode === 'idcard') {
+                let movs = document.querySelectorAll('#a4Page .movable-item');
+                if (movs.length > 0) {
+                    has = true;
+                    movs.forEach(div => {
+                        draft.items.push({
+                            type: div.dataset.type || 'front',
+                            src: div.querySelector('img').src,
+                            style: {
+                                left: div.style.left, top: div.style.top,
+                                width: div.style.width, height: div.style.height
+                            }
+                        });
+                    });
+                } else if (dataFront) {
+                    has = true;
+                    draft.items.push({ type: 'front', src: dataFront });
+                    if (dataBack) draft.items.push({ type: 'back', src: dataBack });
+                }
+            } else if (mode === 'a4') {
+                let movs = document.querySelectorAll('#a4Page .movable-item');
+                if (movs.length > 0) {
+                    has = true;
+                    movs.forEach(div => {
+                        draft.items.push({
+                            type: 'a4-item',
+                            src: div.querySelector('img').src,
+                            style: { left: div.style.left, top: div.style.top, width: div.style.width, height: div.style.height }
+                        });
+                    });
+                }
+            }
+            return has ? draft : null;
+        }
+
+        function addMovableImage(src, imgW, imgH, style = null, type = 'a4-item') {
+            let page = document.getElementById('a4Page');
+            let div = document.createElement('div');
+            div.className = 'movable-item';
+            div.dataset.type = type;
+
+            let width, height, left, top;
+
+            if (style) {
+                left = parseFloat(style.left);
+                top = parseFloat(style.top);
+                width = parseFloat(style.width);
+                height = parseFloat(style.height);
+            } else if (type === 'front' || type === 'back') {
+                width = 341;
+                height = 214;
+                let pageW = page.clientWidth || 794;
+                left = (pageW - width) / 2;
+                if (type === 'front') {
+                    top = 57;
+                } else {
+                    top = 290;
+                }
+            } else {
+                let pageW = page.clientWidth || 794;
+                let pageH = page.clientHeight || 1123;
+                let padding = 20;
+                let maxW = pageW - padding * 2;
+                let maxH = pageH - padding * 2;
+                width = maxW;
+                height = maxH;
+
+                if (imgW && imgH) {
+                    let ratio = imgW / imgH;
+                    if (maxW / maxH > ratio) {
+                        width = maxH * ratio;
+                        height = maxH;
+                    } else {
+                        width = maxW;
+                        height = maxW / ratio;
+                    }
+                } else {
+                    width = 300;
+                    height = 400;
+                }
+
+                left = (pageW - width) / 2;
+                top = (pageH - height) / 2;
+            }
+
+            div.style.left = left + 'px';
+            div.style.top = top + 'px';
+            div.style.width = width + 'px';
+            div.style.height = height + 'px';
+
+            let im = document.createElement('img');
+            im.src = src;
+            if (document.getElementById('bwCheck').checked) im.style.filter = 'grayscale(100%)';
+            div.appendChild(im);
+
+            ['nw', 'ne', 'se', 'sw'].forEach(d => {
+                let h = document.createElement('div');
+                h.className = 'resize-handle rh-' + d;
+                h.dataset.dir = d;
+                let icon = document.createElement('i');
+                icon.className = 'fas fa-expand-arrows-alt';
+                if (d === 'ne' || d === 'sw') {
+                    icon.style.transform = 'rotate(90deg)';
+                }
+                h.appendChild(icon);
+                div.appendChild(h);
+            });
+            div.addEventListener('mousedown', startDrag);
+            // Create Three-dot Menu Container
+            let menuContainer = document.createElement('div');
+            menuContainer.className = 'item-menu-container';
+
+            let menuBtn = document.createElement('div');
+            menuBtn.className = 'item-menu-btn';
+            menuBtn.innerHTML = '<i class="fas fa-ellipsis-v"></i>';
+
+            let dropdown = document.createElement('div');
+            dropdown.className = 'item-menu-dropdown';
+
+            menuContainer.appendChild(menuBtn);
+            menuContainer.appendChild(dropdown);
+            div.appendChild(menuContainer);
+
+            // Prevent drag/select events when interacting with the menu
+            ['mousedown', 'touchstart', 'click'].forEach(evtName => {
+                menuContainer.addEventListener(evtName, (e) => {
+                    e.stopPropagation();
+                });
+            });
+
+            menuBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                // Close other dropdowns
+                document.querySelectorAll('.item-menu-dropdown').forEach(d => {
+                    if (d !== dropdown) d.classList.remove('show');
+                });
+
+                // Dynamically populate options based on existing saved pages
+                let transferOptionsHtml = '';
+                savedPages.forEach(p => {
+                    if (editingPageId !== p.id) {
+                        let typeLabel = p.mode === 'idcard' ? 'ID Card' : 'A4 Page';
+                        transferOptionsHtml += `
+                            <div class="item-menu-dropdown-item" data-action="move-to-page" data-page-id="${p.id}">
+                                <i class="fas fa-file-alt"></i> Move to Page ${p.id} (${typeLabel})
+                            </div>
+                        `;
+                    }
+                });
+
+                dropdown.innerHTML = `
+                    <div class="item-menu-header">Size Options</div>
+                    <div class="item-menu-dropdown-item" data-action="size-voter">
+                        <i class="far fa-id-card"></i> Voter Card (7x11 cm)
+                    </div>
+                    <div class="item-menu-dropdown-item" data-action="size-big-voter">
+                        <i class="fas fa-id-card"></i> Big Voter Card (8.3x11 cm)
+                    </div>
+                    <div class="item-menu-dropdown-item" data-action="size-long-aadhar">
+                        <i class="fas fa-address-card"></i> Long Aadhar Card (9.2x23 cm)
+                    </div>
+                    <div class="item-menu-divider"></div>
+                    <div class="item-menu-header">Edit Options</div>
+                    <div class="item-menu-dropdown-item" data-action="enhance-image" style="color: #059669;">
+                        <i class="fas fa-magic"></i> Image Enhancement
+                    </div>
+                    <div class="item-menu-divider"></div>
+                    <div class="item-menu-header">Transfer Options</div>
+                    ${transferOptionsHtml}
+                    <div class="item-menu-dropdown-item" data-action="move-to-new-id" style="color: var(--primary);">
+                        <i class="far fa-id-card"></i> Move to New ID Card Page
+                    </div>
+                    <div class="item-menu-dropdown-item" data-action="move-to-new-a4" style="color: var(--primary);">
+                        <i class="fas fa-file-medical"></i> Move to New A4 Page
+                    </div>
+                `;
+
+                dropdown.classList.toggle('show');
+            });
+
+            dropdown.addEventListener('click', (e) => {
+                let item = e.target.closest('.item-menu-dropdown-item');
+                if (!item) return;
+                e.preventDefault();
+                e.stopPropagation();
+
+                let action = item.dataset.action;
+                if (action === 'enhance-image') {
+                    enhanceMovableItem(div);
+                } else if (action === 'size-voter') {
+                    resizeMovableItem(div, 265, 416);
+                } else if (action === 'size-big-voter') {
+                    resizeMovableItem(div, 314, 416);
+                } else if (action === 'size-long-aadhar') {
+                    resizeMovableItem(div, 348, 870);
+                } else if (action === 'move-to-new-id') {
+                    moveItemToNewPage(div, 'idcard');
+                } else if (action === 'move-to-new-a4') {
+                    moveItemToNewPage(div, 'a4');
+                } else if (action === 'move-to-page') {
+                    let pageId = parseInt(item.dataset.pageId);
+                    moveItemToExistingPage(div, pageId);
+                }
+                dropdown.classList.remove('show');
+            });
+
+            page.appendChild(div);
+        }
+
+        let activeItem = null, actionState = null, startX, startY, startL, startT, startW, startH, resDir;
+
+        function startDrag(e) {
+            e.preventDefault(); e.stopPropagation();
+            activeItem = e.currentTarget;
+            let handle = e.target.closest('.resize-handle');
+            if (handle) {
+                actionState = 'resize';
+                resDir = handle.dataset.dir;
+            } else {
+                actionState = 'drag';
+            }
+            startX = e.clientX; startY = e.clientY;
+            startL = activeItem.offsetLeft; startT = activeItem.offsetTop;
+            startW = activeItem.offsetWidth; startH = activeItem.offsetHeight;
+            window.addEventListener('mousemove', doAction);
+            window.addEventListener('mouseup', stopAction);
+        }
+
+        function doAction(e) {
+            if (!activeItem) return;
+            let dx = (e.clientX - startX) / A4_SCALE;
+            let dy = (e.clientY - startY) / A4_SCALE;
+
+            if (actionState === 'drag') {
+                activeItem.style.left = (startL + dx) + 'px';
+                activeItem.style.top = (startT + dy) + 'px';
+            } else {
+                let nW = startW, nH = startH, nL = startL, nT = startT;
+                if (resDir.includes('e')) nW = startW + dx;
+                if (resDir.includes('w')) { nW = startW - dx; nL = startL + dx; }
+                if (resDir.includes('s')) nH = startH + dy;
+                if (resDir.includes('n')) { nH = startH - dy; nT = startT + dy; }
+                if (nW > 20) { activeItem.style.width = nW + 'px'; activeItem.style.left = nL + 'px'; }
+                if (nH > 20) { activeItem.style.height = nH + 'px'; activeItem.style.top = nT + 'px'; }
+            }
+        }
+        function stopAction() { activeItem = null; actionState = null; window.removeEventListener('mousemove', doAction); window.removeEventListener('mouseup', stopAction); }
+        
+        function toggleBW() {
+            let f = document.getElementById('bwCheck').checked ? 'grayscale(100%)' : 'none';
+            document.querySelectorAll('.movable-item img').forEach(i => i.style.filter = f);
+            if (document.getElementById('prev-front')) document.getElementById('prev-front').style.filter = f;
+            if (document.getElementById('prev-back')) document.getElementById('prev-back').style.filter = f;
+        }
+
+        function autoSaveCurrentWorkspace() {
+            let movables = document.querySelectorAll('#a4Page .movable-item');
+            if (movables.length === 0 && editingPageId === null) return;
+
+            let pageData;
+            if (editingPageId !== null) {
+                pageData = savedPages.find(p => p.id === editingPageId);
+                if (pageData) {
+                    pageData.mode = mode;
+                    pageData.items = [];
+                } else {
+                    pageData = { id: editingPageId, mode: mode, items: [] };
+                    savedPages.push(pageData);
+                }
+            } else {
+                let newPageId = savedPages.length + 1;
+                pageData = { id: newPageId, mode: mode, items: [] };
+                savedPages.push(pageData);
+                editingPageId = newPageId;
+            }
+
+            movables.forEach(div => {
+                let type = div.dataset.type || (mode === 'idcard' ? 'front' : 'a4-item');
+                pageData.items.push({
+                    type: type,
+                    src: div.querySelector('img').src,
+                    style: {
+                        left: div.style.left,
+                        top: div.style.top,
+                        width: div.style.width,
+                        height: div.style.height
+                    }
+                });
+            });
+
+            renderPageList();
+            updateSaveButtonsText();
+        }
+
+        function enhanceMovableItem(div) {
+            if (!cvReady) {
+                alert("AI Engine is not ready yet. Please wait a moment.");
+                return;
+            }
+            enhancingItem = div;
+            activeSide = div.dataset.type || 'a4-item';
+            showImageLoadingIndicator();
+
+            let imgSrc = div.querySelector('img').src;
+            img.onload = () => {
+                hideImageLoadingIndicator();
+                openEditor();
+            };
+            img.onerror = () => {
+                hideImageLoadingIndicator();
+                alert("Failed to load image for enhancement.");
+                enhancingItem = null;
+            };
+            img.src = imgSrc;
+        }
+
+        function resizeMovableItem(div, newW, newH) {
+            div.style.width = newW + 'px';
+            div.style.height = newH + 'px';
+            showToast("Resized successfully");
+        }
+        function moveItemToNewPage(div, targetMode = 'a4') {
+            let imgSrc = div.querySelector('img').src;
+            let imgW = parseFloat(div.style.width);
+            let imgH = parseFloat(div.style.height);
+            let imgType = div.dataset.type || 'a4-item';
+            
+            // Remove from current DOM
+            div.remove();
+            
+            // Auto-save the current page's other items after removal
+            autoSaveCurrentWorkspace();
+            
+            // Add a new page in savedPages list
+            let newPageId = savedPages.length + 1;
+            let newItem = {
+                src: imgSrc
+            };
+            
+            if (targetMode === 'idcard') {
+                newItem.type = 'front';
+                newItem.style = {
+                    left: '226px',
+                    top: '57px',
+                    width: '341px',
+                    height: '214px'
+                };
+            } else {
+                newItem.type = 'a4-item';
+                newItem.style = {
+                    left: '50px',
+                    top: '50px',
+                    width: imgW + 'px',
+                    height: imgH + 'px'
+                };
+            }
+            
+            let newPage = {
+                id: newPageId,
+                mode: targetMode,
+                items: [newItem]
+            };
+            
+            savedPages.push(newPage);
+            
+            // Re-render the saved pages list
+            renderPageList();
+            
+            // Show toast message
+            showToast(`Moved to new ${targetMode === 'idcard' ? 'ID Card' : 'A4'} Page ` + newPageId);
+        }
+
+        function moveItemToExistingPage(div, pageId) {
+            let imgSrc = div.querySelector('img').src;
+            let imgW = parseFloat(div.style.width);
+            let imgH = parseFloat(div.style.height);
+            let imgType = div.dataset.type || 'a4-item';
+            
+            // Find existing page
+            let targetPage = savedPages.find(p => p.id === pageId);
+            if (!targetPage) return;
+            
+            if (targetPage.mode === 'idcard') {
+                // Check if target page is full
+                let hasFront = targetPage.items.some(i => i.type === 'front');
+                let hasBack = targetPage.items.some(i => i.type === 'back');
+                
+                if (hasFront && hasBack) {
+                    alert("Page " + pageId + " is an ID Card page and is already full (has both Front and Back sides)!");
+                    return;
+                }
+                
+                let newType = !hasFront ? 'front' : 'back';
+                
+                // Remove from current DOM
+                div.remove();
+                
+                // Auto-save the current page's other items after removal
+                autoSaveCurrentWorkspace();
+                
+                targetPage.items.push({
+                    type: newType,
+                    src: imgSrc,
+                    style: {
+                        left: '226px',
+                        top: newType === 'front' ? '57px' : '290px',
+                        width: '341px',
+                        height: '214px'
+                    }
+                });
+                
+                renderPageList();
+                showToast(`Moved image as ID Card ${newType === 'front' ? 'Front' : 'Back'} to Page ${pageId}`);
+            } else {
+                // A4 page: just append it
+                div.remove();
+                
+                // Auto-save the current page's other items after removal
+                autoSaveCurrentWorkspace();
+                
+                targetPage.items.push({
+                    type: 'a4-item',
+                    src: imgSrc,
+                    style: {
+                        left: '50px',
+                        top: '50px',
+                        width: imgW + 'px',
+                        height: imgH + 'px'
+                    }
+                });
+                
+                renderPageList();
+                showToast("Moved image to A4 Page " + pageId);
+            }
+        }
+
+        // Global handler to close all dropdowns when clicking outside
+        document.addEventListener('click', () => {
+            document.querySelectorAll('.item-menu-dropdown').forEach(d => {
+                d.classList.remove('show');
+            });
+        });
+        // ------------------------------------
+        // DYNAMIC LOADER
+        // ------------------------------------
+        // DYNAMIC LOADER WITH TIMEOUT
+        // ------------------------------------
+        (function loadEngine() {
+            let script = document.createElement('script');
+            // Try local offline file first
+            script.src = 'opencv.js';
+            script.async = true;
+            script.onload = onOpenCvReady;
+            script.onerror = function() {
+                console.warn('Local opencv.js not found. Falling back to high-speed jsDelivr CDN...');
+                let fallback = document.createElement('script');
+                fallback.src = 'https://cdn.jsdelivr.net/npm/@techstark/opencv-js@4.6.0-release.1/dist/opencv.js';
+                fallback.async = true;
+                fallback.onload = onOpenCvReady;
+                fallback.onerror = onOpenCvError;
+                document.body.appendChild(fallback);
+            };
+            document.body.appendChild(script);
+
+            // Timeout after 30 seconds
+            setTimeout(() => {
+                if (!cvReady) {
+                    console.error('OpenCV loading timeout');
+                    onOpenCvError();
+                }
+            }, 30000);
+        })();
+
+        // =========================================================================
+        // 📱 ADMIN-ONLY PHONE CAMERA QR SYNC FEATURE (FOR A4 MODE)
+        // =========================================================================
+        let phoneCamSessionId = null;
+        let phoneCamPeer = null;
+        let phoneCamPollTimer = null;
+        let phoneCamPhotoHandled = false;
+
+        function isUserAdmin() {
+            try {
+                const uRole = (localStorage.getItem('user_role') || localStorage.getItem('userRole') || '').toLowerCase().trim();
+                const uId = (localStorage.getItem('user_id') || localStorage.getItem('userId') || localStorage.getItem('ikph_user_id') || localStorage.getItem('currentUser') || '').toUpperCase().trim();
+                const hasAdminToken = !!(localStorage.getItem('admin_token') || localStorage.getItem('session_token'));
+
+                if (uRole === 'admin' || (uId === 'VIP786' && hasAdminToken) || uId === 'VIP786') {
+                    return true;
+                }
+                return false;
+            } catch (e) {
+                return false;
+            }
+        }
+
+        function updateAdminPhoneCamVisibility() {
+            const sec = document.getElementById('adminPhoneCamSection');
+            if (!sec) return;
+            // STRICT SECURITY GATING: Only Admin AND only in A4 Mode
+            if (isUserAdmin() && mode === 'a4') {
+                sec.style.setProperty('display', 'block', 'important');
+            } else {
+                sec.style.setProperty('display', 'none', 'important');
+            }
+        }
+
+        function playSuccessChime() {
+            try {
+                const ctx = new (window.AudioContext || window.webkitAudioContext)();
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(587.33, ctx.currentTime); // D5
+                osc.frequency.setValueAtTime(880, ctx.currentTime + 0.1); // A5
+                gain.gain.setValueAtTime(0.15, ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.35);
+                osc.start(ctx.currentTime);
+                osc.stop(ctx.currentTime + 0.35);
+            } catch (e) {
+                // Ignore audio errors silently
+            }
+        }
+
+        function openPhoneCameraModal() {
+            // Strict security check: Must be Admin AND must be in A4 mode
+            if (!isUserAdmin() || mode !== 'a4') {
+                console.warn('Phone Camera QR Scan is an Admin-only feature in A4 mode.');
+                return;
+            }
+
+            phoneCamPhotoHandled = false;
+            phoneCamSessionId = 'ikph_doc_' + Math.random().toString(36).substring(2, 9) + Date.now().toString(36).slice(-4);
+
+            const modal = document.getElementById('phoneCameraModal');
+            if (modal) modal.style.display = 'flex';
+
+            let origin = window.location.origin;
+            if (!origin || origin.startsWith('file://')) {
+                origin = 'http://localhost:3000';
+            }
+
+            const mobileUrl = `${origin}/cam.html?session=${phoneCamSessionId}&peer=${phoneCamSessionId}&service=doc&plan=ADMIN&vip=1`;
+
+            const shareInput = document.getElementById('phoneCamShareUrl');
+            if (shareInput) shareInput.value = mobileUrl;
+
+            const noticeEl = document.getElementById('phoneCamLocalhostNotice');
+            if (noticeEl) {
+                if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+                    noticeEl.style.display = 'block';
+                } else {
+                    noticeEl.style.display = 'none';
+                }
+            }
+
+            // Generate QR Code
+            const qrBox = document.getElementById('phoneCamQrBox');
+            if (qrBox) {
+                qrBox.innerHTML = '';
+                if (typeof QRCode !== 'undefined') {
+                    try {
+                        new QRCode(qrBox, {
+                            text: mobileUrl,
+                            width: 200,
+                            height: 200,
+                            colorDark: "#0f172a",
+                            colorLight: "#ffffff",
+                            correctLevel: QRCode.CorrectLevel.M
+                        });
+                    } catch (qrErr) {
+                        qrBox.innerHTML = `<img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(mobileUrl)}" alt="QR Code" style="width:200px; height:200px; border-radius:12px;">`;
+                    }
+                } else {
+                    qrBox.innerHTML = `<img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(mobileUrl)}" alt="QR Code" style="width:200px; height:200px; border-radius:12px;">`;
+                }
+            }
+
+            updatePhoneCamModalStatus('waiting', 'Waiting for smartphone scan...');
+
+            initDesktopPeerSync(phoneCamSessionId);
+            startPhoneCamRelayPolling(phoneCamSessionId);
+        }
+
+        function updatePhoneCamModalStatus(type, message) {
+            const statusPill = document.getElementById('phoneCamModalStatus');
+            const statusText = document.getElementById('phoneCamModalStatusText');
+            if (!statusText) return;
+
+            statusText.textContent = message;
+            if (statusPill) {
+                statusPill.className = 'phone-status-pill ' + type;
+            }
+        }
+
+        function initDesktopPeerSync(sessionId) {
+            if (phoneCamPeer) {
+                try { phoneCamPeer.destroy(); } catch (e) {}
+                phoneCamPeer = null;
+            }
+
+            if (typeof Peer === 'undefined') {
+                console.warn('PeerJS not loaded, relying on server relay');
+                return;
+            }
+
+            try {
+                phoneCamPeer = new Peer(sessionId, { debug: 1 });
+
+                phoneCamPeer.on('connection', (conn) => {
+                    console.log('📱 Phone connected via WebRTC PeerJS in दस्तऐवज प्रिंटिंग साधन!');
+                    updatePhoneCamModalStatus('connected', 'Phone Connected! Waiting for document(s)...');
+
+                    conn.on('data', (data) => {
+                        if (data && data.images && data.images.length > 0) {
+                            processReceivedPhonePhoto(data.images);
+                        } else if (data && data.image) {
+                            processReceivedPhonePhoto(data.image, data.name || 'document_scan.jpg');
+                        }
+                    });
+                });
+
+                phoneCamPeer.on('error', (err) => {
+                    console.warn('Peer notice (server relay will handle):', err);
+                });
+            } catch (err) {
+                console.warn('Could not initialize desktop Peer:', err);
+            }
+        }
+
+        function startPhoneCamRelayPolling(sessionId) {
+            if (phoneCamPollTimer) {
+                clearInterval(phoneCamPollTimer);
+            }
+
+            // Send initial registration ping immediately
+            fetch(`/api/cam-sync?action=poll&session=${sessionId}&role=pc`).catch(() => {});
+
+            phoneCamPollTimer = setInterval(async () => {
+                if (phoneCamPhotoHandled) {
+                    clearInterval(phoneCamPollTimer);
+                    return;
+                }
+
+                try {
+                    const res = await fetch(`/api/cam-sync?action=poll&session=${sessionId}&role=pc`);
+                    if (!res.ok) return;
+
+                    const data = await res.json();
+                    if (data.status === 'success' && (data.images?.length > 0 || data.image)) {
+                        if (data.images && data.images.length > 0) {
+                            processReceivedPhonePhoto(data.images);
+                        } else {
+                            processReceivedPhonePhoto(data.image, data.name || 'document_scan.jpg');
+                        }
+                    } else if (data.phone_connected) {
+                        updatePhoneCamModalStatus('connected', 'Phone Connected! 🟢 Capturing document(s)...');
+                    }
+                } catch (e) {
+                    // Ignore background polling network errors
+                }
+            }, 1000);
+        }
+
+        function closePhoneCameraModal() {
+            const modal = document.getElementById('phoneCameraModal');
+            if (modal) modal.style.display = 'none';
+
+            if (phoneCamSessionId) {
+                // Notify cloud relay that PC disconnected from this session
+                fetch(`/api/cam-sync?action=disconnect&session=${phoneCamSessionId}&role=pc`).catch(() => {});
+            }
+
+            if (phoneCamPollTimer) {
+                clearInterval(phoneCamPollTimer);
+                phoneCamPollTimer = null;
+            }
+            if (phoneCamPeer) {
+                try { phoneCamPeer.destroy(); } catch (e) {}
+                phoneCamPeer = null;
+            }
+        }
+
+        function copyPhoneCamLink() {
+            const shareInput = document.getElementById('phoneCamShareUrl');
+            if (!shareInput) return;
+            shareInput.select();
+            shareInput.setSelectionRange(0, 99999);
+            navigator.clipboard.writeText(shareInput.value)
+                .then(() => alert('Link copied to clipboard! You can send it to your phone via WhatsApp.'))
+                .catch(() => alert('Could not copy link automatically. Please copy manually.'));
+        }
+
+        function useNetworkIp(hostWithPort) {
+            const newUrl = `http://${hostWithPort}/cam.html?session=${phoneCamSessionId}&peer=${phoneCamSessionId}&service=doc&plan=ADMIN&vip=1`;
+            const shareInput = document.getElementById('phoneCamShareUrl');
+            if (shareInput) shareInput.value = newUrl;
+
+            const qrBox = document.getElementById('phoneCamQrBox');
+            if (qrBox) {
+                qrBox.innerHTML = '';
+                if (typeof QRCode !== 'undefined') {
+                    try {
+                        new QRCode(qrBox, {
+                            text: newUrl,
+                            width: 200,
+                            height: 200,
+                            colorDark: "#0f172a",
+                            colorLight: "#ffffff",
+                            correctLevel: QRCode.CorrectLevel.M
+                        });
+                    } catch (e) {
+                        qrBox.innerHTML = `<img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(newUrl)}" alt="QR Code" style="width:200px; height:200px; border-radius:12px;">`;
+                    }
+                } else {
+                    qrBox.innerHTML = `<img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(newUrl)}" alt="QR Code" style="width:200px; height:200px; border-radius:12px;">`;
+                }
+            }
+        }
+
+        async function processReceivedPhonePhoto(payload, fileName) {
+            if (phoneCamPhotoHandled) return;
+            phoneCamPhotoHandled = true;
+
+            // Strict admin and A4 check
+            if (!isUserAdmin() || mode !== 'a4') {
+                console.warn('Unauthorized or non-A4 intake rejected');
+                return;
+            }
+
+            // Normalize payload into an array of items: [ { image, name } ]
+            let items = [];
+            if (Array.isArray(payload)) {
+                items = payload;
+            } else if (typeof payload === 'string') {
+                items = [{ image: payload, name: fileName || `doc_phone_${Date.now()}.jpg` }];
+            } else if (payload && payload.images) {
+                items = payload.images;
+            } else if (payload && payload.image) {
+                items = [{ image: payload.image, name: payload.name || fileName || `doc_phone_${Date.now()}.jpg` }];
+            }
+
+            if (items.length === 0) return;
+
+            const countText = items.length > 1 ? `${items.length} Documents (Bulk)` : 'Document';
+            updatePhoneCamModalStatus('success', `${countText} Received! Loading into A4 Cropper...`);
+            playSuccessChime();
+
+            try {
+                const fileObjects = [];
+                for (let idx = 0; idx < items.length; idx++) {
+                    const it = items[idx];
+                    const imgUrl = it.image || it.dataUrl || it;
+                    const fName = it.name || `doc_scan_${idx + 1}_${Date.now()}.jpg`;
+
+                    const res = await fetch(imgUrl);
+                    const blob = await res.blob();
+                    const file = new File([blob], fName, { type: blob.type || 'image/jpeg' });
+                    fileObjects.push(file);
+                }
+
+                setTimeout(async () => {
+                    closePhoneCameraModal();
+                    // Sequential multi-file or single-file handling into A4 mode
+                    await handleDroppedFiles(fileObjects, 'front');
+                }, 500);
+            } catch (err) {
+                console.error('Error processing received documents:', err);
+                alert('Error loading received document(s): ' + err.message);
+            }
+        }
+
+        // Initialize Admin Phone Camera visibility on page load and storage/focus change
+        window.addEventListener('DOMContentLoaded', updateAdminPhoneCamVisibility);
+        window.addEventListener('storage', updateAdminPhoneCamVisibility);
+        window.addEventListener('focus', updateAdminPhoneCamVisibility);
+        setTimeout(updateAdminPhoneCamVisibility, 500);
+    </script>
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092" integrity="sha512-UKNk8GbxkABxKcXYuLkO16EleLGUkcvJWtpSNmExE0Too3ZaFAxTscNWEc1OdAv5/BikHawapSCaiD2XCmp+Bw==" data-cf-beacon='{"version":"2024.11.0","token":"7bbca7346d0541de89e4761f13e40d46","r":1,"spa":2}' crossorigin="anonymous"></script>
+</body>
+
+</html>
