@@ -3220,6 +3220,27 @@ select:focus, input:focus {
 }
 </style>
 
+
+    <script>
+  // राईट क्लिक डिसेबल करणे
+  document.addEventListener('contextmenu', function(e) {
+    e.preventDefault();
+    alert('या वेबसाईटवर राईट क्लिक करण्याची परवानगी नाही!'); // हवं असल्यास हा मेसेज काढू शकता
+  });
+
+  // डेव्हलपर टूल्स आणि शॉर्टकट कीज ब्लॉक करणे (F12, Ctrl+U, Ctrl+Shift+I, इत्यादी)
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'F12' || 
+        (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J' || e.key === 'C')) || 
+        (e.ctrlKey && e.key === 'U')) {
+      e.preventDefault();
+      return false;
+    }
+  });
+</script>
+
+    
+
 </head>
 
 <body>
@@ -3231,7 +3252,7 @@ select:focus, input:focus {
         <div class="bg-blob blob-4"></div>
     </div>
 
-    <div style="position: fixed; top: 20px; left: 20px; z-index: 9999;"><a href="javascript:void(0)" onclick="window.location.reload(); return false;" class="back-home-button" title="Back to Home">Home</a></div>
+    
     
 
     <div class="container">
@@ -3239,11 +3260,11 @@ select:focus, input:focus {
             <div style="display:flex; align-items:center; gap:10px; background: rgba(18, 18, 24, 0.9); border: 1.5px solid rgba(255, 119, 0, 0.4); padding: 8px 18px; border-radius: 40px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.6), 0 0 15px rgba(255, 119, 0, 0.2);">
                 <img src="favicon.png" alt="Smart Croper Logo" style="width:28px; height:28px; border-radius:8px;" onerror="this.style.display='none'">
                 <div style="display:flex; flex-direction:column;">
-                    <span style="line-height:1.1; font-size:17px; font-weight:800; color:#FFFFFF; letter-spacing: 0.5px;">SmartCroper</span>
-                    <span style="font-size:10px; color:#FF9933; font-weight:700; letter-spacing:0.8px; text-transform:uppercase; margin-top:-1px;">Free Forever</span>
+                    <span style="line-height:1.1; font-size:17px; font-weight:800; color:#FFFFFF; letter-spacing: 0.5px;">SUYOMS PASSPORT MAKER</span>
+                    <span style="font-size:10px; color:#FF9933; font-weight:700; letter-spacing:0.8px; text-transform:uppercase; margin-top:-1px;"></span>
                 </div>
             </div>
-            <h1 style="margin:0; text-align:center; background: linear-gradient(135deg, #FFA000 0%, #FF7700 50%, #FF3D00 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-size: 28px; font-weight: 800; text-shadow: none;">AI Passport Size Photo Maker</h1>
+            <h1 style="margin:0; text-align:center; background: linear-gradient(135deg, #FFA000 0%, #FF7700 50%, #FF3D00 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-size: 28px; font-weight: 800; text-shadow: none;">एआय (AI) पासपोर्ट आकाराचा फोटो मेकर</h1>
         </div>
 
         <div class="upload-zone" id="uploadZone" onclick="document.getElementById('fileInput').click()">
@@ -3253,11 +3274,11 @@ select:focus, input:focus {
                         <div class="upload-icon-pulse"></div>
                         <i class="fa-solid fa-cloud-arrow-up upload-icon"></i>
                     </div>
-                    <h2>Drop Photos Here</h2>
-                    <p class="upload-subtitle">or click to browse files</p>
+                    <h2>येथे फोटो टाका</h2>
+                    <p class="upload-subtitle">किंवा फाइल्स ब्राउझ करण्यासाठी क्लिक करा</p>
                     <div style="display: flex; flex-direction: column; gap: 12px; align-items: center; margin-top: 5px;">
                         <span class="upload-hint" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; border: none; box-shadow: 0 4px 15px rgba(16,185,129,0.3); letter-spacing: 0.5px;">
-                            <i class="fa-solid fa-layer-group"></i> Bulk Upload Supported!
+                            <i class="fa-solid fa-layer-group"></i> मोठ्या प्रमाणात अपलोड समर्थित आहे!
                         </span>
                         <span class="upload-hint">
                             <i class="fa-solid fa-images"></i> Multiple JPG, PNG (Max 10MB)
@@ -3265,35 +3286,35 @@ select:focus, input:focus {
                     </div>
                 </div>
                 <div class="upload-right">
-                    <h3>Professional Passport Maker</h3>
-                    <p class="info-desc">Create perfect Indian passport photos in seconds.</p>
+                    <h3>व्यावसायिक पासपोर्ट निर्माता</h3>
+                    <p class="info-desc">काही सेकंदात भारतीय पासपोर्टसाठी अचूक फोटो तयार करा.</p>
                     <div class="step-list">
                         <div class="step-item">
                             <div class="step-icon"><i class="fa-solid fa-crop"></i></div>
                             <div class="step-text">
-                                <h4>1. Smart Crop</h4>
-                                <p>Auto-sizes to India standard (3x4 cm)</p>
+                                <h4>1. SUYOMS PASSPORT Crop</h4>
+                                <p>भारतीय मानकानुसार (३x४ सेमी) आपोआप आकार निश्चित करते</p>
                             </div>
                         </div>
                         <div class="step-item">
                             <div class="step-icon"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
                             <div class="step-text">
                                 <h4>2. AI Background</h4>
-                                <p>100% Free local AI background removal</p>
+                                <p>१००%, स्थानिक (लोकल) AI द्वारे बॅकग्राउंड काढून टाकण्याची सुविधा</p>
                             </div>
                         </div>
                         <div class="step-item">
                             <div class="step-icon"><i class="fa-solid fa-palette"></i></div>
                             <div class="step-text">
                                 <h4>3. Perfect Color</h4>
-                                <p>Enhance lighting, face tone &amp; add strokes</p>
+                                <p>प्रकाशयोजना आणि चेहऱ्याचा वर्ण सुधारा, तसेच ब्रशचे फटके (स्ट्रोक्स) जोडा</p>
                             </div>
                         </div>
                         <div class="step-item">
                             <div class="step-icon"><i class="fa-solid fa-print"></i></div>
                             <div class="step-text">
                                 <h4>4. Ready to Print</h4>
-                                <p>Auto-generates A4 sheets up to 36 copies</p>
+                                <p>A4 आकाराच्या कागदांच्या ३६ प्रतींपर्यंत आपोआप तयार करते</p>
                             </div>
                         </div>
                     </div>
@@ -3304,16 +3325,16 @@ select:focus, input:focus {
             <div class="upload-samples-container" onclick="event.stopPropagation()">
                 <div class="samples-title-bar">
                     <span class="samples-title"><i class="fa-solid fa-wand-magic-sparkles"></i> Try with a Sample Photo</span>
-                    <button class="btn-try-sample" onclick="window.loadSampleImage()"><i class="fa-solid fa-play"></i> Auto-Load Sample</button>
+                    <button class="btn-try-sample" onclick="window.loadSampleImage()"><i class="fa-solid fa-play"></i>नमुना आपोआप लोड करा</button>
                 </div>
                 <div class="before-after-layout">
                     <!-- Before Card -->
                     <div class="showcase-card before-card">
                         <div class="card-image-wrapper">
-                            <img src="images/before-photo.jpg" alt="Sample Portrait Photo (Before)">
+                            <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgq2w4N0D3MVoynVN1mlm300e50_j4fPyL4C8qizy6W7W6NAX6GB7Ql6D4pUULjX5Hpg-uAzDmxHQ4XA51wgXQY-paGe9BzgwuNyNngmrWCmZcFk99qthk6ZOXufrVP1nGzm4KdF9pswv_bnA-0YTxPH7GMwSQwLLRER4M909on33o7QHj_8kL53tvV4KYp/s1600/Traditional%20Saree%20Portrait%20Against%20Red.png" alt="Sample Portrait Photo (Before)">
                             <div class="sparkle-badge"><i class="fa-solid fa-wand-magic"></i></div>
                         </div>
-                        <div class="card-label before-label">BEFORE</div>
+                        <div class="card-label before-label">पूर्वी</div>
                     </div>
                     <!-- Connector Arrow -->
                     <div class="showcase-arrow">
@@ -3326,50 +3347,50 @@ select:focus, input:focus {
                         <div class="card-image-wrapper grid-container-wrapper">
                             <!-- Dynamic Mini-Sheet CSS Grid -->
                             <div class="after-grid-preview">
-                                <div class="grid-item"><img src="images/after-photo.jpg"></div>
-                                <div class="grid-item"><img src="images/after-photo.jpg"></div>
-                                <div class="grid-item"><img src="images/after-photo.jpg"></div>
-                                <div class="grid-item"><img src="images/after-photo.jpg"></div>
-                                <div class="grid-item"><img src="images/after-photo.jpg"></div>
-                                <div class="grid-item"><img src="images/after-photo.jpg"></div>
+                                <div class="grid-item"><img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgq2w4N0D3MVoynVN1mlm300e50_j4fPyL4C8qizy6W7W6NAX6GB7Ql6D4pUULjX5Hpg-uAzDmxHQ4XA51wgXQY-paGe9BzgwuNyNngmrWCmZcFk99qthk6ZOXufrVP1nGzm4KdF9pswv_bnA-0YTxPH7GMwSQwLLRER4M909on33o7QHj_8kL53tvV4KYp/s1600/Traditional%20Saree%20Portrait%20Against%20Red.png"></div>
+                                <div class="grid-item"><img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgq2w4N0D3MVoynVN1mlm300e50_j4fPyL4C8qizy6W7W6NAX6GB7Ql6D4pUULjX5Hpg-uAzDmxHQ4XA51wgXQY-paGe9BzgwuNyNngmrWCmZcFk99qthk6ZOXufrVP1nGzm4KdF9pswv_bnA-0YTxPH7GMwSQwLLRER4M909on33o7QHj_8kL53tvV4KYp/s1600/Traditional%20Saree%20Portrait%20Against%20Red.png"></div>
+                                <div class="grid-item"><img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgq2w4N0D3MVoynVN1mlm300e50_j4fPyL4C8qizy6W7W6NAX6GB7Ql6D4pUULjX5Hpg-uAzDmxHQ4XA51wgXQY-paGe9BzgwuNyNngmrWCmZcFk99qthk6ZOXufrVP1nGzm4KdF9pswv_bnA-0YTxPH7GMwSQwLLRER4M909on33o7QHj_8kL53tvV4KYp/s1600/Traditional%20Saree%20Portrait%20Against%20Red.png"></div>
+                                <div class="grid-item"><img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgq2w4N0D3MVoynVN1mlm300e50_j4fPyL4C8qizy6W7W6NAX6GB7Ql6D4pUULjX5Hpg-uAzDmxHQ4XA51wgXQY-paGe9BzgwuNyNngmrWCmZcFk99qthk6ZOXufrVP1nGzm4KdF9pswv_bnA-0YTxPH7GMwSQwLLRER4M909on33o7QHj_8kL53tvV4KYp/s1600/Traditional%20Saree%20Portrait%20Against%20Red.png"></div>
+                                <div class="grid-item"><img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgq2w4N0D3MVoynVN1mlm300e50_j4fPyL4C8qizy6W7W6NAX6GB7Ql6D4pUULjX5Hpg-uAzDmxHQ4XA51wgXQY-paGe9BzgwuNyNngmrWCmZcFk99qthk6ZOXufrVP1nGzm4KdF9pswv_bnA-0YTxPH7GMwSQwLLRER4M909on33o7QHj_8kL53tvV4KYp/s1600/Traditional%20Saree%20Portrait%20Against%20Red.png"></div>
+                                <div class="grid-item"><img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgq2w4N0D3MVoynVN1mlm300e50_j4fPyL4C8qizy6W7W6NAX6GB7Ql6D4pUULjX5Hpg-uAzDmxHQ4XA51wgXQY-paGe9BzgwuNyNngmrWCmZcFk99qthk6ZOXufrVP1nGzm4KdF9pswv_bnA-0YTxPH7GMwSQwLLRER4M909on33o7QHj_8kL53tvV4KYp/s1600/Traditional%20Saree%20Portrait%20Against%20Red.png"></div>
                                 
-                                <div class="grid-item"><img src="images/after-photo.jpg"></div>
-                                <div class="grid-item"><img src="images/after-photo.jpg"></div>
-                                <div class="grid-item"><img src="images/after-photo.jpg"></div>
-                                <div class="grid-item"><img src="images/after-photo.jpg"></div>
-                                <div class="grid-item"><img src="images/after-photo.jpg"></div>
-                                <div class="grid-item"><img src="images/after-photo.jpg"></div>
+                                <div class="grid-item"><img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgq2w4N0D3MVoynVN1mlm300e50_j4fPyL4C8qizy6W7W6NAX6GB7Ql6D4pUULjX5Hpg-uAzDmxHQ4XA51wgXQY-paGe9BzgwuNyNngmrWCmZcFk99qthk6ZOXufrVP1nGzm4KdF9pswv_bnA-0YTxPH7GMwSQwLLRER4M909on33o7QHj_8kL53tvV4KYp/s1600/Traditional%20Saree%20Portrait%20Against%20Red.png"></div>
+                                <div class="grid-item"><img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgq2w4N0D3MVoynVN1mlm300e50_j4fPyL4C8qizy6W7W6NAX6GB7Ql6D4pUULjX5Hpg-uAzDmxHQ4XA51wgXQY-paGe9BzgwuNyNngmrWCmZcFk99qthk6ZOXufrVP1nGzm4KdF9pswv_bnA-0YTxPH7GMwSQwLLRER4M909on33o7QHj_8kL53tvV4KYp/s1600/Traditional%20Saree%20Portrait%20Against%20Red.png"></div>
+                                <div class="grid-item"><img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgq2w4N0D3MVoynVN1mlm300e50_j4fPyL4C8qizy6W7W6NAX6GB7Ql6D4pUULjX5Hpg-uAzDmxHQ4XA51wgXQY-paGe9BzgwuNyNngmrWCmZcFk99qthk6ZOXufrVP1nGzm4KdF9pswv_bnA-0YTxPH7GMwSQwLLRER4M909on33o7QHj_8kL53tvV4KYp/s1600/Traditional%20Saree%20Portrait%20Against%20Red.png"></div>
+                                <div class="grid-item"><img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgq2w4N0D3MVoynVN1mlm300e50_j4fPyL4C8qizy6W7W6NAX6GB7Ql6D4pUULjX5Hpg-uAzDmxHQ4XA51wgXQY-paGe9BzgwuNyNngmrWCmZcFk99qthk6ZOXufrVP1nGzm4KdF9pswv_bnA-0YTxPH7GMwSQwLLRER4M909on33o7QHj_8kL53tvV4KYp/s1600/Traditional%20Saree%20Portrait%20Against%20Red.png"></div>
+                                <div class="grid-item"><img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgq2w4N0D3MVoynVN1mlm300e50_j4fPyL4C8qizy6W7W6NAX6GB7Ql6D4pUULjX5Hpg-uAzDmxHQ4XA51wgXQY-paGe9BzgwuNyNngmrWCmZcFk99qthk6ZOXufrVP1nGzm4KdF9pswv_bnA-0YTxPH7GMwSQwLLRER4M909on33o7QHj_8kL53tvV4KYp/s1600/Traditional%20Saree%20Portrait%20Against%20Red.png"></div>
+                                <div class="grid-item"><img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgq2w4N0D3MVoynVN1mlm300e50_j4fPyL4C8qizy6W7W6NAX6GB7Ql6D4pUULjX5Hpg-uAzDmxHQ4XA51wgXQY-paGe9BzgwuNyNngmrWCmZcFk99qthk6ZOXufrVP1nGzm4KdF9pswv_bnA-0YTxPH7GMwSQwLLRER4M909on33o7QHj_8kL53tvV4KYp/s1600/Traditional%20Saree%20Portrait%20Against%20Red.png"></div>
 
-                                <div class="grid-item"><img src="images/after-photo.jpg"></div>
-                                <div class="grid-item"><img src="images/after-photo.jpg"></div>
-                                <div class="grid-item"><img src="images/after-photo.jpg"></div>
-                                <div class="grid-item"><img src="images/after-photo.jpg"></div>
-                                <div class="grid-item"><img src="images/after-photo.jpg"></div>
-                                <div class="grid-item"><img src="images/after-photo.jpg"></div>
+                                <div class="grid-item"><img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgq2w4N0D3MVoynVN1mlm300e50_j4fPyL4C8qizy6W7W6NAX6GB7Ql6D4pUULjX5Hpg-uAzDmxHQ4XA51wgXQY-paGe9BzgwuNyNngmrWCmZcFk99qthk6ZOXufrVP1nGzm4KdF9pswv_bnA-0YTxPH7GMwSQwLLRER4M909on33o7QHj_8kL53tvV4KYp/s1600/Traditional%20Saree%20Portrait%20Against%20Red.png"></div>
+                                <div class="grid-item"><img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgq2w4N0D3MVoynVN1mlm300e50_j4fPyL4C8qizy6W7W6NAX6GB7Ql6D4pUULjX5Hpg-uAzDmxHQ4XA51wgXQY-paGe9BzgwuNyNngmrWCmZcFk99qthk6ZOXufrVP1nGzm4KdF9pswv_bnA-0YTxPH7GMwSQwLLRER4M909on33o7QHj_8kL53tvV4KYp/s1600/Traditional%20Saree%20Portrait%20Against%20Red.png"></div>
+                                <div class="grid-item"><img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgq2w4N0D3MVoynVN1mlm300e50_j4fPyL4C8qizy6W7W6NAX6GB7Ql6D4pUULjX5Hpg-uAzDmxHQ4XA51wgXQY-paGe9BzgwuNyNngmrWCmZcFk99qthk6ZOXufrVP1nGzm4KdF9pswv_bnA-0YTxPH7GMwSQwLLRER4M909on33o7QHj_8kL53tvV4KYp/s1600/Traditional%20Saree%20Portrait%20Against%20Red.png"></div>
+                                <div class="grid-item"><img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgq2w4N0D3MVoynVN1mlm300e50_j4fPyL4C8qizy6W7W6NAX6GB7Ql6D4pUULjX5Hpg-uAzDmxHQ4XA51wgXQY-paGe9BzgwuNyNngmrWCmZcFk99qthk6ZOXufrVP1nGzm4KdF9pswv_bnA-0YTxPH7GMwSQwLLRER4M909on33o7QHj_8kL53tvV4KYp/s1600/Traditional%20Saree%20Portrait%20Against%20Red.png"></div>
+                                <div class="grid-item"><img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgq2w4N0D3MVoynVN1mlm300e50_j4fPyL4C8qizy6W7W6NAX6GB7Ql6D4pUULjX5Hpg-uAzDmxHQ4XA51wgXQY-paGe9BzgwuNyNngmrWCmZcFk99qthk6ZOXufrVP1nGzm4KdF9pswv_bnA-0YTxPH7GMwSQwLLRER4M909on33o7QHj_8kL53tvV4KYp/s1600/Traditional%20Saree%20Portrait%20Against%20Red.png"></div>
+                                <div class="grid-item"><img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgq2w4N0D3MVoynVN1mlm300e50_j4fPyL4C8qizy6W7W6NAX6GB7Ql6D4pUULjX5Hpg-uAzDmxHQ4XA51wgXQY-paGe9BzgwuNyNngmrWCmZcFk99qthk6ZOXufrVP1nGzm4KdF9pswv_bnA-0YTxPH7GMwSQwLLRER4M909on33o7QHj_8kL53tvV4KYp/s1600/Traditional%20Saree%20Portrait%20Against%20Red.png"></div>
 
-                                <div class="grid-item"><img src="images/after-photo.jpg"></div>
-                                <div class="grid-item"><img src="images/after-photo.jpg"></div>
-                                <div class="grid-item"><img src="images/after-photo.jpg"></div>
-                                <div class="grid-item"><img src="images/after-photo.jpg"></div>
-                                <div class="grid-item"><img src="images/after-photo.jpg"></div>
-                                <div class="grid-item"><img src="images/after-photo.jpg"></div>
+                                <div class="grid-item"><img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgq2w4N0D3MVoynVN1mlm300e50_j4fPyL4C8qizy6W7W6NAX6GB7Ql6D4pUULjX5Hpg-uAzDmxHQ4XA51wgXQY-paGe9BzgwuNyNngmrWCmZcFk99qthk6ZOXufrVP1nGzm4KdF9pswv_bnA-0YTxPH7GMwSQwLLRER4M909on33o7QHj_8kL53tvV4KYp/s1600/Traditional%20Saree%20Portrait%20Against%20Red.png"></div>
+                                <div class="grid-item"><img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgq2w4N0D3MVoynVN1mlm300e50_j4fPyL4C8qizy6W7W6NAX6GB7Ql6D4pUULjX5Hpg-uAzDmxHQ4XA51wgXQY-paGe9BzgwuNyNngmrWCmZcFk99qthk6ZOXufrVP1nGzm4KdF9pswv_bnA-0YTxPH7GMwSQwLLRER4M909on33o7QHj_8kL53tvV4KYp/s1600/Traditional%20Saree%20Portrait%20Against%20Red.png"></div>
+                                <div class="grid-item"><img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgq2w4N0D3MVoynVN1mlm300e50_j4fPyL4C8qizy6W7W6NAX6GB7Ql6D4pUULjX5Hpg-uAzDmxHQ4XA51wgXQY-paGe9BzgwuNyNngmrWCmZcFk99qthk6ZOXufrVP1nGzm4KdF9pswv_bnA-0YTxPH7GMwSQwLLRER4M909on33o7QHj_8kL53tvV4KYp/s1600/Traditional%20Saree%20Portrait%20Against%20Red.png"></div>
+                                <div class="grid-item"><img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgq2w4N0D3MVoynVN1mlm300e50_j4fPyL4C8qizy6W7W6NAX6GB7Ql6D4pUULjX5Hpg-uAzDmxHQ4XA51wgXQY-paGe9BzgwuNyNngmrWCmZcFk99qthk6ZOXufrVP1nGzm4KdF9pswv_bnA-0YTxPH7GMwSQwLLRER4M909on33o7QHj_8kL53tvV4KYp/s1600/Traditional%20Saree%20Portrait%20Against%20Red.png"></div>
+                                <div class="grid-item"><img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgq2w4N0D3MVoynVN1mlm300e50_j4fPyL4C8qizy6W7W6NAX6GB7Ql6D4pUULjX5Hpg-uAzDmxHQ4XA51wgXQY-paGe9BzgwuNyNngmrWCmZcFk99qthk6ZOXufrVP1nGzm4KdF9pswv_bnA-0YTxPH7GMwSQwLLRER4M909on33o7QHj_8kL53tvV4KYp/s1600/Traditional%20Saree%20Portrait%20Against%20Red.png"></div>
+                                <div class="grid-item"><img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgq2w4N0D3MVoynVN1mlm300e50_j4fPyL4C8qizy6W7W6NAX6GB7Ql6D4pUULjX5Hpg-uAzDmxHQ4XA51wgXQY-paGe9BzgwuNyNngmrWCmZcFk99qthk6ZOXufrVP1nGzm4KdF9pswv_bnA-0YTxPH7GMwSQwLLRER4M909on33o7QHj_8kL53tvV4KYp/s1600/Traditional%20Saree%20Portrait%20Against%20Red.png"></div>
 
-                                <div class="grid-item"><img src="images/after-photo.jpg"></div>
-                                <div class="grid-item"><img src="images/after-photo.jpg"></div>
-                                <div class="grid-item"><img src="images/after-photo.jpg"></div>
-                                <div class="grid-item"><img src="images/after-photo.jpg"></div>
-                                <div class="grid-item"><img src="images/after-photo.jpg"></div>
-                                <div class="grid-item"><img src="images/after-photo.jpg"></div>
+                                <div class="grid-item"><img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgq2w4N0D3MVoynVN1mlm300e50_j4fPyL4C8qizy6W7W6NAX6GB7Ql6D4pUULjX5Hpg-uAzDmxHQ4XA51wgXQY-paGe9BzgwuNyNngmrWCmZcFk99qthk6ZOXufrVP1nGzm4KdF9pswv_bnA-0YTxPH7GMwSQwLLRER4M909on33o7QHj_8kL53tvV4KYp/s1600/Traditional%20Saree%20Portrait%20Against%20Red.png"></div>
+                                <div class="grid-item"><img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgq2w4N0D3MVoynVN1mlm300e50_j4fPyL4C8qizy6W7W6NAX6GB7Ql6D4pUULjX5Hpg-uAzDmxHQ4XA51wgXQY-paGe9BzgwuNyNngmrWCmZcFk99qthk6ZOXufrVP1nGzm4KdF9pswv_bnA-0YTxPH7GMwSQwLLRER4M909on33o7QHj_8kL53tvV4KYp/s1600/Traditional%20Saree%20Portrait%20Against%20Red.png"></div>
+                                <div class="grid-item"><img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgq2w4N0D3MVoynVN1mlm300e50_j4fPyL4C8qizy6W7W6NAX6GB7Ql6D4pUULjX5Hpg-uAzDmxHQ4XA51wgXQY-paGe9BzgwuNyNngmrWCmZcFk99qthk6ZOXufrVP1nGzm4KdF9pswv_bnA-0YTxPH7GMwSQwLLRER4M909on33o7QHj_8kL53tvV4KYp/s1600/Traditional%20Saree%20Portrait%20Against%20Red.png"></div>
+                                <div class="grid-item"><img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgq2w4N0D3MVoynVN1mlm300e50_j4fPyL4C8qizy6W7W6NAX6GB7Ql6D4pUULjX5Hpg-uAzDmxHQ4XA51wgXQY-paGe9BzgwuNyNngmrWCmZcFk99qthk6ZOXufrVP1nGzm4KdF9pswv_bnA-0YTxPH7GMwSQwLLRER4M909on33o7QHj_8kL53tvV4KYp/s1600/Traditional%20Saree%20Portrait%20Against%20Red.png"></div>
+                                <div class="grid-item"><img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgq2w4N0D3MVoynVN1mlm300e50_j4fPyL4C8qizy6W7W6NAX6GB7Ql6D4pUULjX5Hpg-uAzDmxHQ4XA51wgXQY-paGe9BzgwuNyNngmrWCmZcFk99qthk6ZOXufrVP1nGzm4KdF9pswv_bnA-0YTxPH7GMwSQwLLRER4M909on33o7QHj_8kL53tvV4KYp/s1600/Traditional%20Saree%20Portrait%20Against%20Red.png"></div>
+                                <div class="grid-item"><img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgq2w4N0D3MVoynVN1mlm300e50_j4fPyL4C8qizy6W7W6NAX6GB7Ql6D4pUULjX5Hpg-uAzDmxHQ4XA51wgXQY-paGe9BzgwuNyNngmrWCmZcFk99qthk6ZOXufrVP1nGzm4KdF9pswv_bnA-0YTxPH7GMwSQwLLRER4M909on33o7QHj_8kL53tvV4KYp/s1600/Traditional%20Saree%20Portrait%20Against%20Red.png"></div>
                                 
-                                <div class="grid-item"><img src="images/after-photo.jpg"></div>
-                                <div class="grid-item"><img src="images/after-photo.jpg"></div>
-                                <div class="grid-item"><img src="images/after-photo.jpg"></div>
-                                <div class="grid-item"><img src="images/after-photo.jpg"></div>
-                                <div class="grid-item"><img src="images/after-photo.jpg"></div>
-                                <div class="grid-item"><img src="images/after-photo.jpg"></div>
+                                <div class="grid-item"><img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgq2w4N0D3MVoynVN1mlm300e50_j4fPyL4C8qizy6W7W6NAX6GB7Ql6D4pUULjX5Hpg-uAzDmxHQ4XA51wgXQY-paGe9BzgwuNyNngmrWCmZcFk99qthk6ZOXufrVP1nGzm4KdF9pswv_bnA-0YTxPH7GMwSQwLLRER4M909on33o7QHj_8kL53tvV4KYp/s1600/Traditional%20Saree%20Portrait%20Against%20Red.png"></div>
+                                <div class="grid-item"><img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgq2w4N0D3MVoynVN1mlm300e50_j4fPyL4C8qizy6W7W6NAX6GB7Ql6D4pUULjX5Hpg-uAzDmxHQ4XA51wgXQY-paGe9BzgwuNyNngmrWCmZcFk99qthk6ZOXufrVP1nGzm4KdF9pswv_bnA-0YTxPH7GMwSQwLLRER4M909on33o7QHj_8kL53tvV4KYp/s1600/Traditional%20Saree%20Portrait%20Against%20Red.png"></div>
+                                <div class="grid-item"><img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgq2w4N0D3MVoynVN1mlm300e50_j4fPyL4C8qizy6W7W6NAX6GB7Ql6D4pUULjX5Hpg-uAzDmxHQ4XA51wgXQY-paGe9BzgwuNyNngmrWCmZcFk99qthk6ZOXufrVP1nGzm4KdF9pswv_bnA-0YTxPH7GMwSQwLLRER4M909on33o7QHj_8kL53tvV4KYp/s1600/Traditional%20Saree%20Portrait%20Against%20Red.png"></div>
+                                <div class="grid-item"><img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgq2w4N0D3MVoynVN1mlm300e50_j4fPyL4C8qizy6W7W6NAX6GB7Ql6D4pUULjX5Hpg-uAzDmxHQ4XA51wgXQY-paGe9BzgwuNyNngmrWCmZcFk99qthk6ZOXufrVP1nGzm4KdF9pswv_bnA-0YTxPH7GMwSQwLLRER4M909on33o7QHj_8kL53tvV4KYp/s1600/Traditional%20Saree%20Portrait%20Against%20Red.png"></div>
+                                <div class="grid-item"><img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgq2w4N0D3MVoynVN1mlm300e50_j4fPyL4C8qizy6W7W6NAX6GB7Ql6D4pUULjX5Hpg-uAzDmxHQ4XA51wgXQY-paGe9BzgwuNyNngmrWCmZcFk99qthk6ZOXufrVP1nGzm4KdF9pswv_bnA-0YTxPH7GMwSQwLLRER4M909on33o7QHj_8kL53tvV4KYp/s1600/Traditional%20Saree%20Portrait%20Against%20Red.png"></div>
+                                <div class="grid-item"><img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgq2w4N0D3MVoynVN1mlm300e50_j4fPyL4C8qizy6W7W6NAX6GB7Ql6D4pUULjX5Hpg-uAzDmxHQ4XA51wgXQY-paGe9BzgwuNyNngmrWCmZcFk99qthk6ZOXufrVP1nGzm4KdF9pswv_bnA-0YTxPH7GMwSQwLLRER4M909on33o7QHj_8kL53tvV4KYp/s1600/Traditional%20Saree%20Portrait%20Against%20Red.png"></div>
                             </div>
                         </div>
-                        <div class="card-label after-label">AFTER (A4 Sheet Grid)</div>
+                        <div class="card-label after-label">नंतर (A4 शीट ग्रिड)</div>
                     </div>
                 </div>
             </div>
@@ -3384,13 +3405,13 @@ select:focus, input:focus {
                     <i class="fa-solid fa-camera-retro"></i>
                 </div>
                 <div>
-                    <h2>Online Passport Size Photo Maker &amp; Print Ready Sheet Generator</h2>
-                    <span style="font-size: 0.82rem; color: #f97316; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">#1 Printing Utility for CSC Centers, Cyber Cafés &amp; Photo Studios</span>
+                    <h2>ऑनलाइन पासपोर्ट आकाराचा फोटो मेकर आणि प्रिंटसाठी तयार शीट जनरेटर</h2>
+                    <span style="font-size: 0.82rem; color: #f97316; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">CSC केंद्रे, सायबर कॅफे आणि फोटो स्टुडिओसाठी सर्वोत्तम प्रिंटिंग युटिलिटी</span>
                 </div>
             </div>
 
             <p class="seo-intro-desc">
-                Welcome to India's fastest <strong>Online Passport Size Photo Maker</strong>, trusted by 20,000+ <strong>CSC Centers (VLEs), Cyber Cafés, Jan Seva Kendras, and Photo Studios</strong> across India. Whether you need standard <strong>3.5 × 4.5 cm Indian passport photos</strong>, 2×2 inch US Visa photos, PAN card crop, or government exam formats (SSC, UPSC, IBPS, Railways), Smart Croper converts any customer portrait into a compliant, studio-quality photograph in under 30 seconds. Remove background in 1 click (solid white, light blue, or red), add formal coats and suits without Photoshop PSD files, and download print-ready <strong>4×6 inch (8 photos)</strong> or <strong>A4 sheets (up to 36 photos)</strong> with cutting guide borders.
+                भारतातील सर्वात जलद <strong>'ऑनलाइन पासपोर्ट साईज फोटो मेकर'</strong> मध्ये तुमचे स्वागत आहे. संपूर्ण भारतातील २०,००० हून अधिक <strong>CSC सेंटर्स (VLEs), सायबर कॅफे, 'आपले सरकार सेवा केंद्र' आणि फोटो स्टुडिओ</strong> यावर विश्वास ठेवतात. तुम्हाला भारतीय पासपोर्टसाठी आवश्यक असलेले <strong>३.५ × ४.५ सेमी</strong> आकाराचे फोटो असोत, अमेरिकन व्हिसासाठी २×२ इंचाचे फोटो असोत, पॅन कार्डसाठी फोटो क्रॉप करायचा असो किंवा सरकारी परीक्षांसाठी (SSC, UPSC, IBPS, रेल्वे) आवश्यक फॉरमॅट हवा असो – 'SUYOMS PASSPORT Croper' कोणत्याही पोर्ट्रेट फोटोला ३० सेकंदांपेक्षा कमी वेळात, नियमांनुसार आणि स्टुडिओ-गुणवत्तेच्या फोटोमध्ये रूपांतरित करते. एका क्लिकवर बॅकग्राउंड काढून टाका (पांढरा, फिकट निळा किंवा लाल रंगाचा बॅकग्राउंड निवडा), फोटोशॉप (PSD) फाईल्सशिवाय औपचारिक कोट किंवा सूट जोडा आणि कटिंगसाठी मार्गदर्शक बॉर्डरसह ४×६ इंच (८ फोटो) किंवा A4 शीट (३६ फोटोपर्यंत) फॉरमॅटमध्ये प्रिंटसाठी तयार फोटो डाउनलोड करा.
             </p>
 
             <!-- CSC, Cyber Cafe & Photoshop Alternative Highlights -->
@@ -3398,30 +3419,30 @@ select:focus, input:focus {
                 <div style="background: rgba(249, 115, 22, 0.07); border: 1px solid rgba(249, 115, 22, 0.25); border-radius: 14px; padding: 18px;">
                     <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
                         <i class="fa-solid fa-bolt" style="color: #f97316; font-size: 1.2rem;"></i>
-                        <h4 style="margin: 0; font-size: 1rem; color: var(--text-primary);">Faster Than Photoshop Actions</h4>
+                        <h4 style="margin: 0; font-size: 1rem; color: var(--text-primary);">फोटोशॉप ॲक्शन्सपेक्षाही जलद</h4>
                     </div>
                     <p style="margin: 0; font-size: 0.85rem; color: var(--text-secondary); line-height: 1.5;">
-                        Eliminate complicated Photoshop 7.0 actions (.atn) and manual pen-tool cutout. Process walk-in customer photos in 30 seconds directly from your browser.
+                        Photoshop 7.0 मधील क्लिष्ट ॲक्शन्स (.atn) आणि पेन-टूलद्वारे मॅन्युअली कटआउट करण्याची पद्धत आता पूर्णपणे काढून टाका. तुमच्या ब्राउझरवरून थेट, अवघ्या ३० सेकंदात ग्राहकांच्या फोटोंवर प्रक्रिया करा.
                     </p>
                 </div>
 
                 <div style="background: rgba(16, 185, 129, 0.07); border: 1px solid rgba(16, 185, 129, 0.25); border-radius: 14px; padding: 18px;">
                     <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
                         <i class="fa-solid fa-print" style="color: #10b981; font-size: 1.2rem;"></i>
-                        <h4 style="margin: 0; font-size: 1rem; color: var(--text-primary);">Epson &amp; Canon 4×6 Pre-Calibrated</h4>
+                        <h4 style="margin: 0; font-size: 1rem; color: var(--text-primary);">Epson आणि Canon 4×6 प्री-कॅलिब्रेटेड</h4>
                     </div>
                     <p style="margin: 0; font-size: 0.85rem; color: var(--text-secondary); line-height: 1.5;">
-                        Nest 8 passport photos on standard 4×6 glossy photo paper with precision cutting hairline borders for Epson L8050, L3210, L3110, L805 &amp; Canon Pixma printers.
+                        Epson L8050, L3210, L3110, L805 आणि Canon Pixma प्रिंटर्ससाठी, ४×६ इंचाच्या मानक ग्लॉसी फोटो पेपरवर ८ पासपोर्ट आकाराचे फोटो अशा प्रकारे मांडा की, त्यांच्यामध्ये अचूक कटिंगसाठी बारीक रेषा (हेअरलाइन बॉर्डर) असतील.
                     </p>
                 </div>
 
                 <div style="background: rgba(245, 158, 11, 0.07); border: 1px solid rgba(245, 158, 11, 0.25); border-radius: 14px; padding: 18px;">
                     <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
                         <i class="fa-solid fa-user-tie" style="color: #f59e0b; font-size: 1.2rem;"></i>
-                        <h4 style="margin: 0; font-size: 1rem; color: var(--text-primary);">Built-in Suit Changer (Zero PSD)</h4>
+                        <h4 style="margin: 0; font-size: 1rem; color: var(--text-primary);">इन-बिल्ट सूट चेंजर (झिरो PSD)</h4>
                     </div>
                     <p style="margin: 0; font-size: 0.85rem; color: var(--text-secondary); line-height: 1.5;">
-                        Snap sharp formal blazers, coats, and ties onto casual attire for men and women without downloading expensive suit PSD layers or action packs.
+                        महागडे 'सूट PSD लेयर्स' किंवा 'ॲक्शन पॅक्स' डाउनलोड न करता, पुरुषांच्या आणि महिलांच्या कॅज्युअल कपड्यांवर अगदी व्यवस्थित बसणारे फॉर्मल ब्लेझर्स, कोट्स आणि टाय जोडा.
                     </p>
                 </div>
             </div>
@@ -3431,40 +3452,40 @@ select:focus, input:focus {
                 <div class="seo-feat-card">
                     <div class="seo-feat-title">
                         <i class="fa-solid fa-wand-magic-sparkles" style="color: #ea580c;"></i>
-                        <span>1-Click AI Background</span>
+                        <span>एका क्लिकवर एआय (AI) बॅकग्राउंड</span>
                     </div>
                     <div class="seo-feat-desc">
-                        Replace messy home backgrounds with official plain white, off-white, light blue, or custom solid colors instantly.
+                        घरातील विस्कळीत पार्श्वभूमी काढून त्याऐवजी अधिकृत साधी पांढरी, ऑफ-व्हाइट, फिकट निळी किंवा तुमच्या पसंतीचा कोणताही एक भरीव रंग त्वरित लावा.
                     </div>
                 </div>
 
                 <div class="seo-feat-card">
                     <div class="seo-feat-title">
                         <i class="fa-solid fa-user-tie" style="color: #059669;"></i>
-                        <span>Formal Suit &amp; Dress Overlays</span>
+                        <span>औपचारिक सूट आणि पोशाखांचे ओव्हरले (Overlays)</span>
                     </div>
                     <div class="seo-feat-desc">
-                        Change casual T-shirts or informal attire into sharp professional suits, blazers, and ties for men and women.
+                        पुरुषांसाठी आणि महिलांसाठी कॅज्युअल टी-शर्ट किंवा अनौपचारिक पेहराव बदलून, त्याऐवजी सुव्यवस्थित व्यावसायिक सूट, ब्लेझर आणि टाय परिधान करा.
                     </div>
                 </div>
 
                 <div class="seo-feat-card">
                     <div class="seo-feat-title">
                         <i class="fa-solid fa-table-cells" style="color: #d97706;"></i>
-                        <span>4×6 &amp; A4 Sheet Layouts</span>
+                        <span>४×६ आणि A4 शीट लेआउट्स</span>
                     </div>
                     <div class="seo-feat-desc">
-                        Automatic smart grid nesting: 6 or 8 photos on 4×6 photo paper, and up to 36 photos on A4 with precision cut lines.
+                       स्वयंचलित स्मार्ट ग्रिड मांडणी: ४×६ फोटो पेपरवर ६ किंवा ८ फोटो, आणि A4 पेपरवर अचूक कटिंग लाईन्ससह ३६ पर्यंत फोटो.
                     </div>
                 </div>
 
                 <div class="seo-feat-card">
                     <div class="seo-feat-title">
                         <i class="fa-solid fa-shield-halved" style="color: #ea580c;"></i>
-                        <span>100% Private &amp; Free</span>
+                        <span>१००% खाजगी</span>
                     </div>
                     <div class="seo-feat-desc">
-                        Photos are processed directly in your browser without uploading your personal images to any external server.
+                        तुमच्या वैयक्तिक प्रतिमा कोणत्याही बाह्य सर्व्हरवर अपलोड न करता, त्या थेट तुमच्या ब्राउझरमध्येच प्रक्रिया केल्या जातात.
                     </div>
                 </div>
             </div>
@@ -3472,62 +3493,62 @@ select:focus, input:focus {
             <!-- Official Photo Size Specifications Table -->
             <div class="seo-section-title">
                 <i class="fa-solid fa-table-list" style="color:#ea580c;"></i>
-                <span>Official Passport, Visa &amp; Exam Photo Size Chart</span>
+                <span>अधिकृत पासपोर्ट, व्हिसा आणि परीक्षेसाठीच्या छायाचित्रांच्या आकाराचा तक्ता</span>
             </div>
 
             <div class="seo-table-container">
                 <table class="seo-specs-table">
                     <thead>
                         <tr>
-                            <th>Document / Application</th>
-                            <th>Dimensions (cm / mm)</th>
-                            <th>Dimensions (Inches / Pixels)</th>
-                            <th>Background Color</th>
-                            <th>Face Coverage</th>
+                            <th>दस्तऐवज / अर्ज</th>
+<th>परिमाणे (सेंमी / मिमी)</th>
+<th>परिमाणे (इंच / पिक्सेल)</th>
+<th>पार्श्वभूमीचा रंग</th>
+<th>चेहऱ्याचे व्यापन (कव्हर होणारे प्रमाण)</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
-                            <td><strong>Indian Passport &amp; OCI Card</strong></td>
-                            <td>3.5 cm × 4.5 cm (35 × 45 mm)</td>
-                            <td>1.37 × 1.77 in (413 × 531 px @ 300 DPI)</td>
-                            <td><span class="seo-tag-pill seo-tag-green">Plain White</span></td>
-                            <td>70% – 80%</td>
+                            <td><strong>भारतीय पासपोर्ट आणि OCI कार्ड</strong></td>
+<td>३.५ सेमी × ४.५ सेमी (३५ × ४५ मिमी)</td>
+<td>१.३७ × १.७७ इंच (४१३ × ५३१ पिक्सेल @ ३०० DPI)</td>
+<td><span class="seo-tag-pill seo-tag-green">साधी पांढरी</span></td>
+<td>७०% – ८०%</td>
                         </tr>
                         <tr>
-                            <td><strong>US Visa / Green Card (DS-160)</strong></td>
-                            <td>5.1 cm × 5.1 cm (51 × 51 mm)</td>
-                            <td>2 × 2 inches (600 × 600 px @ 300 DPI)</td>
-                            <td><span class="seo-tag-pill seo-tag-green">Plain White</span></td>
-                            <td>50% – 69%</td>
+                            <td><strong>यूएस व्हिसा / ग्रीन कार्ड (DS-160)</strong></td>
+<td>५.१ सेमी × ५.१ सेमी (५१ × ५१ मिमी)</td>
+<td>२ × २ इंच (६०० × ६०० पिक्सेल @ ३०० DPI)</td>
+<td><span class="seo-tag-pill seo-tag-green">साधा पांढरा</span></td>
+<td>५०% – ६९%</td>
                         </tr>
                         <tr>
-                            <td><strong>PAN Card (NSDL / UTIITSL)</strong></td>
-                            <td>3.5 cm × 2.5 cm (35 × 25 mm)</td>
-                            <td>213 × 213 px (under 50 KB)</td>
-                            <td><span class="seo-tag-pill seo-tag-blue">White / Light</span></td>
-                            <td>Head &amp; Neck</td>
+                            <td><strong>पॅन कार्ड (NSDL / UTIITSL)</strong></td>
+<td>३.५ सेमी × २.५ सेमी (३५ × २५ मिमी)</td>
+<td>२१३ × २१३ पिक्सेल (५० KB पेक्षा कमी)</td>
+<td><span class="seo-tag-pill seo-tag-blue">पांढरा / फिकट</span></td>
+<td>डोके आणि मान</td>
                         </tr>
                         <tr>
-                            <td><strong>Schengen Visa (Europe)</strong></td>
-                            <td>3.5 cm × 4.5 cm (35 × 45 mm)</td>
-                            <td>1.37 × 1.77 in (413 × 531 px)</td>
-                            <td><span class="seo-tag-pill seo-tag-green">Light Grey / White</span></td>
-                            <td>70% – 80%</td>
+                            <td><strong>शेंगेन व्हिसा (युरोप)</strong></td>
+<td>३.५ सेमी × ४.५ सेमी (३५ × ४५ मिमी)</td>
+<td>१.३७ × १.७७ इंच (४१३ × ५३१ पिक्सेल)</td>
+<td><span class="seo-tag-pill seo-tag-green">फिकट राखाडी / पांढरा</span></td>
+<td>७०% – ८०%</td>
                         </tr>
                         <tr>
-                            <td><strong>SSC / UPSC / Govt Exams</strong></td>
-                            <td>3.5 cm × 4.5 cm (35 × 45 mm)</td>
-                            <td>138 × 177 px (20 KB – 50 KB)</td>
-                            <td><span class="seo-tag-pill seo-tag-amber">White with Name/Date</span></td>
-                            <td>75% Clear Face</td>
+                           <td><strong>SSC / UPSC / सरकारी परीक्षा</strong></td>
+<td>3.5 सेमी × 4.5 सेमी (35 × 45 मिमी)</td>
+<td>138 × 177 पिक्सेल (20 KB – 50 KB)</td>
+<td><span class="seo-tag-pill seo-tag-amber">पांढरी पार्श्वभूमी (नाव/दिनांकासह)</span></td>
+<td>75% स्पष्ट चेहरा</td>
                         </tr>
                         <tr>
-                            <td><strong>Driving Licence / Voter ID</strong></td>
-                            <td>3.5 cm × 4.5 cm (35 × 45 mm)</td>
-                            <td>1.37 × 1.77 in (300 DPI)</td>
-                            <td><span class="seo-tag-pill seo-tag-purple">White / Light Blue</span></td>
-                            <td>Front View</td>
+                            <td><strong>ड्रायव्हिंग लायसन्स / मतदार ओळखपत्र</strong></td>
+<td>३.५ सेमी × ४.५ सेमी (३५ × ४५ मिमी)</td>
+<td>१.३७ × १.७७ इंच (३०० डीपीआय)</td>
+<td><span class="seo-tag-pill seo-tag-purple">पांढरा / फिकट निळा</span></td>
+<td>समोरून घेतलेला फोटो (Front View)</td>
                         </tr>
                     </tbody>
                 </table>
@@ -3536,102 +3557,102 @@ select:focus, input:focus {
             <!-- How to Print Section -->
             <div class="seo-section-title">
                 <i class="fa-solid fa-print" style="color:#ea580c;"></i>
-                <span>How to Print Passport Photos at Home or Cyber Café</span>
+                <span>घरी किंवा सायबर कॅफेमध्ये पासपोर्ट फोटो कसे प्रिंट करावेत</span>
             </div>
 
             <div class="seo-intro-desc" style="margin-bottom: 20px;">
                 <ol style="padding-left: 20px; line-height: 1.8; margin-top: 8px;">
-                    <li><strong>Choose 4×6 Photo Paper:</strong> Standard 4×6 inch (100×150 mm) glossy photo paper is the most cost-effective format for Epson, Canon, and HP inkjet printers. A single 4×6 sheet holds 8 full passport photos.</li>
-                    <li><strong>Printer Scale Setting:</strong> When printing from your computer or phone, always select <strong>"Actual Size"</strong> or <strong>"100% Scale"</strong>. Never select "Fit to Page" as it will distort the official 3.5×4.5 cm dimensions.</li>
-                    <li><strong>Paper Type Setting:</strong> In your printer dialog (Epson Easy Photo Print / Canon Print), choose <strong>"Ultra Glossy Photo Paper"</strong> and Quality <strong>"High"</strong> for waterproof studio-grade clarity.</li>
-                    <li><strong>Trim Along Borders:</strong> Use scissors or an ID card trimmer along the built-in hairline border marks for neat, razor-sharp edges.</li>
-                </ol>
+<li><strong>४×६ फोटो पेपर निवडा:</strong> Epson, Canon आणि HP इंकजेट प्रिंटर्ससाठी ४×६ इंच (१००×१५० मिमी) आकाराचा ग्लॉसी फोटो पेपर हा सर्वात किफायतशीर पर्याय आहे. एका ४×६ शीटवर पासपोर्ट आकाराचे एकूण ८ फोटो मावतात.</li>
+<li><strong>प्रिंटर स्केल सेटिंग:</strong> संगणक किंवा फोनवरून प्रिंट देताना, नेहमी <strong>"Actual Size"</strong> (प्रत्यक्ष आकार) किंवा <strong>"100% Scale"</strong> हा पर्याय निवडा. कधीही "Fit to Page" (पृष्ठात बसवा) हा पर्याय निवडू नका, कारण यामुळे पासपोर्टसाठी आवश्यक असलेल्या ३.५×४.५ सेमी या अधिकृत मापांमध्ये बदल होऊ शकतो.</li>
+<li><strong>पेपर प्रकार सेटिंग:</strong> प्रिंटर डायलॉग बॉक्समध्ये (उदा. Epson Easy Photo Print किंवा Canon Print), <strong>"Ultra Glossy Photo Paper"</strong> हा पर्याय निवडा आणि गुणवत्तेसाठी (Quality) <strong>"High"</strong> (उच्च) सेटिंग निवडा. यामुळे फोटो स्टुडिओ दर्जाचे, स्पष्ट आणि वॉटरप्रूफ मिळतील.</li>
+<li><strong>काठावरून कापा:</strong> फोटोवर दिलेल्या बारीक रेषांच्या खुणांनुसार कात्री किंवा आयडी कार्ड ट्रिमरचा वापर करून फोटो कापून घ्या, जेणेकरून तुम्हाला अगदी अचूक आणि सुबक कडा मिळतील.</li>
+</ol>
             </div>
 
             <!-- Interactive FAQs Accordion -->
             <div class="seo-section-title">
                 <i class="fa-solid fa-circle-question" style="color:#ea580c;"></i>
-                <span>Frequently Asked Questions (FAQs)</span>
+                <span>वारंवार विचारले जाणारे प्रश्न (FAQs)</span>
             </div>
 
             <div class="seo-faq-accordion">
                 <div class="seo-faq-item active">
                     <button type="button" class="seo-faq-btn" onclick="toggleSeoFaq(this)">
-                        <span>What is the standard Indian passport photo size in cm, mm, and inches?</span>
+                        <span>भारतीय पासपोर्ट फोटोचा प्रमाणित आकार (सेमी, मिमी आणि इंचांमध्ये) किती असतो?</span>
                         <i class="fa-solid fa-chevron-down"></i>
                     </button>
                     <div class="seo-faq-answer">
-                        The official Indian passport size is <strong>3.5 cm × 4.5 cm (35 mm × 45 mm / 1.37 × 1.77 inches)</strong>. At standard 300 DPI printing resolution, this equals <strong>413 × 531 pixels</strong>. The face from chin to crown must cover 70% to 80% of the photo area with both ears clearly visible.
+                        भारतीय पासपोर्टसाठी अधिकृत आकार <strong>३.५ सेमी × ४.५ सेमी (३५ मिमी × ४५ मिमी / १.३७ × १.७७ इंच)</strong> असा आहे. ३०० डीपीआय (DPI) या मानक प्रिंटिंग रिझोल्यूशननुसार, हे माप <strong>४१३ × ५३१ पिक्सेल</strong> इतके होते. फोटोमध्ये हनुवटीपासून डोक्याच्या वरच्या भागापर्यंतचा चेहरा एकूण क्षेत्राच्या ७०% ते ८०% इतका असावा आणि दोन्ही कान स्पष्टपणे दिसले पाहिजेत.
                     </div>
                 </div>
 
                 <div class="seo-faq-item">
                     <button type="button" class="seo-faq-btn" onclick="toggleSeoFaq(this)">
-                        <span>Why is Smart Croper the best passport photo software for CSC Centers and Cyber Cafés?</span>
+                        <span>CSC केंद्रे आणि सायबर कॅफेसाठी 'SUYOMS PASSPORT Croper' हे पासपोर्ट फोटो सॉफ्टवेअर सर्वोत्तम का आहे?</span>
                         <i class="fa-solid fa-chevron-down"></i>
                     </button>
                     <div class="seo-faq-answer">
-                        Smart Croper is engineered for high-volume CSC VLEs and Cyber Cafés. Instead of paying for expensive software or wrestling with Photoshop actions and slow manual pen-tool selections, operators can upload customer photos, remove backgrounds with AI in 1 click (solid white/blue), snap on formal coats or blazers, and export 8 photos perfectly nested on 4×6 glossy photo paper in under 30 seconds. Works seamlessly on any low-spec PC or laptop with Epson, Canon, and HP printers.
+                        सुयोम्स पासपोर्ट क्रॉपर हे जास्त प्रमाणात काम करणाऱ्या CSC VLEs आणि सायबर कॅफेसाठी तयार केले आहे. महागड्या सॉफ्टवेअरसाठी पैसे देण्याऐवजी किंवा फोटोशॉप ॲक्शन्स आणि संथ मॅन्युअल पेन-टूल सिलेक्शनशी झगडण्याऐवजी, ऑपरेटर्स ग्राहकांचे फोटो अपलोड करू शकतात, एका क्लिकमध्ये AI वापरून बॅकग्राउंड (पूर्ण पांढरा/निळा) काढू शकतात, फॉर्मल कोट किंवा ब्लेझर लावू शकतात आणि ३० सेकंदांपेक्षा कमी वेळात ४×६ ग्लॉसी फोटो पेपरवर ८ फोटो अचूकपणे नेस्टेड करून एक्सपोर्ट करू शकतात. हे एप्सन, कॅनन आणि एचपी प्रिंटर्ससह कोणत्याही कमी क्षमतेच्या पीसी किंवा लॅपटॉपवर सहजतेने चालते.
                     </div>
                 </div>
 
                 <div class="seo-faq-item">
                     <button type="button" class="seo-faq-btn" onclick="toggleSeoFaq(this)">
-                        <span>How can I make 8 passport photos on a 4x6 sheet without Photoshop or Photoshop actions?</span>
+                        <span>फोटोशॉप (Photoshop) किंवा फोटोशॉप ॲक्शन्सचा वापर न करता, ४x६ इंचाच्या एका कागदावर पासपोर्ट आकाराचे ८ फोटो कसे तयार करता येतील?</span>
                         <i class="fa-solid fa-chevron-down"></i>
                     </button>
                     <div class="seo-faq-answer">
-                        Simply upload your photo to Smart Croper Passport Photo Maker, select AI background color (white or blue), choose a formal coat or blazer if required, click Print Preview, select 4×6 sheet (8 photos), and click Download or Print Now. It auto-aligns 8 photos with precision cutting borders without needing Photoshop 7.0 or .atn action files.
+                        केवळ तुमचा फोटो 'SUYOMS PASSPORT Croper Passport Photo Maker' मध्ये अपलोड करा, AI बॅकग्राउंडचा रंग (पांढरा किंवा निळा) निवडा, आवश्यक असल्यास फॉर्मल कोट किंवा ब्लेझर निवडा, 'प्रिंट प्रिव्ह्यू' (Print Preview) वर क्लिक करा, ४×६ शीट (८ फोटो) निवडा आणि 'डाउनलोड' (Download) किंवा 'प्रिंट नाऊ' (Print Now) वर क्लिक करा. हे टूल आपोआप ८ फोटो अचूक कटिंग बॉर्डरसह सेट करते; यासाठी तुम्हाला 'Photoshop 7.0' किंवा '.atn' ॲक्शन फाइल्सची अजिबात गरज पडत नाही.
                     </div>
                 </div>
 
                 <div class="seo-faq-item">
                     <button type="button" class="seo-faq-btn" onclick="toggleSeoFaq(this)">
-                        <span>How many passport photos can I print on a 4×6 photo sheet?</span>
+                        <span>४×६ आकाराच्या फोटो शीटवर मी पासपोर्ट आकाराचे किती फोटो प्रिंट करू शकतो?</span>
                         <i class="fa-solid fa-chevron-down"></i>
                     </button>
                     <div class="seo-faq-answer">
-                        You can comfortably print <strong>6 photos (2×3 grid)</strong> or <strong>8 photos (2×4 grid)</strong> on a standard 4×6 inch photo paper. On an A4 paper sheet, you can print up to <strong>32 or 36 photos</strong> with built-in border lines for easy cutting.
+                        तुम्ही ४×६ इंच आकाराच्या प्रमाणित फोटो पेपरवर आरामात <strong>६ फोटो (२×३ ग्रिडमध्ये)</strong> किंवा <strong>८ फोटो (२×४ ग्रिडमध्ये)</strong> प्रिंट करू शकता. A4 आकाराच्या कागदावर तुम्ही <strong>३२ किंवा ३६ फोटो</strong> पर्यंत प्रिंट करू शकता, ज्यामध्ये फोटो सहज कापण्यासाठी आवश्यक असलेल्या बॉर्डर रेषाही (border lines) दिलेल्या असतात.
                     </div>
                 </div>
 
                 <div class="seo-faq-item">
                     <button type="button" class="seo-faq-btn" onclick="toggleSeoFaq(this)">
-                        <span>Which background color is required for passport, visa, and exam photos?</span>
+                        <span>पासपोर्ट, व्हिसा आणि परीक्षेच्या फोटोंसाठी कोणत्या रंगाची पार्श्वभूमी आवश्यक असते?</span>
                         <i class="fa-solid fa-chevron-down"></i>
                     </button>
                     <div class="seo-faq-answer">
-                        Indian Passport authorities and US/Schengen embassies strictly mandate a <strong>plain white or light off-white background</strong> with no shadows, patterns, or gradients. Select state government examinations accept light blue backgrounds. You can switch between white, blue, red, or grey backgrounds in 1 click using our AI tool.
+                        भारतीय पासपोर्ट प्राधिकरण आणि यूएस/शेंगेन दूतावास सावल्या, नक्षी किंवा ग्रेडियंट्स नसलेली <strong>साधी पांढरी किंवा फिकट पांढरट रंगाची पार्श्वभूमी</strong> असणे सक्तीचे करतात. निवडक राज्य सरकारी परीक्षांमध्ये फिकट निळ्या रंगाची पार्श्वभूमी स्वीकारली जाते. तुम्ही आमच्या एआय टूलचा वापर करून एका क्लिकमध्ये पांढरी, निळी, लाल किंवा राखाडी पार्श्वभूमी बदलू शकता.
                     </div>
                 </div>
 
                 <div class="seo-faq-item">
                     <button type="button" class="seo-faq-btn" onclick="toggleSeoFaq(this)">
-                        <span>Can I change clothes to a formal coat or suit in this photo maker without PSD templates?</span>
+                        <span>या फोटो मेकरमध्ये, PSD टेम्पलेट्सचा वापर न करता, मी कपडे बदलून फॉर्मल कोट किंवा सूट घालू शकतो का?</span>
                         <i class="fa-solid fa-chevron-down"></i>
                     </button>
                     <div class="seo-faq-answer">
-                        Yes! Smart Croper provides built-in formal suit, coat, blazer, and tie templates for men and women. Simply upload any casual photo, select a suit from the Dress tab, adjust the scale and position to fit your shoulders, and export a polished corporate portrait without needing Photoshop suit PSD files.
+                        हो! SUYOMS PASSPORT Croper मध्ये पुरुष आणि महिलांसाठी फॉर्मल सूट, कोट, ब्लेझर आणि टायचे इन-बिल्ट टेम्पलेट्स उपलब्ध आहेत. फक्त तुमचा कोणताही कॅज्युअल फोटो अपलोड करा, 'ड्रेस' (Dress) टॅबमधून हवा तो सूट निवडा, खांद्यांच्या मापाप्रमाणे त्याचे आकारमान (scale) आणि स्थान (position) ॲडजस्ट करा आणि फोटोशॉपच्या (Photoshop) सूट PSD फाइल्सची गरज न पडता एक उत्तम कॉर्पोरेट पोर्ट्रेट तयार करा!
                     </div>
                 </div>
 
                 <div class="seo-faq-item">
                     <button type="button" class="seo-faq-btn" onclick="toggleSeoFaq(this)">
-                        <span>What is the required photo size for PAN Card, SSC, and UPSC exams?</span>
+                        <span>पॅन कार्ड, एसएससी (SSC) आणि यूपीएससी (UPSC) परीक्षांसाठी आवश्यक असलेल्या फोटोचा आकार किती असावा?</span>
                         <i class="fa-solid fa-chevron-down"></i>
                     </button>
                     <div class="seo-faq-answer">
-                        For PAN Card (NSDL/UTIITSL), the required size is <strong>3.5 cm × 2.5 cm (213 × 213 pixels)</strong> under 30–50 KB. For SSC (CGL, CHSL, MTS) and UPSC, the standard format is <strong>3.5 cm × 4.5 cm (20 KB to 50 KB)</strong>, frequently requiring Name and Date of Photo (DOPO) printed at the bottom.
+                        पॅन कार्डसाठी (NSDL/UTIITSL), आवश्यक आकार <strong>३.५ सेमी × २.५ सेमी (२१३ × २१३ पिक्सेल)</strong> असून फाईलचा आकार ३० ते ५० KB च्या दरम्यान असावा लागतो. SSC (CGL, CHSL, MTS) आणि UPSC परीक्षांसाठी, प्रमाणित आकार <strong>३.५ सेमी × ४.५ सेमी (२० KB ते ५० KB)</strong> असा असतो; यामध्ये अनेकदा फोटोच्या तळाशी उमेदवाराचे नाव आणि फोटो काढल्याची तारीख (DOPO) छापलेली असणे आवश्यक असते.
                     </div>
                 </div>
 
                 <div class="seo-faq-item">
                     <button type="button" class="seo-faq-btn" onclick="toggleSeoFaq(this)">
-                        <span>Is this passport size photo maker completely free for cyber cafes and CSC VLEs?</span>
+                        <span>सायबर कॅफे आणि सीएससी व्हीएलई (CSC VLEs) साठी हा पासपोर्ट आकाराचा फोटो बनवणारा टूल पूर्णपणे मोफत आहे का?</span>
                         <i class="fa-solid fa-chevron-down"></i>
                     </button>
                     <div class="seo-faq-answer">
-                        Yes, Smart Croper's Passport Photo Maker is <strong>100% free with zero watermarks</strong>. You can crop photos, adjust colors, apply suits, and download high-resolution printable 4×6 / A4 PDFs without any charge.
+                        हो, SUYOMS PASSPORT Croper's Passport Photo Maker हे <strong>१००% प्लॅन सबस्क्रायबर साठी मोफत असून यात कोणतेही वॉटरमार्क नाहीत</strong>. तुम्ही फोटो क्रॉप करू शकता, रंगांमध्ये बदल करू शकता, कपडे (सूट) जोडू शकता आणि उच्च-रिझोल्यूशन असलेले, प्रिंट करण्यायोग्य ४×६ / A4 आकाराचे PDF फाईल्स इतर कोणत्याही शुल्काशिवाय डाउनलोड करू शकता.
                     </div>
                 </div>
             </div>
@@ -3645,7 +3666,7 @@ select:focus, input:focus {
                 <div style="display: flex; align-items: center; gap: 10px;">
                     <img src="favicon.png" alt="Smart Croper Logo" style="width: 38px; height: 38px; border-radius: 10px; box-shadow: 0 4px 10px rgba(249, 115, 22, 0.2);">
                     <div style="display: flex; flex-direction: column;">
-                        <h2 style="margin: 0; font-size: 1.5rem; font-weight: 800; background: linear-gradient(135deg, #ea580c 0%, #fb923c 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-family: 'Outfit', sans-serif; line-height: 1.2;">SmartCroper</h2>
+                        <h2 style="margin: 0; font-size: 1.5rem; font-weight: 800; background: linear-gradient(135deg, #ea580c 0%, #fb923c 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-family: 'Outfit', sans-serif; line-height: 1.2;">SUYOMS PASSPORT Croper</h2>
                         <span style="font-size: 11px; color: var(--text-secondary); font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; margin-top: -2px;">Create your perfect photo</span>
                     </div>
                 </div>
